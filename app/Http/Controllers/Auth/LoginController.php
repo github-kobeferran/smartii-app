@@ -39,8 +39,10 @@ class LoginController extends Controller
                 return '/student';
             case $user->isFaculty():
                 return '/faculty';
-            default:
+            case $user->isApplicant():
                 return '/applicant';
+            default:
+                return '/home';
         }
     }
 

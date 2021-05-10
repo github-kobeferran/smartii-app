@@ -1,5 +1,74 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
 @charset "UTF-8";
+.navbar-nav > li > a:hover {
+  color: blue;
+}
+
+#sidebar-aside-admin {
+  background-color: #e6c694;
+  color: black !important;
+}
+
+#sidebar-nav-admin {
+  background-color: #e6c694;
+}
+
+.bs-example {
+  margin: 20px;
+}
+
+#exTab1 .tab-content {
+  color: white;
+  background-color: #428bca;
+  padding: 5px 15px;
+}
+
+/* remove border radius for the tab */
+#exTab1 .nav-pills > li > a {
+  border-radius: 0;
+}
+
+.navbar-nav > li > a:hover {
+  color: blue;
+}
+
+#sidebar-aside-admin {
+  background-color: #e6c694;
+  color: black !important;
+}
+
+#sidebar-nav-admin {
+  background-color: #e6c694;
+}
+
+.bs-example {
+  margin: 20px;
+}
+
+#exTab1 .tab-content {
+  color: white;
+  background-color: #428bca;
+  padding: 5px 15px;
+}
+
+/* remove border radius for the tab */
+#exTab1 .nav-pills > li > a {
+  border-radius: 0;
+}
+
+.nav-link {
+  border-bottom: 3px solid rgba(0, 0, 0, 0);
+}
+
+.nav-link:hover {
+  border-bottom: 3px solid #eee;
+}
+
+.nav-link:active {
+  border-bottom: 3px solid #338ecf;
+  background: #eee;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

@@ -44,8 +44,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function hasRole($role)
+    {
+        return User::where('user_type', $role)->get();
+    }
+
     public function isAdmin(){
         if (Auth::user()->user_type === 'admin')
+            return true;
+        else
+            false;
+    }
+
+    public function isStudent(){
+        if (Auth::user()->user_type === 'student')
+            return true;
+        else
+            false;
+    }
+    public function isFaculty(){
+        if (Auth::user()->user_type === 'faculty')
+            return true;
+        else
+            false;
+    }
+    public function isApplicant(){
+        if (Auth::user()->user_type === 'applicant')
             return true;
         else
             false;
