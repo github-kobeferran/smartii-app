@@ -1,2 +1,2 @@
-require('./admin');
 require('./bootstrap');
+require('./admin');
