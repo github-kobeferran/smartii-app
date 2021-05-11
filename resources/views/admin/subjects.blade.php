@@ -3,22 +3,7 @@
 @section('content')
 <h2>Create : <span id="object" class="h4">Student</span></h2>
 
-<div  id="createTab" class="bs-example">
-    {{-- <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a href="#1c" data-toggle="tab" class="nav-link active">Student</a>
-        </li>
-        <li class="nav-item">
-            <a href="#2c" data-toggle="tab" class="nav-link ">Faculty</a>
-        </li>
-        <li class="nav-item">
-            <a href="#3c" data-toggle="tab" class="nav-link ">Subject</a>
-        </li>
-        <li class="nav-item">
-            <a href="#4c" data-toggle="tab" class="nav-link ">Subject Set</a>
-        </li>
-        
-    </ul> --}}
+<div  id="createTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="home" aria-selected="true">Student</a>
@@ -57,12 +42,6 @@
          Subject Set ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
 	</div>        
 </div>
-  
-
-
-
-
-
 
 
 @endsection

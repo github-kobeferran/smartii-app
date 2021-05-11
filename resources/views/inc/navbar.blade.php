@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+<nav id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -37,7 +37,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
                                     <?php $role = auth()->user()->user_type ?>                                    
-                                    <a class="dropdown-item" href="{{ route($role . '_dashboard') }}">
+                                    <a class="dropdown-item" href="{{ route($role . 'Dashboard') }}">
                                         {{ __(ucfirst($role) . ' Module') }}
                                     </a>
 

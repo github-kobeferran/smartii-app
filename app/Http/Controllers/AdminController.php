@@ -29,4 +29,8 @@ class AdminController extends Controller
         return view('admin.settings');
     }
 
+    public function adminSubjects(){
+        return view('admin.subjects');
+    }
+
 }

@@ -1,53 +1,47 @@
 @extends('layouts.module')
 
 @section('content')
-<h2>View</h2>
+<h2>View : <span id="object" class="h4">Students</span></h2> 
 
-<div  id="exTab1" class="bs-example">
-    <ul class="nav nav-tabs">
+<div  id="viewTab" class="bs-example"> 
+     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-            <a href="#0a" data-toggle="tab" class="nav-link ">Applicants</a>
+            <a class="nav-link" id="applicants-view-tab" data-toggle="tab" href="#applicants" role="tab" aria-controls="profile" aria-selected="false">Applicants</a>
         </li>
         <li class="nav-item">
-            <a href="#1a" data-toggle="tab" class="nav-link active">Students</a>
+            <a class="nav-link active" id="students-view-tab" data-toggle="tab" href="#students" role="tab" aria-controls="home" aria-selected="true">Students</a>
         </li>
         <li class="nav-item">
-            <a href="#2a" data-toggle="tab" class="nav-link ">Faculty Members</a>
+            <a class="nav-link" id="faculty-view-tab" data-toggle="tab" href="#facultyMembers" role="tab" aria-controls="profile" aria-selected="false">Faculty Members</a>
         </li>
         <li class="nav-item">
-            <a href="#3a" data-toggle="tab" class="nav-link ">Subject</a>
+            <a class="nav-link" id="admins-view-tab" data-toggle="tab" href="#admins" role="tab" aria-controls="contact" aria-selected="false">Admins</a>
         </li>
-        <li class="nav-item">
-            <a href="#4a" data-toggle="tab" class="nav-link ">Subject Set</a>
-        </li>
-        
+       
     </ul>
 
 </div>
 
 	    
 <div class="tab-content clearfix">
-    <div class="tab-pane" id="0a">
-        Faculty ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
+    <div class="tab-pane" id="applicants">
+        Applicants ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
 	</div>
 
-	<div class="tab-pane active" id="1a">
+	<div class="tab-pane active" id="students">
+        Students
         {!! Form::open(['url' => 'foo/bar']) !!}
             
         {!! Form::close() !!}
 	</div>
 
-	<div class="tab-pane" id="2a">
+	<div class="tab-pane" id="facultyMembers">
         Faculty ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
 	</div>
 
-    <div class="tab-pane" id="3a">
+    <div class="tab-pane" id="admins">
          Subject ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
-	</div>       
-    
-    <div class="tab-pane" id="4a">
-         Subject Set ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
-	</div>        
+	</div>                
 </div>
   
 

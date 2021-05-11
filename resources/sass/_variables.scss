@@ -16,32 +16,3 @@ $yellow: #ffed4a;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
-.navbar-nav>li>a:hover {
-    color: blue;
-}
-
-#sidebar-aside-admin {
-    background-color: #e6c694;
-    color: black !important;
-}
-
-#sidebar-nav-admin {
-    background-color: #e6c694;
-}
-
-.bs-example {
-    margin: 20px;
-}
-
-#exTab1 .tab-content {
-    color: white;
-    background-color: #428bca;
-    padding: 5px 15px;
-}
-
-
-/* remove border radius for the tab */
-
-#exTab1 .nav-pills>li>a {
-    border-radius: 0;
-}

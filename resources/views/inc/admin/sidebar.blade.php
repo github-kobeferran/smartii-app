@@ -3,19 +3,22 @@
                 <div class="collapse navbar-collapse ">
                     <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">                      
                         <li class="nav-item">
-                            <a class="nav-link text-dark pl-0 text-nowrap" href="/admin">Dashboard</a>
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark pl-0 text-nowrap" href="/admin/view">View</a>
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/view">View</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark pl-0 text-nowrap" href="/admin/create"> Create</a>
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/create"> Create</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark pl-0 text-nowrap" href="/admin/payment">Payment</a>
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/subjects"> Subjects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/payment">Payment</a>
                         </li>                       
                         <li class="nav-item">
-                            <a class="nav-link text-dark pl-0 text-nowrap" href="/admin/settings">Settings</a>
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/settings">Settings</a>
                         </li>
                        
                     </ul>

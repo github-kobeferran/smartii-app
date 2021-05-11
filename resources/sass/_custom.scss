@@ -1,5 +1,8 @@
-.navbar-nav>li>a:hover {
-    color: blue;
+// .navbar-nav>li>a:hover {
+//     color: blue;
+// }
+#navbar {
+    border-bottom: 0.8px solid rgba(99, 94, 94, 0.234);
 }
 
 #sidebar-aside-admin {
@@ -15,7 +18,13 @@
     margin: 20px;
 }
 
-#exTab1 .tab-content {
+#createTab .tab-content {
+    color: white;
+    background-color: #272a2c;
+    padding: 5px 15px;
+}
+
+#viewTab .tab-content {
     color: white;
     background-color: #428bca;
     padding: 5px 15px;
@@ -24,19 +33,15 @@
 
 /* remove border radius for the tab */
 
-#exTab1 .nav-pills>li>a {
-    border-radius: 0;
-}
-
-.nav-link {
+.nav-link.view {
     border-bottom: 3px solid rgba(0, 0, 0, 0);
 }
 
-.nav-link:hover {
+.nav-link.sidebar-admin:hover {
     border-bottom: 3px solid #eee;
 }
 
-.nav-link:active {
+.nav-link.sidebar-admin:active {
     border-bottom: 3px solid #338ecf;
     background: #eee
 }
