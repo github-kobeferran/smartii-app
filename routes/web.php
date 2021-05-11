@@ -24,28 +24,29 @@ Auth::routes();
 
 // ADMIN protected routes 
 Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->group(function () {
-    Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('adminDashboard');
-    Route::get('/admin/create', [App\Http\Controllers\AdminController::class, 'adminCreate'])->name('adminCreate');
-    Route::get('/admin/view', [App\Http\Controllers\AdminController::class, 'adminView'])->name('adminView');
-    Route::get('/admin/payment', [App\Http\Controllers\AdminController::class, 'adminPayment'])->name('adminPayment');
-    Route::get('/admin/settings', [App\Http\Controllers\AdminController::class, 'adminSettings'])->name('adminSettings');
-    Route::get('/admin/subjects', [App\Http\Controllers\AdminController::class, 'adminSubjects'])->name('adminSubjects');
+    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard');
+    Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate');
+    Route::get('/admin/view', [App\Http\Controllers\AdminsController::class, 'adminView'])->name('adminView');
+    Route::get('/admin/view/{table}', [App\Http\Controllers\AdminsController::class, 'show'])->name('adminView');
+    Route::get('/admin/payment', [App\Http\Controllers\AdminsController::class, 'adminPayment'])->name('adminPayment');
+    Route::get('/admin/settings', [App\Http\Controllers\AdminsController::class, 'adminSettings'])->name('adminSettings');
+    Route::get('/admin/subjects', [App\Http\Controllers\AdminsController::class, 'adminSubjects'])->name('adminSubjects');
 });
 
 // APPLICANT protected routes 
 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/applicant', [App\Http\Controllers\ApplicantController::class, 'index'])->name('applicantDashboard');
+    Route::get('/applicant', [App\Http\Controllers\ApplicantsController::class, 'index'])->name('applicantDashboard');
 });
 
 // STUDENT protected routes 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/student', [App\Http\Controllers\StudentController::class, 'index'])->name('studentDashboard');
+    Route::get('/student', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentDashboard');
 });
 
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/faculty', [App\Http\Controllers\FacultyController::class, 'index'])->name('facultyDashboard');
+    Route::get('/faculty', [App\Http\Controllers\FacultiesController::class, 'index'])->name('facultyDashboard');
 });
 
 

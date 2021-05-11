@@ -3,34 +3,22 @@
 @section('content')
 <h2>Create : <span id="object" class="h4">Student</span></h2>
 
-<div  id="createTab" class="bs-example">
-    {{-- <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a href="#1c" data-toggle="tab" class="nav-link active">Student</a>
-        </li>
-        <li class="nav-item">
-            <a href="#2c" data-toggle="tab" class="nav-link ">Faculty</a>
-        </li>
-        <li class="nav-item">
-            <a href="#3c" data-toggle="tab" class="nav-link ">Subject</a>
-        </li>
-        <li class="nav-item">
-            <a href="#4c" data-toggle="tab" class="nav-link ">Subject Set</a>
-        </li>
-        
-    </ul> --}}
+<div  id="createTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="home" aria-selected="true">Student</a>
+            <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="faculty-tab" data-toggle="tab" href="#faculty" role="tab" aria-controls="profile" aria-selected="false">Faculty</a>
+            <a class="nav-link" id="faculty-tab" data-toggle="tab" href="#faculty" role="tab" aria-controls="faculty" aria-selected="false">Faculty</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="subject-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="contact" aria-selected="false">Subject</a>
+            <a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Admin</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="subjectSet-tab" data-toggle="tab" href="#subjectSet" role="tab" aria-controls="contact" aria-selected="false">Subject Set</a>
+            <a class="nav-link" id="subject-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="subjectSet-tab" data-toggle="tab" href="#subjectSet" role="tab" aria-controls="subject-set" aria-selected="false">Subject Set</a>
         </li>
     </ul>
 

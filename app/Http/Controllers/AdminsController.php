@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Admin;
 
 
 
-class AdminController extends Controller
+class AdminsController extends Controller
 {
     //
+    
     public function index(){
         return view('admin.dashboard');
     }
@@ -31,6 +33,17 @@ class AdminController extends Controller
 
     public function adminSubjects(){
         return view('admin.subjects');
+    }
+
+    public function show($table){
+
+        switch($table){
+            case 'admins':
+                $admins = Admin::all();
+                return $admins->toJson();
+            break;
+        }
+        
     }
 
 }

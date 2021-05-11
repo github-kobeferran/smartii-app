@@ -37,18 +37,23 @@
 
 	<div class="tab-pane" id="facultyMembers">
         Faculty ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
+        <br>
+        <br>
+        <?php 
+            $id = 3;
+            $year =  date("y");
+            $prefix = "B";
+            $user_id = $prefix . $year . '-' . sprintf('%04d', $id);
+        
+        ?>
+
+        {{ 'for stud, emp, app id manipulation ' . $user_id}}
 	</div>
 
     <div class="tab-pane" id="admins">
-         Subject ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
-	</div>                
+       @include('admin.view.view-admins')
+	</div> 
+                  
 </div>
   
-
-
-
-
-
-
-
 @endsection
