@@ -1,7 +1,7 @@
 @extends('layouts.module')
 
 @section('content')
-<h2>Create : <span id="object" class="h4">Student</span></h2>
+<h4>You're creating a <span id="object" class="h2">Student</span></h4>
 
 <div  id="createTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
@@ -27,10 +27,7 @@
 	    
 <div class="tab-content clearfix">
 	<div class="tab-pane active" id="student">
-        Student
-        {!! Form::open(['url' => 'foo/bar']) !!}
-            
-        {!! Form::close() !!}
+        @include('admin.create.student')               
 	</div>
 
 	<div class="tab-pane" id="faculty">

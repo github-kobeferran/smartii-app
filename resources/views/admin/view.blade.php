@@ -2,7 +2,7 @@
 
 
 @section('content')
-<h2>View : <span id="object" class="h4">Students</span></h2> 
+<h4>You're viewing <span id="object" class="h2">Student</span> List</h4>
 
 <div  id="viewTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
@@ -53,10 +53,9 @@
 	</div>
 
     <div class="tab-pane" id="admins">
-       @include('admin.view.view-admins')
+       @include('admin.view.admins')
 	</div> 
                   
 </div>
 
-<script src="{{ asset('js/app.js') }}" defer></script>
 @endsection

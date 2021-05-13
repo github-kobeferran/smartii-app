@@ -8,8 +8,3 @@
     </table>
 </div>
 
-
-    <script>        
-      
- 
-</script>
