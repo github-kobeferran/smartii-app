@@ -36,13 +36,37 @@ class AdminsController extends Controller
     }
 
     public function show($table){
-
         switch($table){
             case 'admins':
                 $admins = Admin::all();
                 return $admins->toJson();
             break;
+
+            default:
+            redirect('/home');
         }
+        
+    }
+
+    public function search($table, $text = ''){
+        switch($table){
+            case 'admins':
+                
+                if($text == ''){
+                    $admins = Admin::all();
+                }else{
+                    $admins = Admin::query()
+                    ->where('name', 'LIKE', "%" . $text . "%")
+                    ->orWhere('email', 'LIKE', "%" . $text . "%")
+                    ->orWhere('position', 'LIKE', "%" . $text . "%")
+                    ->get();
+                }                               
+                                
+                return $admins->toJson();
+
+            break;
+        }    
+        
         
     }
 

@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.setPublicPath('../smartii.cc')
-    .js('resources/js/app.js', '../smartii.cc/js')
-    .sass('resources/sass/app.scss', '../smartii.cc/css')
+mix.setPublicPath('public')
+    .js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css')
     .sourceMaps();

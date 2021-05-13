@@ -1,5 +1,6 @@
 @extends('layouts.module')
 
+
 @section('content')
 <h2>View : <span id="object" class="h4">Students</span></h2> 
 
@@ -23,7 +24,8 @@
 </div>
 
 	    
-<div class="tab-content clearfix">
+<div class="tab-content clearfix">    
+
     <div class="tab-pane" id="applicants">
         Applicants ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
 	</div>
@@ -55,5 +57,6 @@
 	</div> 
                   
 </div>
-  
+
+<script src="{{ asset('js/app.js') }}" defer></script>
 @endsection
