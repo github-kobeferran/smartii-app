@@ -59,6 +59,8 @@ document.getElementById('admins-view-tab').addEventListener('click', () => {
     xhr.send();
 });
 
+
+
 // ---------------------------------------------> FILL ADMIN TABLE WHEN PER KEYUP SEARCH INPUT
 document.querySelector('#admin-search').addEventListener('keyup', (e) => {
     console.log('keyup');
@@ -68,11 +70,12 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://smartii-app.test/admin/view/search/admins/' + txt, true);
 
-
+    document.getElementsByClassName('lds-dual-ring')[0].style.display = 'inline-block';
     xhr.onload = function() {
 
         if (this.status == 200) {
             var admins = JSON.parse(this.responseText);
+
 
             output = '<table id="admins-table" class="table table-striped">' +
                 '<thead>' +
@@ -98,7 +101,7 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 
             output += '</tbody>' +
                 '</table>';
-
+            document.getElementsByClassName('lds-dual-ring')[0].style.display = 'none';
             document.getElementById('admins-table').innerHTML = output;
 
 

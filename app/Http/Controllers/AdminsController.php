@@ -56,9 +56,9 @@ class AdminsController extends Controller
                     $admins = Admin::all();
                 }else{
                     $admins = Admin::query()
-                    ->where('name', 'LIKE', "%" . $text . "%")
-                    ->orWhere('email', 'LIKE', "%" . $text . "%")
-                    ->orWhere('position', 'LIKE', "%" . $text . "%")
+                    ->where('name', 'LIKE',  $text . "%")
+                    ->orWhere('email', 'LIKE',  $text . "%")
+                    ->orWhere('position', 'LIKE', $text . "%")
                     ->get();
                 }                               
                                 
