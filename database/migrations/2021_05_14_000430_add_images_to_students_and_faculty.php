@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAccessGrantToUsers extends Migration
+class AddImagesToStudentsAndFaculty extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class AddAccessGrantToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('access_grant')->default(1);
-        });
+        // Schema::table('students', function (Blueprint $table) {
+        //     $table->string('student_image');
+        // });
+        // Schema::table('faculty', function (Blueprint $table) {
+        //     $table->string('faculty_image')->nullable();
+        // });
     }
 
     /**
@@ -25,8 +28,6 @@ class AddAccessGrantToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('access_grant');
-        });
+        
     }
 }

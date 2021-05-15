@@ -13,8 +13,13 @@ class CreateMembersTable extends Migration
      */
     public function up()
     {
-        Schema::create('members', function (Blueprint $table) {
-            $table->id();
+        
+        Schema::create('members', function (Blueprint $table) {            
+            $table->foreignId('user_id');
+            $table->string('member_type', 11)->nullable();        
+            $table->foreign('member_type')->references('user_type')->on('users');
+            $table->foreignId('member_id'); 
+            $table->primary(['user_id', 'member_id']);
             $table->timestamps();
         });
     }

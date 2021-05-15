@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\Program;
 
 
 
@@ -35,17 +36,39 @@ class AdminsController extends Controller
         return view('admin.subjects');
     }
 
-    public function show($table){
+    public function showTable($table){
         switch($table){
             case 'admins':
                 $admins = Admin::all();
                 return $admins->toJson();
-            break;
-
+            break;        
             default:
             redirect('/home');
         }
         
+    }
+
+
+    public function showTableBy($table, $by, $value){
+        if($by == ''){
+
+            showTable($table);
+
+        } else {
+
+            switch($table){
+
+                case 'programs':
+                    $programs = Program::where($by, $value)->get();
+
+                    return $programs;
+                break;        
+
+
+                default:
+                redirect('/home');
+            }
+        }
     }
 
     public function search($table, $text = ''){

@@ -12,7 +12,10 @@ $(".tab-pane").on("click", function() {
     $(this).parent().addClass("active");
 });
 
+// #################          VIEW
 // ---------------------------------------------> FILL TABLE WHEN ADMIN-NAV-LINK is CLICKED
+
+
 document.getElementById('admins-view-tab').addEventListener('click', () => {
     //console.log('clicked');
 
@@ -59,11 +62,9 @@ document.getElementById('admins-view-tab').addEventListener('click', () => {
     xhr.send();
 });
 
-
-
 // ---------------------------------------------> FILL ADMIN TABLE WHEN PER KEYUP SEARCH INPUT
 document.querySelector('#admin-search').addEventListener('keyup', (e) => {
-    console.log('keyup');
+
 
     txt = document.querySelector('#admin-search').value;
 
@@ -113,3 +114,29 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 
     xhr.send();
 });
+
+
+window.addEventListener('load', (event) => {
+
+    let dept = selectDept.value;
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept, true);
+
+    xhr.onload = function() {
+        if (this.status == 200) {
+            var programs = JSON.parse(this.responseText);
+
+            for (let i in programs) {
+                selectProg.options[i].text = programs[i].abbrv + ' - ' + programs[i].desc;
+                selectProg.options[i].value = programs[i].id + ' - ' + programs[i].id;
+            }
+        } else {
+
+        }
+
+    }
+
+    xhr.send();
+});
+// #################   CREATE
