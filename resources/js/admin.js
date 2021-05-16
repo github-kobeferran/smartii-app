@@ -6,11 +6,14 @@ $(".nav-link").on("click", function() {
 });
 
 
-
 $(".tab-pane").on("click", function() {
     $(".tab-pane").find(".active").removeClass("active");
     $(this).parent().addClass("active");
 });
+
+
+
+
 
 // #################          VIEW
 // ---------------------------------------------> FILL TABLE WHEN ADMIN-NAV-LINK is CLICKED
@@ -116,27 +119,5 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 });
 
 
-window.addEventListener('load', (event) => {
 
-    let dept = selectDept.value;
-    var xhr = new XMLHttpRequest();
-
-    xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept, true);
-
-    xhr.onload = function() {
-        if (this.status == 200) {
-            var programs = JSON.parse(this.responseText);
-
-            for (let i in programs) {
-                selectProg.options[i].text = programs[i].abbrv + ' - ' + programs[i].desc;
-                selectProg.options[i].value = programs[i].id + ' - ' + programs[i].id;
-            }
-        } else {
-
-        }
-
-    }
-
-    xhr.send();
-});
 // #################   CREATE
