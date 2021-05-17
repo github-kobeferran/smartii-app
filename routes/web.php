@@ -27,6 +27,7 @@ Auth::routes();
 // ADMIN protected routes 
 Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->group(function () {
     Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard');
+    
     Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate');
     Route::post('/admin/create/student', [App\Http\Controllers\StudentsController::class, 'store'])->name('studentCreate');
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSemesterToStudents extends Migration
+class UpdateColumnStudentIdInStudents extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddSemesterToStudents extends Migration
     public function up()
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->smallInteger('semester');
+            $table->string('student_id', 11)->nullable()->change();
         });
     }
 

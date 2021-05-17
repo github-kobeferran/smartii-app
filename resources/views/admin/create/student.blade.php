@@ -1,23 +1,22 @@
 {!! Form::open(['url' => 'admin/create/student', 'files' => true]) !!}
     <div class="custom-control custom-switch">
-        <input name="new_stud" type="checkbox" class="custom-control-input" id="newStudSwitch">
+        <input name="new_stud_switch" type="checkbox" class="custom-control-input" id="newStudSwitch">
         <label class="custom-control-label" for="newStudSwitch"><strong>Don't have Student ID</strong></label>
     </div>
 
     <div id="new-stud-div" class="form-group" style="display:block;">         
         {{Form::label('studentId', 'Student ID', ['class' => 'mt-3'])}}
-        {{Form::text('student_id', '', ['class' => 'form-control w-25 ', 'id' => 'studentID', 'required' => 'required', 'placeholder' => 'Enter Student ID'])}}
+        {{Form::text('student_id', '', ['maxlength' => '8', 'class' => 'form-control w-25 ', 'id' => 'studentID', 'required' => 'required', 'placeholder' => 'ex. C18-2159'])}}
     </div> 
  <hr class= "w-75 ml-0"/>
 {{-- row0 --}}
     <div class="row">    
          <div class="col-5"> 
             <div class="form-inline">
-                  {{Form::label('dept', 'Department')}}
-                  {{Form::select('dept', [
-                                          '0' => 'Senior High School',
+                  {{Form::label('department', 'Department')}}
+                  {{Form::select('department', ['0' => 'Senior High School',
                                           '1' => 'College'
-                                          ], null,
+                                          ], 0,
                                     ['class' => 'custom-select w-75 ml-2', 'id' => 'selectDept'])}}                   
             </div>
             
@@ -50,37 +49,17 @@
         <div class="col">  
             <div class = "form-group">        
                 {{Form::label('email', 'Email Address', ['class' => 'mt'])}}
-                {{Form::email('email', '', ['class' => 'form-control', 'placeholder' => 'Email here..'])}}
+                {{Form::email('email', '', ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Email here..'])}}
             </div> 
         </div>
 
         <div class="col">  
             <div class = "form-group">        
-                {{Form::label('email', 'Contact Number', ['class' => 'mt'])}}
-                {{Form::number('contact', '', ['min' => '11', 'max' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..'])}}
+                {{Form::label('theContact', 'Contact Number', ['class' => 'mt'])}}
+                {{Form::number('contact', '', ['maxlength' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..'])}}
             </div> 
         </div>
     </div>
-
-    <hr class= "w-75 ml-0"/>
-
-    <div class="row"> 
-        <div class="col">  
-            <div class = "form-group">        
-                {{Form::label('email', 'Email Address', ['class' => 'mt'])}}
-                {{Form::email('email', '', ['class' => 'form-control', 'placeholder' => 'Email here..'])}}
-            </div> 
-        </div>
-
-        <div class="col">  
-            <div class = "form-group">        
-                {{Form::label('email', 'Contact Number', ['class' => 'mt'])}}
-                {{Form::number('contact', '', ['min' => '11', 'max' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..'])}}
-            </div> 
-        </div>
-    </div>
-
-
 
     <hr class= "w-75 ml-0"/>
 {{-- row1 --}}
@@ -117,33 +96,25 @@
                 {{Form::label('dob', 'Date of Birth')}}
                 {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2', 'id' => 'dob'] )}}
             </div> 
-            
 
-            <div class = "form-group">        
-                {{Form::label('sex', 'Sex')}}
-                {{Form::select('sex', ['m' => 'Male', 
-                                        'f' => 'Female'], null,
-                                       ['class' => 'custom-select ml-2 w-25'])}}
-            </div> 
 
-                     
-                
-            
-        </div>
-
-         <div class="col">
-            <div class = "form-group">        
+             <div class = "form-group">        
             {{Form::label('gender', 'Gender')}}
-            {{Form::select('gender', ['m' => 'Male', 
-                                    'f' => 'Female',
-                                    'l' => 'Lesbian',
-                                    'g' => 'Gay',
-                                    'b' => 'Bisexual',
-                                    't' => 'Transgender',
-                                    'q' => 'Queer'                                        
+            {{Form::select('gender', ['male' => 'Male', 
+                                    'female' => 'Female',
+                                    'lesbian' => 'Lesbian',
+                                    'gay' => 'Gay',
+                                    'bisexual' => 'Bisexual',
+                                    'male-transgender' => 'Transgender(Male)',
+                                    'female-transgender' => 'Transgender(Female)',
+                                    'queer' => 'Queer'                                        
                                     ], null,
                                     ['class' => 'custom-select w-25 ml-2'])}}
             </div> 
+        </div>
+
+         <div class="col">
+           
 
             <div class = "form-inline">        
                 {{Form::label('nationality', 'Nationality')}}
@@ -216,7 +187,7 @@
 
             <div class = "form-group">        
                 {{Form::label('father_contact', 'Father\'s Contact Number')}}                
-                {{Form::number('father_contact', '', ['min' => '11', 'max' => '11','class' => 'form-control w-50', 'placeholder' => 'Father\'s Contact here..'])}}
+                {{Form::number('father_contact', '', ['maxlength' => '11','class' => 'form-control w-50', 'placeholder' => 'Father\'s Contact here..'])}}
             </div> 
 
          </div>
@@ -242,7 +213,7 @@
 
             <div class = "form-group">        
                 {{Form::label('mother_contact', 'Mother\'s Contact Number')}}                
-                {{Form::number('mother_contact', '', ['min' => '11', 'max' => '11','class' => 'form-control w-50', 'placeholder' => 'Mother\'s Contact here..'])}}
+                {{Form::number('mother_contact', '', ['maxlength' => '11','class' => 'form-control w-50', 'placeholder' => 'Mother\'s Contact here..'])}}
             </div> 
 
          </div>
@@ -268,7 +239,7 @@
 
             <div class = "form-group">        
                 {{Form::label('guardian_contact', 'Guardian\'s Contact Number')}}                
-                 {{Form::number('guardian_contact', '', ['min' => '11', 'max' => '11','class' => 'form-control  w-50', 'placeholder' => 'Guardian\'s Contact here..'])}}                
+                 {{Form::number('guardian_contact', '', ['maxlength' => '11','class' => 'form-control  w-50', 'placeholder' => 'Guardian\'s Contact here..'])}}                
             </div> 
 
          </div>
@@ -289,12 +260,12 @@
          <div class="col">
            <div class = "form-group">        
                 {{Form::label('emergency_person_name', 'Name of Person to Contact in case of Emergency')}}
-                {{Form::text('emergency_person_name', '', ['class' => 'form-control w-75', 'placeholder' => 'Name here..'])}}
+                {{Form::text('emergency_person_name', '', [ 'class' => 'form-control w-75', 'placeholder' => 'Name here..'])}}
             </div>
 
             <div class = "form-group">        
                 {{Form::label('emergency_person_contact', 'Contact of Person to Contact in case of Emergency')}}
-                {{Form::text('emergency_person_contact', '', ['class' => 'form-control w-75', 'placeholder' => 'Contact here..'])}}
+                {{Form::text('emergency_person_contact', '', [ 'maxlength' => '11', 'class' => 'form-control w-75', 'placeholder' => 'Contact here..'])}}
             </div> 
 
          </div>
@@ -453,6 +424,7 @@
         
     });
 
+   
     let selectDept = document.querySelector('#selectDept');
     let selectProg = document.querySelector('#selectProg');   
     let selectLevel = document.querySelector('#selectLevel');   

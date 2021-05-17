@@ -24,6 +24,13 @@
 
 </div>
 
+ @if (session('status'))
+    <div class="alert alert-success" role="alert">
+        {{ session('status') }}
+    </div>
+@endif
+
+@include('inc.messages')
 	    
 <div class="tab-content clearfix">
 	<div class="tab-pane active" id="student">
