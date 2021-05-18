@@ -43,36 +43,13 @@ class StudentsController extends Controller
             'program_id' => 'required',
             'semester' => 'required', // 1 = first sem .. 
             'email' => 'required',
-            'contact' => '',
+            'contact' => 'required',
             'last_name' => 'required',
             'first_name' => 'required',
             'middle_name' => '',
-            'dob' => 'required',
-            'gender' => 'required',
-            'nationality' => '',
-            'civil_status' => 'required',
+            'dob' => 'required',            
             'permanent_address' => 'required',
-            'present_address' => 'required',
-            'father_name' => '',
-            'father_contact' => '',
-            'father_occupation' => '',
-            'mother_name' => '',
-            'mother_contact' => '',
-            'mother_occupation' => '',
-            'guardian_name' => 'required',
-            'guardian_contact' => 'required',
-            'guardian_occupation' => 'required',
-            'emergency_person_name' => 'required',
-            'emergency_person_contact' => 'required',
-            'emergency_person_address' => 'required',
-            'elementary' => '',
-            'elementary_year' => '',
-            'junior_high' => '',
-            'junior_high_year' => '',
-            'senior_high' => '',
-            'senior_high_year' => '',
-            'last_school' => '',
-            'last_school_year' => '',
+            'present_address' => 'required',           
         ]);
         
         $student = new Student;
@@ -82,9 +59,7 @@ class StudentsController extends Controller
         $student->middle_name = $request->input('middle_name');
         $student->gender = $request->input('gender');
         $student->dob = $request->input('dob');
-        $student->nationality = $request->input('nationality');
-        $student->civil_status = $request->input('civil_status');
-        $student->religion = $request->input('religion');
+      
         $student->email = $request->input('email');
         $student->contact = $request->input('contact');
 
@@ -93,37 +68,7 @@ class StudentsController extends Controller
         $student->program_id = $request->input('program_id');
         $student->semester = $request->input('semester');
         $student->permanent_address = $request->input('permanent_address');
-        $student->present_address = $request->input('present_address');
-
-        $student->father_name = $request->input('father_name');
-        $student->father_contact = $request->input('father_contact');
-        $student->father_occupation = $request->input('father_occupation');
-
-        $student->mother_name = $request->input('mother_name');
-        $student->mother_contact = $request->input('mother_contact');
-        $student->mother_occupation = $request->input('mother_occupation');
-
-        $student->guardian_name = $request->input('guardian_name');
-        $student->guardian_contact = $request->input('guardian_contact');
-        $student->guardian_occupation = $request->input('guardian_occupation');
-
-        $student->emergency_person_name = $request->input('emergency_person_name');
-        $student->emergency_person_contact = $request->input('emergency_person_contact');
-        $student->emergency_person_address = $request->input('emergency_person_address');
-
-        $student->elementary = $request->input('elementary');
-        $student->elementary_year = $request->input('elementary_year');
-
-        $student->junior_high = $request->input('junior_high');
-        $student->junior_high_year = $request->input('junior_high_year');
-
-        $student->senior_high = $request->input('senior_high');
-        $student->senior_high_year = $request->input('senior_high_year');
-
-        $student->last_school = $request->input('last_school');
-        $student->last_school_year = $request->input('last_school_year');
-
-        
+        $student->present_address = $request->input('present_address');                  
 
         $student->section_id = '1';
         $student->created_by_admin = '1';
@@ -131,14 +76,19 @@ class StudentsController extends Controller
         $student->cur_status = '0';
         $student->transferee = '0';
 
-        Subject::findSubjectSet($request->input('program_id'), $request->input('level'), $request->input('semester'));
-
+        $subjectSet = Subject::findSubjectSet($request->input('program_id'), $request->input('level'), $request->input('semester'));
+        
+        foreach($subjectSet as $subject){
+            Subject::PreReqChecker($subject, )
+        }
+       
         if($request->input('student_id') != ''){
             $student->student_id = $request->input('student_id');
             $student->save();
 
             return redirect('admin/create/student')->with('success', 'Student Created Successfully');
-        } else {
+        } else {               
+
             $student->save();
             
             $id = $student->id;
@@ -151,7 +101,6 @@ class StudentsController extends Controller
 
             return redirect('admin/create')->with('success', 'Student Created Successfully');
         }
-
         
                 
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SubjectTaken;
 
 
 class Subject extends Model
@@ -14,6 +15,12 @@ class Subject extends Model
         return $this->belongsToMany(Subject::class, 'subjects_pre_req', 'subject_id', 'subject_pre_req_id');
     }
 
+    /**
+     *  returns subjects to be taken based on a students
+     *      program, level and semester
+     * 
+     */
+    
     public static function findSubjectSet($program, $level, $semester){
         return Subject::whereRaw('(program_id = ? or program_id is null) ' .
                                  ' and level = ?'.
@@ -22,40 +29,54 @@ class Subject extends Model
                            ->get();
     }
 
-    // must compare subjects->pre_req->id from findSubjectSet 
-    // to student id, subjects taken in subjects_taken
+   
+    /**
+     *  returns an array of arrays that store the subject's 
+     *     pre-requisite id and true if the student has a passed rating 
+     *        in subjects taken table, false if failed and null if it does 
+     *           not exist in the subjects taken table
+     */
+    public static function PreReqChecker($subject, $studentID){ 
+        $result = [];
+        $message = '';
+        if($subject['pre_req'] == 1){
 
-    public static function PreReqChecker($subjects){ 
-        $subj_pre_reqs = [];
-        $ids = [];
-        
-        $count = 0;
+            $count = 0;
+           foreach($subject->pre_reqs as $pre_req){
 
-        foreach($subjects as $subject){            
-            if($subject['pre_req'] == 1){
-                $subj_pre_reqs[$count] = $subject->pre_reqs;            
-                $count++;
-            }            
-        }
-        $count = 0;
-                
-        // [[object], [object], [object1, object2]]
-        foreach($subj_pre_reqs as $pre_reqs){ 
-            $sub_count = 0;
-            foreach($pre_reqs as $pre_req){
-                $ids[$count][$sub_count] = $pre_req['id'];                                
-                $sub_count++;
-            }
-            $ids[$count];
-            $count++;          
-        }
+                $passed = SubjectTaken::where('student_id', $studentID)
+                                     ->where('subject_id' , $pre_req->id)
+                                     ->where('rating', '<', 4)
+                                     ->exists();
 
-        return $ids; // multi-dimensional 
-        // first subject => pre_subj #1
-        // second subject => pre_subj #1
-        //                => pre_subj #2
-        
+                $failed = SubjectTaken::where('student_id', $studentID)
+                                     ->where('subject_id' , $pre_req->id)
+                                     ->where('rating', '>', 4)
+                                     ->exists();
+
+                if($passed){                    
+                    $result[$count] = [$pre_req, true]; 
+                    
+                } elseif($failed)  {
+                    $result[$count] = [$pre_req, false]; 
+                    
+                } else {
+                    $result[$count] = [$pre_req, null];                    
+                }
+
+                $count++;                
+           }
+
+        } else {
+            $result = ['', true];
+        }                 
+
+        return $result;
+       
     }
+
+
+    
 
     
 }

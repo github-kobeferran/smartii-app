@@ -32,6 +32,7 @@
             <main class="col bg-faded py-3 flex-grow-1">
                 @yield('content')
             </main> 
+            
         </div>
 
     </div>
