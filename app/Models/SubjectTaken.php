@@ -15,16 +15,6 @@ class SubjectTaken extends Model
         return $this->belongsTo(Student::class);
     }
 
-    public function store($student_id, $subject_id){
-        $subjectToBeTaken = new SubjectTaken;
-
-        $subjectToBeTaken->student_id = $student_id;
-        $subjectToBeTaken->subject_id = $subject_id;
-
-        if(!$subjectToBeTaken->save()){
-            SubjectTaken::abort(500, 'Error');
-        }
-
-    }
+    
 
 }

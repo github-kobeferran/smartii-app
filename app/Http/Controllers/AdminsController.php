@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\Program;
+use App\Models\Subject;
 
 
 
@@ -61,14 +62,61 @@ class AdminsController extends Controller
                 case 'programs':
                     $programs = Program::where($by, $value)->get();
 
-                    return $programs;
-                break;        
-
+                    return $programs->toJson();
+                break;                              
 
                 default:
                 redirect('/home');
             }
         }
+    }
+
+    public function showTableByFour($table, $firstColumn, $firstValue, $secondColumn, $secondValue,
+                                    $thirdColumn, $thirdValue, $fourthColumn, $fourthValue){                                   
+                               
+            switch($table){
+                case 'subjects':                    
+                    $values = [$firstColumn => $firstValue,
+                               $secondColumn => $secondValue,
+                               $thirdColumn => $thirdValue,
+                               $fourthColumn => $fourthValue];
+
+                    
+                    $subjects = Subject::allWhere($values, true);
+                    $subjects->toJson();                    
+                    $programs;
+                    $pre_reqs;
+                                        
+                    
+                    $count = 0;
+                    foreach($subjects as $subject){                        
+                        $subCount = 0;                        
+                        $programs[$count] = Program::find($subject->program_id);
+
+                        if(count($subject->pre_reqs)){
+
+                            foreach($subject->pre_reqs as $pre_req){
+                                $pre_reqs[$count][$subCount] = $pre_req;
+                                $subCount++;
+                            }
+                                
+                        } else{
+                            $pre_reqs[$count] = null;
+                            $subCount++;
+                        }
+                        
+                        $count++;
+                    }
+                    
+                    $results = ['subjects' => $subjects, 'pre_reqs' => $pre_reqs, 'programs' => $programs];
+                    
+                    return $results;
+                break;                              
+
+                default:
+                redirect('/home');
+            }
+        
     }
 
     public function search($table, $text = ''){
