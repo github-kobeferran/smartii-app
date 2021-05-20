@@ -1,4 +1,4 @@
-{!! Form::open(['url' => 'admin/create/student', 'files' => true]) !!}
+{!! Form::open(['url' => 'admin/create/student', 'files' => true, 'id' => 'studentForm']) !!}
     <div class="custom-control custom-switch">
         <input name="new_stud_switch" type="checkbox" class="custom-control-input" id="newStudSwitch">
         <label class="custom-control-label" for="newStudSwitch"><strong>New Student</strong></label>
@@ -167,39 +167,22 @@
                 {{Form::label('cur_status', 'Irregular', ['class' => 'mb-2 ml-2'])}}                 
                 {{ Form::radio('cur_status', '1', false, ['class' => 'mb-2 ml-2'])}}
             </div>  
-
-        </div> 
+            
+        </div>
 
     </div>  
 
+    <div class = "form-group mr-0">        
+        {{Form::submit('Save',  ['class' => 'btn btn-success w-25 mt-3'])}}
+    </div> 
+    <hr class=""/> 
+    
+    <h3>Subjects</h3>
     
     <div class="table-responsive">
 
         <table class="table table-striped h-50" id="subjects-table">
-            <thead class="bg-warning ">
-                <tr>
-                    <th scope="col">Action</th>
-                    <th scope="col" >Rating</th>
-                    <th scope="col">Code</th>
-                    <th scope="col" class="w-50">Description</th>
-                    <th scope="col">Program</th>
-                    <th scope="col">Units</th>
-                    <th scope="col">Pre-Req</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                <tr>
-                    <td><a class="btn btn-danger">Remove</a></td>
-                    <td><input type="number" min="1" max="5" class="w-75" step="0.25"></td>
-                    <th scope="row">HIS112</th>
-                    <td>Readings in Philippine History 1</td>
-                    <td>General</td>
-                    <td>3</td>
-                    <td>HIS111</td>
-                </tr>              
-
-            </tbody>
+            
         </table>
 
     </div>
@@ -208,9 +191,6 @@
     {{-- {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{SUBMIT}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} --}}
    <hr class= "w-75 ml-0"/>
 
-    <div class = "form-group">        
-        {{Form::submit('Save',  ['class' => 'btn btn-success w-25 mt-3'])}}
-    </div> 
 
     {{-- {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{SUBMIT}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} --}}
 
@@ -279,18 +259,18 @@ selectDept.addEventListener('change', () => {
 });
 
 selectProg.addEventListener('change', () => {                        
-    changeTable();
+    changeSelect();
     
 
 });
 selectLevel.addEventListener('change', () => {                        
-    changeTable();
+    changeSelect();
     
 
 });
 
 selectSemester.addEventListener('change', () => {                        
-    changeTable();
+    changeSelect();
     
 
 });
@@ -318,7 +298,7 @@ function changeSelect(){
             var programs = JSON.parse(this.responseText);                                
 
                 for (let i in programs) {                                        
-                    selectProg.options[i] = new Option(programs[i].abbrv + ' - ' + programs[i].desc, programs[i].id);                     
+                    selectProg.options[i] = new Option(programs[i].abbrv + ' - ' + programs[i].desc, programs[i].id); 
                 }
 
             } else {
@@ -340,11 +320,6 @@ function changeTable(){
     let level = selectLevel.value;
     let semester = selectSemester.value;
 
-    console.log(dept);
-    console.log(program);
-    console.log(level);
-    console.log(semester);
-
     var xhr = new XMLHttpRequest();   
     xhr.open('GET', 'http://smartii-app.test/admin/view/subjects'
                     +'/department/' + dept 
@@ -364,51 +339,46 @@ function changeTable(){
         //     console.log(results['pre_reqs'][i]);
         // }
 
+        let year =  new Date();
+        year = year.getFullYear();        
+
         let output = `<table class="table table-striped h-50" id="subjects-table">`;
             output+= `<thead class="bg-warning ">`;
             output+=`<tr>`;
             output+=`<th scope="col">Action</th>`;
             output+=`<th scope="col" >Rating</th>`;
+            output+=`<th scope="col" >Academic Year</th>`;
+            output+=`<th scope="col" >Sem</th>`;
             output+=`<th scope="col">Code</th>`;
-            output+=`<th scope="col" class="w-50">Description</th>`;
+            output+=`<th scope="col">Description</th>`;
             output+=`<th scope="col">Program</th>`;
-            output+=`<th scope="col">Units</th>`;
-            output+=`<th scope="col">Pre-Req</th>`;
+            
             output+=`</tr>`;
             output+=`</thead>`;
             output+=`<tbody>`;
             for (let i=0; i<results['subjects'].length; i++) { 
                 // console.log(results['subjects'][i]);        
-                output+=`<tr>`;
-                output+=`<td><a class="btn btn-danger">Remove</a></td>`;
-                output+=`<td><input type="number" min="1" max="5" class="w-75" step="0.25"></td>`;
+            output+=`<tr id="tr-` + results['subjects'][i].id + `">`;
+
+            output+=`<input name="subjects[]" type="hidden" value="`+ results['subjects'][i].id +`">`
+
+                output+=`<td><button type="button" onclick="subjectToggle(this, document.getElementById('tr-`+results['subjects'][i].id  +`'))" class="btn btn-light border">Enabled</button></td>`;
+
+                output+=`<td class="pl-1 pt-3"><input name="ratings[]" type="number" min="1" max="5"  step="0.25" placeholder="grade" ></td>`;
+
+                output+=`<td class="pl-1 pt-3">                        
+                        <input name="from_years[]" type="number" min="2010" max="`+ year +`" placeholder="from" > -
+                        <input name="to_years[]" type="number" min="2010" max="`+ year +`" placeholder="to" >
+                        </td>`;
+
+                output+=`<td class="pl-1 pt-3 "><input type="number" min="1" max="2" placeholder="sem" ></td>`;
+
                 output+=`<th scope="row">` + results['subjects'][i].code + `</th>`;
+
                 output+=`<td>` + results['subjects'][i].desc + `</td>`;
-                output+=`<td>`;
-                    if(results['programs'][i] == null){
-                        output+= 'General Subject';
-                    } else {
-                        output+=results['programs'][i].desc + `</td>`;
-                    }
+
+                output+=`<td>` +results['programs'][i].abbrv + `</td>`;                                
                 
-                     
-                output+=`<td>` + results['subjects'][i].units + `</td>`;
-                output+=`<td>`;
-                    // console.log(results['pre_reqs'][i]);
-                    if(!results['pre_reqs'][i]){
-
-                        output+=` `;
-
-                    } else {
-                        
-                        for(let j in results['pre_reqs'][i]){
-
-                            output+= results['pre_reqs'][i][j].code + ', ';
-
-                        }
-
-                    }
-                output+=`</td>`;
                 output+=`</tr>`;
             }                            
             output+=`</tbody>`;
@@ -425,17 +395,98 @@ function changeTable(){
     }
 
         xhr.send(); 
-
-
 }
 
+window.onbeforeunload = function(event)
+{
+    return '';
+};
+
+document.getElementById("studentForm").onsubmit = function(e) {
+    window.onbeforeunload = null;
+    return true;
+};
+
+function subjectToggle(el, row){
+    
+    let status = el.textContent;
+
+    if(status == 'Enabled'){
+        el.className = "btn btn-danger border";
+        el.textContent = "Disabled";
+       
+        let rowElements =row.attributes[0].ownerElement.children;
+
+        for(let i=0; i<rowElements.length; i++){
+            if(rowElements[i].children.length > 0){
+                
+                let children = rowElements[i].children;
+                for(let j=0; j<children.length; j++){
+                    // console.log();
+                    children[j].value = '';
+                    
+                    if(children[j].type == 'number'){
+                        children[j].disabled = true;
+                        
+                    }
+                }
+
+                
+            } else {
+                rowElements[i].style.color = '#c2c2c2';
+            }
+                // rowElements[i].children.style.color = 'gr'
+                
+            
+        }
+    } else {
+        el.className = "btn btn-light border";
+        el.textContent = "Enabled";
+
+        let rowElements =row.attributes[0].ownerElement.children;
+
+        for(let i=0; i<rowElements.length; i++){
+            if(rowElements[i].children.length > 0){
+                
+                let children = rowElements[i].children;
+                for(let j=0; j<children.length; j++){
+                    // console.log();
+                    if(children[j].type == 'number'){
+                        children[j].disabled = false;
+                        
+                    }
+                }
+            } else {
+                rowElements[i].style.color = '#474644';
+            }
+        }
+    
+    }
+}
 
 </script>
 
 
 
 
+{{-- // output+=`<td>` + results['subjects'][i].units + `</td>`;
+// output+=`<td>`;
+//     // console.log(results['pre_reqs'][i]);
+//     if(!results['pre_reqs'][i]){
 
+//         output+=` `;
+
+//     } else {
+
+        
+        
+//         for(let j in results['pre_reqs'][i]){
+
+//             output+= results['pre_reqs'][i][j].code + ', ';
+
+//         }
+
+//     } --}}
 
 
        {{-- <div class = "form-group">        

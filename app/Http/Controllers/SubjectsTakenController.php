@@ -7,7 +7,8 @@ use App\Models\SubjectTaken;
 
 class SubjectsTakenController extends Controller
 {
-    public function store($student_id, $subject_id){
+    public static function store($student_id, $subject_id){
+        
         $subjectToBeTaken = new SubjectTaken;
 
         $subjectToBeTaken->student_id = $student_id;
