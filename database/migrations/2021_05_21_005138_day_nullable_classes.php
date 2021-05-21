@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameSubjectsSubjects extends Migration
+class DayNullableClasses extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,9 @@ class RenameSubjectsSubjects extends Migration
      */
     public function up()
     {
-        Schema::rename('subjects_subjects', 'subjects_pre_req');        
+        Schema::table('classes', function (Blueprint $table) {
+            $table->string('day',3)->nullable()->change();
+        });
     }
 
     /**

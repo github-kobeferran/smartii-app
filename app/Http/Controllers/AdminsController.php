@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\Program;
 use App\Models\Subject;
-
+use App\Models\Student;
 
 
 class AdminsController extends Controller
@@ -18,7 +18,7 @@ class AdminsController extends Controller
     }
 
     public function adminCreate(){
-        return view('admin.create');
+        return view('admin.create')->with('student', true);
     }
 
     public function adminView(){
@@ -42,6 +42,45 @@ class AdminsController extends Controller
             case 'admins':
                 $admins = Admin::all();
                 return $admins->toJson();
+            break;        
+            case 'students':
+                $students = Student::all();
+
+                $programs =[];
+                $count = 0;
+
+
+                foreach($students as $student){
+                    $programs[$count] = Program::find($student->program_id);
+                    $count++;
+                }
+
+
+                $results = ['students' => $students, 'programs' => $programs];
+                    
+                return $results;
+            break;        
+            default:
+            redirect('/home');
+        }
+        
+    }
+
+    public function showData($table, $id){
+        switch($table){
+            case 'admins':
+                $admins = Admin::find($id);
+
+                return $admins->toJson();
+            break;        
+            case 'students':
+                $student = Student::find($id);               
+                
+
+                $student->setProgramDescAttribute(Program::find($student->program_id)->desc);                       
+                    
+                return $student->toJson();
+
             break;        
             default:
             redirect('/home');

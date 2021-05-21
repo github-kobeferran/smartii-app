@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameSubjectsSubjects extends Migration
+class ChangePrimaryInSubjectsTaken extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,9 @@ class RenameSubjectsSubjects extends Migration
      */
     public function up()
     {
-        Schema::rename('subjects_subjects', 'subjects_pre_req');        
+        Schema::table('subjects_taken', function (Blueprint $table) {
+            $table->primary(['student_id', 'subject_id', 'from_year', 'semester']);            
+        });
     }
 
     /**
@@ -23,6 +25,8 @@ class RenameSubjectsSubjects extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('subjects_taken', function (Blueprint $table) {
+            //
+        });
     }
 }

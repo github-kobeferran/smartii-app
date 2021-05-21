@@ -24,8 +24,7 @@ class DropStPrimaryKey extends Migration
             $table->year('to_year');
             $table->boolean('semester');
             // $table->foreign('class_id')->references('id')->on('classes');
-            $table->dropTimestamps();
-            
+            $table->dropTimestamps();            
         });
     }
 

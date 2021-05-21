@@ -1,7 +1,7 @@
 {!! Form::open(['url' => 'admin/create/student', 'files' => true, 'id' => 'studentForm']) !!}
     <div class="custom-control custom-switch">
         <input name="new_stud_switch" type="checkbox" class="custom-control-input" id="newStudSwitch">
-        <label class="custom-control-label" for="newStudSwitch"><strong>New Student</strong></label>
+        <label class="custom-control-label" for="newStudSwitch"><strong>Generate Student ID</strong></label>
     </div>
 
     <div id="new-stud-div" class="form-group" style="display:block;">         
@@ -198,8 +198,27 @@
 {!! Form::close() !!}
 
 <script>
-    document.querySelector('#newStudSwitch').addEventListener('click', () => {
-        idDiv = document.getElementById('new-stud-div');
+    
+let selectDept = document.querySelector('#selectDept');
+let selectProg = document.querySelector('#selectProg');   
+let selectLevel = document.querySelector('#selectLevel');   
+let selectSemester = document.querySelector('#selectSemester');   
+    
+   
+
+document.querySelector('#newStudSwitch').addEventListener('click', () => {        
+    toggleStudentID();
+});
+
+window.addEventListener('load', (event) => {
+
+     
+    changeSelect();
+
+}); 
+
+function toggleStudentID(){
+    let idDiv = document.getElementById('new-stud-div');
         if(idDiv.style.display == 'none') {
             idDiv.style.display = 'block';
             document.querySelector('#studentID').required = true;
@@ -209,48 +228,8 @@
             document.querySelector('#studentID').required = false;
             document.querySelector('#studentID').value = "";
         }
-        
-    });
-
-   
-    let selectDept = document.querySelector('#selectDept');
-    let selectProg = document.querySelector('#selectProg');   
-    let selectLevel = document.querySelector('#selectLevel');   
-    let selectSemester = document.querySelector('#selectSemester');   
-    // let seniorHighDiv = document.querySelector('#seniorHighDiv');   
-
-
-window.addEventListener('load', (event) => {
-        changeSelect();       
-
-    //     let dept = selectDept.value;
-
-    //     if(dept == 0){
-    //         selectLevel.options[0] = new Option('Grade 11', 'grade_11');     
-    //         selectLevel.options[1] = new Option('Grade 12', 'grade_12'); 
-    //         // seniorHighDiv.className = "row d-none";
-    //     } else {
-    //         selectLevel.options[0] = new Option('First Year', 'first_year');     
-    //         selectLevel.options[1] = new Option('Second Year', 'second_year');     
-    //         // seniorHighDiv.className = "row";
-    //     }
-
-    //     var xhr = new XMLHttpRequest();
-
-    //     xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept, true);
-
-    //     xhr.onload = function() {
-    //         if (this.status == 200) {
-    //             var programs = JSON.parse(this.responseText);
-
-    //             for (let i in programs) {
-    //                 selectProg.options[i] = new Option(programs[i].abbrv + ' - ' + programs[i].desc, programs[i].id);
-    //             }
-    //         } 
-    // }
-
-    // xhr.send();
-}); 
+    }
+    
 
 selectDept.addEventListener('change', () => {                    
     changeSelect();
@@ -356,13 +335,13 @@ function changeTable(){
             output+=`</tr>`;
             output+=`</thead>`;
             output+=`<tbody>`;
-            for (let i=0; i<results['subjects'].length; i++) { 
+        for (let i=0; i<results['subjects'].length; i++) { 
                 // console.log(results['subjects'][i]);        
             output+=`<tr id="tr-` + results['subjects'][i].id + `">`;
 
             output+=`<input name="subjects[]" type="hidden" value="`+ results['subjects'][i].id +`">`
 
-                output+=`<td><button type="button" onclick="subjectToggle(this, document.getElementById('tr-`+results['subjects'][i].id  +`'))" class="btn btn-light border">Enabled</button></td>`;
+                output+=`<td><button data-toggle="tooltip" data-placement="top" title="Toggle Subject" type="button" onclick="subjectToggle(this, document.getElementById('tr-`+results['subjects'][i].id  +`'))" class="btn btn-light border">Enabled</button></td>`;
 
                 output+=`<td class="pl-1 pt-3"><input name="ratings[]" type="number" min="1" max="5"  step="0.25" placeholder="grade" ></td>`;
 
@@ -371,7 +350,7 @@ function changeTable(){
                         <input name="to_years[]" type="number" min="2010" max="`+ year +`" placeholder="to" >
                         </td>`;
 
-                output+=`<td class="pl-1 pt-3 "><input type="number" min="1" max="2" placeholder="sem" ></td>`;
+                output+=`<td class="pl-1 pt-3 "><input type="number" min="1" max="2" placeholder="semesters[]" ></td>`;
 
                 output+=`<th scope="row">` + results['subjects'][i].code + `</th>`;
 
@@ -422,20 +401,22 @@ function subjectToggle(el, row){
                 
                 let children = rowElements[i].children;
                 for(let j=0; j<children.length; j++){
-                    // console.log();
+                
                     children[j].value = '';
                     
                     if(children[j].type == 'number'){
-                        children[j].disabled = true;
-                        
+                        children[j].disabled = true;                        
                     }
                 }
 
                 
             } else {
                 rowElements[i].style.color = '#c2c2c2';
+                if(i == 0){
+                    rowElements[i].name = '';
+                }
             }
-                // rowElements[i].children.style.color = 'gr'
+                
                 
             
         }
@@ -458,6 +439,9 @@ function subjectToggle(el, row){
                 }
             } else {
                 rowElements[i].style.color = '#474644';
+                if(i == 0){
+                    rowElements[i].name = 'subjects[]';
+                }
             }
         }
     

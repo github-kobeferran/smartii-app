@@ -15,7 +15,7 @@ class CreateSubjectsTakenTable extends Migration
     {
         Schema::create('subjects_taken', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->references('student_id')->on('students');
+            $table->foreignId('student_id')->references('id')->on('students');
             $table->foreignId('subject_id')->references('id')->on('subjects');
             $table->float('rating', 3, 2);
             $table->timestamps();

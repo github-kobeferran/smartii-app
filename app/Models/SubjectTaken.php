@@ -8,7 +8,9 @@ use App\Models\Student;
 
 class SubjectTaken extends Model
 {
+    use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'subjects_taken';
 
     public function student(){

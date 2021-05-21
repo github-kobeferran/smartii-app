@@ -23,9 +23,10 @@ class AddForeignToClasses extends Migration
             $table->unsignedBigInteger('faculty_id');
             $table->foreign('faculty_id')->references('id')->on('faculty');
         });
+        
         Schema::table('subjects_taken', function (Blueprint $table) {
 
-            $table->unsignedBigInteger('class_id');
+            $table->unsignedBigInteger('class_id')->nullable();
             $table->foreign('class_id')->references('id')->on('classes');            
         });
     }

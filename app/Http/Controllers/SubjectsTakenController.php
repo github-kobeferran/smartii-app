@@ -7,15 +7,23 @@ use App\Models\SubjectTaken;
 
 class SubjectsTakenController extends Controller
 {
-    public static function store($student_id, $subject_id){
+    public static function store($values = [], $classID){
         
-        $subjectToBeTaken = new SubjectTaken;
+        $subjectToBeTaken = new SubjectTaken;        
 
-        $subjectToBeTaken->student_id = $student_id;
-        $subjectToBeTaken->subject_id = $subject_id;
+        $subjectToBeTaken->student_id = $values['student_id'];
+        $subjectToBeTaken->subject_id = $values['subject_id'];
+        $subjectToBeTaken->rating = $values['rating'];
+        $subjectToBeTaken->from_year = $values['from_year'];
+        $subjectToBeTaken->to_year = $values['to_year'];
+        $subjectToBeTaken->semester = $values['semester'];
+        $subjectToBeTaken->class_id = $classID;
+        
 
         if(!$subjectToBeTaken->save()){
-            SubjectTaken::abort(500, 'Error');
+            return true;
+        } else {
+            return false;
         }
 
     }

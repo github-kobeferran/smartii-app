@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class SetUserTypeToNullableUsers extends Migration
+class StudentsNullableInStudents extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class SetUserTypeToNullableUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->string('user_type', 11)->nullable()->change();      
+        Schema::table('students', function (Blueprint $table) {
+            $table->string('elementary')->nullable()->change();
+            $table->unsignedBigInteger('balance_id')->nullable()->change();             
         });
     }
 
@@ -26,9 +26,8 @@ class SetUserTypeToNullableUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('students', function (Blueprint $table) {
             //
-            
         });
     }
 }

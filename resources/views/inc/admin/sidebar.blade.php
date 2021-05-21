@@ -9,7 +9,7 @@
                             <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/view">View</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/create"> Create</a>
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="{{ route('adminCreate') }}"> Create</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/subjects"> Subjects</a>

@@ -11,7 +11,26 @@ $(".tab-pane").on("click", function() {
     $(this).parent().addClass("active");
 });
 
+// $(document).ready(function() {
+//     $(".nav-link").find(".active").removeClass("active");
+//     $(this).parent().addClass("active");
+//     $("#object").text($(".nav-link").text());
+// });
+// $(document).ready(function() {
+//     $(".tab-pane").find(".active").removeClass("active");
+//     $(this).parent().addClass("active");
+// });
 
+
+
+
+
+window.addEventListener('load', (event) => {
+
+
+    changeSelect();
+
+});
 
 
 
@@ -117,6 +136,70 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 
     xhr.send();
 });
+
+
+document.getElementById('students-view-tab').addEventListener('click', () => {
+
+    studentsAjax();
+
+    document.getElementById('student-profile').style.display = 'none';
+
+});
+
+
+
+function studentsAjax() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://smartii-app.test/admin/view/students', true);
+
+    xhr.onload = function() {
+        if (this.status == 200) {
+            var results = JSON.parse(this.responseText);
+
+            output = '<table id="students-table" class="table table-striped">' +
+                '<thead>' +
+                '<tr>' +
+
+                '<th scope="col">View</th>' +
+                '<th scope="col">Student ID</th>' +
+                '<th scope="col">Name</th>' +
+                '<th scope="col">Department</th>' +
+                '<th scope="col">Program</th>' +
+                '<th scope="col">Balance</th>' +
+
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
+
+            for (let i = 0; i < results['students'].length; i++) {
+                $department = (results['students'][i].department == 0) ? "SHS" : "College";
+                output += '<tr>' +
+
+                    '<td><button type="button"  onclick="viewStudent(' + results['students'][i].id + ')" class="btn btn-light border">View Details</button></td>' + //substring below
+                    '<td>' + results['students'][i].student_id + '</td>' +
+                    '<td>' + results['students'][i].last_name + ', ' + results['students'][i].first_name + ', ' + results['students'][i].middle_name.charAt(0).toUpperCase() + '</td>' +
+                    '<td>' + $department + '</td>' +
+                    '<td>' + results['programs'][i].abbrv + '</td>' +
+                    '<td>' + results['students'][i].balance_id + '</td>' +
+
+                    '</tr>';
+            }
+
+            output += '</tbody>' +
+                '</table>';
+
+            document.getElementById('students-table').innerHTML = output;
+
+        } else {
+            var output = 'loading...';
+            document.getElementById('students-table').innerHTML = output;
+        }
+    }
+
+    xhr.send();
+}
+
+
 
 
 
