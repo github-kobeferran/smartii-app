@@ -20,7 +20,7 @@
             <a class="nav-link {{ session('subject') ? 'active' : '' }}" id="subject-create-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ session('subjectSet') ? 'active' : '' }}" id="subjectSet-create-tab" data-toggle="tab" href="#subjectSet" role="tab" aria-controls="subject-set" aria-selected="false">Subject Set</a>
+            <a class="nav-link {{ session('program') ? 'active' : '' }}" id="program-create-tab" data-toggle="tab" href="#program" role="tab" aria-controls="program" aria-selected="false">Program</a>
         </li>
     </ul>
 
@@ -48,11 +48,11 @@
 	</div>  
 
     <div class="tab-pane {{ session('subject') ? 'active' : '' }}" id="subject">
-         Subject ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
+        @include('admin.create.subject')  
 	</div>       
     
-    <div class="tab-pane {{ session('subjectSet') ? 'active' : '' }}" id="subjectSet">
-         Subject Set ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
+    <div class="tab-pane {{ session('program') ? 'active' : '' }}" id="program">
+        @include('admin.create.program')               
 	</div>        
 </div>  
 

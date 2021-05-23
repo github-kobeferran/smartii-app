@@ -219,7 +219,7 @@ function toggleStudentID(){
         if(idDiv.style.display == 'none') {
             idDiv.style.display = 'block';
             document.querySelector('#studentID').required = true;
-            document.querySelector('#newStudSwitch').textcontent = "Change to Existing Student Form";
+            // document.querySelector('#newStudSwitch').textContent = "Change to Existing Student Form";
         } else {
             idDiv.style.display =  'none';
             document.querySelector('#studentID').required = false;
@@ -235,9 +235,7 @@ selectDept.addEventListener('change', () => {
 });
 
 selectProg.addEventListener('change', () => {                        
-    changeTable();
-    
-
+    changeTable();    
 });
 
 selectLevel.addEventListener('change', () => {                        
@@ -250,10 +248,10 @@ selectSemester.addEventListener('change', () => {
 
 });
 
-function changeSelect(isSelectLevel = false, isSelectProg = false){
+function changeSelect(isSelectLevel = false){
     
     let dept = selectDept.value;
-    var xhr = new XMLHttpRequest();    
+      
 
     if(!isSelectLevel){
         if(dept == 0){     
@@ -268,29 +266,41 @@ function changeSelect(isSelectLevel = false, isSelectProg = false){
     }
 
     
-    
-    xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept, true);
+    if(isSelectLevel){
+        changeTable();
+    } else {
 
-    xhr.onload = function() {
-        if (this.status == 200) {
-            var programs = JSON.parse(this.responseText);                                
+        var xhr = new XMLHttpRequest();
+        
+        xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept, true);
 
-                for (let i in programs) {                                        
-                    selectProg.options[i] = new Option(programs[i].abbrv + ' - ' + programs[i].desc, programs[i].id); 
+        xhr.onload = function() {
+            if (this.status == 200) {
+                
+                for(i = 0; i < selectProg.length; i++){
+                    selectProg.remove(i);
                 }
 
-            } else {
-            
-            }
-            changeTable();
+                var programs = JSON.parse(this.responseText);                                
+
+                    for (let i in programs) {                                        
+                        selectProg.options[i] = new Option(programs[i].abbrv + ' - ' + programs[i].desc, programs[i].id); 
+                    }
+
+                } else {
+                
+                }
+                changeTable();
 
         }
 
         xhr.send(); 
-        
+
+    }
+           
 }
 
-// table chnge per select
+// table change per select
 function changeTable(){
     
     let dept = selectDept.value;
