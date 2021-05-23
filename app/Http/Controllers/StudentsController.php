@@ -8,6 +8,7 @@ use App\Models\Subject;
 use App\Models\StudentClass;
 use App\Models\Balance;
 use App\Models\SubjectTaken;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Validator;
 
 class StudentsController extends Controller
@@ -109,12 +110,22 @@ class StudentsController extends Controller
         
         $status = '';
         $message = '';
-        $id = 0;                  
+        $id = 0; 
+        $balanceID = 0;                 
+        $department = $request->input('department');
                                
         if($request->input('student_id') != ''){
-            $student->student_id = $request->input('student_id');                        
+            $student->student_id = $request->input('student_id');  
+            
+           
+
+            $balance_id = new Balance;             
+            $balanceID = $balance_id->init($student);   
+
+            $student->balance_id = $balanceID;
 
             if($student->save()){
+                $id = $student->id;
 
                 $status = 'success';
                 $message.= 'Student Creation Successful';                
@@ -133,9 +144,10 @@ class StudentsController extends Controller
             
             $id = $student->id;
 
-            $balance_id = new Balance;    
+            $balance_id = new Balance;             
+            $balanceID = $balance_id->init($student);
 
-            $student->balance_id = $balance_id->init($student);
+            $student->balance_id = $balanceID;
             
             $year =  date("y");
             $prefix = "C";
@@ -157,18 +169,43 @@ class StudentsController extends Controller
                       
         }
 
+        // return 'id: '. $id . 'balance: ' . $balanceID . ' dept: ' . $department;
+
+        // adding subjects taken/to take
+
         $subjects = $request->input('subjects');
         $ratings = $request->input('ratings');
         $from_years = $request->input('from_years');
         $to_years = $request->input('to_years');        
         $semesters = $request->input('semesters');        
 
+        $totalBalance = 0;
 
-        for($i=0; $i<count($subjects); $i++){        
+        $studentBalance = Balance::find($balanceID);
+        
+
+        for($i=0; $i<count($subjects); $i++){                       
 
             $subjectToTake = new SubjectTaken;
+
             $subjectToTake->student_id = $id;
-            $subjectToTake->subject_id = $subjects[$i];
+            $subjectToTake->subject_id = $subjects[$i]; 
+            
+            
+            $subject = Subject::find($subjects[$i]);
+
+            if($i == count($subjects)-1 ){
+                
+                $studentBalance->amount = $totalBalance;
+                $studentBalance->save();
+            }
+
+         
+
+            if($department == 0)
+                $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
+            else 
+                $totalBalance+= Setting::first()->college_price_per_unit * $subject->units;            
 
             if($ratings[$i] != '')
                 $subjectToTake->rating = $ratings[$i];
@@ -178,17 +215,17 @@ class StudentsController extends Controller
             if($from_years[$i] != '')
                 $subjectToTake->from_year = $from_years[$i];
             else 
-                $subjectToTake->from_year = config('settings.academic_year.from_year');
+                $subjectToTake->from_year = Setting::first()->from_year;
 
             if($to_years[$i] != '')
                 $subjectToTake->to_year = $to_years[$i];
             else 
-                $subjectToTake->to_year = config('settings.academic_year.to_year');
+                $subjectToTake->to_year = Setting::first()->to_year;
 
             if($semesters[$i] != '')
                 $subjectToTake->semester = $semesters[$i];
             else 
-                $subjectToTake->semester = config('settings.semester');                                    
+                $subjectToTake->semester = Setting::first()->semester;                                  
 
             $subjectToTake->save();
         }                      
@@ -228,7 +265,7 @@ class StudentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
@@ -239,6 +276,6 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

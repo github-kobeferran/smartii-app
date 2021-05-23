@@ -1,7 +1,10 @@
 <div class="form-group">    
-    <input id="students-search" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search here..">
+    <input id="students-search" type="text" class="form-control" placeholder="Search here..">
 </div>
 
+<div class="loader-parent">
+    <div class="student-dual-ring" style=""></div>            
+</div>
 
 <div>
     <table id="students-table" class="table table-striped">
@@ -15,10 +18,6 @@
         <li class="list-group-item">Dapibus ac facilisis in</li>
         <li class="list-group-item">Vestibulum at eros</li>
     </ul>
-</div>
-
-<div class="loader-parent">
-        <div class="lds-dual-ring" style=""></div>            
 </div>
 
 <script>
@@ -35,10 +34,10 @@ function viewStudent(id) {
 
             output = '<div id="student-profile" class="card" style="width: 18rem;">';
             output += '<ul class="list-group list-group-flush">';           
-            output += '<li class="list-group-item">' + student.first_name + '</li>';
-            output += '<li class="list-group-item">' + student.last_name + '</li>';
+            output += '<li class="list-group-item">' + student.first_name + ' ' + student.last_name  + '</li>';
+            output += '<li class="list-group-item">' + student.email + '</li>';
             output += '<li class="list-group-item">' + student.program_desc + '</li>';
-            output += '<li class="list-group-item">' + student.email + '</li>';            
+            output += '<li class="list-group-item">₱ ' + student.balance_amount + '</li>';            
             output += '</ul>';
             output += '</div>';
             

@@ -46,13 +46,31 @@
     background: #eee
 }
 
-.lds-dual-ring {
+.admin-dual-ring {
     display: none;
     width: 80px;
     height: 80px;
 }
 
-.lds-dual-ring:after {
+.admin-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #6ab04c;
+    border-color: #6ab04c transparent #6ab04c transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+
+.student-dual-ring {
+    display: none;
+    width: 80px;
+    height: 80px;
+}
+
+.student-dual-ring:after {
     content: " ";
     display: block;
     width: 64px;
@@ -71,6 +89,12 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.admin-loader-parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .loader-parent {

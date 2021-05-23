@@ -7,6 +7,8 @@ use App\Models\Admin;
 use App\Models\Program;
 use App\Models\Subject;
 use App\Models\Student;
+use App\Models\Setting;
+use App\Models\Balance;
 
 
 class AdminsController extends Controller
@@ -40,10 +42,12 @@ class AdminsController extends Controller
     public function showTable($table){
         switch($table){
             case 'admins':
+
                 $admins = Admin::all();
                 return $admins->toJson();
             break;        
             case 'students':
+
                 $students = Student::all();
 
                 $programs =[];
@@ -76,8 +80,8 @@ class AdminsController extends Controller
             case 'students':
                 $student = Student::find($id);               
                 
-
-                $student->setProgramDescAttribute(Program::find($student->program_id)->desc);                       
+                $student->setProgramDescAttribute(Program::find($student->program_id)->desc);
+                $student->setBalanceAmountAttribute(Balance::find($student->balance_id)->amount);
                     
                 return $student->toJson();
 
@@ -159,20 +163,19 @@ class AdminsController extends Controller
     }
 
     public function search($table, $text = ''){
-        switch($table){
-            case 'admins':
-                
+        switch($table){     
+
+            case 'admins':  
+
                 if($text == ''){
-                    $admins = Admin::all();
+                    return Admin::all();                    
                 }else{
-                    $admins = Admin::query()
+                    return Admin::query()
                     ->where('name', 'LIKE',  $text . "%")
                     ->orWhere('email', 'LIKE',  $text . "%")
                     ->orWhere('position', 'LIKE', $text . "%")
-                    ->get();
-                }                               
-                                
-                return $admins->toJson();
+                    ->get()->toJson();                  
+                }    
 
             break;
         }    

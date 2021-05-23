@@ -1,6 +1,11 @@
  <div class="form-group">    
-    <input id="admin-search" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search here..">
+    <input id="admin-search" type="text" class="form-control" placeholder="Search here..">
 </div>
+
+<div class="admin-loader-parent">
+    <div class="admin-dual-ring" style=""></div>            
+</div>
+
 
 
 <div>
@@ -9,7 +14,5 @@
     </table>            
 </div>
 
-<div class="loader-parent">
-        <div class="lds-dual-ring" style=""></div>            
-</div>
+
 

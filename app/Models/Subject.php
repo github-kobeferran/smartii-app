@@ -38,16 +38,19 @@ class Subject extends Model
     public static function allWhere($values = [], $joinGenSubjs = false){
        
         if($joinGenSubjs == true){
-            $query =  '(dept = ?)';
+            $query =  'dept = ? ';
             if($values['department']  == 0 ){                
                 $query.= ' and (level >= 1 and level <= ?)';
                 $query.= ' and (program_id = ? or program_id = 3)';                                  
             } else {
                 $query.= ' and (program_id = ? or program_id = 4)'; 
                 $query.= ' and (level >= 11 and level <= ?)';
-            }                
-                $query.= ' and semester <= ?';
+            }
             
+            if($values['level'] == 1 || $values['level'] == 11 )
+                $query.= ' and semester <= ?';           
+            
+                
             return Subject::whereRaw($query, 
                                     [$values['department'], $values['program'],$values['level'], $values['semester']])
                                     ->get();

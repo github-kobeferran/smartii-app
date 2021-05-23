@@ -41,12 +41,13 @@ window.addEventListener('load', (event) => {
 document.getElementById('admins-view-tab').addEventListener('click', () => {
     //console.log('clicked');
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://smartii-app.test/admin/view/admins', true);
 
     xhr.onload = function() {
         if (this.status == 200) {
-            var admins = JSON.parse(this.responseText);
+
+            let admins = JSON.parse(this.responseText);
 
             output = '<table id="admins-table" class="table table-striped">' +
                 '<thead>' +
@@ -60,7 +61,7 @@ document.getElementById('admins-view-tab').addEventListener('click', () => {
                 '</thead>' +
                 '<tbody>';
 
-            for (var i in admins) {
+            for (let i in admins) {
                 output += '<tr>' +
                     '<th scope="row">' + admins[i].user_id + '</th>' +
                     '<td>' + admins[i].name + '</td>' +
@@ -75,8 +76,8 @@ document.getElementById('admins-view-tab').addEventListener('click', () => {
 
             document.getElementById('admins-table').innerHTML = output;
 
-        } else {
-            var output = 'loading...';
+        } else if (this.status == 404) {
+            let output = 'not found...';
             document.getElementById('admins-table').innerHTML = output;
         }
     }
@@ -90,15 +91,19 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 
     txt = document.querySelector('#admin-search').value;
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://smartii-app.test/admin/view/search/admins/' + txt, true);
+    let xhr = new XMLHttpRequest();
 
-    document.getElementsByClassName('lds-dual-ring')[0].style.display = 'inline-block';
+    xhr.open('GET', 'http://smartii-app.test/admin/search/admins/' + txt, true);
+
+    document.getElementsByClassName('admin-dual-ring')[0].style.display = 'inline-block';
+
     xhr.onload = function() {
 
-        if (this.status == 200) {
-            var admins = JSON.parse(this.responseText);
+        // console.log(typeof this.responseText);
 
+        if (this.status == 200) {
+
+            let admins = JSON.parse(this.responseText);
 
             output = '<table id="admins-table" class="table table-striped">' +
                 '<thead>' +
@@ -112,7 +117,7 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
                 '</thead>' +
                 '<tbody>';
 
-            for (var i in admins) {
+            for (let i in admins) {
                 output += '<tr>' +
                     '<th scope="row">' + admins[i].user_id + '</th>' +
                     '<td>' + admins[i].name + '</td>' +
@@ -124,18 +129,20 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 
             output += '</tbody>' +
                 '</table>';
-            document.getElementsByClassName('lds-dual-ring')[0].style.display = 'none';
+
+            document.getElementsByClassName('admin-dual-ring')[0].style.display = 'none';
             document.getElementById('admins-table').innerHTML = output;
 
 
-        } else {
-            var output = 'not found';
+        } else if (this.status == 404) {
+            let output = 'not found';
             document.getElementById('admins-table').innerHTML = output;
         }
     }
 
     xhr.send();
 });
+
 
 
 document.getElementById('students-view-tab').addEventListener('click', () => {
@@ -149,12 +156,12 @@ document.getElementById('students-view-tab').addEventListener('click', () => {
 
 
 function studentsAjax() {
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://smartii-app.test/admin/view/students', true);
 
     xhr.onload = function() {
         if (this.status == 200) {
-            var results = JSON.parse(this.responseText);
+            let results = JSON.parse(this.responseText);
 
             output = '<table id="students-table" class="table table-striped">' +
                 '<thead>' +
@@ -180,7 +187,7 @@ function studentsAjax() {
                     '<td>' + results['students'][i].last_name + ', ' + results['students'][i].first_name + ', ' + results['students'][i].middle_name.charAt(0).toUpperCase() + '</td>' +
                     '<td>' + $department + '</td>' +
                     '<td>' + results['programs'][i].abbrv + '</td>' +
-                    '<td>' + results['students'][i].balance_id + '</td>' +
+                    '<td>' + results['students'][i].permanent_address + '</td>' +
 
                     '</tr>';
             }
@@ -191,7 +198,7 @@ function studentsAjax() {
             document.getElementById('students-table').innerHTML = output;
 
         } else {
-            var output = 'loading...';
+            let output = 'loading...';
             document.getElementById('students-table').innerHTML = output;
         }
     }

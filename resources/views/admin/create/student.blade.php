@@ -22,22 +22,20 @@
 
                 <div class="form-inline">
                     {{Form::label('department', 'Department')}}
-                    {{Form::select('department', ['0' => 'Senior High School',
-                                            '1' => 'College'
-                                            ], 0,
-                                        ['class' => 'custom-select w-75 ml-2', 'id' => 'selectDept'])}}                   
+                    {{Form::select('department', 
+                      ['0' => 'Senior High School',                              
+                      '1' => 'College'], 0,
+                      ['class' => 'custom-select w-75 ml-2', 'id' => 'selectDept'])}}                   
                 </div>
                 
                 <div class="form-inline">
                     {{Form::label('level', 'Student Level',  ['class' => 'mt-2'])}}
-                    {{Form::select('level', [], null,
-                                        ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectLevel'])}}                   
+                    {{Form::select('level', [], null, ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectLevel'])}}                   
                 </div>
 
         </div>
 
         <div class="col-7"> 
-
 
             <div class="form-inline">
                   {{Form::label('program', 'Program')}}
@@ -142,8 +140,7 @@
       
 
     <hr class= "w-75 ml-0"/> 
-
-
+    
     <div class="row" >
 
         <div class="col">
@@ -238,37 +235,39 @@ selectDept.addEventListener('change', () => {
 });
 
 selectProg.addEventListener('change', () => {                        
-    changeSelect();
+    changeTable();
     
 
 });
-selectLevel.addEventListener('change', () => {                        
-    changeSelect();
-    
 
+selectLevel.addEventListener('change', () => {                        
+    changeSelect(true);    
+    console.log(selectLevel.value);
 });
 
 selectSemester.addEventListener('change', () => {                        
-    changeSelect();
-    
+    changeTable();
 
 });
 
-function changeSelect(){
+function changeSelect(isSelectLevel = false, isSelectProg = false){
     
     let dept = selectDept.value;
-    var xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();    
 
-    if(dept == 0){
-        selectLevel.options[0] = new Option('Grade 11', '1');     
-        selectLevel.options[1] = new Option('Grade 12', '2');     
-        
+    if(!isSelectLevel){
+        if(dept == 0){     
+            selectLevel.options[0] = new Option('Grade 11', '1');
+            selectLevel.options[1] = new Option('Grade 12', '2');
+        } else {
+            selectLevel.options[0] = new Option('First Year', '11');
+            selectLevel.options[1] = new Option('Second Year', '12');                  
+        } 
     } else {
-        selectLevel.options[0] = new Option('First Year', '11');     
-        selectLevel.options[1] = new Option('Second Year', '12');     
         
-    } 
+    }
 
+    
     
     xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept, true);
 
