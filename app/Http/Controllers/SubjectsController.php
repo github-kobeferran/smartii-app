@@ -36,7 +36,35 @@ class SubjectsController extends Controller
      */
     public function store(Request $request)
     {
+        $status = '';
+        $msg = '';
+
+
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|alpha_num', // 0 = shs, 1 = college
+            'desc' => 'required|alpha_num', // first_year, grade_11
+            'dept' => 'required', // 3 =>  shs, 4 => college
+            'level' => 'required', 
+            'prog' => 'required',
+            'sem' => 'required',
+            'units' => 'required|numeric|between:3,12',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('adminCreate')
+                         ->withErrors($validator)
+                         ->withInput()
+                         ->with('subject', true);
+        }
+
+
+
+        $preReqs = $request->input('preReqs');
         
+
+        return redirect()->route('adminCreate')
+                         ->with($status, $msg)
+                         ->with('subject', true);
     }
 
     /**

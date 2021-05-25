@@ -9,6 +9,7 @@ use App\Models\StudentClass;
 use App\Models\Balance;
 use App\Models\SubjectTaken;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class StudentsController extends Controller
@@ -50,12 +51,12 @@ class StudentsController extends Controller
             'semester' => 'required', 
             'email' => 'required',
             'contact' => 'required',
-            'last_name' => 'required',
-            'first_name' => 'required',
-            'middle_name' => '',
-            'dob' => 'required',            
-            'permanent_address' => '',
-            'present_address' => '',      
+            'last_name' => 'required|alpha|max:100',
+            'first_name' => 'required|alpha|max:100',
+            'middle_name' => 'alpha|max:100',
+            'dob' => 'required|date',            
+            'permanent_address' => 'max:191',
+            'present_address' => 'max:191',      
         ]);
     
         if ($validator->fails()) {
@@ -84,6 +85,14 @@ class StudentsController extends Controller
                             ->with('error', 'Email Already Exist')
                             ->with('student', true);
             }
+
+            if(User::where('email', $request->input('email'))->exists()){
+                return redirect()
+                            ->route('adminCreate')
+                            ->with('error', 'Email Already Exist')
+                            ->with('student', true);
+            }
+            
         }
         
         $student = new Student;        
@@ -115,9 +124,7 @@ class StudentsController extends Controller
         $department = $request->input('department');
                                
         if($request->input('student_id') != ''){
-            $student->student_id = $request->input('student_id');  
-            
-           
+            $student->student_id = $request->input('student_id');                         
 
             $balance_id = new Balance;             
             $balanceID = $balance_id->init($student);   
@@ -169,10 +176,6 @@ class StudentsController extends Controller
                       
         }
 
-        // return 'id: '. $id . 'balance: ' . $balanceID . ' dept: ' . $department;
-
-        // adding subjects taken/to take
-
         $subjects = $request->input('subjects');
         $ratings = $request->input('ratings');
         $from_years = $request->input('from_years');
@@ -182,54 +185,91 @@ class StudentsController extends Controller
         $totalBalance = 0;
 
         $studentBalance = Balance::find($balanceID);
+
+        $subjectsToBeTakenLength = count($subjects);
+        $valid = true;
         
+        
+        if(is_countable($subjects) > 0 ){
 
-        for($i=0; $i<count($subjects); $i++){                       
+            for($i=0; $i < $subjectsToBeTakenLength; $i++){
 
-            $subjectToTake = new SubjectTaken;
-
-            $subjectToTake->student_id = $id;
-            $subjectToTake->subject_id = $subjects[$i]; 
-            
-            
-            $subject = Subject::find($subjects[$i]);
-
-            if($i == count($subjects)-1 ){
+                $subjectToTake = new SubjectTaken;
+    
+                $subjectToTake->student_id = $id;
+                $subjectToTake->subject_id = $subjects[$i]; 
                 
-                $studentBalance->amount = $totalBalance;
-                $studentBalance->save();
-            }
+                
+                $subject = Subject::find($subjects[$i]);   
 
-         
 
-            if($department == 0)
-                $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
-            else 
-                $totalBalance+= Setting::first()->college_price_per_unit * $subject->units;            
+                if( ($ratings[$i] != '' && $from_years[$i] == '' && $to_years[$i] == '' && $semesters[$i] == '') ||
+                    ($ratings[$i] == '' && $from_years[$i] != '' && $to_years[$i] == '' && $semesters[$i] == '') ||
+                    ($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] != '' && $semesters[$i] == '') ||
+                    ($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] != '' && $semesters[$i] != '')
+                  ){
+                    $valid = false;
+                }
+                                     
+                   
+                if($valid){
 
-            if($ratings[$i] != '')
-                $subjectToTake->rating = $ratings[$i];
-            else 
-                $subjectToTake->rating = 4.5;
+                    if($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] == '' && $semesters[$i] == ''){
 
-            if($from_years[$i] != '')
-                $subjectToTake->from_year = $from_years[$i];
-            else 
-                $subjectToTake->from_year = Setting::first()->from_year;
+                        if($department == 0)
+                            $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
+                        else 
+                            $totalBalance+= Setting::first()->college_price_per_unit * $subject->units; 
+                               
+                    } else {
+    
+                        $totalBalance+= 0;
+    
+                    }
+    
+                    if($i == $subjectsToBeTakenLength - 1 ) {                
+                        $studentBalance->amount = $totalBalance;
+                        $studentBalance->save();
+                    }
+                    
+        
+                    if($ratings[$i] != '')
+                        $subjectToTake->rating = $ratings[$i];
+                    else 
+                        $subjectToTake->rating = 4.5;
+        
+                    if($from_years[$i] != '')
+                        $subjectToTake->from_year = $from_years[$i];
+                    else 
+                        $subjectToTake->from_year = Setting::first()->from_year;
+        
+                    if($to_years[$i] != '')
+                        $subjectToTake->to_year = $to_years[$i];
+                    else 
+                        $subjectToTake->to_year = Setting::first()->to_year;
+        
+                    if($semesters[$i] != '')
+                        $subjectToTake->semester = $semesters[$i];
+                    else 
+                        $subjectToTake->semester = Setting::first()->semester;                                  
+        
+                    $subjectToTake->save();
 
-            if($to_years[$i] != '')
-                $subjectToTake->to_year = $to_years[$i];
-            else 
-                $subjectToTake->to_year = Setting::first()->to_year;
+                } else {
+                    $status = 'warning';
+                    $message = 'Subjects not added due to missing data. Please use Add Subjects to Students to add it again.';
 
-            if($semesters[$i] != '')
-                $subjectToTake->semester = $semesters[$i];
-            else 
-                $subjectToTake->semester = Setting::first()->semester;                                  
+                    return redirect()->route('adminCreate')->with($status, $message)->with('student', true);
+                }
+                                                                                                  
+            }                      
+           
 
-            $subjectToTake->save();
-        }                      
-       
+        } else {
+            $status = 'warning';
+            $message = 'Student Created with no Subjects taken';
+        }
+      
         return redirect()->route('adminCreate')->with($status, $message)->with('student', true); 
                 
     }

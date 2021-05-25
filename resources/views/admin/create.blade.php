@@ -57,26 +57,16 @@
 </div>  
 
 <script>
-// let studentNavLink = document.getElementById('student-create-tab');
-// let facultyNavLink = document.getElementById('faculty-create-tab');
-// let adminNavLink = document.getElementById('admin-create-tab');
-// let subjectNavLink = document.getElementById('subject-create-tab');
-// let subjectSetNavLink = document.getElementById('subjectSet-create-tab');
 
-// let subjectContent = document.getElementById('student');
-// let facultyContent = document.getElementById('faculty');
-// let adminContent = document.getElementById('admin');
-// let subjectContent = document.getElementById('subject');
-// let subjectSetContent = document.getElementById('subjectSet');
+window.addEventListener('load', (event) => {
 
+changeSubjectSelect();
+changeSelect();
 
+document.getElementById("preReqSwitch").checked = false;
+document.getElementById("newStudSwitch").checked = false;
 
-
-
-// window.addEventListener('load', (event) => {
-
-    
-// }); 
+}); 
 
 
 </script>

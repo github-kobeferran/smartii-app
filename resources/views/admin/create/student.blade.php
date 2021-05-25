@@ -200,32 +200,24 @@ let selectDept = document.querySelector('#selectDept');
 let selectProg = document.querySelector('#selectProg');   
 let selectLevel = document.querySelector('#selectLevel');   
 let selectSemester = document.querySelector('#selectSemester');   
-    
-   
 
 document.querySelector('#newStudSwitch').addEventListener('click', () => {        
     toggleStudentID();
 });
 
-window.addEventListener('load', (event) => {
-
-     
-    changeSelect();
-
-}); 
 
 function toggleStudentID(){
-    let idDiv = document.getElementById('new-stud-div');
-        if(idDiv.style.display == 'none') {
-            idDiv.style.display = 'block';
-            document.querySelector('#studentID').required = true;
-            // document.querySelector('#newStudSwitch').textContent = "Change to Existing Student Form";
-        } else {
-            idDiv.style.display =  'none';
-            document.querySelector('#studentID').required = false;
-            document.querySelector('#studentID').value = "";
-        }
+let idDiv = document.getElementById('new-stud-div');
+    if(idDiv.style.display == 'none') {
+        idDiv.style.display = 'block';
+        document.querySelector('#studentID').required = true;
+        // document.querySelector('#newStudSwitch').textContent = "Change to Existing Student Form";
+    } else {
+        idDiv.style.display =  'none';
+        document.querySelector('#studentID').required = false;
+        document.querySelector('#studentID').value = "";
     }
+}
     
 
 selectDept.addEventListener('change', () => {                    
@@ -283,7 +275,7 @@ function changeSelect(isSelectLevel = false){
 
                 var programs = JSON.parse(this.responseText);                                
 
-                    for (let i in programs) {                                        
+                    for (let i in programs) {                        
                         selectProg.options[i] = new Option(programs[i].abbrv + ' - ' + programs[i].desc, programs[i].id); 
                     }
 
@@ -356,7 +348,7 @@ function changeTable(){
 
                 output+=`<td class="pl-1 pt-3">                        
                         <input name="from_years[]" type="number" min="2010" max="`+ year +`" placeholder="from" > -
-                        <input name="to_years[]" type="number" min="2010" max="`+ year +`" placeholder="to" >
+                        <input name="to_years[]" type="number" min="2010" max="`+ (year + 1) +`" placeholder="to" >
                         </td>`;
 
                 output+=`<td class="pl-1 pt-3 "><input type="number" min="1" max="2" placeholder="semesters[]" ></td>`;

@@ -116,8 +116,54 @@ class Subject extends Model
        
     }
 
+    public static function getPossiblePreReq($values){
+
+        if( ($values['level'] == 1 || $values['level'] == 11) && $values['semester'] == 1  ){
+            return new Subject;
+        } else {
+
+            $query = 'dept = ?';
+            
+
+            if($values['department']  == 0 ){
+
+                $query.= ' and (program_id = ? or program_id = 3)';                                  
+
+                
+                if($values['level'] > 1){
+                    $query.= ' and level < ?';
+                    
+                }else {
+                    $query.= ' and level = 1';
+                    $query.= ' and semester = 1';
+                }
+
+            }else{
+
+                $query.= ' and (program_id = ? or program_id = 4)';                      
+
+                if($values['level'] > 11){
+                    $query.= ' and level < ?';
+                    
+                }else {
+                    $query.= ' and level = 11';
+                    $query.= ' and semester = 1';
+                }
+                    
+            }                                                      
+
+            return Subject::whereRaw($query,
+                                    [$values['department'], $values['program'],$values['level'], $values['semester']])
+                                    ->get();
+
+        }
+        
+    }
+
+
+
+
 
     
-
     
 }

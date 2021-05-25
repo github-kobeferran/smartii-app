@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -93,7 +92,7 @@ class AdminsController extends Controller
     }
 
 
-    public function showTableBy($table, $by, $value){
+    public function showTableBy($table, $by, $value, $all = null){
         if($by == ''){
 
             showTable($table);
@@ -101,9 +100,19 @@ class AdminsController extends Controller
         } else {
 
             switch($table){
+                case 'programs':                  
 
-                case 'programs':
-                    $programs = Program::where($by, $value)->get();
+                    // $programs = Program::where($by, $value)->get();  
+
+                    if($all){
+                        $programs = Program::where($by, $value)->get();
+                    } else {
+                        $programs = Program::where($by, $value)
+                                           ->where('id', '!=', 3)
+                                           ->where('id', '!=', 4)
+                                           ->get();
+                    }
+                    
 
                     return $programs->toJson();
                 break;                              
@@ -154,7 +163,18 @@ class AdminsController extends Controller
                     $results = ['subjects' => $subjects, 'pre_reqs' => $pre_reqs, 'programs' => $programs];
                     
                     return $results;
-                break;                              
+                break;   
+                case 'prereqs':
+                    $values = [$firstColumn => $firstValue,
+                               $secondColumn => $secondValue,
+                               $thirdColumn => $thirdValue,
+                               $fourthColumn => $fourthValue];
+
+                    $subjects = Subject::getPossiblePreReq($values);
+                    
+                    return $subjects->toJson();
+                    
+                break;
 
                 default:
                 redirect('/home');

@@ -172,7 +172,7 @@ function studentsAjax() {
                 '<th scope="col">Name</th>' +
                 '<th scope="col">Department</th>' +
                 '<th scope="col">Program</th>' +
-                '<th scope="col">Balance</th>' +
+                '<th scope="col">Permanent Address</th>' +
 
                 '</tr>' +
                 '</thead>' +
