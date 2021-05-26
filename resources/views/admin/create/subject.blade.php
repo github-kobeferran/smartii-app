@@ -60,7 +60,7 @@
             
             <div class="form-group">
                 {{Form::label('units', 'No. of Units', ['class' => 'mt'])}}
-                {{Form::number('units', '', ['class' => 'form-control w-25', 'step' => '3', 'min' => '3', 'max' => '12', 'placeholder' => 'Units'])}}                 
+                {{Form::number('units', '', ['class' => 'form-control w-25', 'step' => '3', 'min' => '3', 'max' => '12', 'required' => 'required', 'placeholder' => 'Units'])}}                 
             </div>
 
            
@@ -149,22 +149,27 @@ let selectPreReq = document.getElementById('selectPreReq');
 selectSubjDept.addEventListener('change', () => {    
     changeSubjectSelect();    
     changePreReqList();
+    clearList();
 });
 
 selectSubjLevel.addEventListener('change', () => {    
     changePreReqList();        
+    clearList();
 });
 
 selectSubjProg.addEventListener('change', () => {    
     changePreReqList();    
+    clearList();
 });
 
 selectSubjSem.addEventListener('change', () => {    
     changePreReqList();    
+    clearList();
 });
 
 selectPreReq.addEventListener('change', () => {    
     preReqToAddList();
+    
 });
 
 

@@ -40,11 +40,11 @@
 	</div>
 
 	<div class="tab-pane {{ session('faculty') ? 'active' : '' }}" id="faculty">
-        Faculty ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
+        @include('admin.create.faculty')  
 	</div>
 
     <div class="tab-pane {{ session('admin') ? 'active' : '' }}" id="admin">
-         Admin ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
+        @include('admin.create.admin')  
 	</div>  
 
     <div class="tab-pane {{ session('subject') ? 'active' : '' }}" id="subject">

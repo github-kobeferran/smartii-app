@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\StudentClass;
@@ -10,7 +11,6 @@ use App\Models\Balance;
 use App\Models\SubjectTaken;
 use App\Models\Setting;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 
 class StudentsController extends Controller
 {
@@ -50,10 +50,10 @@ class StudentsController extends Controller
             'program_id' => 'required', // 3 =>  shs, 4 => college
             'semester' => 'required', 
             'email' => 'required',
-            'contact' => 'required',
-            'last_name' => 'required|alpha|max:100',
-            'first_name' => 'required|alpha|max:100',
-            'middle_name' => 'alpha|max:100',
+            'contact' => 'required|numeric',
+            'last_name' => 'required|regex:/^[\s\w-]*$/|max:100',
+            'first_name' => 'required|regex:/^[\s\w-]*$/|max:100',
+            'middle_name' => 'regex:/^[\s\w-]*$/|max:100',
             'dob' => 'required|date',            
             'permanent_address' => 'max:191',
             'present_address' => 'max:191',      

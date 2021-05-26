@@ -2,12 +2,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use App\Models\Program;
 use App\Models\Subject;
 use App\Models\Student;
 use App\Models\Setting;
 use App\Models\Balance;
+use App\Models\User;
+use App\Mail\WelcomeMember;
+
 
 
 class AdminsController extends Controller
@@ -38,6 +44,92 @@ class AdminsController extends Controller
         return view('admin.subjects');
     }
 
+
+    public function store(Request $request){
+
+        $status ='';
+        $msg = '';
+        $id = 0;
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|regex:/^[\s\w-]*$/', 
+            'email' => 'required', 
+            'address' => 'required|max:100', 
+            'contact' => 'required|numeric',
+            'position' => 'required',             
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('adminCreate')
+                         ->withErrors($validator)
+                         ->withInput()
+                         ->with('admin', true);
+        }
+
+        if(Admin::where('email', $request->input('email'))->exists() ||
+           User::where('email', $request->input('email'))->exists()){
+
+            return redirect()->route('adminCreate')
+                             ->with('error', 'Email Already Exist')
+                             ->with('admin', true);
+                            
+        }
+
+        $admin = new Admin;     
+
+        $admin->name = $request->input('name');
+        $admin->email = $request->input('email');
+        $admin->address = $request->input('address');
+        $admin->contact = $request->input('contact');
+        $admin->position = $request->input('position');
+
+        // create user based on the new admin
+        $user = new User;
+        $password = $this->generateRandomString() . $request->input('email');
+        
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        
+        $user->password = Hash::make($password);
+        $user->user_type = 'admin';
+                    
+        
+        if($admin->save()){
+            $id = $admin->id;
+
+            $year =  date("y");
+            $prefix = "A";
+            $admin_id = $prefix . $year . '-' . sprintf('%04d', $id);
+
+            $admin->admin_id = $admin_id;
+
+            if($user->save()){
+                
+                Mail::to($user)->send(new WelcomeMember($password));
+
+                $status ='success';
+                $msg = 'Admin '. ucfirst($user->name) . ' has been successfully created';
+
+
+            } else {
+                return redirect()->route('adminCreate')
+                             ->with('error' , 'There\'s a problem creating this member, please try again.')
+                             ->with('admin', true); 
+            }
+
+
+        } else {
+            $status ='error';
+            $msg = 'There\'s a problem creating this member, please try again.';
+        }
+
+        return redirect()->route('adminCreate')
+                             ->with($status , $msg)
+                             ->with('admin', true);    
+                
+    }
+
+
     public function showTable($table){
         switch($table){
             case 'admins':
@@ -57,7 +149,6 @@ class AdminsController extends Controller
                     $programs[$count] = Program::find($student->program_id);
                     $count++;
                 }
-
 
                 $results = ['students' => $students, 'programs' => $programs];
                     
@@ -201,6 +292,17 @@ class AdminsController extends Controller
         }    
         
         
+    }
+
+
+    public function generateRandomString($length = 8) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
 }

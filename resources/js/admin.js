@@ -52,7 +52,7 @@ document.getElementById('admins-view-tab').addEventListener('click', () => {
             output = '<table id="admins-table" class="table table-striped">' +
                 '<thead>' +
                 '<tr>' +
-                '<th scope="col">USER ID</th>' +
+                '<th scope="col">Admin ID</th>' +
                 '<th scope="col">Name</th>' +
                 '<th scope="col">Email</th>' +
                 '<th scope="col">Position</th>' +
@@ -63,11 +63,11 @@ document.getElementById('admins-view-tab').addEventListener('click', () => {
 
             for (let i in admins) {
                 output += '<tr>' +
-                    '<th scope="row">' + admins[i].user_id + '</th>' +
+                    '<th scope="row">' + admins[i].admin_id + '</th>' +
                     '<td>' + admins[i].name + '</td>' +
                     '<td>' + admins[i].email + '</td>' +
                     '<td>' + admins[i].position + '</td>' +
-                    '<td><a href=\"admin/delete/' + admins[i].user_id + ' \" class="btn btn-primary">delete</a></td>' +
+                    '<td><a href=\"admin/delete/' + admins[i].id + ' \" class="btn btn-primary">delete</a></td>' +
                     '</tr>';
             }
 
@@ -108,7 +108,7 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
             output = '<table id="admins-table" class="table table-striped">' +
                 '<thead>' +
                 '<tr>' +
-                '<th scope="col">USER ID</th>' +
+                '<th scope="col">Admin ID</th>' +
                 '<th scope="col">Name</th>' +
                 '<th scope="col">Email</th>' +
                 '<th scope="col">Position</th>' +
@@ -119,11 +119,11 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 
             for (let i in admins) {
                 output += '<tr>' +
-                    '<th scope="row">' + admins[i].user_id + '</th>' +
+                    '<th scope="row">' + admins[i].admin_id + '</th>' +
                     '<td>' + admins[i].name + '</td>' +
                     '<td>' + admins[i].email + '</td>' +
                     '<td>' + admins[i].position + '</td>' +
-                    '<td><a href=\"admin/delete/' + admins[i].user_id + ' \" class="btn btn-primary">delete</a></td>' +
+                    '<td><a href=\"admin/delete/' + admins[i].id + ' \" class="btn btn-primary">delete</a></td>' +
                     '</tr>';
             }
 

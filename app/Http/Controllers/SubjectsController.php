@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Subject;
+use App\Models\SubjectsPreReq;
 use Illuminate\Support\Facades\Validator;
 
 class SubjectsController extends Controller
@@ -38,12 +39,13 @@ class SubjectsController extends Controller
     {
         $status = '';
         $msg = '';
+        $subjectID = 0;
 
 
         $validator = Validator::make($request->all(), [
-            'code' => 'required|alpha_num', // 0 = shs, 1 = college
-            'desc' => 'required|alpha_num', // first_year, grade_11
-            'dept' => 'required', // 3 =>  shs, 4 => college
+            'code' => 'required|regex:/^[\s\w-]*$/', 
+            'desc' => 'required|regex:/^[\s\w-]*$/', 
+            'dept' => 'required', 
             'level' => 'required', 
             'prog' => 'required',
             'sem' => 'required',
@@ -57,9 +59,77 @@ class SubjectsController extends Controller
                          ->with('subject', true);
         }
 
+        $subject = new Subject;
 
+        if(Subject::where('code', $request->input('code'))->exists() || 
+           Subject::where('desc', $request->input('desc'))->exists()){
+            return redirect()->route('adminCreate')
+                             ->with('error', 'Code or Description already exist')
+                             ->with('subject', true);
+                                        
+        } else {
+            $subject->code = $request->input('code');
+            $subject->desc = $request->input('desc');
+            $subject->dept = $request->input('dept');
+            $subject->level = $request->input('level');
+            $subject->program_id = $request->input('prog');
+            $subject->semester = $request->input('sem');
+            $subject->units = $request->input('units');
+
+            if($request->input('preReqs') > 0 )
+                $subject->pre_req = 1;
+            else 
+                $subject->pre_req = 0;
+
+            if($subject->save())
+                $subjectID = $subject->id;
+            else {
+
+                return redirect()->route('adminCreate')
+                                 ->with('error', 'There is a problem saving, please try again.')
+                                 ->with('subject', true);
+
+            } 
+            
+        }
 
         $preReqs = $request->input('preReqs');
+
+        
+        
+        if($preReqs > 0 ){                       
+            $noproblems = true;
+            
+            foreach($preReqs as $prereq){
+                $subjectPreReq = new SubjectsPreReq;
+                
+                $subjectPreReq->subject_id = $subjectID;
+                $subjectPreReq->subject_pre_req_id = $prereq;
+
+                if($subjectPreReq->save()){
+
+                }else {
+                    $noproblems = false;
+                }
+
+            }
+
+            if($noproblems){
+                $status = 'success';
+                $msg = 'Subject Created Successfully';
+            } else {
+                $status = 'warning';
+                $msg = 'Subject Pre-Requisites are not added, try again.';
+            }                
+
+
+        } else {
+            $subject->save();
+            $status = 'success';
+            $msg = 'Subject Created Successfully';
+        }
+
+        
         
 
         return redirect()->route('adminCreate')

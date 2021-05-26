@@ -74,7 +74,7 @@
 
             <div class = "form-group">        
                 {{Form::label('theContact', 'Contact Number', ['class' => 'mt'])}}
-                {{Form::number('contact', '', ['maxlength' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..'])}}
+                {{Form::text('contact', '', ['maxlength' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..'])}}
             </div> 
 
         </div>

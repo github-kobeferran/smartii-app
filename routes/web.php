@@ -21,17 +21,18 @@ Route::get('/home', function () {
     return view('home');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 // Route::resource('students', 'App\Http\Controllers\StudentsController');
 
 // ADMIN protected routes 
 Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->group(function () {
-    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard');
+    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard')->middleware('verified');
     
     Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate');
     Route::post('/admin/create/student', [App\Http\Controllers\StudentsController::class, 'store'])->name('studentCreate');    
     Route::post('/admin/create/program', [App\Http\Controllers\ProgramsController::class, 'store'])->name('programStore');    
     Route::post('/admin/create/subject', [App\Http\Controllers\SubjectsController::class, 'store'])->name('subjectStore');    
+    Route::post('/admin/create/admin', [App\Http\Controllers\AdminsController::class, 'store'])->name('adminStore');    
 
     Route::get('/admin/view', [App\Http\Controllers\AdminsController::class, 'adminView'])->name('adminView');
     Route::get('/admin/view/{table}', [App\Http\Controllers\AdminsController::class, 'showTable'])->name('adminViewTable');    
@@ -48,17 +49,17 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 // APPLICANT protected routes 
 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/applicant', [App\Http\Controllers\ApplicantsController::class, 'index'])->name('applicantDashboard');
+    Route::get('/applicant', [App\Http\Controllers\ApplicantsController::class, 'index'])->name('applicantDashboard')->middleware('verified');
 });
 
 // STUDENT protected routes 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/student', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentDashboard');
+    Route::get('/student', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentDashboard')->middleware('verified');
 });
 
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/faculty', [App\Http\Controllers\FacultiesController::class, 'index'])->name('facultyDashboard');
+    Route::get('/faculty', [App\Http\Controllers\FacultiesController::class, 'index'])->name('facultyDashboard')->middleware('verified');
 });
 
 
