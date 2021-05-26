@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Models\Setting;
 use App\Models\Balance;
 use App\Models\User;
+use App\Models\Member;
 use App\Mail\WelcomeMember;
 
 
@@ -85,7 +86,7 @@ class AdminsController extends Controller
 
         // create user based on the new admin
         $user = new User;
-        $password = $this->generateRandomString() . $request->input('email');
+        $password = Setting::generateRandomString();
         
         $user->name = $request->input('name');
         $user->email = $request->input('email');
@@ -102,10 +103,20 @@ class AdminsController extends Controller
             $admin_id = $prefix . $year . '-' . sprintf('%04d', $id);
 
             $admin->admin_id = $admin_id;
+            
+            $admin->save();
 
             if($user->save()){
-                
-                Mail::to($user)->send(new WelcomeMember($password));
+
+                $member = new Member;
+
+                $member->user_id = $user->id;
+                $member->member_type = $user->user_type;
+                $member->member_id = $id;
+
+                $member->save();
+
+                Mail::to($user)->send(new WelcomeMember($admin->name, $password));
 
                 $status ='success';
                 $msg = 'Admin '. ucfirst($user->name) . ' has been successfully created';
@@ -295,14 +306,6 @@ class AdminsController extends Controller
     }
 
 
-    public function generateRandomString($length = 8) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
-    }
+    
 
 }

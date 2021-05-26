@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\StudentClass;
 use App\Models\Balance;
 use App\Models\SubjectTaken;
 use App\Models\Setting;
+use App\Models\Member;
 use App\Models\User;
+use App\Mail\WelcomeMember;
 
 class StudentsController extends Controller
 {
@@ -122,6 +126,16 @@ class StudentsController extends Controller
         $id = 0; 
         $balanceID = 0;                 
         $department = $request->input('department');
+
+        $user = new User;
+        $password = Setting::generateRandomString();
+        
+        $user->name = $request->input('first_name') . ' ' . $request->input('last_name');
+        $user->email = $request->input('email');
+        
+        $user->password = Hash::make($password);
+        $user->user_type = 'student';
+        
                                
         if($request->input('student_id') != ''){
             $student->student_id = $request->input('student_id');                         
@@ -134,9 +148,23 @@ class StudentsController extends Controller
             if($student->save()){
                 $id = $student->id;
 
-                $status = 'success';
-                $message.= 'Student Creation Successful';                
+                if($user->save()){
+                    $member = new Member;
 
+                    $member->user_id = $user->id;
+                    $member->member_type = $user->user_type;
+                    $member->member_id = $id;
+
+                    $member->save();
+
+                    Mail::to($user)->send(new WelcomeMember(ucfirst($student->first_name), $password));
+
+                    $status ='success';
+                    $message = 'Student '. ucfirst($student->first_name) . ' ' .
+                     ucfirst($student->last_name) . ' has been successfully created';
+                }
+
+          
             } else {
                 
                 $status = 'error';
@@ -164,8 +192,21 @@ class StudentsController extends Controller
 
             if($student->save()){
 
-                $status = 'success';
-                $message.= 'Student Creation Successful';                
+                if($user->save()){
+                    $member = new Member;
+
+                    $member->user_id = $user->id;
+                    $member->member_type = $user->user_type;
+                    $member->member_id = $id;
+
+                    $member->save();
+
+                    Mail::to($user)->send(new WelcomeMember(ucfirst($student->first_name), $password));
+
+                    $status ='success';
+                    $message = 'Student '. ucfirst($student->first_name) . ' ' .
+                     ucfirst($student->last_name) . ' has been successfully created';
+                }              
 
             } else {
                 

@@ -18,7 +18,7 @@
             {{Form::label('position', 'Position',  ['class' => 'mt-2'])}}
             <div class="form-group">
                 
-                {{Form::select('position', ['registrar', 'accounting', 'superadmin'], null, ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectLevel'])}}                   
+                {{Form::select('position', ['registrar' => 'Registrar', 'accounting' =>  'Accounting', 'superadmin' => 'Site Administrator'], null, ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectLevel'])}}                   
             </div>
 
             <div class = "form-group">        
@@ -30,10 +30,8 @@
                 {{Form::label('address', 'Address', ['class' => 'mt'])}}
                 {{Form::text('address', '', ['class' => 'form-control', 'placeholder' => 'Address here..'])}}
             </div> 
-
+        
             
-
-            <hr class=""/> 
 
         </div>
 

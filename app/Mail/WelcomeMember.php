@@ -12,6 +12,7 @@ class WelcomeMember extends Mailable
     use Queueable, SerializesModels;
 
     public $password;
+    public $name;
 
     /**
      * Create a new message instance.
@@ -19,9 +20,10 @@ class WelcomeMember extends Mailable
      * @return void
      */
 
-    public function __construct($password)
+    public function __construct($name, $password)
     {
         $this->password = $password;
+        $this->name = $name;
     }
 
     /**

@@ -26,7 +26,7 @@
         @include('inc.navbar')
 
         <div class="container-fluid"  >
-            <div class="row min-vh-100 flex-column flex-md-row">           
+            <div class="row min-vh-100 flex-column flex-md-row" >           
 
             @if (!Auth::guest() && Auth::user()->isAdmin())
                 @include('inc.admin.sidebar')
@@ -38,7 +38,7 @@
                 @include('inc.applicant.sidebar')
             @endif
             
-            <main class="col bg-faded py-3 flex-grow-1">                
+            <main class="col bg-faded py-3 flex-grow-1 shadow">                
                 @yield('content')
             </main>                            
 
