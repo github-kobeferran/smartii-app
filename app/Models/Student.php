@@ -10,11 +10,8 @@ class Student extends Model
     use HasFactory;
 
     public function subject_taken(){
-        return $this->hasMany(SubjectTaken::class, 'subjects_taken', );
-    }  
-
-
-
+        return $this->hasMany(SubjectTaken::class);
+    }
     
     public function getProgramDescAttribute()
     {

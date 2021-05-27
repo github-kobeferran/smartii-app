@@ -7,7 +7,7 @@
 </div>
 
 <div>
-    <table id="students-table" class="table table-striped">
+    <table id="students-table" class="table table-striped table table-responsive-sm">
         
     </table>            
 </div>

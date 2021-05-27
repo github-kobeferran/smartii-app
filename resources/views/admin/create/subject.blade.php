@@ -2,7 +2,7 @@
 
     <div class="row">    
 
-        <div class="col">                            
+        <div class="col-sm">                            
             
                 <div class="form-group">
                     {{Form::label('code', 'Subject Code', ['class' => 'mt'])}}
@@ -27,7 +27,7 @@
 
     <div class="row">    
         
-        <div class="col-4"> 
+        <div class="col-sm-4"> 
 
             {{Form::label('department', 'Subject is for:')}}
             <div class="form-group">                
@@ -68,7 +68,7 @@
         </div>
 
 
-        <div class="col-8"> 
+        <div class="col-sm-8"> 
             
             <div class="form-group">
                 <div class="custom-control custom-switch">

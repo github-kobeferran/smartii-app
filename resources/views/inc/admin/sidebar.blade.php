@@ -12,7 +12,7 @@
                             <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="{{ route('adminCreate') }}"> Create</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/subjects"> Subjects</a>
+                            <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/classes">Classes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link sidebar-admin text-dark pl-0 text-nowrap" href="/admin/payment">Payment</a>

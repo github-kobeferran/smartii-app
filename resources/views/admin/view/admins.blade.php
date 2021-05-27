@@ -8,8 +8,8 @@
 
 
 
-<div>
-    <table id="admins-table" class="table table-striped">
+<div >
+    <table id="admins-table" class="table table-striped table table-responsive-sm" >
         
     </table>            
 </div>

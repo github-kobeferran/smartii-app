@@ -18,7 +18,7 @@
 {{-- row0 --}}
     <div class="row">    
 
-        <div class="col-5"> 
+        <div class="col-sm-5"> 
 
                 <div class="form-inline">
                     {{Form::label('department', 'Department')}}
@@ -35,7 +35,7 @@
 
         </div>
 
-        <div class="col-7"> 
+        <div class="col-sm-7"> 
 
             <div class="form-inline">
                   {{Form::label('program', 'Program')}}
@@ -61,7 +61,7 @@
 
     <div class="row "> 
 
-        <div class="col">  
+        <div class="col-sm">  
 
             <div class = "form-group">        
                 {{Form::label('email', 'Email Address', ['class' => 'mt'])}}
@@ -70,7 +70,7 @@
 
         </div>
 
-        <div class="col">  
+        <div class="col-sm">  
 
             <div class = "form-group">        
                 {{Form::label('theContact', 'Contact Number', ['class' => 'mt'])}}
@@ -87,7 +87,7 @@
     
     <div class="row">    
 
-        <div class="col">  
+        <div class="col-sm">  
 
             <div class = "form-group">        
                 {{Form::label('lastName', 'Last Name', ['class' => 'mt'])}}
@@ -101,7 +101,7 @@
                    
         </div>
 
-        <div class="col"> 
+        <div class="col-sm"> 
 
             <div class = "form-group">        
                 {{Form::label('firstName', 'First Name')}}
@@ -123,7 +123,7 @@
 
     <div class="row">    
 
-         <div class="col">  
+         <div class="col-sm">  
 
             <div class = "form-group">        
                 {{Form::label('permanent_address', 'Permanent Address')}}
@@ -143,7 +143,7 @@
     
     <div class="row" >
 
-        <div class="col">
+        <div class="col-sm">
 
             Transferee<strong>?</strong>
             <div class="form-check form-check-inline ml-4">  
@@ -155,7 +155,7 @@
 
         </div>  
 
-        <div class="col">
+        <div class="col-sm">
 
             Student Type<strong>?</strong>
             <div class="form-check form-check-inline ml-4">  

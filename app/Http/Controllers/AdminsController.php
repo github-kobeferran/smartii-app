@@ -18,15 +18,14 @@ use App\Mail\WelcomeMember;
 
 
 class AdminsController extends Controller
-{
-    //
+{    
     
     public function index(){
         return view('admin.dashboard');
     }
 
     public function adminCreate(){
-        return view('admin.create')->with('student', true);
+        return view('admin.create')->with('empty', 'active');
     }
 
     public function adminView(){
@@ -41,8 +40,8 @@ class AdminsController extends Controller
         return view('admin.settings');
     }
 
-    public function adminSubjects(){
-        return view('admin.subjects');
+    public function adminClasses(){
+        return view('admin.classes')->with('create', true);
     }
 
 

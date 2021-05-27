@@ -2,7 +2,7 @@
 
     <div class="row">    
 
-        <div class="col"> 
+        <div class="col-sm"> 
             {{Form::label('department', 'Department')}}
                 <div class="form-group">
                     
@@ -27,7 +27,7 @@
 
     <div class="row">    
 
-        <div class="col"> 
+        <div class="col-sm"> 
 
                 <div class = "form-group">        
                     {{Form::label('abbrv', 'Program Abbreviation', ['class' => 'mt'])}}
@@ -36,7 +36,7 @@
 
         </div>
 
-        <div class="col">                
+        <div class="col-sm">                
 
         </div>
 
