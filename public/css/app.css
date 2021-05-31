@@ -1,5 +1,14 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
 @charset "UTF-8";
+thead th {
+  position: sticky;
+  top: 0;
+}
+
+tbody td {
+  top: 25;
+}
+
 #navbar {
   border-bottom: 1.2px solid rgba(99, 94, 94, 0.234);
 }
@@ -11,6 +20,7 @@
 
 #sidebar-nav-admin {
   background-color: #e6c694;
+  font-size: large;
 }
 
 .bs-example {

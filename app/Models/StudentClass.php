@@ -20,9 +20,12 @@ class StudentClass extends Model
 
         $class = new StudentClass;
         $class->save();
-
         return $class->id;
+
     }
+
+
+
 
     
 

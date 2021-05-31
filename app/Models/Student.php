@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Program;
 
 class Student extends Model
 {
@@ -12,7 +13,7 @@ class Student extends Model
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
     }
-    
+
     public function getProgramDescAttribute()
     {
         return $this->attributes['program_desc'];

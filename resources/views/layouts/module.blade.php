@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    
+    <script src="https://kit.fontawesome.com/6421dddc90.js" crossorigin="anonymous"></script>
    
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com"> 
@@ -21,6 +21,9 @@
     
 </head>
 <body>
+    <script>
+        var APP_URL = {!! json_encode(url('/')) !!}
+    </script>
     <div id="app">
         @include('inc.navbar')
 

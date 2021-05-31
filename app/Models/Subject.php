@@ -160,10 +160,17 @@ class Subject extends Model
         
     }
 
+    public static function subjectsForClasses($values = []){
+        $query =  'dept = ? ';
+        if($values['department']  == 0 ){                            
+            $query.= ' and (program_id = ? or program_id = 3)';
+        } else {
+            $query.= ' and (program_id = ? or program_id = 4)';             
+        }
+                                    
+        return Subject::whereRaw($query, 
+                                [$values['department'], $values['program']])
+                                ->get();
+    }
 
-
-
-
-    
-    
 }

@@ -36,5 +36,20 @@
       
 </div>
 
+<script>
+
+    window.addEventListener('load', (event) => {
+        
+
+        changeClassesSelects(); 
+        allRooms(); 
+        allFaculty();   
+        updateSchedCounter();
+        
+    }); 
+    
+    
+    </script>
+
 
 @endsection

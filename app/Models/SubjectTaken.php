@@ -14,12 +14,13 @@ class SubjectTaken extends Model
     public $timestamps = false;
     protected $table = 'subjects_taken';
  
-    public static function currentClasses(){
+    public static function pendingClasses(){
 
         return static::where('from_year', Setting::first()->from_year)
                      ->where('to_year', Setting::first()->to_year)
                      ->where('semester', Setting::first()->semester)
                      ->where('rating', 4.5)
+                     ->where('class_id', null)
                      ->get();
         
     }

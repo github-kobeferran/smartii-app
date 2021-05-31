@@ -264,7 +264,7 @@ function changeSelect(isSelectLevel = false){
 
         var xhr = new XMLHttpRequest();
         
-        xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept, true);
+        xhr.open('GET', APP_URL + '/admin/view/programs/department/' + dept, true);
 
         xhr.onload = function() {
             if (this.status == 200) {
@@ -301,7 +301,7 @@ function changeTable(){
     let semester = selectSemester.value;
 
     var xhr = new XMLHttpRequest();   
-    xhr.open('GET', 'http://smartii-app.test/admin/view/subjects'
+    xhr.open('GET', APP_URL + '/admin/view/subjects'
                     +'/department/' + dept 
                     + '/program/' + program 
                     + '/level/' + level 

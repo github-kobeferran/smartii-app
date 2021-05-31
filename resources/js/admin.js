@@ -1,3 +1,6 @@
+// console.log(APP_URL);
+
+
 $(".nav-link").on("click", function() {
     $(".nav-link").find(".active").removeClass("active");
     $(this).parent().addClass("active");
@@ -42,7 +45,7 @@ document.getElementById('admins-view-tab').addEventListener('click', () => {
     //console.log('clicked');
 
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://smartii-app.test/admin/view/admins', true);
+    xhr.open('GET', APP_URL + '/admin/view/admins', true);
 
     xhr.onload = function() {
         if (this.status == 200) {
@@ -93,7 +96,7 @@ document.querySelector('#admin-search').addEventListener('keyup', (e) => {
 
     let xhr = new XMLHttpRequest();
 
-    xhr.open('GET', 'http://smartii-app.test/admin/search/admins/' + txt, true);
+    xhr.open('GET', APP_URL + '/admin/search/admins/' + txt, true);
 
     document.getElementsByClassName('admin-dual-ring')[0].style.display = 'inline-block';
 
@@ -157,7 +160,7 @@ document.getElementById('students-view-tab').addEventListener('click', () => {
 
 function studentsAjax() {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://smartii-app.test/admin/view/students', true);
+    xhr.open('GET', APP_URL + '/admin/view/students', true);
 
     xhr.onload = function() {
         if (this.status == 200) {

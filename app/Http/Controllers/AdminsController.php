@@ -9,10 +9,12 @@ use App\Models\Admin;
 use App\Models\Program;
 use App\Models\Subject;
 use App\Models\Student;
+use App\Models\Faculty;
 use App\Models\Setting;
 use App\Models\Balance;
 use App\Models\User;
 use App\Models\Member;
+use App\Models\Room;
 use App\Mail\WelcomeMember;
 
 
@@ -138,6 +140,7 @@ class AdminsController extends Controller
                              ->with('admin', true);    
                 
     }
+    
 
 
     public function showTable($table){
@@ -163,6 +166,18 @@ class AdminsController extends Controller
                 $results = ['students' => $students, 'programs' => $programs];
                     
                 return $results;
+            break;        
+            case 'rooms':
+
+                $rooms = Room::all();        
+
+                return $rooms->toJson();
+            break;        
+            case 'faculty':
+
+                $faculty = Faculty::all();        
+
+                return $faculty->toJson();
             break;        
             default:
             redirect('/home');
@@ -223,6 +238,17 @@ class AdminsController extends Controller
             }
         }
     }
+
+    public function showTableByTwo($table, $firstColumn, $firstValue, $secondColumn, $secondValue){
+        switch($table){
+            case 'subjects':                    
+                $values = [$firstColumn => $firstValue,
+                           $secondColumn => $secondValue];                
+                        
+                return Subject::subjectsForClasses($values)->toJson();
+                break;
+            }
+    }    
 
     public function showTableByFour($table, $firstColumn, $firstValue, $secondColumn, $secondValue,
                                     $thirdColumn, $thirdValue, $fourthColumn, $fourthValue){                                   

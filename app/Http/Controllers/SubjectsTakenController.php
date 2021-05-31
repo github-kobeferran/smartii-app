@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SubjectTaken;
+use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Program;
 
 class SubjectsTakenController extends Controller
 {
@@ -27,4 +30,29 @@ class SubjectsTakenController extends Controller
         }
 
     }
+
+    public function pendingStudentClass($dept, $prog, $subj){             
+    
+        $students = new Student;        
+        $programs = new Program;
+
+        $pendingClasses = SubjectTaken::pendingClasses();
+
+        for($i=0; $i<count($pendingClasses); $i++){
+            $student = new Student;
+            if($pendingClasses[$i]->subject_id == $subj) 
+                $student = Student::find($pendingClasses[$i]->student_id);
+                if($student->program_id == $prog)
+                    $students[$i] = $student;
+
+        }
+                        
+        return $students;
+
+        // return $result = ['students' => $students->toJson(), 'programs' => $programs->toJson()];
+        
+    }
+
+
+
 }

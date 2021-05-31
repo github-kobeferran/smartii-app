@@ -1,7 +1,7 @@
 @component('mail::message')
 Welcome {{ $name }} !
 
-@component('mail::button', ['url' => 'http://smartii-app.test/login'])
+@component('mail::button', ['url' => url('/login')])
 Login
 @endcomponent
 

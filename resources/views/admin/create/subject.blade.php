@@ -193,7 +193,7 @@ function changeSubjectSelect(){
 
     let xhr = new XMLHttpRequest();
 
-    xhr.open('GET', 'http://smartii-app.test/admin/view/programs/department/' + dept + '/true', true);
+    xhr.open('GET', APP_URL + '/admin/view/programs/department/' + dept + '/true', true);
 
     xhr.onload = function() {
         if (this.status == 200) { 
