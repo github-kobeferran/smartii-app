@@ -46,8 +46,13 @@ let secondColumn = document.getElementById('second-column');
 selectViewDept.addEventListener('change', () => {
     changeViewSelects();
 });
+
 selectViewProg.addEventListener('change', () => {
     changeViewSelects(true);
+});
+
+selectViewSubj.addEventListener('change', () => {
+    viewSchedules();
 });
 
 function changeViewSelects($isSelectProg = false){
@@ -124,6 +129,8 @@ function changeViewSubjects(){
 }
 
 function viewSchedules(){
+
+    secondColumn.innerHTML = '';
     
     prog = selectViewProg.value;
     subj = selectViewSubj.value;
@@ -209,7 +216,7 @@ function viewSchedules(){
             }        
 
         } else {
-
+            secondColumn.innerHTML = `<p> no classes available </p>`
         }       
 
     }
