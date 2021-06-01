@@ -32,7 +32,7 @@
             
             <div class="form-group text-center">        
                     
-                {{Form::select('subject', 
+                {{Form::select('subj', 
                 [], null,
                 ['class' => 'custom-select w-50 m-1', 'id' => 'selectSubject'])}}            
             </div>    
@@ -49,7 +49,7 @@
                 <table class="table table-striped table-responsive-sm border" >
                     <thead class="thead">
                         <tr>
-                            <th scope="col">Check</th>
+                            <th class="text-center" scope="col">Check</th>
                             <th scope="col">Student ID</th>
                             <th scope="col">Name</th>
                         </tr>
@@ -98,7 +98,7 @@
                         
                         <p><strong >From:   </strong></p>
     
-                        <input type="time" id="appt" name="from"
+                        <input type="time" id="appt" name="from" value="07:00"
                         min="07:00" max="19:00" class="form-control bg-light text-dark border-secondary" required>          
                         
     
@@ -106,7 +106,7 @@
     
                     <div class="col-sm">
                         <p><strong >Until:   </strong></p>
-                        <input type="time" id="appt" name="until"
+                        <input type="time" id="appt" name="until" value="08:00"
                         min="08:00" max="21:00" class="form-control bg-light text-dark border-secondary" required>          
     
                     </div>
@@ -141,9 +141,7 @@
     
             </div>
            
-        </div>
-
-        
+        </div>        
 
     </div>
     
@@ -160,12 +158,13 @@
         {{Form::submit('Save',  ['class' => 'btn btn-success w-50 mt-3'])}}
     </div> 
 
-    
-
+    <?php $sectionLimit = App\Models\Setting::first()->class_quantity; ?>
 
 {!! Form::close() !!}
 
 <script>
+
+var sectionLimit = {!! json_encode($sectionLimit) !!}
 
 let selectDept = document.getElementById('selectDept');
 let selectProg = document.getElementById('selectProg');
@@ -210,9 +209,9 @@ function anotherSched(){
                     for(let k=0; k<newSchedRow.childNodes[i].childNodes[j].childNodes.length; k++){                        
 
                         if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].tagName  == "SELECT" ) {
-                            
+                                                                            
                            newSchedRow.childNodes[i].childNodes[j].childNodes[k].name += '_' + schedContainerChildCount;
-                           console.log(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name);
+                        
                         }
 
                         if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].tagName  == "DIV"){                          
@@ -222,8 +221,7 @@ function anotherSched(){
                                 if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].tagName == "INPUT")
 
                                     newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name += '_' + schedContainerChildCount;
-                                    console.log(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name);
-
+                                    
                             }
 
                         }
@@ -323,8 +321,7 @@ function allFaculty(){
 
 function changeClassesSelects($isSelectProg = false){
     
-    removeAllOptions(selectSubject);
-    removeAllOptions(selectSubject);
+    removeAllOptions(selectSubject);    
 
     dept = selectDept.value;
     prog = selectProg.value;
@@ -418,9 +415,14 @@ function classesTableData(){
 
     output = `<tbody>`;
             for (let i in students) {
-                output += '<tr>' +
-                    '<th scope="row"><input class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..."></th>' +
-                    '<td>' + students[i].student_id + '</td>' +
+                output += '<tr>';
+                
+                if(i < sectionLimit)
+                    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." checked></th>'; 
+                else
+                    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." ></th>';
+
+                output +='<td>' + students[i].student_id + '</td>' +
                     '<td>' + capitalizeFirstLetter(students[i].last_name) + ',  ' + capitalizeFirstLetter(students[i].first_name) + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '. ' + '</td>' +
                     '</tr>';
             }
@@ -459,7 +461,7 @@ function updateSchedCounter(){
     let multiSched = document.getElementById('multi-sched');
     multiSched.setAttribute('value', counter);
 
-    console.log(multiSched.value);
+   
 }
 
 </script>

@@ -19,6 +19,13 @@
 
 </div>
 
+@if (session('status'))
+    <div class="alert alert-success" role="alert">
+        {{ session('status') }}
+    </div>
+@endif
+
+@include('inc.messages')
 	    
 <div class="tab-content clearfix">
 	<div class="tab-pane {{ session('create') ? 'active' : '' }}" id="create">
@@ -26,7 +33,7 @@
 	</div>
 
 	<div class="tab-pane {{ session('view') ? 'active' : '' }}" id="view">
-        
+        @include('admin.classes.view') 
 	</div>
 
     <div class="tab-pane {{ session('rooms') ? 'active' : '' }}" id="rooms">
@@ -45,6 +52,7 @@
         allRooms(); 
         allFaculty();   
         updateSchedCounter();
+        changeViewSelects();
         
     }); 
     

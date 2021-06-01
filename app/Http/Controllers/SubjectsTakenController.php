@@ -7,6 +7,10 @@ use App\Models\SubjectTaken;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Program;
+use App\Models\StudentClass;
+use App\Models\Schedule;
+use App\Models\Faculty;
+use Carbon\Carbon;
 
 class SubjectsTakenController extends Controller
 {
@@ -50,6 +54,47 @@ class SubjectsTakenController extends Controller
         return $students;
 
         // return $result = ['students' => $students->toJson(), 'programs' => $programs->toJson()];
+        
+    }
+
+    public function showClassSchedules($prog, $subj){
+
+        $enrolledTakenSubjects = SubjectTaken::getEnrolledTakenSubjects();
+        
+
+        $schedules = new Schedule;
+        $faculties = new Faculty;
+
+        foreach($enrolledTakenSubjects as $enrolledTakenSubject){
+
+            if($enrolledTakenSubject->subject_id == $subj){
+
+                if(Student::find($enrolledTakenSubject->student_id)->program_id == $prog){
+
+                    $classSchedules = new Schedule;                    
+
+                    $faculties = Faculty::find(StudentClass::find($enrolledTakenSubject->class_id)->faculty_id);
+
+                    $classSchedules = StudentClass::find($enrolledTakenSubject->class_id)->schedules;
+
+                    foreach($classSchedules as $classSched){
+
+                        $classSched->from = Carbon::parse($classSched->from)->format('h:i A');
+                        $classSched->until = Carbon::parse($classSched->until)->format('h:i A');
+                        $classSched->faculty_name = $classSched->id;
+                        $classSched->room_name = $classSched->id;
+
+                    }
+
+                    $schedules = $classSchedules;
+
+                }
+
+            }
+
+        }    
+        
+        return $schedules->toJson();
         
     }
 

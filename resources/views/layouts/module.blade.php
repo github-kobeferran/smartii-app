@@ -27,7 +27,7 @@
     <div id="app">
         @include('inc.navbar')
 
-        <div class="container-fluid"  >
+        <div class="container-fluid">
             <div class="row min-vh-100 flex-column flex-md-row" >           
 
             @if (!Auth::guest() && Auth::user()->isAdmin())

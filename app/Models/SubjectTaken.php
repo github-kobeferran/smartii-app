@@ -13,6 +13,7 @@ class SubjectTaken extends Model
 
     public $timestamps = false;
     protected $table = 'subjects_taken';
+    // protected $primaryKey = ['student_id', 'subject_id', 'from_year', 'semester'];
  
     public static function pendingClasses(){
 
@@ -25,16 +26,18 @@ class SubjectTaken extends Model
         
     }
 
-    //show classes group by dept and program order by setting
+    public static function getEnrolledTakenSubjects(){
 
-    // public static function subjectsTakenThisSemester(){
+        return static::where('from_year', Setting::first()->from_year)
+                     ->where('to_year', Setting::first()->to_year)
+                     ->where('semester', Setting::first()->semester)
+                     ->where('rating', 3.5)
+                     ->whereNotNull('class_id')
+                     ->get();
 
-    //     return static::selectRaw('year(created_at) year, monthname(created_at) month, count(*) published')
-    //     ->groupBy('year', 'month')
-    //     ->orderByRaw('min(created_at) desc')
-    //     ->get()
-    //     ->toArray();        
-    // }
+    }
+
+    
     
 
 }

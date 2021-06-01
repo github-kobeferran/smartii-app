@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
 use App\Models\SubjectTaken;
 use App\Models\Setting;
+use App\Models\Schedule;
 
 class StudentClass extends Model
 {
@@ -24,11 +25,8 @@ class StudentClass extends Model
 
     }
 
-
-
-
-    
-
-    
+    public function schedules(){
+        return $this->hasMany(Schedule::class, 'class_id', 'id');
+    }    
     
 }
