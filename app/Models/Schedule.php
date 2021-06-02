@@ -12,7 +12,7 @@ class Schedule extends Model
     use HasFactory;
 
     public $timestamps = false;   
-    protected $appends = ['faculty_name', 'room_name']; 
+    protected $appends = ['faculty_name' => null, 'room_name' => null]; 
 
     public function studentClass()
     {

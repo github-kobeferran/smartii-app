@@ -59,41 +59,60 @@ class SubjectsTakenController extends Controller
 
     public function showClassSchedules($prog, $subj){
 
-        $enrolledTakenSubjects = SubjectTaken::getEnrolledTakenSubjects();
-        
+        $enrolledTakenSubjects = SubjectTaken::getEnrolledTakenSubjects();        
 
-        $schedules = new Schedule;
+        $schedules = collect();
         $faculties = new Faculty;
 
+        $schedArray = collect();
+        $counter = 0;        
+
+
         foreach($enrolledTakenSubjects as $enrolledTakenSubject){
+                                    
+            if($enrolledTakenSubject->subject_id == $subj){                          
 
-            if($enrolledTakenSubject->subject_id == $subj){
+                if(Student::find($enrolledTakenSubject->student_id)->program_id == $prog){   
 
-                if(Student::find($enrolledTakenSubject->student_id)->program_id == $prog){
+                    if(!$schedArray->contains('class_id', $enrolledTakenSubject->class_id)){
 
-                    $classSchedules = new Schedule;                    
-
-                    $faculties = Faculty::find(StudentClass::find($enrolledTakenSubject->class_id)->faculty_id);
-
-                    $classSchedules = StudentClass::find($enrolledTakenSubject->class_id)->schedules;
-
-                    foreach($classSchedules as $classSched){
-
-                        $classSched->from = Carbon::parse($classSched->from)->format('h:i A');
-                        $classSched->until = Carbon::parse($classSched->until)->format('h:i A');
-                        $classSched->faculty_name = $classSched->id;
-                        $classSched->room_name = $classSched->id;
+                        $schedArray->push($enrolledTakenSubject);
 
                     }
-
-                    $schedules = $classSchedules;
-
+                  
                 }
 
+            }             
+
+            ++$counter;
+
+        }
+        
+        // return $schedArray;
+        
+        for($i=0; $i<count($schedArray); $i++){   
+                    
+            if(Student::find($schedArray[$i]->student_id)->program_id == $prog){                
+
+                $classSchedules = StudentClass::find($schedArray[$i]->class_id)->schedules;
+
+                foreach($classSchedules as $classSched){
+
+                    $classSched->from = Carbon::parse($classSched->from)->format('h:i A');
+                    $classSched->until = Carbon::parse($classSched->until)->format('h:i A');
+                    $classSched->faculty_name = $classSched->id;
+                    $classSched->room_name = $classSched->id;
+
+                }
+                
+                $schedules->push($classSchedules);
+                
             }
 
-        }    
-        
+            
+
+        }
+          
         return $schedules->toJson();
         
     }

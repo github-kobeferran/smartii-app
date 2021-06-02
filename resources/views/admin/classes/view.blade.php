@@ -161,14 +161,14 @@ function viewSchedules(){
 
                 let cardTitle = document.createElement("H5");
                 cardTitle.className = "card-title";
-                cardTitle.textContent = "Instructor: " + schedules[i].faculty_name;   
+                cardTitle.textContent = "Instructor: " + schedules[i][0].faculty_name;   
 
                 let day = document.createElement("P");
                 day.className = "card-text";
 
                 let dayText = "";
 
-                switch(schedules[i].day){
+                switch(schedules[i][0].day){
                     case 'mon':
                         dayText = "Monday";
                     break;
@@ -193,15 +193,15 @@ function viewSchedules(){
 
                 let from = document.createElement("P");
                 from.className = "card-text";
-                from.textContent = "from: " + schedules[i].from;   
+                from.textContent = "from: " + schedules[i][0].from;   
 
                 let until = document.createElement("P");
                 until.className = "card-text";
-                until.textContent = "until: " + schedules[i].until;   
+                until.textContent = "until: " + schedules[i][0].until;   
 
                 let room = document.createElement("P");
                 room.className = "card-text";
-                room.textContent = "at: " + schedules[i].room_name;  
+                room.textContent = "at: " + schedules[i][0].room_name;  
 
                 cardBody.appendChild(cardTitle);
                 cardBody.appendChild(day);
