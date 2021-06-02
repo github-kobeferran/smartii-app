@@ -142,9 +142,12 @@ function viewSchedules(){
     xhr.onload = function() {
         if (this.status == 200) {          
             
-            let schedules = JSON.parse(this.responseText);                                
+            let schedules = JSON.parse(this.responseText);  
 
-            for (let i in schedules) {                                        
+            let row = document.createElement("DIV");
+            row.className = "row m-2";                              
+
+            for (let i in schedules[0]) {                                        
 
                 let divCard = document.createElement("DIV");
                                 
@@ -161,14 +164,14 @@ function viewSchedules(){
 
                 let cardTitle = document.createElement("H5");
                 cardTitle.className = "card-title";
-                cardTitle.textContent = "Instructor: " + schedules[i][0].faculty_name;   
+                cardTitle.textContent = "Instructor: " + schedules[0][i].faculty_name;   
 
                 let day = document.createElement("P");
                 day.className = "card-text";
 
                 let dayText = "";
 
-                switch(schedules[i][0].day){
+                switch(schedules[0][i].day){
                     case 'mon':
                         dayText = "Monday";
                     break;
@@ -193,15 +196,15 @@ function viewSchedules(){
 
                 let from = document.createElement("P");
                 from.className = "card-text";
-                from.textContent = "from: " + schedules[i][0].from;   
+                from.textContent = "from: " + schedules[0][i].from;   
 
                 let until = document.createElement("P");
                 until.className = "card-text";
-                until.textContent = "until: " + schedules[i][0].until;   
+                until.textContent = "until: " + schedules[0][i].until;   
 
                 let room = document.createElement("P");
                 room.className = "card-text";
-                room.textContent = "at: " + schedules[i][0].room_name;  
+                room.textContent = "at: " + schedules[0][i].room_name;  
 
                 cardBody.appendChild(cardTitle);
                 cardBody.appendChild(day);
@@ -212,8 +215,11 @@ function viewSchedules(){
                 divCard.appendChild(cardHeader);
                 divCard.appendChild(cardBody);
 
-                secondColumn.appendChild(divCard);
-            }        
+            
+                row.appendChild(divCard);                
+            } 
+
+            secondColumn.appendChild(row);       
 
         } else {
             secondColumn.innerHTML = `<p> no classes available </p>`

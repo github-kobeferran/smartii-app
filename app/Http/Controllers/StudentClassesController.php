@@ -130,6 +130,7 @@ class StudentClassesController extends Controller
                     if($takenSubjects[$i]->subject_id == $request->input('subj') 
                         && $takenSubjects[$i]->student_id == $students[$j]){
                         
+                        $takenSubjects[$i]->rating = 3.5;
                         $takenSubjects[$i]->class_id = $classID;
 
                         $takenSubjects[$i]->save();

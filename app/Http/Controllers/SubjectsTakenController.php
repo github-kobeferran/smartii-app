@@ -74,11 +74,8 @@ class SubjectsTakenController extends Controller
 
                 if(Student::find($enrolledTakenSubject->student_id)->program_id == $prog){   
 
-                    if(!$schedArray->contains('class_id', $enrolledTakenSubject->class_id)){
+                    $schedArray->push($enrolledTakenSubject);
 
-                        $schedArray->push($enrolledTakenSubject);
-
-                    }
                   
                 }
 
@@ -89,10 +86,11 @@ class SubjectsTakenController extends Controller
         }
         
         // return $schedArray;
+        $collection = collect();
         
         for($i=0; $i<count($schedArray); $i++){   
                     
-            if(Student::find($schedArray[$i]->student_id)->program_id == $prog){                
+            if(Student::find($schedArray[$i]->student_id)->program_id == $prog){                                 
 
                 $classSchedules = StudentClass::find($schedArray[$i]->class_id)->schedules;
 
@@ -103,9 +101,15 @@ class SubjectsTakenController extends Controller
                     $classSched->faculty_name = $classSched->id;
                     $classSched->room_name = $classSched->id;
 
+                    if(!$collection->contains('id', $classSched->id)){
+
+                        $collection->push($classSched);       
+    
+                    }     
+
                 }
-                
-                $schedules->push($classSchedules);
+
+                $schedules->push($collection);                 
                 
             }
 

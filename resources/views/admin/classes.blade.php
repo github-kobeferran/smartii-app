@@ -37,7 +37,7 @@
 	</div>
 
     <div class="tab-pane {{ session('rooms') ? 'active' : '' }}" id="rooms">
-        
+        @include('admin.classes.room') 
 	</div>       
     
       
