@@ -1,4 +1,4 @@
-{!! Form::open(['url' => 'admin/create/faculty', 'files' => true, 'id' => 'facultyForm']) !!}
+{!! Form::open(['url' => 'admin/create/faculty', 'id' => 'facultyForm']) !!}
 
   
 <div class="row">    

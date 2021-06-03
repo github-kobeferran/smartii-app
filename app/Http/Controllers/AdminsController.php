@@ -135,6 +135,10 @@ class AdminsController extends Controller
             $msg = 'There\'s a problem creating this member, please try again.';
         }
 
+        return redirect()->route('adminCreate')
+                             ->with($status, $msg)
+                             ->with('admin', true); 
+
           
                 
     }

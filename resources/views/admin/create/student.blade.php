@@ -1,4 +1,4 @@
-{!! Form::open(['url' => 'admin/create/student', 'files' => true, 'id' => 'studentForm']) !!}
+{!! Form::open(['url' => 'admin/create/student', 'id' => 'studentForm']) !!}
     <div class="custom-control custom-switch">
         <input name="new_stud_switch" type="checkbox" class="custom-control-input" id="newStudSwitch">
         <label class="custom-control-label" for="newStudSwitch"><strong>Generate Student ID</strong></label>

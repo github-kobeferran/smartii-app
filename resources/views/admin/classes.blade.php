@@ -11,10 +11,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link {{ session('view') ? 'active' : '' }}" id="view-class-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="false">View</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{ session('rooms') ? 'active' : '' }}" id="rooms-tab" data-toggle="tab" href="#rooms" role="tab" aria-controls="rooms" aria-selected="false">Rooms</a>
-        </li>       
+        </li>             
     </ul>
 
 </div>
@@ -34,13 +31,7 @@
 
 	<div class="tab-pane {{ session('view') ? 'active' : '' }}" id="view">
         @include('admin.classes.view') 
-	</div>
-
-    <div class="tab-pane {{ session('rooms') ? 'active' : '' }}" id="rooms">
-        @include('admin.classes.room') 
-	</div>       
-    
-      
+	</div>                
 </div>
 
 <script>
@@ -53,6 +44,7 @@
         allFaculty();   
         updateSchedCounter();
         changeViewSelects();
+        fillRoomTable();
         
     }); 
     
