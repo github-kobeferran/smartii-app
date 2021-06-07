@@ -62,10 +62,9 @@ class AdminsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('adminCreate')
+            return redirect()->route('adminPayment')
                          ->withErrors($validator)
-                         ->withInput()
-                         ->with('admin', true);
+                         ->withInput();                         
         }
 
         if(Admin::where('email', $request->input('email'))->exists() ||
@@ -149,25 +148,19 @@ class AdminsController extends Controller
         switch($table){
             case 'admins':
 
-                $admins = Admin::all();
+                $admins = Admin::orderBy('created_at', 'desc')->get();
                 return $admins->toJson();
             break;        
             case 'students':
 
-                $students = Student::all();
+                $students = Student::orderBy('created_at', 'desc')->get();                              
 
-                $programs =[];
-                $count = 0;
-
-
-                foreach($students as $student){
-                    $programs[$count] = Program::find($student->program_id);
-                    $count++;
+                foreach($students as $student){                    
+                    $student->program_desc = $student->program_id;
+                    $student->balance_amount = $student->balance_id;
                 }
-
-                $results = ['students' => $students, 'programs' => $programs];
                     
-                return $results;
+                return $students->toJson();
             break;        
             case 'rooms':
 
@@ -196,9 +189,9 @@ class AdminsController extends Controller
             break;        
             case 'students':
                 $student = Student::find($id);               
-                
-                $student->setProgramDescAttribute(Program::find($student->program_id)->desc);
-                $student->setBalanceAmountAttribute(Balance::find($student->balance_id)->amount);
+    
+                $student->program_desc = $student->program_id;
+                $student->balance_amount = $student->balance_id;                                
                     
                 return $student->toJson();
 
@@ -327,9 +320,53 @@ class AdminsController extends Controller
                 }    
 
             break;
+            case 'students':  
+
+                if($text == ''){
+                    $students = Student::all();
+
+                    foreach($students as $student){                    
+                        $student->program_desc = $student->program_id;
+                        $student->balance_amount = $student->balance_id;
+                    }
+
+                    return $students->toJson();
+                                       
+                }else{
+                    $students = Student::query()
+                    ->where('last_name', 'LIKE', '%' . $text . "%")
+                    ->orWhere('first_name', 'LIKE',  '%' .$text . "%")
+                    ->orWhere('middle_name', 'LIKE', '%' . $text . "%")                    
+                    ->orwhere('student_id', 'LIKE', '%' . $text . "%")                    
+                    ->get();                                        
+
+                    foreach($students as $student){                    
+                        $student->program_desc = $student->program_id;
+                        $student->balance_amount = $student->balance_id;
+                    }
+
+                    return $students->toJson();
+                }    
+
+            break;
         }    
         
         
+    }
+
+    public function invoice(Request $request){
+        //id
+        //invoice-id
+        //student id
+        //admin id
+        //timestamps
+        //total balance
+        //payment
+        //change
+        //
+        return Admin::find(auth()->user()->member->member_id)->admin_id . print_r($request->all());
+        
+
     }
 
 

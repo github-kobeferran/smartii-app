@@ -24,9 +24,9 @@
 </div>
 
 	    
-<div class="tab-content clearfix">    
+<div class="tab-content clearfix">            
 
-    <div class="tab-pane {{ session('applicant') ? 'active' : '' }}" id="applicants">
+    <div class="tab-pane {{ session('applicant') ? 'active' : '' }}" id="applicants">        
         Applicants ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
 	</div>
 
@@ -49,7 +49,7 @@
         {{ 'for stud, emp, app id manipulation ' . $user_id}}
 	</div>
 
-    <div class="tab-pane {{ session('admin') ? 'active' : '' }}" id="admins">
+    <div class="tab-pane {{ session('admin') ? 'active' : '' }}" id="admins">        
        @include('admin.view.admins')
 	</div> 
                   
@@ -60,11 +60,13 @@
 
 <script>
 
-window.addEventListener('load', (event) => {     
-
-    document.querySelector('#nav-link').click();
-
+window.addEventListener('load', (event) => {         
+    
+    viewAdmins();
+    studentsAjax();
 }); 
+
+
 
 
 </script>

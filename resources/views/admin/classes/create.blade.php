@@ -1,4 +1,4 @@
-{!! Form::open(['url' => 'admin/create/class', 'files' => true, 'id' => 'classForm']) !!}
+{!! Form::open(['url' => 'admin/create/class', 'id' => 'classForm']) !!}
 
     <blockquote  class="blockquote text-center">Pending Classes, Assign Schedule and Instructor</blockquote >
         
@@ -415,16 +415,23 @@ function classesTableData(){
 
     output = `<tbody>`;
             for (let i in students) {
-                output += '<tr>';
-                
-                if(i < sectionLimit)
-                    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." checked></th>'; 
-                else
-                    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." ></th>';
+                if(students[i] != null){
 
-                output +='<td>' + students[i].student_id + '</td>' +
-                    '<td>' + capitalizeFirstLetter(students[i].last_name) + ',  ' + capitalizeFirstLetter(students[i].first_name) + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '. ' + '</td>' +
-                    '</tr>';
+                    output += '<tr>';
+
+console.log(students[i].id);
+
+if(i < sectionLimit)
+    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." checked></th>'; 
+else
+    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." ></th>';
+
+output +='<td>' + students[i].student_id + '</td>' +
+    '<td>' + capitalizeFirstLetter(students[i].last_name) + ',  ' + capitalizeFirstLetter(students[i].first_name) + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '. ' + '</td>' +
+    '</tr>';
+
+                }
+               
             }
 
     output += ` </tbody>

@@ -118,8 +118,8 @@ class StudentsController extends Controller
         $student->present_address = $request->input('present_address');                  
 
         $student->created_by_admin = '1';              
-        $student->student_type = '0';
-        $student->transferee = '0';  
+        $student->student_type = $request->input('cur_status');   
+        $student->transferee = $request->input('transferee');   
         
         $status = '';
         $message = '';

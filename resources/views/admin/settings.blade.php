@@ -1,54 +1,90 @@
 @extends('layouts.module')
 
 @section('content')
-<h2>Settings</h2>
 
+@if (session('status'))
+    <div class="alert alert-success" role="alert">
+        {{ session('status') }}
+    </div>
+@endif
 
+@include('inc.messages')
 
-{{-- <div  id="exTab1" class="bs-example">
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a href="#1a" data-toggle="tab" class="nav-link active">Student</a>
-        </li>
-        <li class="nav-item">
-            <a href="#2a" data-toggle="tab" class="nav-link ">Faculty</a>
-        </li>
-        <li class="nav-item">
-            <a href="#3a" data-toggle="tab" class="nav-link ">Subject</a>
-        </li>
-        <li class="nav-item">
-            <a href="#4a" data-toggle="tab" class="nav-link ">Subject Set</a>
-        </li>
-        
-    </ul>
+<?php 
+    $currentSetting = \App\Models\Setting::first();
 
-</div> --}}
+    $yearNow= \Carbon\Carbon::now();
+    $now = $yearNow->year;
+    $min = $yearNow->subYears(1)->year;
+    $maxFrom = $yearNow->addYear(1)->year;
+    $maxTo = $yearNow->addYear(2)->year;
 
-	    
-{{-- <div class="tab-content clearfix">
-	<div class="tab-pane active" id="1a">
-        {!! Form::open(['url' => 'foo/bar']) !!}
-            
-        {!! Form::close() !!}
-	</div>
+?>
+<div class="row">    
+    <div class="col-sm-6">
+        <h2 class="mb-3">Settings<span clas=""><em class=" lead">set your defaults here</em></span></h2>
+        <hr>        
+{!! Form::open(['url' => 'admin/update/setting', 'id' => 'settingsForm']) !!}
 
-	<div class="tab-pane" id="2a">
-        Faculty ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
-	</div>
+<b>Academic Year</b> 
 
-    <div class="tab-pane" id="3a">
-         Subject ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
-	</div>       
+    <div class="form-inline m-2">            
+        {{ Form::label('fromyear', 'Starting Year', ['class' => 'm-2']) }}
+        {{ Form::number('from', $currentSetting->from_year, ['min' => $min, 'max' => $maxFrom, 'placeholder' => $currentSetting->from_year, 'class' => 'form-control']) }}
+    </div>
+    <div class="form-inline m-2">            
+        {{ Form::label('toyear', 'Ending Year', ['class' => 'm-2']) }}
+        {{ Form::number('to', $currentSetting->to_year, ['min' => $now, 'max' => $maxTo, 'placeholder' => $currentSetting->from_year, 'class' => 'form-control']) }}
+    </div>
     
-    <div class="tab-pane" id="4a">
-         Subject Set ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
-	</div>        
-</div> --}}
-  
+    <hr>
+
+<b>Semester</b>
+
+    <div class="form-group m-2">
+        
+        {{Form::select('sem', ['1' => 'First', '2' => 'Second'], $currentSetting->semester, ['class' => 'form-control w-25'])}}
+
+    </div>
+    <hr>
+
+<b>Prices per Unit</b>    
+
+    <div class="form-inline m-2">            
+        {{ Form::label('shsprice', 'SHS price/unit', ['class' => 'm-2']) }}
+        {{ Form::number('shs_price', $currentSetting->shs_price_per_unit, ['min' =>'0', 'max' => "1000", 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control']) }}
+    </div>
+
+    <div class="form-inline m-2">            
+        {{ Form::label('collegeprice', 'College price/unit', ['class' => 'm-2']) }}
+        {{ Form::number('col_price', $currentSetting->college_price_per_unit, ['min' =>'0', 'max' => "1000", 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control']) }}
+    </div>
+    <hr>
+<b>Number of Student per Class</b> 
+
+    <div class="form-inline m-2">                    
+        {{ Form::number('class_quantity', $currentSetting->class_quantity, ['min' =>'1', 'max' => "50", 'placeholder' => $currentSetting->class_quantity, 'class' => 'form-control']) }}
+    </div>
+
+    <hr class="shadow">
+
+    <div class="form-group">
+
+        {{Form::submit('Save', ['class' => 'btn btn-success w-50'])}}
+
+    </div>
+        
+{!! Form::close() !!}
+
+        
+    </div>
+
+    <div class="col-sm-6">
 
 
+    </div>
 
-
+</div>
 
 
 
