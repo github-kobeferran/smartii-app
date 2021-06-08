@@ -186,7 +186,7 @@ class StudentClassesController extends Controller
             $schedule = new Schedule;
 
             $schedule->day = $request->input('day');
-            $schedule->from = $request->input('from');
+            $schedule->start_time = $request->input('from');
             $schedule->until = $request->input('until');
             $schedule->room_id = $request->input('room_id');
             $schedule->class_id = $classID;

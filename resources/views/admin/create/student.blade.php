@@ -174,7 +174,7 @@
     </div> 
     <hr class=""/> 
     
-    <h3>Subjects<span class="lead"><em> leave empty for default values</em></span></h3>
+    <h3>Subjects<span class="lead"><em> leave empty for default values in settings</em></span></h3>
     
     <div class="table-responsive">
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Schedule;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class RoomsController extends Controller
 {
@@ -106,5 +107,33 @@ class RoomsController extends Controller
         }        
 
     }
+
+    public function availableRooms($from, $until, $day = null){
+
+        
+        if($day != null){
+             $sched = Schedule::select('room_id')
+             ->where('day', $day)
+             ->where('start_time','<=', $until)
+             ->where('until','>=', $from)                                                  
+             ->first();
+             
+             if($sched != null){
+               
+                return Room::where('id', '!=', $sched->room_id)->get()->toJson();
+                
+             } else {
+                return Room::all()->toJson();
+                
+             }
+ 
+             
+ 
+        }else{
+            return Room::all()->toJson();
+        }
+ 
+ 
+     }
 
 }

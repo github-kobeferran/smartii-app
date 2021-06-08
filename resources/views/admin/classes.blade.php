@@ -40,8 +40,8 @@
         
 
         changeClassesSelects(); 
-        allRooms(); 
-        allFaculty();   
+        availableRooms(); 
+        availableFaculty();   
         updateSchedCounter();
         changeViewSelects();
         fillRoomTable();

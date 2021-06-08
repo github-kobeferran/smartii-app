@@ -98,7 +98,7 @@ class SubjectsTakenController extends Controller
 
                 foreach($classSchedules as $classSched){
 
-                    $classSched->from = Carbon::parse($classSched->from)->format('h:i A');
+                    $classSched->start_time = Carbon::parse($classSched->start_time)->format('h:i A');
                     $classSched->until = Carbon::parse($classSched->until)->format('h:i A');
                     $classSched->faculty_name = $classSched->id;
                     $classSched->room_name = $classSched->id;

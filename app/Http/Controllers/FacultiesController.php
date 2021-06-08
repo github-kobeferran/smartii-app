@@ -10,6 +10,8 @@ use App\Models\Setting;
 use App\Models\Faculty;
 use App\Models\User;
 use App\Models\Member;
+use App\Models\Schedule;
+use App\Models\StudentClass;
 use App\Mail\WelcomeMember;
 
 class FacultiesController extends Controller
@@ -112,5 +114,46 @@ class FacultiesController extends Controller
 
 
     }
+
+
+    public function availableFaculty($from, $until, $day = null){
+
+        
+        if($day != null){
+
+            // $start = min($from, $until);
+            // $end = max($from, $until);
+
+            // return $from . ', ' . $until;
+
+             $faculty_id = Schedule::select('class_id')
+             ->where('day', $day)
+             ->where('start_time','<=', $until)
+             ->where('until','>=', $from)                   
+             ->first();
+             
+            
+             
+             if($faculty_id != null){
+
+                $class = StudentClass::where('id', $faculty_id->class_id)->first();                
+
+                return Faculty::where('id', '!=', $class->faculty_id)->get()->toJson();
+                
+             } else {
+                 
+                return Faculty::all()->toJson();
+                
+             }              
+ 
+        }else{
+
+            return Faculty::all()->toJson();
+
+        }
+ 
+ 
+     }
+
 
 }

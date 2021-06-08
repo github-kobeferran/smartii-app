@@ -242,7 +242,7 @@ function viewSchedules(){
 
                 let from = document.createElement("P");
                 from.className = "card-text h5";
-                from.textContent = "from: " + schedules[0][i].from;   
+                from.textContent = "from: " + schedules[0][i].start_time;   
 
                 let until = document.createElement("P");
                 until.className = "card-text h5";

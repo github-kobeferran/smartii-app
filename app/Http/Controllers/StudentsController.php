@@ -98,6 +98,37 @@ class StudentsController extends Controller
             }
             
         }
+
+        $subjects = $request->input('subjects');
+        $ratings = $request->input('ratings');
+        $from_years = $request->input('from_years');
+        $to_years = $request->input('to_years');        
+        $semesters = $request->input('semesters');  
+
+        // if(is_countable($subjects) > 0 ){
+
+        //     $subjectsToBeTakenLength = count($subjects);
+        //     $valid = true;
+
+        //     for($i=0; $i < $subjectsToBeTakenLength; $i++){
+
+        //         if( ($ratings[$i] != '' && $from_years[$i] == '' && $to_years[$i] == '' && $semesters[$i] == '') ||
+        //             ($ratings[$i] == '' && $from_years[$i] != '' && $to_years[$i] == '' && $semesters[$i] == '') ||
+        //             ($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] != '' && $semesters[$i] == '') ||
+        //             ($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] != '' && $semesters[$i] != '')
+        //             ){
+        //             $valid = false;
+        //             return redirect()
+        //                             ->route('adminCreate')
+        //                             ->with('error', 'Subject Details incomplete')
+        //                             ->with('student', true);
+
+        //         }
+
+        //     }
+
+            
+        // }
         
         $student = new Student;        
 
@@ -135,6 +166,9 @@ class StudentsController extends Controller
         
         $user->password = Hash::make($password);
         $user->user_type = 'student';
+
+
+      
         
                                
         if($request->input('student_id') != ''){
@@ -217,11 +251,7 @@ class StudentsController extends Controller
                       
         }
 
-        $subjects = $request->input('subjects');
-        $ratings = $request->input('ratings');
-        $from_years = $request->input('from_years');
-        $to_years = $request->input('to_years');        
-        $semesters = $request->input('semesters');        
+         
 
         $totalBalance = 0;
 

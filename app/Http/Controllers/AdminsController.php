@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\Member;
 use App\Models\Room;
 use App\Mail\WelcomeMember;
+use PDF;
 
 
 
@@ -352,21 +353,6 @@ class AdminsController extends Controller
         }    
         
         
-    }
-
-    public function invoice(Request $request){
-        //id
-        //invoice-id
-        //student id
-        //admin id
-        //timestamps
-        //total balance
-        //payment
-        //change
-        //
-        return Admin::find(auth()->user()->member->member_id)->admin_id . print_r($request->all());
-        
-
     }
 
 

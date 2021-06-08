@@ -13,7 +13,7 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $appends = ['program_desc' => null, 'balance_amount' => null];
+    protected $appends = ['level_desc' => null, 'dept' => null, 'program_desc' => null, 'balance_amount' => null];
 
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
@@ -41,6 +41,48 @@ class Student extends Model
     public function getBalanceAmountAttribute()
     {
         return $this->attributes['balance_amount'];
+    }
+
+    public function setDeptAttribute($id)
+    {
+        if($id == 0)
+            $this->attributes['dept'] = "SHS";
+        else
+            $this->attributes['dept'] = "College";
+    }
+
+    
+    public function getDeptAttribute()
+    {
+        return $this->attributes['dept'];
+    }
+
+
+    public function setLevelDescAttribute($value)
+    {
+        $level = "Undefined";
+        switch($value){
+            case 1:
+                $level = "Grade 11";
+            break;
+            case 2:
+                $level = "Grade 12";
+            break;
+            case 11:
+                $level = "First Year";
+            break;
+            case 12:
+                $level = "Second Year";
+            break;
+
+        }
+
+        $this->attributes['level_desc'] = $level;
+    }
+
+    public function getLevelDescAttribute()
+    {
+        return $this->attributes['level_desc'];
     }
 
 }

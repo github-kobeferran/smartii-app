@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
 use App\Models\Setting;
+use App\Models\Subject;
 
 class SubjectTaken extends Model
 {
@@ -13,8 +14,33 @@ class SubjectTaken extends Model
 
     public $timestamps = false;
     protected $table = 'subjects_taken';
+    protected $appends = ['units'=> null, 'subj_desc' => null];
     // protected $primaryKey = ['student_id', 'subject_id', 'from_year', 'semester'];
- 
+
+    public function setUnitsAttribute($id)
+    {
+        $subject = Subject::find($id);
+
+        $this->attributes['units'] = $subject->units;
+    }
+
+    public function getUnitsAttribute()
+    {
+        return $this->attributes['units'];
+    }
+    
+    public function setSubjDescAttribute($id)
+    {
+        $subject = Subject::find($id);
+
+        $this->attributes['subj_desc'] = $subject->desc;
+    }
+
+    public function getSubjDescAttribute()
+    {
+        return $this->attributes['subj_desc'];
+    }
+    
     public static function pendingClasses(){
 
         return static::where('from_year', Setting::first()->from_year)
@@ -35,6 +61,16 @@ class SubjectTaken extends Model
                      ->whereNotNull('class_id')
                      ->get();
 
+    }
+
+    public static function enrolledSubjectsbyStudent($id){
+
+        return static::where('from_year', Setting::first()->from_year)
+                     ->where('to_year', Setting::first()->to_year)
+                     ->where('semester', Setting::first()->semester)
+                     ->where('student_id',$id)                     
+                     ->get();
+        
     }
 
     

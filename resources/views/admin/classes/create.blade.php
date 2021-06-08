@@ -49,9 +49,9 @@
                 <table class="table table-striped table-responsive-sm border" >
                     <thead class="thead">
                         <tr>
-                            <th class="text-center" scope="col">Check</th>
-                            <th scope="col">Student ID</th>
-                            <th scope="col">Name</th>
+                            <th class="text-center bg-light" scope="col">Check</th>
+                            <th class="bg-light" scope="col">Student ID</th>
+                            <th class="bg-light" scope="col">Name</th>
                         </tr>
                     </thead> 
                     <tbody id="subjects-table" >
@@ -98,7 +98,7 @@
                         
                         <p><strong >From:   </strong></p>
     
-                        <input type="time" id="appt" name="from" value="07:00"
+                        <input type="time" id="from_time" name="from" value="07:00"
                         min="07:00" max="19:00" class="form-control bg-light text-dark border-secondary" required>          
                         
     
@@ -106,7 +106,7 @@
     
                     <div class="col-sm">
                         <p><strong >Until:   </strong></p>
-                        <input type="time" id="appt" name="until" value="08:00"
+                        <input type="time" id="until_time"  name="until" value="08:00"
                         min="08:00" max="21:00" class="form-control bg-light text-dark border-secondary" required>          
     
                     </div>
@@ -123,7 +123,7 @@
                         
                     {{Form::select('room', 
                     [], null,
-                    ['name' => 'room_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom'])}}            
+                    ['placeholder' => 'Pick a Room', 'name' => 'room_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom'])}}            
                 </div>    
     
             </div>
@@ -172,6 +172,9 @@ let selectSubject = document.getElementById('selectSubject');
 let selectRoom = document.getElementById('selectRoom');
 let selectFaculty = document.getElementById('selectFaculty');
 let schedContainer = document.getElementById('sched-container');
+let from_time = document.getElementById('from_time');
+let until_time = document.getElementById('until_time');
+let selectDay = document.getElementById('selectDay');
 
 
 let counter = 1;
@@ -188,6 +191,23 @@ selectSubject.addEventListener('change', () => {
     classesTableData();
     
 });
+
+selectDay.addEventListener('change', () => {   
+    availableRooms();    
+    availableFaculty();
+});
+
+from_time.addEventListener('input', () => {
+    availableRooms();    
+    availableFaculty();
+
+});
+until_time.addEventListener('input', () => {
+    availableRooms();    
+    availableFaculty();
+});
+
+
 
 function anotherSched(){
   
@@ -262,19 +282,24 @@ function deleteSched(){
 
 }
 
-function allRooms(){
+function availableRooms(){
     let xhr = new XMLHttpRequest();
 
-    xhr.open('GET', APP_URL + '/admin/view/rooms/', true);
+    let day = document.getElementById('selectDay').value;
+    let from = document.getElementById('from_time').value;
+    let until = document.getElementById('until_time').value;
+    
+
+    xhr.open('GET', APP_URL + '/admin/available/rooms/' + from + '/' + until + '/' + day , true);
 
     xhr.onload = function() {
         if (this.status == 200) { 
     
-            for(i = 0; i < selectProg.length; i++){
-                selectProg.remove(i);
+            for(i = 0; i < selectRoom.length; i++){
+                selectRoom.remove(i);
             }
-
-            var rooms = JSON.parse(this.responseText);                                
+            
+            let rooms = JSON.parse(this.responseText);            
 
             for (let i in rooms) {                                        
                 selectRoom.options[i] = new Option(rooms[i].name, rooms[i].id); 
@@ -291,15 +316,19 @@ function allRooms(){
 
 }
 
-function allFaculty(){
+function availableFaculty(){
     let xhr = new XMLHttpRequest();
 
-    xhr.open('GET', APP_URL + '/admin/view/faculty/', true);
+    let day = document.getElementById('selectDay').value;
+    let from = document.getElementById('from_time').value;
+    let until = document.getElementById('until_time').value;
+
+    xhr.open('GET', APP_URL + '/admin/available/faculty/' + from + '/' + until + '/' + day , true);
 
     xhr.onload = function() {
         if (this.status == 200) { 
     
-            for(i = 0; i < selectProg.length; i++){
+            for(i = 0; i < selectFaculty.length; i++){
                 selectFaculty.remove(i);
             }
 
@@ -419,7 +448,7 @@ function classesTableData(){
 
                     output += '<tr>';
 
-console.log(students[i].id);
+
 
 if(i < sectionLimit)
     output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." checked></th>'; 
