@@ -1,7 +1,7 @@
 @extends('layouts.module')
 
 @section('content')
-<h3>Dashboard</h3>
+<h5>Dashboard</h5>
                      
             <div class="card">
                 <div class="card-header">{{ __('Admin Dashboard') }}</div>

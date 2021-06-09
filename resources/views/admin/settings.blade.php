@@ -22,7 +22,7 @@
 ?>
 <div class="row">    
     <div class="col-sm-6">
-        <h2 class="mb-3">Settings<span clas=""><em class=" lead">set your defaults here</em></span></h2>
+        <h5 class="mb-3">Settings<span clas=""><em class=" lead">set your defaults here</em></span></h5>
         <hr>        
 {!! Form::open(['url' => 'admin/update/setting', 'id' => 'settingsForm']) !!}
 

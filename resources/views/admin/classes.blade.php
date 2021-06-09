@@ -34,6 +34,8 @@
     
 @endif
 
+<h5>Classes</h5>
+
 <div  id="classesTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">

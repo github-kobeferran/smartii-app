@@ -1,3 +1,5 @@
+
+
 {!! Form::open(['url' => 'admin/create/class', 'id' => 'classForm']) !!}
 
     <blockquote  class="blockquote text-center">Pending Classes, Assign Schedule and Instructor</blockquote >

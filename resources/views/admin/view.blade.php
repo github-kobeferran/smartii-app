@@ -2,8 +2,8 @@
 
 
 @section('content')
-<h4><span id="object" class="h2">Choose what to</span> View</h4>
 
+<h5>View</h5>
 <div  id="viewTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">

@@ -1,7 +1,7 @@
 @extends('layouts.module')
 
 @section('content')
-    <h3 class="mb-3">Payment</h3>
+    <h5 class="mb-3">Payment</h5>
 
     
     @if (session('status'))

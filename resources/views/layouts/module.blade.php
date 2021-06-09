@@ -27,28 +27,34 @@
         var APP_URL = {!! json_encode(url('/')) !!}
     </script>
 
-    <div id="app">
+    <div id="app" class="vh-100">
+
 
 
 
         @include('inc.navbar')
 
-        <div class="container-fluid">
-            <div class="row min-vh-100 flex-column flex-md-row" >           
+        <div class="container-fluid" >
+            <div class="row vh-100">    
+                
+                <div class="col-1" >
+                    @if (!Auth::guest() && Auth::user()->isAdmin())
+                        @include('inc.admin.sidebar')
+                    @elseif(!Auth::guest() && Auth::user()->isStudent())
+                        @include('inc.student.sidebar')
+                    @elseif(!Auth::guest() && Auth::user()->isStudent())
+                        @include('inc.faculty.sidebar')            
+                    @elseif(!Auth::guest() && Auth::user()->isApplicant())
+                        {{-- @include('inc.applicant.sidebar') --}}
+                    @endif
 
-            @if (!Auth::guest() && Auth::user()->isAdmin())
-                @include('inc.admin.sidebar')
-            @elseif(!Auth::guest() && Auth::user()->isStudent())
-                @include('inc.student.sidebar')
-            @elseif(!Auth::guest() && Auth::user()->isStudent())
-                @include('inc.faculty.sidebar')            
-            @elseif(!Auth::guest() && Auth::user()->isApplicant())
-                {{-- @include('inc.applicant.sidebar') --}}
-            @endif
-            
-            <main class="col bg-faded py-3 flex-grow-1 shadow">                
-                @yield('content')
-            </main>                            
+                </div>
+
+                <div class="col-11 pl-0 mt-3 flex-grow-1" >
+                                   
+                        @yield('content')
+                    
+                </div>                                                           
 
             </div>    
         </div>
