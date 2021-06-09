@@ -23,6 +23,12 @@ tbody td {
   font-size: large;
 }
 
+#sidebar-nav-admin > li:active {
+  background-color: #77664b;
+  color: white;
+  font-size: large;
+}
+
 .bs-example {
   margin: 20px;
 }

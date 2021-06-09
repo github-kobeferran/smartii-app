@@ -64,9 +64,10 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 });
 
 // APPLICANT protected routes 
-
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/applicant', [App\Http\Controllers\ApplicantsController::class, 'index'])->name('applicantDashboard')->middleware('verified');
+    Route::get('/applicant', [App\Http\Controllers\ApplicantsController::class, 'index'])->name('admissionForm')->middleware('verified');
+    Route::get('/applicant/view/programs/{dept}', [App\Http\Controllers\ApplicantsController::class, 'showPrograms'])->name('applicantViewPrograms');    
+    Route::post('/applicant/create/', [App\ttp\Controllers\ApplicantsController::class, 'store'])->name('applicantStore');    
 });
 
 // STUDENT protected routes 

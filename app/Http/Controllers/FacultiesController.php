@@ -39,7 +39,7 @@ class FacultiesController extends Controller
             return redirect()->route('adminCreate')
                          ->withErrors($validator)
                          ->withInput()
-                         ->with('faculty', true);
+                         ->with('active', 'faculty');
         }
 
         if(Faculty::where('email', $request->input('email'))->exists() ||
@@ -47,7 +47,7 @@ class FacultiesController extends Controller
 
             return redirect()->route('adminCreate')
                              ->with('error', 'Email Already Exist')
-                             ->with('faculty', true);
+                             ->with('active', 'faculty');
                             
         }
 
@@ -99,7 +99,7 @@ class FacultiesController extends Controller
             } else {
                 return redirect()->route('adminCreate')
                              ->with('error' , 'There\'s a problem creating this member, please try again.')
-                             ->with('faculty', true); 
+                             ->with('active', 'faculty');
             }
 
 
@@ -110,7 +110,7 @@ class FacultiesController extends Controller
 
         return redirect()->route('adminCreate')
                              ->with($status , $msg)
-                             ->with('faculty', true);   
+                             ->with('active', 'faculty'); 
 
 
     }
@@ -128,8 +128,8 @@ class FacultiesController extends Controller
 
              $faculty_id = Schedule::select('class_id')
              ->where('day', $day)
-             ->where('start_time','<=', $until)
-             ->where('until','>=', $from)                   
+             ->where('start_time','<', $until)
+             ->where('until','>', $from)                   
              ->first();
              
             

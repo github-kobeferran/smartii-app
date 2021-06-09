@@ -1,4 +1,4 @@
-<nav id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow">
+ <nav id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
@@ -38,8 +38,19 @@
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
                             <?php $role = auth()->user()->user_type ?>                                    
-                            <a class="dropdown-item" href="{{ route($role . 'Dashboard') }}">
+                            <a class="dropdown-item"
+                            
+                            @if(!Auth::guest() && Auth::user()->isApplicant())
+                                href="{{ route("admissionForm") }}"
+                            @else
+                                href="{{ route($role . 'Dashboard') }}"
+                            @endif    
+                                >
+                                @if(!Auth::guest() && Auth::user()->isApplicant())
+                                    Admission Form
+                                @else
                                 {{ __(ucfirst($role) . ' Module') }}
+                                @endif
                             </a>
 
 
@@ -59,4 +70,4 @@
             </ul>
         </div>
     </div>
-</nav>
+</nav>  

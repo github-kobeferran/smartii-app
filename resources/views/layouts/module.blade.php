@@ -17,16 +17,20 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-        
-    
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+                
 </head>
 <body>
+  
+
     <script>
         var APP_URL = {!! json_encode(url('/')) !!}
     </script>
+
     <div id="app">
+
+
+
         @include('inc.navbar')
 
         <div class="container-fluid">
@@ -39,7 +43,7 @@
             @elseif(!Auth::guest() && Auth::user()->isStudent())
                 @include('inc.faculty.sidebar')            
             @elseif(!Auth::guest() && Auth::user()->isApplicant())
-                @include('inc.applicant.sidebar')
+                {{-- @include('inc.applicant.sidebar') --}}
             @endif
             
             <main class="col bg-faded py-3 flex-grow-1 shadow">                
@@ -55,6 +59,8 @@
     
   
     <script src="{{ asset('js/app.js') }}" defer></script>  
+
+    @yield('javascript')
  
 </body>
 </html>

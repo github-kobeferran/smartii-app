@@ -73,7 +73,7 @@ class AdminsController extends Controller
 
             return redirect()->route('adminCreate')
                              ->with('error', 'Email Already Exist')
-                             ->with('admin', true);
+                             ->with('active', 'admin');
                             
         }
 
@@ -126,7 +126,7 @@ class AdminsController extends Controller
             } else {
                 return redirect()->route('adminCreate')
                              ->with('error' , 'There\'s a problem creating this member, please try again.')
-                             ->with('admin', true); 
+                             ->with('active', 'admin');
             }
 
 
@@ -137,7 +137,7 @@ class AdminsController extends Controller
 
         return redirect()->route('adminCreate')
                              ->with($status, $msg)
-                             ->with('admin', true); 
+                             ->with('active', 'admin');
 
           
                 

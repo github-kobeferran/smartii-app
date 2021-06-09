@@ -68,7 +68,7 @@ class StudentsController extends Controller
                             ->route('adminCreate')
                             ->withErrors($validator)
                             ->withInput()
-                            ->with('student', true);
+                            ->with('active', 'student');
         }      
         
         if($request->input('student_id') != ''){
@@ -77,7 +77,7 @@ class StudentsController extends Controller
                 return redirect()
                             ->route('adminCreate')
                             ->with('error', 'Student ID Already Exist')
-                            ->with('student', true);
+                            ->with('active', 'student');
             }
         }
 
@@ -87,14 +87,14 @@ class StudentsController extends Controller
                 return redirect()
                             ->route('adminCreate')
                             ->with('error', 'Email Already Exist')
-                            ->with('student', true);
+                            ->with('active', 'student');
             }
 
             if(User::where('email', $request->input('email'))->exists()){
                 return redirect()
                             ->route('adminCreate')
                             ->with('error', 'Email Already Exist')
-                            ->with('student', true);
+                            ->with('active', 'student');
             }
             
         }
@@ -105,30 +105,30 @@ class StudentsController extends Controller
         $to_years = $request->input('to_years');        
         $semesters = $request->input('semesters');  
 
-        // if(is_countable($subjects) > 0 ){
+        if(is_countable($subjects) > 0 ){
 
-        //     $subjectsToBeTakenLength = count($subjects);
-        //     $valid = true;
+            $subjectsToBeTakenLength = count($subjects);
+            $valid = true;
 
-        //     for($i=0; $i < $subjectsToBeTakenLength; $i++){
+            for($i=0; $i < $subjectsToBeTakenLength; $i++){
 
-        //         if( ($ratings[$i] != '' && $from_years[$i] == '' && $to_years[$i] == '' && $semesters[$i] == '') ||
-        //             ($ratings[$i] == '' && $from_years[$i] != '' && $to_years[$i] == '' && $semesters[$i] == '') ||
-        //             ($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] != '' && $semesters[$i] == '') ||
-        //             ($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] != '' && $semesters[$i] != '')
-        //             ){
-        //             $valid = false;
-        //             return redirect()
-        //                             ->route('adminCreate')
-        //                             ->with('error', 'Subject Details incomplete')
-        //                             ->with('student', true);
+                if( ( !empty($ratings[$i]) && empty($from_years[$i]) && empty($to_years[$i]) && empty($semesters[$i]) ) ||
+                    ( empty($ratings[$i])  && !empty($from_years[$i]) && empty($to_years[$i]) && empty($semesters[$i]) ) ||
+                    ( empty($ratings[$i]) && empty($from_years[$i]) && !empty($to_years[$i]) && empty($semesters[$i]) ) ||
+                    ( empty($ratings[$i])  && empty($from_years[$i]) && empty($to_years[$i]) && !empty($semesters[$i]) )
+                    ){
+                    $valid = false;
+                    return redirect()
+                                    ->route('adminCreate')
+                                    ->with('error', 'Subject Details incomplete')
+                                    ->with('active', 'student');
 
-        //         }
+                }
 
-        //     }
+            }
 
             
-        // }
+        }
         
         $student = new Student;        
 
@@ -330,7 +330,7 @@ class StudentsController extends Controller
                     $status = 'warning';
                     $message = 'Subjects not added due to missing data. Please use Add Subjects to Students to add it again.';
 
-                    return redirect()->route('adminCreate')->with($status, $message)->with('student', true);
+                    return redirect()->route('adminCreate')->with($status, $message)->with('active', 'student');
                 }
                                                                                                   
             }                      
@@ -341,7 +341,7 @@ class StudentsController extends Controller
             $message = 'Student Created with no Subjects taken';
         }
       
-        return redirect()->route('adminCreate')->with($status, $message)->with('student', true); 
+        return redirect()->route('adminCreate')->with($status, $message)->with('active', 'student');
                 
     }
 

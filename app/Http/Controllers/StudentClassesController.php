@@ -70,7 +70,7 @@ class StudentClassesController extends Controller
                 return redirect()->route('adminClasses')
                              ->withErrors($validator)
                              ->withInput()
-                             ->with('create', true);
+                             ->with('active', 'create');
             }
 
             for($i=0; $i<$noOfSched; $i++){ 
@@ -146,7 +146,7 @@ class StudentClassesController extends Controller
 
             return redirect()->route('adminClasses')
                              ->with($status , $msg)
-                             ->with('create', true); 
+                             ->with('active', 'create');
             
             
             
@@ -170,7 +170,7 @@ class StudentClassesController extends Controller
                 return redirect()->route('adminClasses')
                              ->withErrors($validator)
                              ->withInput()
-                             ->with('create', true);
+                             ->with('active', 'create');
             }
 
             $students = $request->input('student_ids');
@@ -218,7 +218,7 @@ class StudentClassesController extends Controller
 
             return redirect()->route('adminClasses')
                              ->with($status , $msg)
-                             ->with('create', true); 
+                             ->with('active', 'create');
             
         
             

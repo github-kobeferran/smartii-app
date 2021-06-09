@@ -23,10 +23,13 @@
     
 </head>
 <body>
+   
     <script>
         var APP_URL = {!! json_encode(url('/')) !!}
     </script>
     <div id="app">
+        
+                
         
         @include('inc.navbar')
 

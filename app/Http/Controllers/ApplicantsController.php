@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Applicant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Applicant;
+use App\Models\Program;
+
+
 
 class ApplicantsController extends Controller
 {
@@ -14,7 +19,7 @@ class ApplicantsController extends Controller
      */
     public function index()
     {
-        return view('applicant.dashboard');
+        return view('applicant.admission');
     }
 
     /**
@@ -35,7 +40,19 @@ class ApplicantsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+
+            'id_pic' => 'required', 
+            'birth_cert' => 'required', 
+            'report_card' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admissionForm')
+                         ->withErrors($validator)
+                         ->withInput();                         
+        }
     }
 
     /**
@@ -81,5 +98,15 @@ class ApplicantsController extends Controller
     public function destroy(Applicant $applicant)
     {
         //
+    }
+
+
+    public function showPrograms($dept){
+        
+        return Program::where('department', $dept)
+                            ->where('id', '!=', 3)
+                            ->where('id', '!=', 4)
+                            ->get()->toJson();
+
     }
 }
