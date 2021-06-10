@@ -123,26 +123,67 @@ Define your own CSS3 animations in the CSS.
         
         <div class="col-md-8">            
 
+          <?php 
+              $dept = false;
+              $req = false;
+              $personal = false;     
+              $upload_ulit = false;     
+
+          ?>
+
+          @if ( session()->has('active') )
+          <?php 
+
+              $value = session('active');
+
+              switch ($value) {
+                  case 'dept':
+                      $dept = true;
+                      break;
+                  case 'req':
+                      $req = true;
+                      break;
+                  case 'personal':
+                      $personal = true;
+                      break;
+                  case 'upload_ulit':
+                      $dept = true;
+                      $req = true;
+                      break;
+
+                  default:
+                      $student = true;
+                      break;
+
+              }
+          ?>
+
+          @else     
+          <?php
+              
+
+              $dept = true;
+          ?>
+              
+          @endif
+
             {!! Form::open(['url' => 'applicant/create/', 'files' => true, 'id' => 'applicantForm']) !!}
 
-            <div class="multisteps-form">
+            <div class="multisteps-form ">
+               
 
-                @if (session('dept') == '' || session('req') == '' || session('personal') == '')
-
-                    {{ session()->put('dept',true)}}
-                    
-                @endif
-
-                <!--progress bar-->
-                <div class="row">
-                  <div class="col-12 col-lg-8 ml-auto mr-auto mb-4">
+                <!--------------------------------progress bar-->
+                <div class="row ">
+                  <div class="col-12 col-lg-8 ml-auto  mr-auto mb-4 mt-3">
                     <div class="multisteps-form__progress">
-                      <button class="multisteps-form__progress-btn {{ session('dept') ? 'js-active' : '' }}" type="button" title="Department">Department and Program</button>                    
-                      <button class="multisteps-form__progress-btn {{ session('req') ? 'js-active' : '' }}" type="button" title="Admission Requirements">Admission Requirements</button>
-                      <button class="multisteps-form__progress-btn {{ session('personal') ? 'js-active' : '' }}" type="button" title="Personal Data">Personal Data</button>
+                      <button class="multisteps-form__progress-btn {{ $dept ? 'js-active' : '' }}" type="button" title="Department" >Department and Program</button>                                          
+                      <button class="multisteps-form__progress-btn {{ $personal ? 'js-active' : '' }}" type="button" title="Personal Data">Personal Details</button>
+                      <button class="multisteps-form__progress-btn {{ $req ? 'js-active' : '' }}" type="button" title="Admission Requirements">Admission Requirements</button>
                     </div>
                   </div>
                 </div>
+
+
 
                 @if (session('status'))
                 <div class="alert alert-success" role="alert">
@@ -152,7 +193,11 @@ Define your own CSS3 animations in the CSS.
             
                 @include('inc.messages')
 
+
+                <!-------------------------------------Monitor Inputs-->
                 <p id="monitorInputs" class="d-none text-center"></p>
+
+                
                 <!--form panels-->
 
                 <div class="row">
@@ -161,81 +206,36 @@ Define your own CSS3 animations in the CSS.
                     <form class="multisteps-form__form">
 
 
-                      <!-- Department Selection --> 
-                      <div class="multisteps-form__panel  p-4 rounded bg-white {{ session('dept') ? 'js-active' : '' }}" data-animation="scaleIn">
-                        <h3 id="selected-dept" class="multisteps-form__title text-center">Select Department</h3>
+                      <!--------------------------------------- Department Selection --> 
+                      <div class="multisteps-form__panel  p-4 rounded bg-white {{ $dept ? 'js-active' : '' }}" data-animation="scaleIn">
+                        <h3 style="font-family: 'Raleway', sans-serif; font-weight: 900px; color: #044716;" id="selected-dept" class="multisteps-form__title text-center">Select Department</h3>
                         <div class="multisteps-form__content">
 
-                            <div class="form-group text-center">                                 
+                            <div class="form-group text-center text-white">                                 
                                 
-                                <button id="btnShsSelect"  value="0" onclick="toggleDepartment(document.getElementById('btnShsSelect'))" style="height: 100px; width: 120px;" type="button" class="btn btn-primary m-1" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                    <h5>Senior High School</h5>
+                                <button id="btnShsSelect"  value="0" onclick="toggleDepartment(document.getElementById('btnShsSelect'))" style="height: 100px; width: 120px;" type="button" class="btn btn-primary m-1 " data-toggle="button" aria-pressed="false" autocomplete="off">
+                                    <h4>Senior High School</h4>
                                 </button>
 
                                 <button id="btnCollegeSelect" value="1" onclick="toggleDepartment(document.getElementById('btnCollegeSelect'))" style="height: 100px;  width: 120px;" type="button" class="btn btn-primary m-1" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                    <h5>College</h5>
+                                    <h4>College</h4>
                                 </button>
 
                                 <input id="hiddenDept" type="hidden" name="dept">
                                 
-
                             </div>
 
                             <div id="divProg" class="form-group text-center mt-3 d-none">
-                                <h5>Program</h5>
+                                <h4 style="font-family: 'Raleway', sans-serif; font-weight: 900px; color: #044716;">Program</h4>
                                 {{Form::select('program_id', [], null, ['placeholder' => 'Select a Program', 'class' => 'form-control' , 'id' => 'selectProg'])}}   
                             </div>                                                              
 
                         </div>
                       </div>
 
-
-                       <!-- Program Selection --> 
-                      <div class="multisteps-form__panel p-4 rounded bg-white {{ session('req') ? 'js-active' : '' }}" data-animation="scaleIn">
-                        <h3 class="multisteps-form__title text-center">Admission Requirements</h3>
-                        <div class="multisteps-form__content">
-                            
-                            <div class=" border rounded border-secondary mb-2">
-
-                                <div class="form-group m-3">
-                
-                                    {{Form::label('idpic', '1x1 ID Picture')}}
-                                    {{Form::file('id_pic', ['class' => 'form-control-file'])}}
-                    
-                                </div>
-                
-                            </div>
-                
-                            <div class=" border rounded border-secondary mb-2">
-                
-                                <div class="form-group m-3">
-                
-                                    {{Form::label('birthcert', 'PSA Birth Certificate')}}
-                                    {{Form::file('birth_cert', ['class' => 'form-control-file '])}}
-                    
-                                </div>
-                
-                            </div>
-                
-                            <div class=" border rounded border-secondary mb-2">
-                
-                                <div class="form-group m-3">
-                
-                                    {{Form::label('form10', 'Grade 10 Report Card', ['id' => 'reportCardLabel'])}}
-                                    {{Form::file('report_card', ['class' => 'form-control-file ', 'id' => 'reportCard'])}}
-                    
-                                </div>
-                
-                            </div>                                       
-
-                        </div>
-                        </div>
-
-                   
-
-                       <!-- File Requirements --> 
-                      <div class="multisteps-form__panel p-4 rounded bg-white {{ session('personal') ? 'js-active' : '' }}" data-animation="scaleIn">
-                        <h3 class="multisteps-form__title text-center">Personal Information</h3>
+                      <!--------------------------------------- Personal Data --> 
+                      <div class="multisteps-form__panel p-4 rounded bg-white {{ $personal ? 'js-active' : '' }}" data-animation="scaleIn">
+                        <h3 style="font-family: 'Raleway', sans-serif; font-weight: 900px; color: #044716;" class="multisteps-form__title text-center">Personal Information</h3>
                         <div class="multisteps-form__content">                            
                 
                             <div class="border rounded border-secondary mb-2">
@@ -273,36 +273,80 @@ Define your own CSS3 animations in the CSS.
                                 </div> 
                 
                             </div>
-                            
-                            <div class = "form-group mt-3">        
-                                {{Form::submit('Submit',  ['class' => 'btn btn-primary btn-block '])}}
-                            </div>  
-
-
 
                         </div>
                       </div>
 
-                      
-                       <!-- Personal Data --> 
-                      <div class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
-                        <h3 class="multisteps-form__title">Additional Comments</h3>
+
+                      <!--------------------------------------- File Requirements --> 
+
+                      <div class="multisteps-form__panel p-4 rounded bg-white {{ $req ? 'js-active' : '' }}" data-animation="scaleIn">
+                        <h3 style="font-family: 'Raleway', sans-serif; font-weight: 900px; color: #044716;" class="multisteps-form__title text-center">Admission Requirements</h3>
                         <div class="multisteps-form__content">
-                          <div class="form-row mt-4">
-                            <textarea class="multisteps-form__textarea form-control" placeholder="Additional Comments and Requirements"></textarea>
-                          </div>
-                          <div class="button-row d-flex mt-4">
-                            <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
-                            <button class="btn btn-success ml-auto" type="button" title="Send">Send</button>
-                          </div>
+                            
+                            <div class=" border rounded border-secondary mb-2">
+
+                                <div class="form-group m-3">
+                
+                                    {{Form::label('idpic', '1x1 ID Picture')}}
+                                    {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                    
+                                </div>
+                
+                            </div>
+                
+                            <div class=" border rounded border-secondary mb-2">
+                
+                                <div class="form-group m-3">
+                
+                                    {{Form::label('birthcert', 'PSA Birth Certificate')}}
+                                    {{Form::file('birth_cert', ['class' => 'form-control-file '])}}
+                    
+                                </div>
+                
+                            </div>
+
+                            <div class=" border rounded border-secondary mb-2">
+                
+                                <div class="form-group m-3">
+                
+                                    {{Form::label('goodmoral', 'Good Moral Certificate')}}
+                                    {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                    
+                                </div>
+                
+                            </div>
+                
+                            <div class=" border rounded border-secondary mb-2">
+                
+                                <div class="form-group m-3">
+                
+                                    {{Form::label('form10', 'Grade 10 Report Card | Form 138', ['id' => 'reportCardLabel'])}}
+                                    {{Form::file('report_card', ['class' => 'form-control-file ', 'id' => 'reportCard'])}}
+                    
+                                </div>
+                
+                            </div> 
+
+                            <div class = "form-group mt-3">        
+                              {{Form::submit('Submit',  ['class' => 'btn btn-primary btn-block '])}}
+                            </div>   
+                            
+                            <div class="card bg-light border-info mb-3 text-center" >                              
+                              <div class="card-body">                                                               
+                                <p class="card-text "><i class="fa fa-info-circle mr-2 text-primary" aria-hidden="true"></i><a href="/admissionhelp" target="_blank">See Admission Requirements Guidelines</a></p>
+                              </div>
+                            </div>
+
                         </div>
                       </div>
-
 
                     </form>
+
                    </div>
                 </div>
               </div>
+
             {!! Form::close() !!}
             
         </div>
@@ -358,7 +402,7 @@ function toggleDepartment(btn){
         
         deptOutput.textContent = btn.textContent + " Department";
 
-        reportCardLabel.textContent = "Grade 10 Report Card";
+        reportCardLabel.textContent = "Grade 10 Report Card | Form 138";
     } else {                              
         monitorInputs.className = "text-center";
         
@@ -367,7 +411,7 @@ function toggleDepartment(btn){
         btn.className = "btn btn-success m-1 active";
         deptOutput.textContent = btn.textContent + " Department";
 
-        reportCardLabel.textContent = "Grade 12 Report Card";
+        reportCardLabel.textContent = "Grade 12 Report Card | Form 138";
     }
 
     monitorInputs.textContent = theDeptOutput;

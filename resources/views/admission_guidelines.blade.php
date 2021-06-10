@@ -1,12 +1,11 @@
-@extends('layouts.module')
+@extends('layouts.app')
 
 @section('content')
-
-<h5>Dashboard</h5>
-                     
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
             <div class="card">
-
-                <div class="card-header">{{ __('Admin Dashboard') }}</div>
+                <div class="card-header">{{ __('Home') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -15,9 +14,10 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    {{ __('Admission Guidelines page') }}
                 </div>
-
             </div>
-
+        </div>
+    </div>
+</div>
 @endsection

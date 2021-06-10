@@ -41,7 +41,7 @@
             }
             
             .main-menu>ul {
-            margin:7px 0;
+            margin:10px 0;
             }
             
             .main-menu li {

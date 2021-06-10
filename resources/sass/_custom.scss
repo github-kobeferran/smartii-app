@@ -1,9 +1,18 @@
 // .navbar-nav>li>a:hover {
 //     color: blue;
 // }
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 thead th {
     position: sticky;
     top: 0;
+}
+
+h5 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900px;
+    color: #044716 !important;
+    text-align: right;
+    padding-right: 5em;
 }
 
 tbody td {
@@ -40,19 +49,6 @@ tbody td {
     padding: 5px 15px;
 }
 
-
-/* remove border radius for the tab */
-
-// .nav-link.view {
-//     border-bottom: 3px solid rgba(0, 0, 0, 0);
-// }
-// .nav-link.sidebar-admin:hover {
-//     border-bottom: 1px solid #eee;
-// }
-// .nav-link.sidebar-admin:active {
-//     border-bottom: 3px solid #338ecf;
-//     background: #eee
-// }
 .dual-ring {
     display: none;
     width: 80px;

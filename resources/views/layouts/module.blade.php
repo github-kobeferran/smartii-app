@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ ucfirst(strtolower(config('app.name', 'Laravel'))) }}</title>
 
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/6421dddc90.js" crossorigin="anonymous"></script>
@@ -27,39 +27,52 @@
         var APP_URL = {!! json_encode(url('/')) !!}
     </script>
 
-    <div id="app" class="vh-100">
+
+    @include('inc.navbar')
+
+    <div class="container-fluid mx-0 p-0" >
+    
+       
+                @if (!Auth::guest() && Auth::user()->isAdmin())
 
 
-
-
-        @include('inc.navbar')
-
-        <div class="container-fluid" >
-            <div class="row vh-100">    
-                
-                <div class="col-1" >
-                    @if (!Auth::guest() && Auth::user()->isAdmin())
+                <div class="row vh-100 no-gutters">    
+            
+                    <div class="col-sm-1 mx-auto">
                         @include('inc.admin.sidebar')
-                    @elseif(!Auth::guest() && Auth::user()->isStudent())
-                        @include('inc.student.sidebar')
-                    @elseif(!Auth::guest() && Auth::user()->isStudent())
-                        @include('inc.faculty.sidebar')            
-                    @elseif(!Auth::guest() && Auth::user()->isApplicant())
-                        {{-- @include('inc.applicant.sidebar') --}}
-                    @endif
 
-                </div>
+                    </div>
 
-                <div class="col-11 pl-0 mt-3 flex-grow-1" >
-                                   
+                
+                    <div class="col-11 mt-2 mx-auto" >
+                                        
                         @yield('content')
                     
-                </div>                                                           
+                    </div> 
+                </div> 
 
-            </div>    
-        </div>
 
+                @elseif(!Auth::guest() && Auth::user()->isStudent())
+
+                    @include('inc.student.sidebar')
+
+                @elseif(!Auth::guest() && Auth::user()->isStudent())
+
+                    @include('inc.faculty.sidebar')            
+
+                @elseif(!Auth::guest() && Auth::user()->isApplicant())
+
+                    @yield('content')
+                    
+                @endif
+
+           
+                                                          
+
+          
     </div>
+
+    
 
     
     

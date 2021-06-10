@@ -1,8 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
+@import url(https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap);
 @charset "UTF-8";
 thead th {
   position: sticky;
   top: 0;
+}
+
+h5 {
+  font-family: "Raleway", sans-serif;
+  font-weight: 900px;
+  color: #044716 !important;
+  text-align: right;
+  padding-right: 5em;
 }
 
 tbody td {
@@ -39,7 +48,6 @@ tbody td {
   padding: 5px 15px;
 }
 
-/* remove border radius for the tab */
 .dual-ring {
   display: none;
   width: 80px;

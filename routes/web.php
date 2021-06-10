@@ -17,8 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 });
+
 Route::get('/home', function () {
     return view('home');
+});
+
+Route::get('/admissionhelp', function () {
+    return view('admission_guidelines');
 });
 
 Auth::routes(['verify' => true]);
@@ -79,6 +84,8 @@ Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
     Route::get('/faculty', [App\Http\Controllers\FacultiesController::class, 'index'])->name('facultyDashboard')->middleware('verified');
 });
+
+
 
 
 // Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('home');

@@ -50,8 +50,8 @@ class ApplicantsController extends Controller
 
         if ($validator->fails()) {
             return redirect()->route('admissionForm')
-                         ->withErrors($validator)
-                         ->withInput();                         
+                         ->with('error', 'upload ulit')
+                         ->with('active', 'upload_ulit');
         }
     }
 

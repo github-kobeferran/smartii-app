@@ -20,10 +20,12 @@
     $maxTo = $yearNow->addYear(2)->year;
 
 ?>
-<div class="row">    
-    <div class="col-sm-6">
-        <h5 class="mb-3">Settings<span clas=""><em class=" lead">set your defaults here</em></span></h5>
-        <hr>        
+<h5 class="">Settings</h5>
+
+<div class="row">        
+    <div class="col-sm-6">                
+        <span clas=""><em class=" lead mb-3">Set your defaults here</em></span>
+        <hr>
 {!! Form::open(['url' => 'admin/update/setting', 'id' => 'settingsForm']) !!}
 
 <b>Academic Year</b> 
