@@ -311,13 +311,17 @@ class AdminsController extends Controller
             case 'admins':  
 
                 if($text == ''){
+
                     return Admin::all();                    
+
                 }else{
+
                     return Admin::query()
                     ->where('name', 'LIKE',  $text . "%")
                     ->orWhere('email', 'LIKE',  $text . "%")
                     ->orWhere('position', 'LIKE', $text . "%")
                     ->get()->toJson();                  
+                    
                 }    
 
             break;

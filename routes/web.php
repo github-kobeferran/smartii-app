@@ -73,6 +73,7 @@ Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])
     Route::get('/applicant', [App\Http\Controllers\ApplicantsController::class, 'index'])->name('admissionForm')->middleware('verified');
     Route::get('/applicant/view/programs/{dept}', [App\Http\Controllers\ApplicantsController::class, 'showPrograms'])->name('applicantViewPrograms');    
     Route::post('/applicant/create/', [App\Http\Controllers\ApplicantsController::class, 'store'])->name('applicantStore');    
+    Route::post('/applicant/programs/{prog}', [App\Http\Controllers\ApplicantsController::class, 'getProg'])->name('getApplicantProg');    
 });
 
 // STUDENT protected routes 

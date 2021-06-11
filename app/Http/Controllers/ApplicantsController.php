@@ -38,21 +38,172 @@ class ApplicantsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
+    public function store(Request $request)    
+    {    
 
-            'id_pic' => 'required', 
-            'birth_cert' => 'required', 
-            'report_card' => 'required',
+        $validator = Validator::make($request->all(), [
+            
+            'dept' => 'required',                                     
+
+        ],
+        [
+
+            'dept.required' => 'Select a Department and Program First.',            
+                        
+        ]);
+
+        
+        if ($validator->fails()) {
+            return redirect()->route('admissionForm')
+                         ->withErrors($validator)
+                         ->with('active', 'dept');
+        }
+
+        $validated = ['dept' => $request->input('dept'),
+                      'prog' => $request->input('program_id'),
+                      'prog_desc' => Program::find($request->input('program_id'))->desc,
+                    ];                    
+
+        $validator = Validator::make($request->all(), [
+            
+            'l_name' => 'required', 
+            'f_name' => 'required', 
+            'm_name' => 'required', 
+            'present_address' => 'required', 
+            'last_school' => 'required',
+
+        ],
+        [
+
+            'l_name.required' => 'Last Name is required.',
+
+            'f_name.required' => 'First Name is required.',
+
+            'm_name.required' => 'Middle Name is required.',
+
+            'present_address.required' => 'Present Address is required.',
+
+            'last_school.required' => 'Last School Attended is required.',
+
+        ]);        
+
+        if ($validator->fails()) {
+            return redirect()->route('admissionForm')
+                         ->withErrors($validator)                             
+                         ->with('active', 'resubmit_personal')
+                         ->with('dept', $validated['dept'])
+                         ->with('prog', $validated['prog'])
+                         ->with('prog_desc', $validated['prog_desc']);
+        }
+
+        $validated +=  ['l_name' => $request->input('l_name'),
+                               'f_name' => $request->input('f_name'),
+                               'm_name' => $request->input('m_name'),
+                               'dob' => $request->input('dob'),
+                               'gender' => $request->input('gender'),
+                               'present_address' => $request->input('present_address'),
+                               'last_school' => $request->input('last_school')];
+        
+
+        $validator = Validator::make($request->all(), [
+            
+            'id_pic' => 'required|max:300|mimes:jpeg', 
+            'birth_cert' => 'required|max:300|mimes:jpeg', 
+            'good_moral' => 'required|max:300|mimes:jpeg', 
+            'report_card' => 'required|max:300|mimes:jpeg',         
+
+        ],
+        [
+
+            'id_pic.required' => 'The 1x1 ID Picture is required.',
+            'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+            'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',
+
+            'birth_cert.required' => 'The Birth Certificate File is required.',
+            'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+            'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',
+            
+            'good_moral.required' => 'The Good Moral Certificate File is required.',
+            'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+            'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',
+
+            'report_card.required' => 'The Form 138 File is required.',
+            'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+            'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
 
         ]);
 
         if ($validator->fails()) {
             return redirect()->route('admissionForm')
-                         ->with('error', 'upload ulit')
-                         ->with('active', 'upload_ulit');
+                         ->withErrors($validator)
+                         ->with('active', 'resubmit_files')
+                         ->with('dept', $validated['dept'])
+                         ->with('prog', $validated['prog'])
+                         ->with('prog_desc', $validated['prog_desc'])
+                         ->with('l_name', $validated['l_name'])
+                         ->with('f_name', $validated['f_name'])
+                         ->with('m_name', $validated['m_name'])
+                         ->with('dob', $validated['dob'])
+                         ->with('gender', $validated['gender'])
+                         ->with('present_address', $validated['present_address'])
+                         ->with('last_school', $validated['last_school']);
         }
+
+        if( $request->hasFile('id_pic')  && $request->hasFile('report_card') &&
+            $request->hasFile('birth_cert') && $request->hasFile('good_moral')){
+
+            // get filename with the extension
+            $idPicwithExt = $request->file('id_pic')->getClientOriginalName();
+            // get just filename
+            $idPicName = pathinfo($idPicwithExt, PATHINFO_FILENAME);
+            // get just ext
+            $idPicExt = $request->file('id_pic')->getClientOriginalExtension();
+            //Filename to store
+            $idPicToStore = $idPicName.'_'.time().'.'.$idPicExt;
+            // upload image
+            $id_pic_path = $request->file('id_pic')->storeAs('public/applicants/id_pics', $idPicToStore);
+
+
+            $birth_certwithExt = $request->file('birth_cert')->getClientOriginalName();
+            $birth_certName = pathinfo($birth_certwithExt, PATHINFO_FILENAME);
+            $birth_certExt = $request->file('birth_cert')->getClientOriginalExtension();
+            $birth_certToStore = $birth_certName.'_'.time().'.'.$birth_certExt;
+            $birth_cert_path = $request->file('birth_cert')->storeAs('public/applicants/birth_certs', $birth_certToStore);
+
+            $good_moralwithExt = $request->file('good_moral')->getClientOriginalName();           
+            $good_moralName = pathinfo($good_moralwithExt, PATHINFO_FILENAME);    
+            $good_moralExt = $request->file('good_moral')->getClientOriginalExtension();
+            $good_moralToStore = $good_moralName.'_'.time().'.'.$good_moralExt;
+            $good_moral_path = $request->file('good_moral')->storeAs('public/applicants/good_morals', $good_moralToStore);
+            
+            $report_cardwithExt = $request->file('report_card')->getClientOriginalName();
+            $report_cardName = pathinfo($report_cardwithExt, PATHINFO_FILENAME);            
+            $report_cardExt = $request->file('report_card')->getClientOriginalExtension();
+            $report_cardToStore = $report_cardName.'_'.time().'.'.$report_cardExt;
+            $report_card_path = $request->file('report_card')->storeAs('public/applicants/report_cards', $report_cardToStore);            
+            
+        }
+
+        $applicant = new Applicant;
+
+        $applicant->dept = $request->input('dept');
+        $applicant->program = $request->input('program_id');
+
+        $applicant->last_name = $request->input('l_name');
+        $applicant->first_name = $request->input('f_name');
+        $applicant->middle_name = $request->input('m_name');
+        $applicant->dob = $request->input('dob');
+        $applicant->gender = $request->input('gender');
+        $applicant->present_address = $request->input('present_address');
+        $applicant->last_school = $request->input('last_school');
+
+        $applicant->id_pic  = $request->file('id_pic');
+        $applicant->birth_cert  = $request->file('birth_cert');
+        $applicant->good_moral  = $request->file('good_moral');
+        $applicant->report_card  = $request->file('report_card');
+
+        $applicant->save();
+               
     }
 
     /**
@@ -107,6 +258,13 @@ class ApplicantsController extends Controller
                             ->where('id', '!=', 3)
                             ->where('id', '!=', 4)
                             ->get()->toJson();
+
+    }
+
+
+    public function getProg($id){
+
+        return Program::find('id')->first()->toJson();
 
     }
 }

@@ -127,7 +127,10 @@ Define your own CSS3 animations in the CSS.
               $dept = false;
               $req = false;
               $personal = false;     
-              $upload_ulit = false;     
+              $resubmit_files = false;     
+              $resubmit_personal = false;  
+                           
+
 
           ?>
 
@@ -146,11 +149,18 @@ Define your own CSS3 animations in the CSS.
                   case 'personal':
                       $personal = true;
                       break;
-                  case 'upload_ulit':
+                  case 'resubmit_personal':
                       $dept = true;
-                      $req = true;
+                      $personal = true;   
+                      $resubmit_personal = true;                                      
+                      break;                    
+                  case 'resubmit_files':
+                      $dept = true;
+                      $personal = true;
+                      $req = true;                     
+                      $resubmit_files = true;                                                            
                       break;
-
+                      
                   default:
                       $student = true;
                       break;
@@ -165,7 +175,10 @@ Define your own CSS3 animations in the CSS.
               $dept = true;
           ?>
               
-          @endif
+          @endif      
+          
+         
+        
 
             {!! Form::open(['url' => 'applicant/create/', 'files' => true, 'id' => 'applicantForm']) !!}
 
@@ -176,9 +189,9 @@ Define your own CSS3 animations in the CSS.
                 <div class="row ">
                   <div class="col-12 col-lg-8 ml-auto  mr-auto mb-4 mt-3">
                     <div class="multisteps-form__progress">
-                      <button class="multisteps-form__progress-btn {{ $dept ? 'js-active' : '' }}" type="button" title="Department" >Department and Program</button>                                          
-                      <button class="multisteps-form__progress-btn {{ $personal ? 'js-active' : '' }}" type="button" title="Personal Data">Personal Details</button>
-                      <button class="multisteps-form__progress-btn {{ $req ? 'js-active' : '' }}" type="button" title="Admission Requirements">Admission Requirements</button>
+                      <button id="step1" class="multisteps-form__progress-btn {{ $dept ? 'js-active' : '' }}" type="button" title="Department" >Department and Program</button>                                          
+                      <button id="step2" class="multisteps-form__progress-btn {{ $personal ? 'js-active' : '' }}" type="button" title="Personal Data">Personal Details</button>
+                      <button id="step3" class="multisteps-form__progress-btn {{ $req ? 'js-active' : '' }}" type="button" title="Admission Requirements">Admission Requirements</button>
                     </div>
                   </div>
                 </div>
@@ -235,6 +248,65 @@ Define your own CSS3 animations in the CSS.
 
                       <!--------------------------------------- Personal Data --> 
                       <div class="multisteps-form__panel p-4 rounded bg-white {{ $personal ? 'js-active' : '' }}" data-animation="scaleIn">
+                        
+                        <script>
+                          let val_dept = null;
+                          let val_prog = null;
+
+                        </script>
+
+                        @if (session('dept'))                          
+
+                          <script>
+                              val_dept = {!! json_encode(session()->get('dept')) !!}
+                          </script>
+
+                        @endif
+
+
+                        @if (session('prog'))                          
+
+                          <script>
+                            val_prog = {!! json_encode(session()->get('prog')) !!}
+                          </script>
+
+                        @endif
+
+                        @if (session('prog_desc'))                          
+
+                          <script>
+                            val_prog_desc = {!! json_encode(session()->get('prog_desc')) !!}
+                          </script>
+
+                        @endif
+
+                        @if (session('l_name'))                          
+
+                          <script>
+                            val_l_name = {!! json_encode(session()->get('l_name')) !!}
+                          </script>
+                          <script>
+                            val_m_name = {!! json_encode(session()->get('m_name')) !!}
+                          </script>
+                          <script>
+                            val_f_name = {!! json_encode(session()->get('f_name')) !!}
+                          </script>
+                          <script>
+                            val_dob = {!! json_encode(session()->get('dob')) !!}
+                          </script>
+                          <script>
+                            val_gender = {!! json_encode(session()->get('gender')) !!}
+                          </script>
+                          <script>
+                            val_present_address = {!! json_encode(session()->get('present_address')) !!}
+                          </script>
+                          <script>
+                            val_last_school = {!! json_encode(session()->get('last_school')) !!}
+                          </script>
+
+                        @endif
+                     
+
                         <h3 style="font-family: 'Raleway', sans-serif; font-weight: 900px; color: #044716;" class="multisteps-form__title text-center">Personal Information</h3>
                         <div class="multisteps-form__content">                            
                 
@@ -242,34 +314,34 @@ Define your own CSS3 animations in the CSS.
                 
                                 <div class="form-group m-3">
                                     {{Form::label('details', 'Please fill data needed ')}}
-                                    {{ Form::text('l_name', '', ['class' => 'form-control mb-2', 'placeholder' => 'Your Last Name Here..']) }}
-                                    {{ Form::text('f_name', '', ['class' => 'form-control mb-2', 'placeholder' => 'Your First Name Here..']) }}
-                                    {{ Form::text('m_name', '', ['class' => 'form-control mb-2', 'placeholder' => 'Your Middle Name Here..']) }}
+                                    {{ Form::text('l_name', '', ['id' => 'lName', 'maxLength' => '100', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last Name Here..']) }}
+                                    {{ Form::text('f_name', '', ['id' => 'fName','maxLength' => '100', 'class' => 'form-control mb-2', 'placeholder' => 'Your First Name Here..']) }}
+                                    {{ Form::text('m_name', '', ['id' => 'mName','maxLength' => '100','class' => 'form-control mb-2', 'placeholder' => 'Your Middle Name Here..']) }}
                     
                                 </div>
 
                                 
                                 <div class = "form-group text-center">     
                                     {{Form::label('dob', 'Date of Birth')}}                   
-                                    {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2', 'id' => 'dob'] )}}
+                                    {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), [ 'class' => 'ml-2', 'id' => 'dob'] )}}
                                 </div> 
                           
                                 
                                 <div class = "form-group text-center">     
                                     {{Form::label('gender', 'Gender',  ['class' => 'mt-2'])}}
-                                    {{Form::select('gender', ['m' => 'Male',
-                                                                'f' => 'Female',
-                                                                'g' => 'Gay',
-                                                                'l' => 'Lesbian',
+                                    {{Form::select('gender', ['male' => 'Male',
+                                                                'female' => 'Female',
+                                                                'gay' => 'Gay',
+                                                                'lesbian' => 'Lesbian',
                                                                 ], null,
                                                                 ['class' => 'custom-select w-50', 'id' => 'selectGender'])}}   
                                 </div>
 
                                 <div class = "form-group m-3">                                                          
-                                    {{ Form::text('present_address', '', ['class' => 'form-control mb-2', 'placeholder' => 'Your Present Address..']) }}
+                                    {{ Form::text('present_address', '', ['id' => 'address', 'class' => 'form-control mb-2', 'placeholder' => 'Your Present Address..']) }}
                                 </div> 
                                 <div class = "form-group m-3">                                                          
-                                    {{ Form::text('last_school', '', ['class' => 'form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}
+                                    {{ Form::text('last_school', '', ['id' => 'l_school', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}
                                 </div> 
                 
                             </div>
@@ -338,6 +410,8 @@ Define your own CSS3 animations in the CSS.
                               </div>
                             </div>
 
+                            *note: to reset from the start just refresh the page
+
                         </div>
                       </div>
 
@@ -357,7 +431,11 @@ Define your own CSS3 animations in the CSS.
 
 @section('javascript')
 
-<script>    
+<script>  
+
+let step1 = document.getElementById('step1');
+let step2 = document.getElementById('step2');
+let step3 = document.getElementById('step3');
 
 let selectProg = document.getElementById('selectProg');
 let divProg = document.getElementById('divProg');
@@ -371,10 +449,91 @@ let monitorInputs = document.getElementById('monitorInputs');
 let reportCard = document.getElementById('reportCard');
 let reportCardLabel = document.getElementById('reportCardLabel');
 
+let lName = document.getElementById('lName');
+let fName = document.getElementById('fName');
+let mName = document.getElementById('mName');
+let dob = document.getElementById('dob');
+let selectGender = document.getElementById('selectGender');
+let address = document.getElementById('address');
+let l_school = document.getElementById('l_school');
+
+
 let department = null;
 let program = null;
 let theDeptOutput = '';
 let theProgramOutput = '';
+
+window.addEventListener('load', (event) => {      
+
+  if(typeof val_dept !== 'undefined' && typeof val_l_name === 'undefined' ){    
+
+    if(val_dept == 0){
+      monitorInputs.className = "text-center";
+      hiddenDept.value = "0";  
+      step1.disabled = true;  
+      selectProg.options[0].value = val_prog;
+
+      monitorInputs.textContent = "SHS | " + val_prog_desc;
+
+    } else {
+
+      monitorInputs.className = "text-center";
+      hiddenDept.value = "1";
+      step1.disabled = true;
+      selectProg.options[0].value = val_prog;
+
+      monitorInputs.textContent = "College | " + val_prog_desc;            
+
+    }
+
+  } else if(typeof val_l_name !== 'undefined'){    
+
+    step1.disabled = true;  
+    step2.disabled = true;  
+
+    if(val_dept == 0){
+      monitorInputs.className = "text-center";
+      hiddenDept.value = "0";  
+      step1.disabled = true;  
+      selectProg.options[0].value = val_prog;
+
+      monitorInputs.textContent = "SHS | " + val_prog_desc;
+
+    } else {
+
+      monitorInputs.className = "text-center";
+      hiddenDept.value = "1";
+      step1.disabled = true;
+      selectProg.options[0].value = val_prog;
+
+      monitorInputs.textContent = "College | " + val_prog_desc;            
+
+    }
+
+    lName.value = val_l_name;
+    fName.value = val_f_name;
+    mName.value = val_m_name;
+    dob.value = val_dob;    
+    selectGender.options[0].value = val_gender;
+    address.value = val_present_address;
+    l_school.value = val_last_school;
+   
+  }
+
+
+ 
+
+
+
+  
+        
+}); 
+
+
+
+
+
+
 
 selectProg.addEventListener('change', () => {
     theProgramOutput = "| " + selectProg.options[selectProg.selectedIndex].text;
@@ -426,7 +585,7 @@ function toggleDepartment(btn){
 
 function fillPrograms(dept){
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     
     xhr.open('GET', APP_URL + '/applicant/view/programs/' + dept, true);
 
@@ -437,7 +596,7 @@ function fillPrograms(dept){
                 selectProg.remove(i);
             }
 
-            var programs = JSON.parse(this.responseText);                                
+            let programs = JSON.parse(this.responseText);                                
 
                 for (let i in programs) {                        
                     selectProg.options[i] = new Option(programs[i].desc, programs[i].id); 
@@ -457,12 +616,6 @@ function fillPrograms(dept){
 
 
 //second tab
-
-
-
-
-
- 
 
 
 window.onbeforeunload = function(event)
@@ -645,6 +798,17 @@ window.addEventListener('load', setFormHeight, false);
 
 //SETTING PROPER FORM HEIGHT ONRESIZE
 window.addEventListener('resize', setFormHeight, false);
+
+// function setValidated(dept, prog, personal_info = null){
+
+//   if(dept == 0)
+//     toggleDepartment(btnSHS);
+//   else
+//     toggleDepartment(btnColl);
+    
+// }
+
+
 
 </script>
 

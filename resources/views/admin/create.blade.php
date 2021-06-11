@@ -44,7 +44,6 @@
 @else     
 <?php
     
-
      $student = true;
 ?>
     
