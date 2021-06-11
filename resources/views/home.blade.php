@@ -14,7 +14,9 @@
                         </div>
                     @endif
 
-                    {{ __('Home page') }}
+                    {{ __('Home page') }}                                  
+                   
+                    
                 </div>
             </div>
         </div>

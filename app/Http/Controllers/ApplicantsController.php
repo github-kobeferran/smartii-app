@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use App\Mail\WelcomeApplicant;
 use App\Models\Applicant;
 use App\Models\Program;
+use App\Models\Member;
 
 
 
@@ -19,7 +22,17 @@ class ApplicantsController extends Controller
      */
     public function index()
     {
+        return view('applicant.index');
+    }
+
+    public function form()
+    {
         return view('applicant.admission');
+    }
+
+    public function status()
+    {
+        return view('applicant.status');
     }
 
     /**
@@ -29,7 +42,7 @@ class ApplicantsController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -39,7 +52,7 @@ class ApplicantsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)    
-    {    
+    {                 
 
         $validator = Validator::make($request->all(), [
             
@@ -107,10 +120,10 @@ class ApplicantsController extends Controller
 
         $validator = Validator::make($request->all(), [
             
-            'id_pic' => 'required|max:300|mimes:jpeg', 
-            'birth_cert' => 'required|max:300|mimes:jpeg', 
-            'good_moral' => 'required|max:300|mimes:jpeg', 
-            'report_card' => 'required|max:300|mimes:jpeg',         
+            'id_pic' => 'required|file|mimes:jpeg|max:300', 
+            'birth_cert' => 'required|file|mimes:jpeg|max:300', 
+            'good_moral' => 'required|file|mimes:jpeg|max:300', 
+            'report_card' => 'required|file|mimes:jpeg|max:300', 
 
         ],
         [
@@ -203,6 +216,29 @@ class ApplicantsController extends Controller
         $applicant->report_card  = $request->file('report_card');
 
         $applicant->save();
+
+        $member = new Member;
+
+        $member->user_id = auth()->id();
+        $member->member_type = auth()->user()->user_type;
+        $member->member_id = $applicant->id;
+
+        $member->save();
+
+        $name =  ucfirst($applicant->first_name) . ' ' . ucfirst($applicant->last_name);
+        $dept = '';
+
+        if($applicant->dept == 0)
+            $dept = "Senior High School";
+        else
+            $dept = "College";
+
+        $program = Program::find($applicant->program)->desc;
+
+        Mail::to(auth()->user())->send(new WelcomeApplicant($name, $dept, $program));
+
+        return redirect()->route('admissionForm');
+
                
     }
 
@@ -250,6 +286,8 @@ class ApplicantsController extends Controller
     {
         //
     }
+    
+
 
 
     public function showPrograms($dept){

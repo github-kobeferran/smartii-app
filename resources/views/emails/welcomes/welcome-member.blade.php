@@ -10,5 +10,5 @@ This is your password: {{ $password }}
 @endcomponent
 
 Thanks,<br>
-{{ config('app.name') }}
+St. Mark Arts and Training Institute Inc.
 @endcomponent

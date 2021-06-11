@@ -42,16 +42,41 @@
                             <a class="dropdown-item"
                             
                             @if(!Auth::guest() && Auth::user()->isApplicant())
-                                href="{{ route("admissionForm") }}"
+                               
+                                <?php $submitted = auth()->user()->member; ?>
+
+                                @isset($submitted)
+
+                                    href="{{ route("appStatus") }}"
+                            
+                                @else
+                                    
+                                    href="{{ route("admissionForm") }}"
+                                
+                                @endisset
+
+                                
+                                
                             @else
                                 href="{{ route($role . 'Dashboard') }}"
-                            @endif    
+                            @endif  
+
                                 >
                                 @if(!Auth::guest() && Auth::user()->isApplicant())
-                                    Admission Form
+                                @isset($submitted)
+
+                                    Application Status
+                            
+                                @else
+                                    
+                                    Application Form
+                                
+                                @endisset
+
                                 @else
                                 {{ __(ucfirst($role) . ' Module') }}
                                 @endif
+
                             </a>
 
 

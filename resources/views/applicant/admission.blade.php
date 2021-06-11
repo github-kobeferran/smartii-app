@@ -116,7 +116,7 @@ Define your own CSS3 animations in the CSS.
 </style>
     
 
-@section('content')
+@section('admission')
 <div class="container">
    
     <div class="row justify-content-center">
@@ -261,24 +261,15 @@ Define your own CSS3 animations in the CSS.
                               val_dept = {!! json_encode(session()->get('dept')) !!}
                           </script>
 
-                        @endif
-
-
-                        @if (session('prog'))                          
-
                           <script>
                             val_prog = {!! json_encode(session()->get('prog')) !!}
                           </script>
-
-                        @endif
-
-                        @if (session('prog_desc'))                          
 
                           <script>
                             val_prog_desc = {!! json_encode(session()->get('prog_desc')) !!}
                           </script>
 
-                        @endif
+                        @endif                 
 
                         @if (session('l_name'))                          
 
@@ -410,7 +401,7 @@ Define your own CSS3 animations in the CSS.
                               </div>
                             </div>
 
-                            *note: to reset from the start just refresh the page
+                            *Note: to reset from the start just refresh the page
 
                         </div>
                       </div>
@@ -465,7 +456,7 @@ let theProgramOutput = '';
 
 window.addEventListener('load', (event) => {      
 
-  if(typeof val_dept !== 'undefined' && typeof val_l_name === 'undefined' ){    
+  if(typeof val_dept !== 'undefined' && typeof val_prog_desc != 'undefined' && typeof val_l_name === 'undefined' ){    
 
     if(val_dept == 0){
       monitorInputs.className = "text-center";
@@ -518,15 +509,10 @@ window.addEventListener('load', (event) => {
     address.value = val_present_address;
     l_school.value = val_last_school;
    
+  } else {
+
   }
 
-
- 
-
-
-
-  
-        
 }); 
 
 
@@ -813,4 +799,4 @@ window.addEventListener('resize', setFormHeight, false);
 </script>
 
     
-@endsection
+@endsection 

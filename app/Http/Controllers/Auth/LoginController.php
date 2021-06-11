@@ -40,7 +40,12 @@ class LoginController extends Controller
             case $user->isFaculty():
                 return '/faculty';
             case $user->isApplicant():
-                return '/applicant';
+
+                if(auth()->user()->member != null)                
+                    return '/appstatus';
+                else
+                    return '/admissionform';      
+                                                                      
             default:
                 return '/home';
         }

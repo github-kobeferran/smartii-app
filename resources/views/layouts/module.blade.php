@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{url('/storage/images/system/logo/smartii.png')}}">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ ucfirst(strtolower(config('app.name', 'Laravel'))) }}</title>
+    <title>Smartii</title>
 
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/6421dddc90.js" crossorigin="anonymous"></script>
@@ -32,38 +33,80 @@
 
     <div class="container-fluid mx-0 p-0" >
     
-       
+                {{-- ******************************* IF USER IS ADMIN --}}
                 @if (!Auth::guest() && Auth::user()->isAdmin())
 
 
-                <div class="row vh-100 no-gutters">    
-            
-                    <div class="col-sm-1 mx-auto">
-                        @include('inc.admin.sidebar')
-
-                    </div>
-
+                    <div class="row vh-100 no-gutters">    
                 
-                    <div class="col-11 mt-2 mx-auto" >
-                                        
-                        @yield('content')
+                        <div class="col-sm-1 mx-auto">
+                            @include('inc.admin.sidebar')
+
+                        </div>
+
                     
+                        <div class="col-11 mt-2 mx-auto" >
+                                            
+                            @yield('content')
+                        
+                        </div> 
                     </div> 
-                </div> 
 
 
+
+
+
+
+
+
+
+                {{-- ******************************* IF USER IS STUDENT --}}
                 @elseif(!Auth::guest() && Auth::user()->isStudent())
 
                     @include('inc.student.sidebar')
 
-                @elseif(!Auth::guest() && Auth::user()->isStudent())
 
-                    @include('inc.faculty.sidebar')            
 
-                @elseif(!Auth::guest() && Auth::user()->isApplicant())
 
-                    @yield('content')
+
+
+
+                {{-- ******************************* IF USER IS FACULTY --}}
+                @elseif(!Auth::guest() && Auth::user()->isFaculty())
+
+                    @include('inc.faculty.sidebar') 
+
+
+
+
+
+
+
+                {{-- ******************************* IF USER IS APPLICANT --}}
+                @elseif(!Auth::guest() && Auth::user()->isApplicant()) 
+                                
+                    <?php 
                     
+                        if(auth()->user()->member != null){
+                            $submitted = true;
+                        } else {
+                            $submitted = false;
+                        }
+                                        
+                    ?>
+
+                    @if($submitted)
+
+                        @yield('status')
+                
+                    @else
+                        
+                        @yield('admission')
+                    
+                    @endisset
+            
+                    
+
                 @endif
 
            
