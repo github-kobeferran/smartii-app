@@ -65,6 +65,7 @@ document.getElementById('student-profile').style.display = 'none';
 
 
 function studentsAjax() {
+    
     let xhr = new XMLHttpRequest();
     xhr.open('GET', APP_URL + '/admin/view/students', true);
 

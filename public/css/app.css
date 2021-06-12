@@ -10,7 +10,6 @@ h5 {
   font-family: "Raleway", sans-serif;
   font-weight: 900px;
   color: #044716 !important;
-  padding-right: 5em;
 }
 
 tbody td {
@@ -93,6 +92,23 @@ tbody td {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.has-search .form-control {
+  padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #aaa;
+  font-size: small;
 }
 
 /*!

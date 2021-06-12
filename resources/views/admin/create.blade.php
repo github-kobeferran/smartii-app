@@ -1,9 +1,6 @@
 @extends('layouts.module')
 
 @section('content')
-{{-- <h4><span id="object" class="h2">Choose what to</span> Create </h4> --}}
-
-{{-- {{dd($student)}} --}}
 
 <?php 
     $student = false;

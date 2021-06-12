@@ -237,7 +237,7 @@ class ApplicantsController extends Controller
 
         Mail::to(auth()->user())->send(new WelcomeApplicant($name, $dept, $program));
 
-        return redirect()->route('admissionForm');
+        return redirect()->route('appStatus');
 
                
     }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use App\Models\Program;
 use App\Models\Subject;
+use App\Models\Applicant;
 use App\Models\Student;
 use App\Models\Faculty;
 use App\Models\Setting;
@@ -174,7 +175,20 @@ class AdminsController extends Controller
                 $faculty = Faculty::all();        
 
                 return $faculty->toJson();
-            break;        
+            break;    
+            case 'applicants':
+
+                $applicants = Applicant::orderBy('created_at', 'desc')->get();  
+                
+                foreach($applicants as $applicant){                    
+                    $applicant->prog_desc = $applicant->id;
+                    $applicant->days_ago = $applicant->id;
+                    $applicant->dept_desc = $applicant->id;
+                }
+
+                return $applicants->toJson();
+            break;    
+
             default:
             redirect('/home');
         }
