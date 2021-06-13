@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use App\Models\Admin;
 use App\Models\Program;
 use App\Models\Subject;
@@ -47,7 +49,6 @@ class AdminsController extends Controller
     public function adminClasses(){
         return view('admin.classes')->with('create', true);
     }
-
 
     public function store(Request $request){
 
@@ -210,7 +211,20 @@ class AdminsController extends Controller
                     
                 return $student->toJson();
 
-            break;        
+            break; 
+            case 'applicants':
+
+                $applicant = Applicant::find($id);  
+                
+                           
+                $applicant->prog_desc = $applicant->id;
+                $applicant->days_ago = $applicant->id;
+                $applicant->dept_desc = $applicant->id;
+                $applicant->age = $applicant->id;
+                
+
+                return $applicant->toJson();
+            break;           
             default:
             redirect('/home');
         }
@@ -373,7 +387,37 @@ class AdminsController extends Controller
         
     }
 
+    public function download($type, $filename){
+    
+        $file_path = '';
 
+        switch($type){
+            case 'idpic':
+
+                $file_path = public_path() . '/storage/applicants/id_pics/' . $filename;
+            
+            break;
+            case 'birthcert':
+
+                $file_path = public_path() . '/storage/applicants/birth_certs/' . $filename;
+
+            break;
+            case 'goodmoral':
+
+                $file_path = public_path() . '/storage/applicants/good_morals/' . $filename;
+
+            break;
+            case 'reportcard':
+
+                $file_path = public_path() . '/storage/applicants/report_cards/' . $filename;
+
+            break;
+        }
+
+        return response()->download($file_path);   
+
+
+    }
     
 
 }

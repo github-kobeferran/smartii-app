@@ -210,10 +210,10 @@ class ApplicantsController extends Controller
         $applicant->present_address = $request->input('present_address');
         $applicant->last_school = $request->input('last_school');
 
-        $applicant->id_pic  = $request->file('id_pic');
-        $applicant->birth_cert  = $request->file('birth_cert');
-        $applicant->good_moral  = $request->file('good_moral');
-        $applicant->report_card  = $request->file('report_card');
+        $applicant->id_pic  = $idPicToStore;
+        $applicant->birth_cert  =  $birth_certToStore;
+        $applicant->good_moral  = $good_moralToStore;
+        $applicant->report_card  = $report_cardToStore;
 
         $applicant->save();
 

@@ -12,10 +12,10 @@
 
     @include('inc.messages')
 
-    <div class="form-group">    
-        <input id="student-search" type="text" class="form-control" placeholder="Student ID or Name here..">
-    </div>
-    
+    <div class="form-group has-search">
+        <span class="fa fa-search form-control-feedback"></span>
+        <input  id="student-search" type="text" class="form-control" placeholder="Search by Student ID or Name">
+    </div>    
     
     <div class ="table-responsive border shadow mb-5" style="max-height: 500px; overflow: auto; display:inline-block;">
         <table class="table table-striped border" >

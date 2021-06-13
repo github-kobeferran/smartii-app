@@ -25,7 +25,11 @@
   
 
     <script>
-        var APP_URL = {!! json_encode(url('/')) !!}
+        var APP_URL = {!! json_encode(url('/')) !!}    
+        
+        function ucfirst(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
     </script>
 
 

@@ -36,7 +36,7 @@
                             {{ Auth::user()->name }}
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu dropdown-menu-right color-custom-green" aria-labelledby="navbarDropdown">
 
                             <?php $role = auth()->user()->user_type ?>                                    
                             <a class="dropdown-item"

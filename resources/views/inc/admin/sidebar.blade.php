@@ -7,7 +7,7 @@
             .fa-2x {
             font-size: 2em;
             }
-            .fa {
+            .sidebar-icon {
             position: relative;
             display: table-cell;
             width: 60px;
@@ -118,7 +118,7 @@
             }
             .main-menu li:hover>a,nav.main-menu li.active>a,.dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus,.no-touch .dashboard-page nav.dashboard-menu ul li:hover a,.dashboard-page nav.dashboard-menu ul li.active a {
             color:#fff;
-            background-color:#5fa2db;
+            background-color:#04471680;
             }
             .area {
             float: left;
@@ -152,7 +152,7 @@
     <ul>
         <li>
             <a href="/admin">
-                <i class="fa fa-map-o" aria-hidden="true"></i>
+                <i class="fa fa-map-o sidebar-icon" aria-hidden="true"></i>
                 <span class="nav-text">
                     Dashboard
                 </span>
@@ -161,7 +161,7 @@
         </li>
         <li class="has-subnav">
             <a href="/admin/view">
-                <i class="fa fa-laptop fa-2x"></i>
+                <i class="fa fa-laptop fa-2x sidebar-icon"></i>
                 <span class="nav-text">
                     View
                 </span>
@@ -170,7 +170,7 @@
         </li>
         <li class="has-subnav">
             <a href="{{ route('adminCreate') }}">
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <i class="fa fa-pencil-square-o sidebar-icon" aria-hidden="true"></i>
                 <span class="nav-text">
                     Create
                 </span>
@@ -179,7 +179,7 @@
         </li>
         <li class="has-subnav">
             <a href="/admin/classes">
-                <i class="fa fa-puzzle-piece" aria-hidden="true"></i>
+                <i class="fa fa-puzzle-piece sidebar-icon" aria-hidden="true"></i>
                 <span class="nav-text">
                     Classes
                 </span>
@@ -188,7 +188,7 @@
         </li>
         <li class="has-subnav">
             <a href="/admin/payment">
-                <i class="fa fa-money" aria-hidden="true"></i>
+                <i class="fa fa-money sidebar-icon" aria-hidden="true"></i>
                 <span class="nav-text">
                    Payment
                 </span>
@@ -197,7 +197,7 @@
         </li>
         <li>
             <a href="/admin/settings">
-                <i class="fa fa-cogs" aria-hidden="true"></i>
+                <i class="fa fa-cogs sidebar-icon" aria-hidden="true"></i>
                 <span class="nav-text">
                     Settings
                 </span>

@@ -7,6 +7,11 @@ thead th {
     top: 0;
 }
 
+$theme-colors: ( "custom-green": #044716);
+img:hover {
+    opacity: 0.92;
+}
+
 h5 {
     font-family: 'Raleway', sans-serif;
     font-weight: 900px;
@@ -101,4 +106,24 @@ tbody td {
     pointer-events: none;
     color: #aaa;
     font-size: small;
+}
+
+.modal-full {
+    min-width: 100vw;
+    margin-left: 80;
+}
+
+.modal-full .modal-content {
+    min-height: 75vh;
+}
+
+.nav-link {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900px;
+    color: #044716 !important;
+    text-transform: uppercase;
+}
+
+.nav-link:hover {
+    opacity: 0.50;
 }

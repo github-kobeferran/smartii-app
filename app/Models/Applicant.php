@@ -9,9 +9,22 @@ use App\Models\Applicant;
 
 class Applicant extends Model
 {
-    use HasFactory;
+    use HasFactory; 
 
-    protected $appends = ['days_ago' => null, 'prog_desc'=> null , 'dept_desc' => null];
+    protected $appends = ['age' => null, 'days_ago' => null, 'prog_desc'=> null , 'dept_desc' => null];
+
+    public function setAgeAttribute($id)
+    {
+        $applicant = Applicant::find($id);    
+
+        $this->attributes['age'] = Carbon::parse($applicant->dob)->age;
+
+    }
+
+    public function getAgeAttribute()
+    {
+        return $this->attributes['age'];
+    }
 
     public function setDaysAgoAttribute($id)
     {
