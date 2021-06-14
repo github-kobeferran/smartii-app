@@ -9,7 +9,27 @@
     $students = false;
     $faculties = false;
     $admins = false;
+
+    $btnID = null;
 ?>
+
+@if (session()->has('app-id'))
+    
+    <?php
+        
+        $appID = session('app-id');
+
+    ?>   
+
+    <script>          
+        let APP_ID = {!! json_encode($appID) !!}    
+
+    </script>
+    
+@endif
+
+
+
 
 @if ( session()->has('active') )
 <?php 
@@ -104,13 +124,20 @@
 window.addEventListener('load', (event) => {         
     
     viewAdmins();
-    studentsAjax();
+    studentsAjax();      
 
-    fillApplicantList();
+     
+    // defaultSelected(19);
+      
 
-}); 
+    if(typeof APP_ID !== 'undefined')  {
+        fillApplicantList(APP_ID);  
+    } else {
+        fillApplicantList();  
+    }
 
 
-
+            
+});
 
 </script>

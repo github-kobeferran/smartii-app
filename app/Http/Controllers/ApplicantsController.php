@@ -174,26 +174,26 @@ class ApplicantsController extends Controller
             //Filename to store
             $idPicToStore = $idPicName.'_'.time().'.'.$idPicExt;
             // upload image
-            $id_pic_path = $request->file('id_pic')->storeAs('public/applicants/id_pics', $idPicToStore);
+            $id_pic_path = $request->file('id_pic')->storeAs('public/images/applicants/id_pics', $idPicToStore);
 
 
             $birth_certwithExt = $request->file('birth_cert')->getClientOriginalName();
             $birth_certName = pathinfo($birth_certwithExt, PATHINFO_FILENAME);
             $birth_certExt = $request->file('birth_cert')->getClientOriginalExtension();
             $birth_certToStore = $birth_certName.'_'.time().'.'.$birth_certExt;
-            $birth_cert_path = $request->file('birth_cert')->storeAs('public/applicants/birth_certs', $birth_certToStore);
+            $birth_cert_path = $request->file('birth_cert')->storeAs('public/images/applicants/birth_certs', $birth_certToStore);
 
             $good_moralwithExt = $request->file('good_moral')->getClientOriginalName();           
             $good_moralName = pathinfo($good_moralwithExt, PATHINFO_FILENAME);    
             $good_moralExt = $request->file('good_moral')->getClientOriginalExtension();
             $good_moralToStore = $good_moralName.'_'.time().'.'.$good_moralExt;
-            $good_moral_path = $request->file('good_moral')->storeAs('public/applicants/good_morals', $good_moralToStore);
+            $good_moral_path = $request->file('good_moral')->storeAs('public/images/applicants/good_morals', $good_moralToStore);
             
             $report_cardwithExt = $request->file('report_card')->getClientOriginalName();
             $report_cardName = pathinfo($report_cardwithExt, PATHINFO_FILENAME);            
             $report_cardExt = $request->file('report_card')->getClientOriginalExtension();
             $report_cardToStore = $report_cardName.'_'.time().'.'.$report_cardExt;
-            $report_card_path = $request->file('report_card')->storeAs('public/applicants/report_cards', $report_cardToStore);            
+            $report_card_path = $request->file('report_card')->storeAs('public/images/applicants/report_cards', $report_cardToStore);            
             
         }
 

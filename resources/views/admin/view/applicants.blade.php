@@ -14,11 +14,23 @@
         
     </div>
 
-    <div class="col-7">
+    
 
-        <div id="appFilesPanel" class="row no-gutters">
-        
-            <h5 class="m-auto">Select an Applicant</h5>
+    <div class="col-7">        
+
+        <div id="ripple" class="text-center align-middle d-none">
+
+            <div class="lds-ripple">
+                <div></div>
+                <div></div>
+            </div>
+
+        </div>
+
+   
+        <div id="appFilesPanel" class="row no-gutters mw-25 mh-25">                                                               
+
+            <h5 class="mx-auto mt-5">Select an Applicant</h5>
 
         </div>
         
@@ -48,7 +60,7 @@ let goodMoral = document.getElementById("good-moral");
 let reportCard = document.getElementById("report-card");
 
 
-function fillApplicantList(){
+function fillApplicantList(id = null){
 
     let xhr = new XMLHttpRequest();
     xhr.open('GET', APP_URL + '/admin/view/applicants', true);
@@ -62,7 +74,9 @@ function fillApplicantList(){
 
             for(i in applicants){
 
-                output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(document.getElementById(\'app-'+ applicants[i].id +'\'), ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
+
+                if(id != null && id == applicants[i].id){
+                    output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start active">';
                     output +='<div class="d-flex w-100 jusstify-content-between">';
                         output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
                         output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
@@ -70,6 +84,23 @@ function fillApplicantList(){
                     output += '<p class="mb-1">'+ applicants[i].dept_desc +'</p>'
                     output += '<p class="mb-1">'+ applicants[i].prog_desc +'</p>'                    
                     output+='</button>';
+
+                    applicantSelect('app-'+ id, id, true);
+
+                } else{
+
+                    output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
+                    output +='<div class="d-flex w-100 jusstify-content-between">';
+                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
+                    output += '</div>'
+                    output += '<p class="mb-1">'+ applicants[i].dept_desc +'</p>'
+                    output += '<p class="mb-1">'+ applicants[i].prog_desc +'</p>'                    
+                    output+='</button>';
+
+                }
+
+                    
                 
             }            
 
@@ -81,41 +112,80 @@ function fillApplicantList(){
         } else {
             applicantList.innerHTML = "<h5>Huh, No applicant </h5>";
         }
+                
     }
 
     xhr.send();
 
 }
 
-
-function applicantSelect(btn, id){
+function applicantSelect(btnId, id, isdefault = false ){
 
     let buttons = document.getElementsByClassName('app-button');
 
-    for(i=0; i<buttons.length; i++){
-        buttons[i].classList.remove('active');   
-        
-    }    
+    let btn = null;
 
-    btn.classList.add('active');    
+    if(!isdefault){
+
+        btn = document.getElementById(btnId);
+
+        for(i=0; i<buttons.length; i++){
+            buttons[i].classList.remove('active');           
+        }  
+
+        btn.classList.add('active'); 
+
+    }                 
     
     let xhr = new XMLHttpRequest();
     xhr.open('GET', APP_URL + '/admin/view/applicants/' + id, true);
+    
+    document.getElementById('ripple').className="text-center align-middle";
+    appFilesPanel.innerHTML = '';
+    appDataPanel.innerHTML = '';
+
 
     xhr.onload = function() {
         if (this.status == 200) {
             
-            let applicant = JSON.parse(this.responseText);
+    let applicant = JSON.parse(this.responseText);
+
+        let idpicResub = false;
+        let birthcertResub = false;
+        let goodmoralResub = false;
+        let reportcardResub = false;
+
+        if(applicant.resubmit_file != undefined && applicant.resubmit_file != null){
+
+            if(applicant.resubmit_file[0] == '1')
+                idpicResub = true;
+
+            if(applicant.resubmit_file[1] == '1')
+                birthcertResub = true;
+
+            if(applicant.resubmit_file[2] == '1')
+                goodmoralResub = true;
+
+            if(applicant.resubmit_file[3] == '1')
+                reportcardResub = true;
+
+        
+        }
+            
 
 
 
-    output=`<div class="col ">
-
+    output=`<div class="col">
+        
             <div class="bg-light text-white text-center">
 
                 <button type="button" class="border-0" data-toggle="modal" data-target="#idpic-modal" >
-                    <img id="id-pic" class="img-thumbnail float-none w-50 " src="{{url('/storage/applicants/id_pics/`+ applicant.id_pic +`')}}"  >    
-                </button>
+                    <img id="id-pic" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/id_pics/`+ applicant.id_pic +`')}}"  >`;
+
+                    if(idpicResub)
+                        output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>`;
+
+       output+=`</button>
                                                 
             </div>
 
@@ -129,7 +199,12 @@ function applicantSelect(btn, id){
             <div class="bg-light text-white text-center">
 
                 <button type="button" class="border-0" data-toggle="modal" data-target="#birthcert-modal">
-                    <img id="birth-cert" class="img-thumbnail float-none w-50" src="{{url('/storage/applicants/birth_certs/`+ applicant.birth_cert +`')}}"  >    
+                    <img id="birth-cert" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/birth_certs/`+ applicant.birth_cert +`')}}"  >`;
+                    
+                    if(birthcertResub)
+                        output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i></span>`;
+
+       output+=`                        
                 </button>                    
                 
 
@@ -146,8 +221,15 @@ function applicantSelect(btn, id){
                 <div class="bg-light text-white text-center">
 
                     <button type="button" class="border-0" data-toggle="modal" data-target="#goodmoral-modal">
-                        <img id="good-moral" class="img-thumbnail float-none w-50" src="{{url('/storage/applicants/good_morals/`+ applicant.good_moral +`')}}"  >    
+                        <img id="good-moral" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/good_morals/`+ applicant.good_moral +`')}}"  >`;
+                    
+                    if(goodmoralResub)
+                        output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>`;
+
+            output+=`    
+                        
                     </button>   
+                    
                     
                 </div>
                 <div class="text-center">
@@ -161,7 +243,13 @@ function applicantSelect(btn, id){
                 <div class="bg-light text-white text-center">
 
                     <button type="button" class="border-0" data-toggle="modal" data-target="#reportcard-modal">
-                        <img id="report-card" class="img-thumbnail float-none w-50" src="{{url('/storage/applicants/report_cards/`+ applicant.report_card +`')}}"  >    
+                        <img id="report-card" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/report_cards/`+ applicant.report_card +`')}}"  >`;
+                    
+                    if(reportcardResub)
+                        output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>`;
+
+       output+=`    
+                        
                     </button>   
                     
                 </div>
@@ -177,6 +265,8 @@ function applicantSelect(btn, id){
 
             {{------------------------------------------------------------- MODALS --}}
 
+            {!! Form::open(['url' => 'admin/requestupload']) !!}
+
             <div class="modal fade " id="idpic-modal" tabindex="-1" role="dialog" aria-labelledby="idpic-modal-title" aria-hidden="true">
 
                 <div class="modal-dialog modal-full" role="document">
@@ -188,104 +278,122 @@ function applicantSelect(btn, id){
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-
                         
                         <div class="modal-body">
                             <div class="container-fluid text-center">
-                                <img id="good-moral" class="img-fluid" src="{{url('/storage/applicants/id_pics/`+ applicant.id_pic +`')}}"  >                            
+                                <img id="id-pic" class="img-fluid" src="{{url('/storage/images/applicants/id_pics/`+ applicant.id_pic +`')}}"  >
+                                
                             </div>
                         </div>
 
-
-
+                        <input type="hidden" name="req_type" value="idpic">
+                        <input type="hidden" name="app_id" value="`+ applicant.id +`">
+                        
+                                 
                         <div class="modal-footer">
-                            <a href="download/idpic/`+ applicant.id_pic +`"  class="btn btn-warning text-dark">Download</a>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <a href="download/idpic/`+ applicant.id_pic +`"  class="btn btn-warning text-dark">Download</a>                            
+                            <button type="submit" class="btn btn-info text-white">Request Resubmission</button>                                                 
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>    
                         </div>
                         
                     </div>
                 </div>
             </div>
 
+            {!! Form::close() !!}
+
+
+            {!! Form::open(['url' => 'admin/requestupload']) !!}
             <div class="modal fade" id="birthcert-modal" tabindex="-1" role="dialog" aria-labelledby="birthcert-modal-title" aria-hidden="true">
-            <div class="modal-dialog modal-full" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="birthcert-modal-title">Birth Certificate of `+ ucfirst(applicant.first_name) + ' ' +  ucfirst(applicant.last_name) +`</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
+                <div class="modal-dialog modal-full" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="birthcert-modal-title">Birth Certificate of `+ ucfirst(applicant.first_name) + ' ' +  ucfirst(applicant.last_name) +`</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
 
 
-                
-                <div class="modal-body text-center">
-                    <img id="good-moral" class="img-fluid" src="{{url('/storage/applicants/birth_certs/`+ applicant.birth_cert +`')}}"  >    
-                </button>   
+                        
+                        <div class="modal-body text-center">
+                            <img id="birth-cert" class="img-fluid" src="{{url('/storage/images/applicants/birth_certs/`+ applicant.birth_cert +`')}}"  >    
+                        </button>   
 
+                        <input type="hidden" name="req_type" value="birthcert">
+                        <input type="hidden" name="app_id" value="`+ applicant.id +`">
 
+                        </div>
+                        <div class="modal-footer">
+                                <a href="download/birthcert/`+ applicant.birth_cert +`"  class="btn btn-warning text-dark">Download</a>
+                                <button type="submit" class="btn btn-info text-white">Request Resubmission</button>                                             
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>   
+                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <a href="download/birthcert/`+ applicant.birth_cert +`"  class="btn btn-warning text-dark">Download</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
                 </div>
             </div>
-            </div>
-            </div>
+            {!! Form::close() !!}
 
+            {!! Form::open(['url' => 'admin/requestupload']) !!}
             <div class="modal fade" id="goodmoral-modal" tabindex="-1" role="dialog" aria-labelledby="goodmoral-modal-title" aria-hidden="true">
-            <div class="modal-dialog modal-full" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="goodmoral-modal-title">Good Moral Certificate of `+ ucfirst(applicant.first_name) + ' ' +  ucfirst(applicant.last_name) +`</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
+                <div class="modal-dialog modal-full" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="goodmoral-modal-title">Good Moral Certificate of `+ ucfirst(applicant.first_name) + ' ' +  ucfirst(applicant.last_name) +`</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
 
 
-                <div class="modal-body text-center">
-                    <img id="good-moral" class="img-fluid" src="{{url('/storage/applicants/good_morals/`+ applicant.good_moral +`')}}"  >    
-                </div>
+                        <div class="modal-body text-center">
+                            <img id="good-moral" class="img-fluid" src="{{url('/storage/images/applicants/good_morals/`+ applicant.good_moral +`')}}"  >    
+                        </div>
 
-                
-                <div class="modal-footer">
-                    <a href="download/goodmoral/`+ applicant.good_moral +`"  class="btn btn-warning text-dark">Download</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                        <input type="hidden" name="req_type" value="goodmoral">
+                        <input type="hidden" name="app_id" value="`+ applicant.id +`">
+
+                        
+                        <div class="modal-footer">
+                                <a href="download/goodmoral/`+ applicant.good_moral +`"  class="btn btn-warning text-dark">Download</a>
+                                <button type="submit" class="btn btn-info text-white">Request Resubmission</button>                                             
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>   
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-            </div>
+            {!! Form::close() !!}
 
+            {!! Form::open(['url' => 'admin/requestupload']) !!}
             <div class="modal fade" id="reportcard-modal" tabindex="-1" role="dialog" aria-labelledby="reportcard-modal-title" aria-hidden="true">
-            <div class="modal-dialog modal-full" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="reportcard-modal-title">Report Card of `+ ucfirst(applicant.first_name) + ' ' +  ucfirst(applicant.last_name) +`</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
+                <div class="modal-dialog modal-full" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="reportcard-modal-title">Report Card of `+ ucfirst(applicant.first_name) + ' ' +  ucfirst(applicant.last_name) +`</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
 
 
-                <div class="modal-body text-center">
-                    <img id="good-moral" class="img-fluid" src="{{url('/storage/applicants/report_cards/`+ applicant.report_card +`')}}"  >    
-                </div>
+                        <div class="modal-body text-center">
+                            <img id="report-card" class="img-fluid" src="{{url('/storage/images/applicants/report_cards/`+ applicant.report_card +`')}}"  >    
+                        </div>
+
+                        <input type="hidden" name="req_type" value="reportcard">
+                        <input type="hidden" name="app_id" value="`+ applicant.id +`">
 
 
-                <div class="modal-footer">
-                    <a href="download/reportcard/`+ applicant.report_card +`"  class="btn btn-warning text-dark">Download</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                        <div class="modal-footer">
+                                <a href="download/reportcard/`+ applicant.report_card +`"  class="btn btn-warning text-dark">Download</a>
+                                <button type="submit" class="btn btn-info text-white">Request Resubmission</button>                                             
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>   
+                        </div>
+                    </div>
+                </div>        
             </div>
-            </div>
-            
-        </div>
+            {!! Form::close() !!}
 
        
 
@@ -297,7 +405,7 @@ function applicantSelect(btn, id){
                         <div class="card-header">
                             <h5 class="text-center">PERSONAL DATA</h5>
                         </div>
-                        <ul class="list-group list-group-flush text-right">
+                        <ul class="list-group list-group-flush ">
                             <li class="list-group-item">Last Name: <strong>`+ ucfirst(applicant.last_name)  + `</strong></li>
                             <li class="list-group-item">First Name: <strong>`+ ucfirst(applicant.first_name)  + `</strong></li>
                             <li class="list-group-item">Middle Name: <strong>`+ ucfirst(applicant.middle_name)  + `</strong></li>
@@ -307,6 +415,8 @@ function applicantSelect(btn, id){
                             <li class="list-group-item">Previous School: <strong>`+ ucfirst(applicant.last_school) + `</strong></li>
                         </ul>
                     </div>`;
+
+            document.getElementById('ripple').className="text-center align-middle d-none";
             
             appFilesPanel.innerHTML = output;
             appDataPanel.innerHTML = output2;
@@ -323,6 +433,34 @@ function applicantSelect(btn, id){
  
     
 }
+
+
+// function requestReq(reqType, id){        
+
+//     let xhr = new XMLHttpRequest();
+//     xhr.open('POST', APP_URL + '/admin/request/applicant/' + reqType + '/' + id, true);
+
+//     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+
+//     xhr.onload = function() {
+//         if (this.status == 200) {
+            
+//             let applicants = JSON.parse(this.responseText);
+                      
+            
+//             applicantList.innerHTML = output;
+
+//         } else {
+//             applicantList.innerHTML = "<h5>Huh, No applicant </h5>";
+//         }
+        
+//     }
+
+//     xhr.send();
+
+
+// }
+
 
 
 </script>

@@ -31,14 +31,16 @@
                         </li>
                     @endif
                 @else
-                    <li class="nav-item dropdown">
+                    <li class="name nav-item dropdown">
                         <a style="font-weight: 900px; color:#044716" id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }}
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right color-custom-green" aria-labelledby="navbarDropdown">
 
-                            <?php $role = auth()->user()->user_type ?>                                    
+                            <?php $role = auth()->user()->user_type ?>
+                            <a href="/home" class="dropdown-item">Home</a>
+
                             <a class="dropdown-item"
                             
                             @if(!Auth::guest() && Auth::user()->isApplicant())

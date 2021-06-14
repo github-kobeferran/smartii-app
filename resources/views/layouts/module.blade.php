@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{url('/storage/images/system/logo/smartii.png')}}">
 
     <!-- CSRF Token -->
@@ -30,6 +31,18 @@
         function ucfirst(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
+
+        function getMeta(metaName) {
+            const metas = document.getElementsByTagName('meta');
+
+            for (let i = 0; i < metas.length; i++) {
+                if (metas[i].getAttribute('name') === metaName) {
+                return metas[i].getAttribute('content');
+                }
+            }
+
+            return '';
+        }
     </script>
 
 
@@ -49,7 +62,7 @@
                         </div>
 
                     
-                        <div class="col-11 mt-2 mx-auto" >
+                        <div class="col-11 mt-3 mx-auto" >
                                             
                             @yield('content')
                         

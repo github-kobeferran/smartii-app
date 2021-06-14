@@ -57,6 +57,8 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::post('/admin/update/room/', [App\Http\Controllers\RoomsController::class, 'update'])->name('updateRoom');
     Route::post('/admin/update/setting/', [App\Http\Controllers\SettingsController::class, 'update'])->name('updateSetting');
+    Route::post('/admin/approvereq/{reqType}/{id}', [App\Http\Controllers\AdminsController::class, 'approveReq'])->name('approveReq');
+    Route::post('/admin/requestreq/{reqType}/{id}', [App\Http\Controllers\AdminsController::class, 'approveReq'])->name('approveReq');
 
 
     Route::get('/admin/delete/room/{id}', [App\Http\Controllers\RoomsController::class, 'destroy'])->name('deleteRoom');
@@ -68,12 +70,12 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/admin/schedules/{prog}/{subj}', [App\Http\Controllers\SubjectsTakenController::class, 'showClassSchedules'])->name('showClassSchedules');
 
     Route::get('/admin/download/{type}/{filename}', [App\Http\Controllers\AdminsController::class, 'download'])->name('AdminDownload');
+    Route::post('/admin/requestupload', [App\Http\Controllers\AdminsController::class, 'requestFileResubmission'])->name('requestFileResubmission');
 
 });
 
 // APPLICANT protected routes 
-Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    // Route::get('/applicant', [App\Http\Controllers\ApplicantsController::class, 'index'])->name('applicant')->middleware('verified');
+Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {    
     Route::get('/admissionform', [App\Http\Controllers\ApplicantsController::class, 'form'])->name('admissionForm')->middleware(['verified', 'applicant.new']);
     Route::get('/appstatus', [App\Http\Controllers\ApplicantsController::class, 'status'])->name('appStatus')->middleware(['verified', 'applicant.submitted']);
     Route::get('/applicant/view/programs/{dept}', [App\Http\Controllers\ApplicantsController::class, 'showPrograms'])->name('applicantViewPrograms');    

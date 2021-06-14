@@ -418,6 +418,132 @@ class AdminsController extends Controller
 
 
     }
+
+
+    public function requestFileResubmission(Request $request){        
+        
+        // return $request->all();
+
+        $filetype = $request->input('req_type');        
+        $id = $request->input('app_id');        
+
+        $applicant = Applicant::find($id);
+
+        switch($filetype){
+            case 'idpic': 
+                
+                
+
+                if($applicant->resubmit_file == null || $applicant->resubmit_file == ''){
+
+                    $applicant->resubmit_file = '1000';
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                    
+                    ->with('app-id', $id);
+
+                } else {
+
+                    $value = $applicant->resubmit_file;
+                    $value[0] = '1';
+                    $applicant->resubmit_file = $value;
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                    
+                    ->with('app-id', $id);
+                }
+
+               
+                
+            break;
+            case 'birthcert':
+
+                if($applicant->resubmit_file == null || $applicant->resubmit_file == ''){
+
+                    $applicant->resubmit_file = '0100';
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                
+                    ->with('app-id', $id);
+
+                } else {
+
+                    $value = $applicant->resubmit_file;
+                    $value[1] = '1';
+                    $applicant->resubmit_file = $value;
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                    
+                    ->with('app-id', $id);
+                }
+
+            break;
+            case 'goodmoral':
+
+                if($applicant->resubmit_file == null || $applicant->resubmit_file == ''){
+
+                    $applicant->resubmit_file = '0010';
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                                    
+                    ->with('btn-active', 'app-' . $id);
+
+                } else {
+
+                    $value = $applicant->resubmit_file;
+                    $value[2] = '1';
+                    $applicant->resubmit_file = $value;
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                    
+                    ->with('app-id', $id);
+                }
+            break;
+            case 'reportcard':
+
+                if($applicant->resubmit_file == null || $applicant->resubmit_file == ''){
+
+                    $applicant->resubmit_file = '0001';
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                    
+                    ->with('app-id', $id);
+
+                } else {
+
+                    $value = $applicant->resubmit_file;
+                    $value[3] = '1';
+                    $applicant->resubmit_file = $value;
+
+                    $applicant->save();
+                    
+                    return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                    
+                    ->with('app-id', $id);
+                }
+            break;
+
+            default:
+            return redirect()->route('adminView')                    
+                    ->with('active', 'applicants')                    
+                    ->with('app-id', $id);
+
+        }
+
+    }
     
 
 }

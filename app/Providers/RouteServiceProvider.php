@@ -24,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
     public const ADMIN_DASHBOARD = '/admin';    
     public const FACULTY_DASHBOARD = '/faculty';
     public const STUDENT_DASHBOARD = '/student';
-    public const APPLICANT_DASHBOARD = '/applicant';
+    public const APPLICANT_DASHBOARD = '/admissionform';
 
     /**
      * The controller namespace for the application.
