@@ -1,121 +1,177 @@
-<div class="form-group">    
-    <input id="students-search" type="text" class="form-control" placeholder="Search here..">
-</div>
+<div class="row no-gutters vh-100">
 
-<div>
-    <table id="students-table" class="table table-striped table table-responsive-sm">
+    <div class="col-5 border-right">
+
+        <div class="btn-group btn-group-toggle border" data-toggle="buttons">
+            <label class="btn btn-light active">
+                <input type="radio" name="options" id="shsOption" autocomplete="off" checked> SHS
+            </label>        
+            <label class="btn btn-light">
+                <input type="radio" name="options" id="collegeOption" autocomplete="off"> College
+            </label>
+        </div>
+
+        <div id="program-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">                               
+    
+
+        </div>
         
-    </table>            
+
+    </div>
+
+    <div class="col-7">
+
+        <div class="form-group has-search">
+            <span class="fa fa-search form-control-feedback"></span>
+            <input id="student-search" type="text" class="form-control" placeholder="Search by Name">
+        </div>
+        
+        <div id="student-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" >
+           
+                     
+
+        </div>
+        
+    </div>
+
 </div>
 
-<div id="student-profile" class="card" style="width: 18rem;">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-</div>
+<script>    
 
-<script>
+let currentProgram = null;
 
-function viewStudent(id) {    
+let shsOption = document.getElementById('shsOption');
+let collegeOption = document.getElementById('collegeOption');
+let programList = document.getElementById('program-list');
+let studentList = document.getElementById('student-list');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://smartii-app.test/admin/view/students/' + id, true);
+shsOption.onclick = () => {
+    fillProgramList(0);
+}
+
+collegeOption.onclick = () => {
+    fillProgramList(1);
+}
+
+function fillProgramList(dept){
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', APP_URL + '/admin/view/programs/department/' + dept , true);
 
     xhr.onload = function() {
-
         if (this.status == 200) {
-            var student = JSON.parse(this.responseText);
 
-            output = '<div id="student-profile" class="card" style="width: 18rem;">';
-            output += '<ul class="list-group list-group-flush">';           
-            output += '<li class="list-group-item">' + student.first_name + ' ' + student.last_name  + '</li>';
-            output += '<li class="list-group-item">' + student.email + '</li>';
-            output += '<li class="list-group-item">' + student.program_desc + '</li>';
-            output += '<li class="list-group-item">₱ ' + student.balance_amount + '</li>';            
-            output += '</ul>';
-            output += '</div>';
-            
-            document.getElementById('student-profile').innerHTML = output;
-            document.getElementById('student-profile').style.display = 'block';
-            document.getElementById('students-table').style.display = 'none';
-           
+        let programs = JSON.parse(this.responseText);
+       
+
+output = `<div id="program-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
+output = `<ul class="list-group mt-2">`;
+
+        for(let i in programs){
+
+            output += ` <li id="prog-`+ programs[i].id +`" onclick="programSelect(\'`+ programs[i].id + `\')" class="list-group-item program-button">`+ programs[i].abbrv + ' - ' + programs[i].desc  +`</li>`;
+
+        }    
+
+output +=`</ul>`;       
+output +=`</div>`;   
+       
+
+        programList.innerHTML = output;
 
         } else {
-            var output = 'loading...';
-            // document.getElementById('students-table').innerHTML = output;
+            output = '';
+            programList.innerHTML = output;
         }
-
-
     }
 
     xhr.send();
-
+            
 }
 
 
-document.getElementById('students-view-tab').addEventListener('click', () => {
+function programSelect(id){
 
-studentsAjax();
+    currentProgram = id;
 
-document.getElementById('student-profile').style.display = 'none';
+    let programbuttons = document.getElementsByClassName('program-button');
 
-});
+    btn = document.getElementById('prog-' + id);
 
+    for(i=0; i<programbuttons.length; i++){
+        programbuttons[i].classList.remove('active');           
+        programbuttons[i].classList.remove('text-white');           
+    }  
 
-function studentsAjax() {
+    btn.classList.add('active');
+    btn.classList.add('text-white');
     
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', APP_URL + '/admin/view/students', true);
+
+    xhr.open('GET', APP_URL + '/admin/view/students/program_id/' + id , true);
 
     xhr.onload = function() {
         if (this.status == 200) {
-            let results = JSON.parse(this.responseText);
 
-            output = '<table id="students-table" class="table table-striped">' +
-                '<thead>' +
-                '<tr>' +
+        let students = JSON.parse(this.responseText);
+        let output = '';
+        
+        if(!isEmpty(students)){
 
-                '<th scope="col">View</th>' +
-                '<th scope="col">Student ID</th>' +
-                '<th scope="col">Name</th>' +
-                '<th scope="col">Department</th>' +
-                '<th scope="col">Program</th>' +
-                '<th scope="col">Permanent Address</th>' +
+    output = `<div class="student-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" >`;       
 
-                '</tr>' +
-                '</thead>' +
-                '<tbody>';
-
-            for (let i = 0; i < results['students'].length; i++) {
-                $department = (results['students'][i].department == 0) ? "SHS" : "College";
-                output += '<tr>' +
-
-                    '<td><button type="button"  onclick="viewStudent(' + results['students'][i].id + ')" class="btn btn-light border">View Details</button></td>' + //substring below
-                    '<td>' + results['students'][i].student_id + '</td>' +
-                    '<td>' + results['students'][i].last_name + ', ' + results['students'][i].first_name + ', ' + results['students'][i].middle_name.charAt(0).toUpperCase() + '</td>' +
-                    '<td>' + $department + '</td>' +
-                    '<td>' + results['programs'][i].abbrv + '</td>' +
-                    '<td>' + results['students'][i].permanent_address + '</td>' +
-
-                    '</tr>';
+        for(let i in students){  
+            
+            let level = '';
+            switch(students[i].level){
+                case 1:
+                    level = "Grade 11";
+                break;
+                case 1:
+                    level = "Grade 11";
+                break;
+                case 11:
+                    level = "Freshman";
+                break;
+                case 1:
+                    level = "Sophomore";
+                break;
             }
 
-            output += '</tbody>' +
-                '</table>';
+ output+= `<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">`;
+        output+= `<h5 class="mb-1">`+ ucfirst(students[i].last_name) +`, `+ ucfirst(students[i].first_name) +`, `+ ucfirst(students[i].middle_name) +`</h5>
+              </div>`;
+      output+=`<p class="">`+ level +` - `+ ucfirst(students[i].gender) +` - ` + students[i].age +` years old - ` + students[i].email +`</p>              
+            </a>`; 
 
-            document.getElementById('students-table').innerHTML = output;
+        }
+
+    output+= `</div>`;
+
+}else{
+
+    output = `<h5 class="text-center"> NO STUDENTS IN THIS PROGRAM </h5>`;
+}
+
+    
+
+
+            studentList.innerHTML = output;
 
         } else {
-            let output = 'loading...';
-            document.getElementById('students-table').innerHTML = output;
+            output = '';
+            studentList.innerHTML = output;
         }
     }
 
     xhr.send();
+
 }
 
 
 
 </script>
+
+

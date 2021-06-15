@@ -124,11 +124,8 @@
 window.addEventListener('load', (event) => {         
     
     viewAdmins();
-    studentsAjax();      
-
-     
-    // defaultSelected(19);
-      
+    fillProgramList(0);
+                     
 
     if(typeof APP_ID !== 'undefined')  {
         fillApplicantList(APP_ID);  

@@ -195,3 +195,14 @@ tbody td {
     font-size: x-large;
     color: #044716 !important;
 }
+
+.program-button {
+    font-family: 'Raleway', sans-serif;
+    color: #044716 !important;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.program-button:hover {
+    opacity: 0.95;
+}

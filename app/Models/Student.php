@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Program;
 use App\Models\Balance;
+use Carbon\Carbon;
 
 
 
@@ -13,11 +14,25 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $appends = ['level_desc' => null, 'dept' => null, 'program_desc' => null, 'balance_amount' => null];
+    protected $appends = ['age' => null, 'level_desc' => null, 'dept' => null, 'program_desc' => null, 'balance_amount' => null];
 
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
     } 
+
+    public function setAgeAttribute($id)
+    {
+        $student = Student::find($id);    
+
+        $this->attributes['age'] = Carbon::parse($student->dob)->age;
+
+    }
+
+    public function getAgeAttribute()
+    {
+        return $this->attributes['age'];
+    }
+
 
     public function setProgramDescAttribute($id)
     {

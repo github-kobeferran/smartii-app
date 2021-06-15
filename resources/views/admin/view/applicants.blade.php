@@ -4,7 +4,7 @@
 
         <div class="form-group has-search">
             <span class="fa fa-search form-control-feedback"></span>
-            <input type="text" class="form-control" placeholder="Search by Name">
+            <input id="applicant-search" type="text" class="form-control" placeholder="Search by Name">
         </div>    
         
         <div id="applicant-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">                               
@@ -78,11 +78,17 @@ function fillApplicantList(id = null){
                 if(id != null && id == applicants[i].id){
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start active">';
                     output +='<div class="d-flex w-100 jusstify-content-between">';
+                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
 
-                        if(applicants.resubmitted != null && applicants.resubmitted != '0000' && applicants.resubmitted != 'undefined'){
-                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 text-info">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
-                        }else{
-                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
+                            
+                            let count = 0;
+                            for(let j=0; j<applicants[i].resubmitted.length; j++){
+                                if(applicants[i].resubmitted[j] == '1')
+                                    ++count;
+                            }
+
+                            output +='<span class="badge badge-primary badge-pill">'+ count +'</span>'
                         }
                         
                         output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
@@ -97,13 +103,20 @@ function fillApplicantList(id = null){
 
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
                     output +='<div class="d-flex w-100 jusstify-content-between">';
+                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+
                         if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
-                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 text-info">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
-                        }else{
-                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                            
+                            let count = 0;
+                            for(let j=0; j<applicants[i].resubmitted.length; j++){
+                                if(applicants[i].resubmitted[j] == '1')
+                                    ++count;
+                            }
+
+                            output +='<span class="badge badge-primary badge-pill">'+ count +'</span>'
                         }
                         
-
+                        
                         output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
                     output += '</div>'
                     output += '<p class="mb-1">'+ applicants[i].dept_desc +'</p>'
@@ -484,39 +497,8 @@ function applicantSelect(btnId, id, isdefault = false ){
     }
 
     xhr.send();
-
-
- 
     
 }
-
-
-// function requestReq(reqType, id){        
-
-//     let xhr = new XMLHttpRequest();
-//     xhr.open('POST', APP_URL + '/admin/request/applicant/' + reqType + '/' + id, true);
-
-//     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
-
-//     xhr.onload = function() {
-//         if (this.status == 200) {
-            
-//             let applicants = JSON.parse(this.responseText);
-                      
-            
-//             applicantList.innerHTML = output;
-
-//         } else {
-//             applicantList.innerHTML = "<h5>Huh, No applicant </h5>";
-//         }
-        
-//     }
-
-//     xhr.send();
-
-
-// }
-
 
 
 </script>

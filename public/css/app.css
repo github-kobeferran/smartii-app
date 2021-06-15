@@ -217,6 +217,17 @@ tbody td {
   color: #044716 !important;
 }
 
+.program-button {
+  font-family: "Raleway", sans-serif;
+  color: #044716 !important;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.program-button:hover {
+  opacity: 0.95;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

@@ -172,5 +172,4 @@ class Subject extends Model
                                 [$values['department'], $values['program']])
                                 ->get();
     }
-
 }

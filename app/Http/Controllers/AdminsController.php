@@ -242,9 +242,7 @@ class AdminsController extends Controller
         } else {
 
             switch($table){
-                case 'programs':                  
-
-                    // $programs = Program::where($by, $value)->get();  
+                case 'programs':                                      
 
                     if($all){
                         $programs = Program::where($by, $value)->get();
@@ -257,7 +255,18 @@ class AdminsController extends Controller
                     
 
                     return $programs->toJson();
-                break;                              
+                break; 
+                case 'students':
+                    
+                    $students = Student::where($by, $value)->get();
+
+                    foreach($students as $student){
+                        $student->age = $student->id;
+                    }
+
+                    return $students->toJson();
+
+                break;
 
                 default:
                 redirect('/home');
@@ -384,6 +393,35 @@ class AdminsController extends Controller
                 }    
 
             break;
+            // case 'applicants':  
+
+            //     if($text == ''){
+            //         $applicants = Applicant::all();
+
+            //         foreach($students as $student){                    
+            //             $student->program_desc = $student->program_id;
+            //             $student->balance_amount = $student->balance_id;
+            //         }
+
+            //         return $applicants->toJson();
+                                       
+            //     }else{
+            //         $students = Student::query()
+            //         ->where('last_name', 'LIKE', '%' . $text . "%")
+            //         ->orWhere('first_name', 'LIKE',  '%' .$text . "%")
+            //         ->orWhere('middle_name', 'LIKE', '%' . $text . "%")                    
+            //         ->orwhere('student_id', 'LIKE', '%' . $text . "%")                    
+            //         ->get();                                        
+
+            //         foreach($students as $student){                    
+            //             $student->program_desc = $student->program_id;
+            //             $student->balance_amount = $student->balance_id;
+            //         }
+
+            //         return $applicants->toJson();
+            //     }    
+
+            // break;
         }    
         
         
