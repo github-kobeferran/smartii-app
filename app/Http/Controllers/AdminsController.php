@@ -18,6 +18,7 @@ use App\Models\Balance;
 use App\Models\User;
 use App\Models\Member;
 use App\Models\Room;
+use App\Models\SubjectTaken;
 use App\Mail\WelcomeMember;
 use PDF;
 
@@ -179,7 +180,8 @@ class AdminsController extends Controller
             break;    
             case 'applicants':
 
-                $applicants = Applicant::orderBy('created_at', 'desc')->get();  
+                $applicants = Applicant::where('approved', 0)
+                                        ->orderBy('created_at', 'desc')->get();  
                 
                 foreach($applicants as $applicant){                    
                     $applicant->prog_desc = $applicant->id;
@@ -544,6 +546,127 @@ class AdminsController extends Controller
         }
 
     }
+
+
+    public function approveApplicant(Request $request){
+
+        //delete member link        
+        
+        $app_id = $request->input('app_id');    
+
+        $applicant = Applicant::find($app_id);
+
+        /**
+         * STUDENT CREATE
+         */
+        
+        $student = new Student;      //studid
+
+        $student->department = $applicant->dept;
+        $student->program_id = $applicant->program;
+        $student->semester = 1;
+
+        $student->student_type = 0;
+        $student->transferee = 0;
+        $student->created_by_admin = 0;
+
+        if($applicant->dept == 0)
+            $student->level = 1;
+        else
+            $student->level = 11;
+
+        $student->email = $applicant->email;
+
+        $student->last_name = $applicant->last_name;
+        $student->first_name = $applicant->first_name;
+        $student->middle_name = $applicant->middle_name;
+
+        $student->dob = $applicant->dob;
+        $student->gender = $applicant->gender;
+        
+        $student->present_address = $applicant->present_address;
+        $student->last_school = $applicant->last_school;
+
+        $student->save();
     
+            $balance = new Balance;             
+            $balanceID = $balance->init();                
+
+            $student->balance_id = $balanceID;
+                    
+            $year =  date("y");
+            $prefix = "C";
+            $prefixID = $prefix . $year . '-' . sprintf('%04d', $student->id);
+        
+            $student->student_id = $prefixID;
+
+        $student->save();
+        $student_id = $student->id;
+
+        $applicant->approved = 1;
+        $applicant->save();
+
+        $member_old = Member::query()->where('member_type', 'applicant')->where('member_id', $app_id)->first();
+        $user_id = $member_old->user_id;
+
+        Member::where('member_type', $member_old->member_type)
+              ->where('member_id', $member_old->member_id)
+              ->where('user_id', $member_old->user_id)->delete();
+
+        $member_new = new Member;
+        $member_new->user_id = $user_id;
+        $member_new->member_type = 'student';
+        $member_new->member_id = $student_id;
+                
+        $member_new->save();
+                   
+        $values = ['department' => $student->department, 
+                    'program' => $student->program_id, 
+                    'level' => $student->level, 
+                    'semester' => $student->semester, 
+                  ];
+
+        $subjects = Subject::allWhere($values, true);
+        $totalBalance = 0;
+        $studentBalance = Balance::find($student->balance_id);
+
+        $subjectsToBeTakenLength = count($subjects);                  
+
+        for($i=0; $i < $subjectsToBeTakenLength; $i++){
+
+            $subjectToTake = new SubjectTaken;
+
+            $subject = Subject::find($subjects[$i]->id);   
+    
+            $subjectToTake->student_id = $student_id;
+            $subjectToTake->subject_id = $subject->id;
+            
+            if($student->department == 0)
+                $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
+            else 
+                $totalBalance+= Setting::first()->college_price_per_unit * $subject->units; 
+
+            if($i == $subjectsToBeTakenLength - 1 ) {                
+                $studentBalance->amount = $totalBalance;
+                $studentBalance->save();
+            }
+
+            $subjectToTake->rating = 4.5;    
+            $subjectToTake->from_year = Setting::first()->from_year;  
+            $subjectToTake->to_year = Setting::first()->to_year; 
+            $subjectToTake->semester = Setting::first()->semester;  
+            
+            $subjectToTake->save();
+
+        }
+
+        
+        return redirect()->route('adminView')->with('active', 'applicants');
+
+    }
+
+
+
+   
 
 }

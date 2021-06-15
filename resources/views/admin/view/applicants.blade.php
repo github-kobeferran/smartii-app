@@ -78,10 +78,16 @@ function fillApplicantList(id = null){
                 if(id != null && id == applicants[i].id){
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start active">';
                     output +='<div class="d-flex w-100 jusstify-content-between">';
-                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+
+                        if(applicants.resubmitted != null && applicants.resubmitted != '0000' && applicants.resubmitted != 'undefined'){
+                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 text-info">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        }else{
+                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        }
+                        
                         output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
                     output += '</div>'
-                    output += '<p class="mb-1">'+ applicants[i].dept_desc +'</p>'
+                    output += '<p class="mb-1">'+ applicants[i].dept_desc + '</p>'
                     output += '<p class="mb-1">'+ applicants[i].prog_desc +'</p>'                    
                     output+='</button>';
 
@@ -91,7 +97,13 @@ function fillApplicantList(id = null){
 
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
                     output +='<div class="d-flex w-100 jusstify-content-between">';
-                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
+                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 text-info">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        }else{
+                            output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        }
+                        
+
                         output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
                     output += '</div>'
                     output += '<p class="mb-1">'+ applicants[i].dept_desc +'</p>'
@@ -154,7 +166,8 @@ function applicantSelect(btnId, id, isdefault = false ){
         let birthcertResub = false;
         let goodmoralResub = false;
         let reportcardResub = false;
-
+        let resubmitted = false;
+          
         if(applicant.resubmit_file != undefined && applicant.resubmit_file != null){
 
             if(applicant.resubmit_file[0] == '1')
@@ -171,62 +184,89 @@ function applicantSelect(btnId, id, isdefault = false ){
 
         
         }
-            
 
+        if(applicant.resubmitted != undefined && applicant.resubmitted != null){
+            resubmitted = true;
+        }
 
-
-    output=`<div class="col">
         
-            <div class="bg-light text-white text-center">
-
-                <button type="button" class="border-0" data-toggle="modal" data-target="#idpic-modal" >
-                    <img id="id-pic" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/id_pics/`+ applicant.id_pic +`')}}"  >`;
-
-                    if(idpicResub)
-                        output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>`;
-
-       output+=`</button>
-                                                
-            </div>
-
-            <div class="text-center">
-                <h5>ID Picture</h5>
             
-            </div>
 
-            {{--  --}}
+        
 
-            <div class="bg-light text-white text-center">
+    output=`
+   
+    
+            <div class="col">
+        
+                <div class="bg-light text-white text-center p-2">
 
-                <button type="button" class="border-0" data-toggle="modal" data-target="#birthcert-modal">
-                    <img id="birth-cert" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/birth_certs/`+ applicant.birth_cert +`')}}"  >`;
-                    
-                    if(birthcertResub)
-                        output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i></span>`;
+                    <button type="button" class="border-0" data-toggle="modal" data-target="#idpic-modal" >
+                        <img id="id-pic" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/id_pics/`+ applicant.id_pic +`')}}"  >`;
 
-       output+=`                        
-                </button>                    
+                        if(idpicResub)
+                            output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>`;
+                        else if(resubmitted){
+
+                            if(applicant.resubmitted[0] == '1')
+                                output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Applicant Resubmitted, check it!" ><i class="fa fa-check" aria-hidden="true"></i> </span>`;
+
+                        }
+
+                output+=`</button>
+                                                
+                </div>
+
+                <div class="text-center">
+                    <h5>ID Picture</h5>
                 
+                </div>
 
-            </div>
-            <div class="text-center">
-                <h5>Birth Certificate</h5>                    
-            </div>
+                {{--  --}}
+
+                <div class="bg-light text-white text-center p-2">
+
+                    <button type="button" class="border-0" data-toggle="modal" data-target="#birthcert-modal">
+                        <img id="birth-cert" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/birth_certs/`+ applicant.birth_cert +`')}}"  >`;
+                        
+                        if(birthcertResub)
+                            output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i></span>`;
+                            else if(resubmitted){
+
+                            if(applicant.resubmitted[1] == '1')
+                                output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Applicant Resubmitted, check it!" ><i class="fa fa-check" aria-hidden="true"></i> </span>`;
+
+                        }
+
+                output+=`                        
+                    </button>                    
+                    
+
+                </div>
+                <div class="text-center">
+                    <h5>Birth Certificate</h5>                    
+                </div>
 
             
             </div>
 
             <div class="col justify-content-center">
 
-                <div class="bg-light text-white text-center">
+                <div class="bg-light text-white text-center p-2">
 
                     <button type="button" class="border-0" data-toggle="modal" data-target="#goodmoral-modal">
                         <img id="good-moral" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/good_morals/`+ applicant.good_moral +`')}}"  >`;
                     
                     if(goodmoralResub)
                         output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>`;
+                        else if(resubmitted){
 
-            output+=`    
+                            if(applicant.resubmitted[2] == '1')
+                                output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Applicant Resubmitted, check it!" ><i class="fa fa-check" aria-hidden="true"></i> </span>`;
+
+                        }
+
+                    output+=`    
                         
                     </button>   
                     
@@ -240,15 +280,21 @@ function applicantSelect(btnId, id, isdefault = false ){
         
 
 
-                <div class="bg-light text-white text-center">
+                <div class="bg-light text-white text-center p-2">
 
                     <button type="button" class="border-0" data-toggle="modal" data-target="#reportcard-modal">
                         <img id="report-card" class="img-thumbnail float-none w-25 h-25" src="{{url('/storage/images/applicants/report_cards/`+ applicant.report_card +`')}}"  >`;
                     
                     if(reportcardResub)
                         output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Still waiting for resubmission" ><i class="fa fa-hourglass-half" aria-hidden="true"></i> </span>`;
+                    else if(resubmitted){
 
-       output+=`    
+                        if(applicant.resubmitted[3] == '1')
+                            output+=`<span class="resubmit" data-toggle="tooltip" data-placement="right" title="Applicant Resubmitted, check it!" ><i class="fa fa-check" aria-hidden="true"></i> </span>`;
+
+                    }
+
+                output+=`    
                         
                     </button>   
                     
@@ -401,20 +447,30 @@ function applicantSelect(btnId, id, isdefault = false ){
         {{------------------------------------------------------------- END OF MODALS --}}`;            
 
 
-        output2 = ` <div class="card mx-auto w-75" >
+        output2 = ` 
+        
+
+                    <div class="card mx-auto w-75" >
                         <div class="card-header">
-                            <h5 class="text-center">PERSONAL DATA</h5>
+                            <h5 class="text-center">PERSONAL DATA </h5>                            
                         </div>
+                        {!! Form::open(['url' => 'admin/approveapplicant/', 'id' => 'approveApplicantForm']) !!}
                         <ul class="list-group list-group-flush ">
-                            <li class="list-group-item">Last Name: <strong>`+ ucfirst(applicant.last_name)  + `</strong></li>
-                            <li class="list-group-item">First Name: <strong>`+ ucfirst(applicant.first_name)  + `</strong></li>
-                            <li class="list-group-item">Middle Name: <strong>`+ ucfirst(applicant.middle_name)  + `</strong></li>
-                            <li class="list-group-item">Age: <strong>`+ applicant.age + ' years ' + `</strong></li>
-                            <li class="list-group-item">Gender: <strong>`+ ucfirst(applicant.gender) + `</strong></li>
-                            <li class="list-group-item">Living in: <strong>`+ ucfirst(applicant.present_address) + `</strong></li>
-                            <li class="list-group-item">Previous School: <strong>`+ ucfirst(applicant.last_school) + `</strong></li>
+                            <li class="list-group-item">Last Name: <strong>`+ ucfirst(applicant.last_name)  + `</strong></li>                            
+                            <li class="list-group-item">First Name: <strong>`+ ucfirst(applicant.first_name)  + `</strong></li>                            
+                            <li class="list-group-item">Middle Name: <strong>`+ ucfirst(applicant.middle_name)  + `</strong></li>                            
+                            <li class="list-group-item">Age: <strong>`+ applicant.age + ' years ' + `</strong></li>                            
+                            <li class="list-group-item">Gender: <strong>`+ ucfirst(applicant.gender) + `</strong></li>                            
+                            <li class="list-group-item">Living in: <strong>`+ applicant.present_address + `</strong></li>                            
+                            <li class="list-group-item">Previous School: <strong>`+ applicant.last_school + `</strong></li>                                                        
+                            {{ Form::hidden('app_id','`+ applicant.id  + `') }}
+                            <li class="list-group-item"><button type="submit" class="btn btn-success btn-block">Approve</button> </li>
+                        {!! Form::close() !!}
                         </ul>
-                    </div>`;
+                    </div>
+
+        
+                    `;
 
             document.getElementById('ripple').className="text-center align-middle d-none";
             

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Mail\WelcomeApplicant;
 use App\Models\Applicant;
 use App\Models\Program;
@@ -84,6 +85,7 @@ class ApplicantsController extends Controller
             'm_name' => 'required', 
             'present_address' => 'required', 
             'last_school' => 'required',
+            'dob' => 'required|date',
 
         ],
         [
@@ -97,6 +99,10 @@ class ApplicantsController extends Controller
             'present_address.required' => 'Present Address is required.',
 
             'last_school.required' => 'Last School Attended is required.',
+
+            'dob.required' => 'Date of Birth is required.',
+
+            'dob.date' => 'Date of Birth is invalid bruh.',
 
         ]);        
 
@@ -205,6 +211,8 @@ class ApplicantsController extends Controller
         $applicant->last_name = $request->input('l_name');
         $applicant->first_name = $request->input('f_name');
         $applicant->middle_name = $request->input('m_name');
+
+        $applicant->email = auth()->user()->email;
         $applicant->dob = $request->input('dob');
         $applicant->gender = $request->input('gender');
         $applicant->present_address = $request->input('present_address');
@@ -305,4 +313,385 @@ class ApplicantsController extends Controller
         return Program::find('id')->first()->toJson();
 
     }
+
+    public function resubmit(Request $request){
+        
+
+        $applicant = Applicant::find($request->input('id'));
+        $newResubmitted = '0000';     
+        
+
+        switch($request->input('status')){
+            case '1000':                
+                $validator = Validator::make($request->all(), [
+                    
+                    'id_pic' => 'required|file|mimes:jpeg|max:300',                   
+                ],
+                [
+        
+                    'id_pic.required' => 'The 1x1 ID Picture is required.',
+                    'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+                    'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',                     
+                ]);
+
+            break;
+            case '1100':      
+                                
+                
+                $validator = Validator::make($request->all(), [
+                    
+                    'id_pic' => 'required|file|mimes:jpeg|max:300',
+                    'birth_cert' => 'required|file|mimes:jpeg|max:300',                           
+                
+
+                ],
+                [
+        
+                    'id_pic.required' => 'The 1x1 ID Picture is required.',
+                    'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+                    'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',   
+                    
+                    'birth_cert.required' => 'The Birth Certificate File is required.',
+                    'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+                    'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
+
+                ]);
+
+            break;
+            case '1010':
+
+                $validator = Validator::make($request->all(), [
+                    
+                    'id_pic' => 'required|file|mimes:jpeg|max:300',                                            
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                           
+                    
+
+                ],
+                [
+        
+                    'id_pic.required' => 'The 1x1 ID Picture is required.',
+                    'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+                    'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',                                          
+
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+            
+                ]);
+
+            break;
+            case '1011':
+
+                $validator = Validator::make($request->all(), [
+                    
+                    'id_pic' => 'required|file|mimes:jpeg|max:300',                                            
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                           
+                    'report_card' => 'required|file|mimes:jpeg|max:300', 
+
+                ],
+                [
+        
+                    'id_pic.required' => 'The 1x1 ID Picture is required.',
+                    'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+                    'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',                                          
+
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+                    
+                    'report_card.required' => 'The Form 138 File is required.',
+                    'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+                    'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
+            
+                ]);
+
+            break;
+            case '1001':
+
+                $validator = Validator::make($request->all(), [
+                    
+                    'id_pic' => 'required|file|mimes:jpeg|max:300',                                              
+                    'report_card' => 'required|file|mimes:jpeg|max:300', 
+
+                ],
+                [
+        
+                    'id_pic.required' => 'The 1x1 ID Picture is required.',
+                    'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+                    'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',                                       
+
+                    'report_card.required' => 'The Form 138 File is required.',
+                    'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+                    'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
+                ]);
+
+            break;
+            case '1110':
+
+                $validator = Validator::make($request->all(), [
+                    
+                    'id_pic' => 'required|file|mimes:jpeg|max:300',
+                    'birth_cert' => 'required|file|mimes:jpeg|max:300',                           
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                                               
+
+                ],
+                [
+        
+                    'id_pic.required' => 'The 1x1 ID Picture is required.',
+                    'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+                    'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',   
+                    
+                    'birth_cert.required' => 'The Birth Certificate File is required.',
+                    'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+                    'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
+
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+                  
+                ]);
+
+            break;
+            case '1111':
+
+                $validator = Validator::make($request->all(), [
+                    
+                    'id_pic' => 'required|file|mimes:jpeg|max:300',
+                    'birth_cert' => 'required|file|mimes:jpeg|max:300',                           
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                           
+                    'report_card' => 'required|file|mimes:jpeg|max:300', 
+
+                ],
+                [
+        
+                    'id_pic.required' => 'The 1x1 ID Picture is required.',
+                    'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
+                    'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',   
+                    
+                    'birth_cert.required' => 'The Birth Certificate File is required.',
+                    'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+                    'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
+
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+
+                    'report_card.required' => 'The Form 138 File is required.',
+                    'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+                    'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
+                ]);
+
+            break;
+            case '0100':
+
+                $validator = Validator::make($request->all(), [
+                                        
+                    'birth_cert' => 'required|file|mimes:jpeg|max:300',                                               
+
+                ],
+                [
+                            
+                    'birth_cert.required' => 'The Birth Certificate File is required.',
+                    'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+                    'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
+                 
+                ]);
+
+            break;
+            case '0110':
+
+                $validator = Validator::make($request->all(), [
+                                        
+                    'birth_cert' => 'required|file|mimes:jpeg|max:300',                           
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                                               
+
+                ],
+                [                             
+                    
+                    'birth_cert.required' => 'The Birth Certificate File is required.',
+                    'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+                    'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
+
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+                 
+                ]);
+
+            break;
+            case '0101':
+
+                $validator = Validator::make($request->all(), [
+                                        
+                    'birth_cert' => 'required|file|mimes:jpeg|max:300',                                                                         
+                    'report_card' => 'required|file|mimes:jpeg|max:300', 
+
+                ],
+                [                           
+                    
+                    'birth_cert.required' => 'The Birth Certificate File is required.',
+                    'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+                    'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
+                  
+                    'report_card.required' => 'The Form 138 File is required.',
+                    'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+                    'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
+                ]);
+
+            break;
+            case '0111':
+
+                $validator = Validator::make($request->all(), [
+                                        
+                    'birth_cert' => 'required|file|mimes:jpeg|max:300',                           
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                           
+                    'report_card' => 'required|file|mimes:jpeg|max:300', 
+
+                ],
+                [                    
+                    
+                    'birth_cert.required' => 'The Birth Certificate File is required.',
+                    'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
+                    'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
+
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+
+                    'report_card.required' => 'The Form 138 File is required.',
+                    'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+                    'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
+                ]);
+
+            break;
+            case '0010':
+
+                $validator = Validator::make($request->all(), [
+                                                          
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                                           
+
+                ],
+                [                         
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+                
+                ]);
+
+            break;
+            case '0011':
+
+                $validator = Validator::make($request->all(), [
+                                                                 
+                    'good_moral' => 'required|file|mimes:jpeg|max:300',                           
+                    'report_card' => 'required|file|mimes:jpeg|max:300', 
+
+                ],
+                [                           
+
+                    'good_moral.required' => 'The Good Moral Certificate File is required.',
+                    'good_moral.max' => 'The Good Moral Certificate File must not be more than 300KB in size.',
+                    'good_moral.mimes' => 'The Good Moral Certificate File must be in JPEG file format.',    
+
+                    'report_card.required' => 'The Form 138 File is required.',
+                    'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+                    'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
+                ]);
+
+            break;
+            case '0001':
+
+                $validator = Validator::make($request->all(), [
+                                                        
+                    'report_card' => 'required|file|mimes:jpeg|max:300', 
+
+                ],
+                [                              
+
+                    'report_card.required' => 'The Form 138 File is required.',
+                    'report_card.max' => 'The Form 138 File must not be more than 300KB in size.',
+                    'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
+                ]);
+
+            break;
+        }
+       
+
+        if ($validator->fails()) {
+            return redirect()->route('appStatus')->withErrors($validator);
+        }
+
+
+        
+        if( $request->hasFile('id_pic') ){
+
+            Storage::delete('/public/images/applicants/id_pics/' . $applicant->id_pic);
+            
+            $idPicwithExt = $request->file('id_pic')->getClientOriginalName();            
+            $idPicName = pathinfo($idPicwithExt, PATHINFO_FILENAME);            
+            $idPicExt = $request->file('id_pic')->getClientOriginalExtension();            
+            $idPicToStore = $idPicName.'_'.time().'.'.$idPicExt;            
+            $id_pic_path = $request->file('id_pic')->storeAs('public/images/applicants/id_pics', $idPicToStore);
+ 
+            $applicant->id_pic  = $idPicToStore; 
+            $newResubmitted[0] = '1';
+                           
+
+        }        
+        
+        if( $request->hasFile('birth_cert') ){
+
+            Storage::delete('/public/images/applicants/birth_certs/' . $applicant->birth_cert);
+            
+            $birth_certwithExt = $request->file('birth_cert')->getClientOriginalName();
+            $birth_certName = pathinfo($birth_certwithExt, PATHINFO_FILENAME);
+            $birth_certExt = $request->file('birth_cert')->getClientOriginalExtension();
+            $birth_certToStore = $birth_certName.'_'.time().'.'.$birth_certExt;
+            $birth_cert_path = $request->file('birth_cert')->storeAs('public/images/applicants/birth_certs', $birth_certToStore);
+ 
+            $applicant->birth_cert  =  $birth_certToStore;
+            $newResubmitted[1] = '1';
+        
+            
+        }
+
+        if( $request->hasFile('good_moral') ){
+
+            Storage::delete('/public/images/applicants/good_morals/' . $applicant->good_moral);
+            
+            $good_moralwithExt = $request->file('good_moral')->getClientOriginalName();           
+            $good_moralName = pathinfo($good_moralwithExt, PATHINFO_FILENAME);    
+            $good_moralExt = $request->file('good_moral')->getClientOriginalExtension();
+            $good_moralToStore = $good_moralName.'_'.time().'.'.$good_moralExt;
+            $good_moral_path = $request->file('good_moral')->storeAs('public/images/applicants/good_morals', $good_moralToStore);
+ 
+            $applicant->good_moral  = $good_moralToStore;
+            $newResubmitted[2] = '1';
+          
+            
+        }
+        
+        if( $request->hasFile('report_card') ){
+
+            Storage::delete('/public/images/applicants/report_cards/' . $applicant->report_card);
+            
+            $report_cardwithExt = $request->file('report_card')->getClientOriginalName();
+            $report_cardName = pathinfo($report_cardwithExt, PATHINFO_FILENAME);            
+            $report_cardExt = $request->file('report_card')->getClientOriginalExtension();
+            $report_cardToStore = $report_cardName.'_'.time().'.'.$report_cardExt;
+            $report_card_path = $request->file('report_card')->storeAs('public/images/applicants/report_cards', $report_cardToStore);            
+ 
+            $applicant->report_card  = $report_cardToStore;
+            $newResubmitted[3] = '1';
+        }
+
+        
+        $applicant->resubmit_file = '0000';
+        $applicant->resubmitted = $newResubmitted;
+        $applicant->save();
+
+        return redirect()->route('appStatus');
+        
+    }
+
 }

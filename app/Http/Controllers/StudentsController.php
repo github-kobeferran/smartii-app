@@ -174,8 +174,8 @@ class StudentsController extends Controller
         if($request->input('student_id') != ''){
             $student->student_id = $request->input('student_id');                         
 
-            $balance_id = new Balance;             
-            $balanceID = $balance_id->init($student);   
+            $balance = new Balance;             
+            $balanceID = $balance->init($student);   
 
             $student->balance_id = $balanceID;
 
@@ -213,8 +213,8 @@ class StudentsController extends Controller
             
             $id = $student->id;
 
-            $balance_id = new Balance;             
-            $balanceID = $balance_id->init($student);
+            $balance = new Balance;             
+            $balanceID = $balance->init($student);
 
             $student->balance_id = $balanceID;
             
@@ -266,13 +266,11 @@ class StudentsController extends Controller
             for($i=0; $i < $subjectsToBeTakenLength; $i++){
 
                 $subjectToTake = new SubjectTaken;
+
+                $subject = Subject::find($subjects[$i]->id);   
     
                 $subjectToTake->student_id = $id;
-                $subjectToTake->subject_id = $subjects[$i]; 
-                
-                
-                $subject = Subject::find($subjects[$i]);   
-
+                $subjectToTake->subject_id = $subject->id;                                                
 
                 if( ($ratings[$i] != '' && $from_years[$i] == '' && $to_years[$i] == '' && $semesters[$i] == '') ||
                     ($ratings[$i] == '' && $from_years[$i] != '' && $to_years[$i] == '' && $semesters[$i] == '') ||

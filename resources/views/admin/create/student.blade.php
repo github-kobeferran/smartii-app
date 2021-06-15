@@ -311,13 +311,8 @@ function changeTable(){
 
     xhr.onload = function() {
     if (this.status == 200) {
+        
         let results = JSON.parse(this.responseText);
-
-        // console.log(results['subjects']);
-        // console.log(results['pre_reqs']);
-        // for(i in results['pre_reqs']){
-        //     console.log(results['pre_reqs'][i]);
-        // }
 
         let year =  new Date();
         year = year.getFullYear();        

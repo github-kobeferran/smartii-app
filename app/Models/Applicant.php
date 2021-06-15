@@ -11,8 +11,12 @@ class Applicant extends Model
 {
     use HasFactory; 
 
-    protected $appends = ['age' => null, 'days_ago' => null, 'prog_desc'=> null , 'dept_desc' => null];
+    protected $appends = ['age' => null, 'days_ago' => null, 'prog_desc'=> null , 'dept_desc' => null];       
 
+    public function student(){
+        return $this->belongsTo(Student::class, 'app_id', 'id');
+    }
+    
     public function setAgeAttribute($id)
     {
         $applicant = Applicant::find($id);    

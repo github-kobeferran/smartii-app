@@ -17,7 +17,7 @@ class Student extends Model
 
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
-    }
+    } 
 
     public function setProgramDescAttribute($id)
     {
