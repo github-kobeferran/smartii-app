@@ -267,6 +267,21 @@ class AdminsController extends Controller
                     return $students->toJson();
 
                 break;
+                case 'applicants':
+                    
+                    $applicants = Applicant::where($by, $value)
+                                           ->where('approved', 0)
+                                           ->get();
+
+                    foreach($applicants as $applicant){
+                        $applicant->dept_desc = $applicant->id;
+                        $applicant->prog_desc = $applicant->id;
+                        $applicant->days_ago = $applicant->id;
+                    }
+
+                    return $applicants->toJson();
+
+                break;
 
                 default:
                 redirect('/home');
@@ -344,12 +359,13 @@ class AdminsController extends Controller
         
     }
 
-    public function search($table, $text = ''){
+    public function search($table, $text = null, $dept = null){
+        
         switch($table){     
 
             case 'admins':  
 
-                if($text == ''){
+                if($text == null){
 
                     return Admin::all();                    
 
@@ -366,7 +382,7 @@ class AdminsController extends Controller
             break;
             case 'students':  
 
-                if($text == ''){
+                if($text == null){
                     $students = Student::all();
 
                     foreach($students as $student){                    
@@ -393,39 +409,148 @@ class AdminsController extends Controller
                 }    
 
             break;
-            // case 'applicants':  
+            case 'applicants':  
+                                
 
-            //     if($text == ''){
-            //         $applicants = Applicant::all();
+                if($dept != null){
 
-            //         foreach($students as $student){                    
-            //             $student->program_desc = $student->program_id;
-            //             $student->balance_amount = $student->balance_id;
-            //         }
+                        if($dept == 0){
 
-            //         return $applicants->toJson();
-                                       
-            //     }else{
-            //         $students = Student::query()
-            //         ->where('last_name', 'LIKE', '%' . $text . "%")
-            //         ->orWhere('first_name', 'LIKE',  '%' .$text . "%")
-            //         ->orWhere('middle_name', 'LIKE', '%' . $text . "%")                    
-            //         ->orwhere('student_id', 'LIKE', '%' . $text . "%")                    
-            //         ->get();                                        
+                            if($text != null){
 
-            //         foreach($students as $student){                    
-            //             $student->program_desc = $student->program_id;
-            //             $student->balance_amount = $student->balance_id;
-            //         }
+                                $allApplicants = Applicant::query()    
+                                ->where('dept', 0)                    
+                                ->where('last_name', 'LIKE', '%' . $text . "%")
+                                ->orWhere('first_name', 'LIKE', '%' . $text . "%")
+                                ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
+                                ->get();                        
+    
+                                $applicants = $allApplicants->filter(function ($applicant) {
+                                    return $applicant->approved == 0;
+                                });          
+                                
+    
+                                foreach($applicants as $applicant){                    
+                                    $applicant->dept_desc = $applicant->id;
+                                    $applicant->prog_desc = $applicant->id;
+                                    $applicant->days_asgo = $applicant->id;
+                                }
+    
+                                return $applicants->toJson();
+    
 
-            //         return $applicants->toJson();
-            //     }    
+                            } else {
 
-            // break;
+                                $applicants = Applicant::where('approved', 0)
+                                ->where('dept', 0)->get();
+
+                                foreach($applicants as $applicant){                    
+                                    $applicant->dept_desc = $applicant->id;
+                                    $applicant->prog_desc = $applicant->id;
+                                    $applicant->days_ago = $applicant->id;
+                                }
+                                
+                                return $applicants->toJson();
+
+                            }
+
+                           
+                        } else {
+
+
+                            if($text != null){
+
+                                $allApplicants = Applicant::query()    
+                                ->where('dept', 1)                    
+                                ->where('last_name', 'LIKE', '%' . $text . "%")
+                                ->orWhere('first_name', 'LIKE', '%' . $text . "%")
+                                ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
+                                ->get();                        
+    
+                                $applicants = $allApplicants->filter(function ($applicant) {
+                                    return $applicant->approved == 0;
+                                });          
+                                
+    
+                                foreach($applicants as $applicant){                    
+                                    $applicant->dept_desc = $applicant->id;
+                                    $applicant->prog_desc = $applicant->id;
+                                    $applicant->days_asgo = $applicant->id;
+                                }
+    
+                                return $applicants->toJson();
+    
+
+                            } else {
+
+                                $applicants = Applicant::where('approved', 0)
+                                ->where('dept', 1)->get();
+
+                                foreach($applicants as $applicant){                    
+                                    $applicant->dept_desc = $applicant->id;
+                                    $applicant->prog_desc = $applicant->id;
+                                    $applicant->days_ago = $applicant->id;
+                                }
+                                
+                                return $applicants->toJson();
+
+                            }
+
+                           
+                        }                
+                                           
+                    
+                }else {
+
+                    if($text != null) {
+
+                        $allApplicants = Applicant::query()                        
+                        ->where('last_name', 'LIKE', '%' . $text . "%")
+                        ->orWhere('first_name', 'LIKE', '%' . $text . "%")
+                        ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
+                        ->get();                        
+
+                        $applicants = $allApplicants->filter(function ($applicant) {
+                            return $applicant->approved == 0;
+                        });          
+                        
+
+                        foreach($applicants as $applicant){                    
+                            $applicant->dept_desc = $applicant->id;
+                            $applicant->prog_desc = $applicant->id;
+                            $applicant->days_asgo = $applicant->id;
+                        }
+
+                        return $applicants->toJson();
+
+                    } else {
+
+                        $applicants = Applicant::where('approved', 0)->get();
+
+                        foreach($applicants as $applicant){                    
+                            $applicant->dept_desc = $applicant->id;
+                            $applicant->prog_desc = $applicant->id;
+                            $applicant->days_ago = $applicant->id;
+                        }
+                        
+                        return $applicants->toJson();
+                    }
+
+
+                }                                        
+
+            break;
         }    
         
         
     }
+
+    public function searchBy($table, $by, $text = null){
+
+    }
+    
+
+
 
     public function download($type, $filename){
     

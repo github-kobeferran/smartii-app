@@ -53,7 +53,8 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/admin/available/rooms/{from}/{until}/{day?}', [App\Http\Controllers\RoomsController::class, 'availableRooms'])->name('availableRooms');    
     Route::get('/admin/available/faculty/{from}/{until}/{day?}', [App\Http\Controllers\FacultiesController::class, 'availableFaculty'])->name('availableFaculty');    
 
-    Route::get('/admin/search/{table}/{text?}', [App\Http\Controllers\AdminsController::class, 'search'])->name('AdminSearch');
+    Route::get('/admin/search/{table}/{text?}/{dept?}', [App\Http\Controllers\AdminsController::class, 'search'])->name('AdminSearch');    
+    
 
     Route::post('/admin/update/room/', [App\Http\Controllers\RoomsController::class, 'update'])->name('updateRoom');
     Route::post('/admin/update/setting/', [App\Http\Controllers\SettingsController::class, 'update'])->name('updateSetting');

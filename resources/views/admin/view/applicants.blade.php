@@ -2,7 +2,19 @@
 <div class="row no-gutters vh-100">
     <div class="col-5 border-right">
 
-        <div class="form-group has-search">
+        <div class="btn-group btn-group-toggle border mb-3" data-toggle="buttons">
+            <label class="btn btn-light active">
+                <input type="radio" name="options" id="allOption" autocomplete="off" checked> All
+            </label>        
+            <label class="btn btn-light">
+                <input type="radio" name="options" id="appShsOption" autocomplete="off"> SHS
+            </label>
+            <label class="btn btn-light">
+                <input type="radio" name="options" id="appCollegeOption" autocomplete="off"> College
+            </label>
+        </div>
+
+        <div id="search-app" class="form-group has-search">
             <span class="fa fa-search form-control-feedback"></span>
             <input id="applicant-search" type="text" class="form-control" placeholder="Search by Name">
         </div>    
@@ -50,20 +62,52 @@
 
 <script>
 
+let allOption = document.getElementById('allOption');
+let appShsOption = document.getElementById('appShsOption');
+let appCollegeOption = document.getElementById('appCollegeOption'); 
+
+let selectedDept = null;
+
 let applicantList = document.getElementById('applicant-list');
 let appFilesPanel = document.getElementById('appFilesPanel');
 let appDataPanel = document.getElementById('appDataPanel');
+let applicantSearch = document.getElementById('applicant-search');
 
 let idPic = document.getElementById("id-pic");
 let birthCert = document.getElementById("birt-cert");
 let goodMoral = document.getElementById("good-moral");
 let reportCard = document.getElementById("report-card");
 
+allOption.onclick = () => {
+    selectedDept = null;
+    fillApplicantList();
+    document.getElementById('search-app').style.display = "block";
+}
+
+appShsOption.onclick = () => {
+    selectedDept = 0;
+    document.getElementById('search-app').style.display = "none";
+    fillApplicantList();
+    
+}
+
+appCollegeOption.onclick = () => {
+    selectedDept = 1;
+    document.getElementById('search-app').style.display = "none";
+    fillApplicantList();
+}
+
 
 function fillApplicantList(id = null){
 
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', APP_URL + '/admin/view/applicants', true);
+
+    if(selectedDept == 0)
+        xhr.open('GET', APP_URL + '/admin/view/applicants/dept/' +  0, true);
+    else if(selectedDept == 1)
+        xhr.open('GET', APP_URL + '/admin/view/applicants/dept/' +  1, true);
+    else
+        xhr.open('GET', APP_URL + '/admin/view/applicants/', true);
 
     xhr.onload = function() {
         if (this.status == 200) {
@@ -499,6 +543,71 @@ function applicantSelect(btnId, id, isdefault = false ){
     xhr.send();
     
 }
+
+
+applicantSearch.addEventListener('keyup', () => {
+
+
+    txt = applicantSearch.value;
+
+    let xhr = new XMLHttpRequest();
+
+    if(selectedDept == 0)
+        xhr.open('GET', APP_URL + '/admin/search/applicants/' + txt + '/' + 0, true);
+    else if(selectedDept == 1)
+        xhr.open('GET', APP_URL + '/admin/search/applicants/' + txt + '/' + 1, true);
+    else
+        xhr.open('GET', APP_URL + '/admin/search/applicants/' + txt , true);
+    
+    xhr.onload = function() {
+        if (this.status == 200) {
+
+            let applicants = JSON.parse(this.responseText);
+
+        output = `<div id="applicant-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group ">`;
+
+        for(i in applicants){
+            
+
+            output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
+            output +='<div class="d-flex w-100 jusstify-content-between">';
+                output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+
+                if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
+                    
+                    let count = 0;
+                    for(let j=0; j<applicants[i].resubmitted.length; j++){
+                        if(applicants[i].resubmitted[j] == '1')
+                            ++count;
+                    }
+
+                    output +='<span class="badge badge-primary badge-pill">'+ count +'</span>'
+                }
+                
+                
+                output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
+            output += '</div>'
+            output += '<p class="mb-1">'+ applicants[i].dept_desc +'</p>'
+            output += '<p class="mb-1">'+ applicants[i].prog_desc +'</p>'                    
+            output+='</button>';
+
+        }                                              
+
+        output +='</div>';
+
+
+        applicantList.innerHTML = output;
+
+        } else {
+            output = 'Huh, No Applicants';
+            programList.innerHTML = output;
+        }
+    }
+
+    xhr.send();
+
+
+});
 
 
 </script>

@@ -41,7 +41,7 @@ class Student extends Model
         $this->attributes['program_desc'] = $program->desc;
     }
 
-    public function getProgramDescAttribute()
+    public function getProgramDescAttributes()
     {
         return $this->attributes['program_desc'];
     }
