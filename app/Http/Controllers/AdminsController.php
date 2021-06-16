@@ -768,9 +768,14 @@ class AdminsController extends Controller
 
         $applicant->approved = 1;
         $applicant->save();
+        
 
         $member_old = Member::query()->where('member_type', 'applicant')->where('member_id', $app_id)->first();
         $user_id = $member_old->user_id;
+
+        $user = User::find($member_old->user_id);
+        $user->user_type = 'student';
+        $user->save();
 
         Member::where('member_type', $member_old->member_type)
               ->where('member_id', $member_old->member_id)

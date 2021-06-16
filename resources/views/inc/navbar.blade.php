@@ -39,7 +39,7 @@
                         <div class="dropdown-menu dropdown-menu-right color-custom-green" aria-labelledby="navbarDropdown">
 
                             <?php $role = auth()->user()->user_type ?>
-                            <a href="/home" class="dropdown-item">Home</a>
+                            <a href="/home" class="dropdown-item">Smartii Homepage</a>
 
                             <a class="dropdown-item"
                             
@@ -59,22 +59,30 @@
 
                                 
                                 
+                            @elseif(!Auth::guest() && Auth::user()->isStudent())
+
+                                href="{{ route('studentProfile') }}"
+
+
+
                             @else
                                 href="{{ route($role . 'Dashboard') }}"
                             @endif  
 
                                 >
                                 @if(!Auth::guest() && Auth::user()->isApplicant())
-                                @isset($submitted)
+                                    @isset($submitted)
 
-                                    Application Status
-                            
-                                @else
-                                    
-                                    Application Form
+                                        Application Status
                                 
-                                @endisset
+                                    @else
+                                        
+                                        Application Form
+                                    
+                                    @endisset
 
+                                @elseif(!Auth::guest() && Auth::user()->isStudent())
+                                    Profile
                                 @else
                                 {{ __(ucfirst($role) . ' Module') }}
                                 @endif

@@ -28,11 +28,10 @@
     <script>
         var APP_URL = {!! json_encode(url('/')) !!}
     </script>
-    
-        
-                
-        
+                                    
     @include('inc.navbar')
+
+    @yield('studentprofile')
 
     <div id="exTab1"  class="container-fluid">
 

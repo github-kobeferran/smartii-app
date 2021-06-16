@@ -65,6 +65,10 @@
 @endif
 
 <h5>View</h5>
+
+
+
+
 <div  id="viewTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">

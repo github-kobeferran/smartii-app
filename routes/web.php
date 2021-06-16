@@ -90,8 +90,11 @@ Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])
 
 // STUDENT protected routes 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {
-    Route::get('/student', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentDashboard')->middleware('verified');
+    
 });
+
+// about student but can be accessed by all
+Route::get('/student/{id?}', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentProfile')->middleware('verified');
 
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {

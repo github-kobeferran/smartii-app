@@ -22,7 +22,12 @@ class ApplicantSubmitted
         }
 
         if (auth()->user()->member != null) {
-            return $next($request);
+            
+            if(auth()->user()->user_type == 'applicant')
+                return $next($request);
+            else                
+                return redirect()->route('studentProfile');
+
         }
 
         return redirect()->back();

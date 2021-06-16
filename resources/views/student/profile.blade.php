@@ -1,25 +1,21 @@
 @extends('layouts.app')
 
-@section('content')
+@section('studentprofile')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Home') }}</div>
-                {{-- {{auth()->user()->member->member_id}} --}}
+                <div class="card-header">{{ __('Student Dashboard') }}</div>
+                   {{ $student->first_name }} Profile 
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
-                    @endif
+                   @endif
 
-               
+                    {{ __('You are logged in!') }}
 
-                    
-
-                    {{ __('Home page') }}                                  
-                   
                     
                 </div>
             </div>

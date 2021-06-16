@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
 
         <?php 
-
+                   
             $applicant =  App\Models\Applicant::find(auth()->user()->member->member_id);            
 
         ?>

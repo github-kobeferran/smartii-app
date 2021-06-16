@@ -75,32 +75,20 @@
                     </div> 
 
 
-
-
-
-
-
-
-
                 {{-- ******************************* IF USER IS STUDENT --}}
                 @elseif(!Auth::guest() && Auth::user()->isStudent())
 
-                    @include('inc.student.sidebar')
+                    <?php 
+                    
+                    return redirect()->route('studentProfile');
 
-
-
-
-
+                    ?>
 
 
                 {{-- ******************************* IF USER IS FACULTY --}}
                 @elseif(!Auth::guest() && Auth::user()->isFaculty())
 
                     @include('inc.faculty.sidebar') 
-
-
-
-
 
 
 

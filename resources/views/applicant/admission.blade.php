@@ -1,6 +1,5 @@
 @extends('layouts.module')
 
-
 <style>
 
 .multisteps-form__progress {

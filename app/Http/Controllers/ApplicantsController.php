@@ -11,6 +11,7 @@ use App\Mail\WelcomeApplicant;
 use App\Models\Applicant;
 use App\Models\Program;
 use App\Models\Member;
+use App\Models\User;
 
 
 
@@ -223,9 +224,9 @@ class ApplicantsController extends Controller
         $applicant->good_moral  = $good_moralToStore;
         $applicant->report_card  = $report_cardToStore;
 
-        $applicant->save();
+        $applicant->save();    
 
-        $member = new Member;
+        $member = new Member;        
 
         $member->user_id = auth()->id();
         $member->member_type = auth()->user()->user_type;

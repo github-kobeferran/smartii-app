@@ -23,9 +23,54 @@ class StudentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('student.dashboard');
+    public function index($id = null)
+    {        
+        
+        if($id != null){      
+            
+    
+            if(Student::where('student_id', $id)->exists()){
+
+                $student = Student::where('student_id', $id)->first();
+                                            
+                $student->age = $student->id;
+
+               return view('student.profile')->with('student', $student);                           
+
+            }else {
+
+                return abort(404);
+
+            }
+
+          
+            return view('student.profile')->with('student', $student->toJson());
+
+        } else {
+
+            if(auth()->user()->user_type == 'student'){
+
+                $id = auth()->user()->member->member_id;                
+                
+                $student = Student::where('id', $id)->first();
+                
+                $student->age = $student->id;
+                
+
+                return view('student.profile')->with('student', $student);
+
+            } else {
+
+                return abort(404);
+                
+            }
+
+        }
+
+        return abort(404);
+        
+        
+        
     }
 
     /**
