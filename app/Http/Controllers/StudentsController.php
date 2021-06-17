@@ -31,11 +31,23 @@ class StudentsController extends Controller
     
             if(Student::where('student_id', $id)->exists()){
 
-                $student = Student::where('student_id', $id)->first();
-                                            
-                $student->age = $student->id;
+                $student = Student::where('student_id', $id)->first();                            
 
-               return view('student.profile')->with('student', $student);                           
+                $appLink = $student->applicant;     
+                
+                $member = Member::where('member_type', 'student')->where('member_id', $student->id)->first();                
+                $userLink = User::where('id', $member->user_id)->first();                
+                                                            
+                $student->age = $student->id;
+                $student->dept = $student->department;
+                $student->program_desc = $student->program_id;
+                $student->balance_amount = $student->balance_id;
+                $student->level_desc = $student->level;
+
+               return view('student.profile')
+                        ->with('student', $student)
+                        ->with('appLink', $appLink)                           
+                        ->with('userLink', $userLink);                           
 
             }else {
 
@@ -53,11 +65,26 @@ class StudentsController extends Controller
                 $id = auth()->user()->member->member_id;                
                 
                 $student = Student::where('id', $id)->first();
-                
+
+                $appLink = $student->applicant;  
+
+                $member = Member::where('member_type', 'student')->where('member_id', $student->id)->first();                
+                $userLink = User::where('id', $member->user_id)->first();                
+                                            
                 $student->age = $student->id;
+                $student->dept = $student->department;
+                $student->program_desc = $student->program_id;
+                $student->balance_amount = $student->balance_id;
+                $student->level_desc = $student->level;
+                
+                
                 
 
-                return view('student.profile')->with('student', $student);
+               return view('student.profile')
+                        ->with('student', $student)
+                        ->with('appLink', $appLink)                           
+                        ->with('userLink', $userLink);  
+                
 
             } else {
 

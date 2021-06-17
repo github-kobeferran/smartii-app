@@ -78,9 +78,8 @@
                 {{-- ******************************* IF USER IS STUDENT --}}
                 @elseif(!Auth::guest() && Auth::user()->isStudent())
 
-                    <?php 
-                    
-                    return redirect()->route('studentProfile');
+                    <?php                     
+                    return redirect('/student');
 
                     ?>
 
@@ -96,7 +95,13 @@
                 @elseif(!Auth::guest() && Auth::user()->isApplicant()) 
                                 
                     <?php 
-                    
+
+
+                        if(auth()->user()->user_type != 'applicant'){           
+        
+                            return redirect()->back();
+                        }
+
                         if(auth()->user()->member != null){
                             $submitted = true;
                         } else {
@@ -107,9 +112,12 @@
 
                     @if($submitted)
 
+                        {{-- {{dd('status')}} --}}
                         @yield('status')
                 
                     @else
+
+                    {{-- {{dd('admission')}} --}}
                         
                         @yield('admission')
                     

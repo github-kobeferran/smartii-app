@@ -21,12 +21,15 @@ class ApplicantSubmitted
             return redirect('home');
         }
 
+        if(auth()->user()->user_type != 'applicant'){           
+            
+            return redirect()->back();
+        }
+
+
         if (auth()->user()->member != null) {
             
-            if(auth()->user()->user_type == 'applicant')
-                return $next($request);
-            else                
-                return redirect()->route('studentProfile');
+            return $next($request);            
 
         }
 

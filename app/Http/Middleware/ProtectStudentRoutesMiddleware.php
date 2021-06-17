@@ -23,7 +23,7 @@ class ProtectStudentRoutesMiddleware
 
 
         if (auth()->user()->user_type == 'student') {
-        return $next($request);
+            return $next($request);
         }
         
         return redirect()->back();

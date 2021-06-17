@@ -5,8 +5,13 @@
    
     <div class="row justify-content-center">
 
-        <?php 
-                   
+        <?php       
+        
+            if(auth()->user()->user_type != 'applicant'){           
+        
+                return redirect()->back();
+            }
+
             $applicant =  App\Models\Applicant::find(auth()->user()->member->member_id);            
 
         ?>

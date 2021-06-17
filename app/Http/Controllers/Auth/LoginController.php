@@ -36,7 +36,7 @@ class LoginController extends Controller
             case $user->isAdmin():
                 return '/admin';
             case $user->isStudent():
-                return '/student';
+                return '/studentprofile';
             case $user->isFaculty():
                 return '/faculty';
             case $user->isApplicant():

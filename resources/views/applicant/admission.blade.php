@@ -123,6 +123,12 @@ Define your own CSS3 animations in the CSS.
         <div class="col-md-8">            
 
           <?php 
+
+              if(auth()->user()->user_type != 'applicant'){           
+        
+                  return redirect()->back();
+              }
+
               $dept = false;
               $req = false;
               $personal = false;     
@@ -304,7 +310,7 @@ Define your own CSS3 animations in the CSS.
                 
                                 <div class="form-group m-3">
                                     {{Form::label('details', 'Please fill data needed ')}}
-                                    {{ Form::text('l_name', '', ['id' => 'lName', 'maxLength' => '100', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last Name Here..']) }}
+                                    {{ Form::text('l_name', '', [ 'id' => 'lName', 'maxLength' => '100', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last Name Here..']) }}
                                     {{ Form::text('f_name', '', ['id' => 'fName','maxLength' => '100', 'class' => 'form-control mb-2', 'placeholder' => 'Your First Name Here..']) }}
                                     {{ Form::text('m_name', '', ['id' => 'mName','maxLength' => '100','class' => 'form-control mb-2', 'placeholder' => 'Your Middle Name Here..']) }}
                     
@@ -328,10 +334,10 @@ Define your own CSS3 animations in the CSS.
                                 </div>
 
                                 <div class = "form-group m-3">                                                          
-                                    {{ Form::text('present_address', '', ['id' => 'address', 'class' => 'form-control mb-2', 'placeholder' => 'Your Present Address..']) }}
+                                    {{ Form::text('present_address', '', ['maxLength' => '100', 'id' => 'address', 'class' => 'form-control mb-2', 'placeholder' => 'Your Present Address..']) }}
                                 </div> 
                                 <div class = "form-group m-3">                                                          
-                                    {{ Form::text('last_school', '', ['id' => 'l_school', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}
+                                    {{ Form::text('last_school', '', ['maxLength' => '100', 'id' => 'l_school', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}
                                 </div> 
                 
                             </div>

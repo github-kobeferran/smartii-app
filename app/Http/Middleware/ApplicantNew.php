@@ -21,6 +21,11 @@ class ApplicantNew
             return redirect('home');
         }
 
+        if(auth()->user()->user_type != 'applicant'){           
+            
+            return redirect()->back();
+        }
+
         if (auth()->user()->member == null || auth()->user()->member == '') {
             return $next($request);
         }

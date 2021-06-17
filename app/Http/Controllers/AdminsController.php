@@ -767,6 +767,7 @@ class AdminsController extends Controller
         $student_id = $student->id;
 
         $applicant->approved = 1;
+        $applicant->student_id = $student->id;
         $applicant->save();
         
 

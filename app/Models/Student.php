@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Program;
 use App\Models\Balance;
+use App\Models\Applicant;
 use Carbon\Carbon;
 
 
@@ -19,6 +20,10 @@ class Student extends Model
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
     } 
+
+    public function applicant(){
+        return $this->hasOne(Applicant::class);
+    }  
 
     public function setAgeAttribute($id)
     {
@@ -84,10 +89,10 @@ class Student extends Model
                 $level = "Grade 12";
             break;
             case 11:
-                $level = "First Year";
+                $level = "Freshman";
             break;
             case 12:
-                $level = "Second Year";
+                $level = "Sophomore";
             break;
 
         }

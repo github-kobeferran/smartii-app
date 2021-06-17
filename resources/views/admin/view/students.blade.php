@@ -63,8 +63,9 @@ function fillProgramList(dept){
         if (this.status == 200) {
 
         let programs = JSON.parse(this.responseText);
-       
 
+        
+        
 output = `<div id="program-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
 output = `<ul class="list-group mt-2">`;
 
@@ -139,12 +140,14 @@ function programSelect(id){
                 break;
             }
 
- output+= `<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">`;
-        output+= `<h5 class="mb-1">`+ ucfirst(students[i].last_name) +`, `+ ucfirst(students[i].first_name) +`, `+ ucfirst(students[i].middle_name) +`</h5>
-              </div>`;
+ output+= `<button class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-left">`;
+        output+= `<h5 class="mb-1 mr-0">`+ ucfirst(students[i].last_name) +`, `+ ucfirst(students[i].first_name) +`, `+ ucfirst(students[i].middle_name) +`</h5> 
+        <a data-toggle="tooltip" data-placement="top" title="Visit Student Profile" class="ml-1 color-primary" href="/studentprofile/` + students[i].student_id+`">` + students[i].student_id.toUpperCase() +`</a>
+        
+        </div>`;
       output+=`<p class="">`+ level +` - `+ ucfirst(students[i].gender) +` - ` + students[i].age +` years old - ` + students[i].email +`</p>              
-            </a>`; 
+            </button>`; 
 
         }
 

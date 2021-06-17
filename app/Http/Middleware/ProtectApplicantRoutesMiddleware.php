@@ -22,6 +22,10 @@ class ProtectApplicantRoutesMiddleware
         }
 
 
+        if (auth()->user()->user_type == 'student') {
+            return redirect('/studentprofile');
+        }
+
         if (auth()->user()->user_type == 'applicant') {
             return $next($request);
         }

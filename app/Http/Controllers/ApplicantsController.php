@@ -81,29 +81,31 @@ class ApplicantsController extends Controller
 
         $validator = Validator::make($request->all(), [
             
-            'l_name' => 'required', 
-            'f_name' => 'required', 
-            'm_name' => 'required', 
-            'present_address' => 'required', 
-            'last_school' => 'required',
+            'l_name' => 'required|max:100', 
+            'f_name' => 'required|max:100', 
+            'm_name' => 'required|max:100', 
+            'present_address' => 'required|max:191', 
+            'last_school' => 'required|max:191',
             'dob' => 'required|date',
 
         ],
         [
 
             'l_name.required' => 'Last Name is required.',
+            'l_name.max' => 'Last Name must be less than a hundred characters.',
 
             'f_name.required' => 'First Name is required.',
+            'f_name.max' => 'First Name must be less than a hundred characters.',
 
             'm_name.required' => 'Middle Name is required.',
+            'm_name.max' => 'Middle Name must be less than a hundred characters.',
 
             'present_address.required' => 'Present Address is required.',
 
             'last_school.required' => 'Last School Attended is required.',
 
             'dob.required' => 'Date of Birth is required.',
-
-            'dob.date' => 'Date of Birth is invalid bruh.',
+            'dob.date' => 'Date of Birth is invalid.',
 
         ]);        
 
