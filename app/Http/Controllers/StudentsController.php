@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\Schedule;
 use App\Models\StudentClass;
 use App\Models\Balance;
 use App\Models\SubjectTaken;
@@ -459,4 +460,131 @@ class StudentsController extends Controller
     {
         
     }
+
+    public function getClasses($id = null){
+        
+        if($id != null){      
+            
+    
+        
+                 
+
+        } else {
+
+            // $stud_id = auth()->user()->member->member_id;
+            $stud_id = 119;
+
+            $student = Student::where('id',$stud_id)->first();
+            
+            $currentSubjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);
+
+            $currentSubjects = collect(new Subject);
+            $currentSubjectsSchedule = collect([]);
+
+            foreach($currentSubjectsTaken as $currentSubjectTaken){
+                
+                $subject = Subject::find($currentSubjectTaken->subject_id);
+
+                if($currentSubjectTaken->class_id != null){
+                    $sched = Schedule::where('class_id', $currentSubjectTaken->class_id)->first();
+                }else{
+                    $sched = null;
+                }         
+                
+                $currentSubjects->push($subject);
+                $currentSubjectsSchedule->push($sched);
+
+            }                                
+            
+
+            foreach($currentSubjectsSchedule as $sched){
+
+                if(!empty($sched)){
+
+                    $sched->faculty_name = $sched->id;
+                    $sched->room_name = $sched->id;
+                    $sched->day_name = $sched->day;
+                    $sched->formatted_start = $sched->start_time;
+                    $sched->formatted_until = $sched->until;
+
+                }
+                
+            }
+            
+            $settings = Setting::first();
+
+            $settings->sem_desc = $settings->sem;
+            
+
+            return view('student.classes')
+                            ->with('student' , $student)       
+                            ->with('currentSubjects' , $currentSubjects)          
+                            ->with('settings' , $settings)          
+                            ->with('currentSubjectsSchedule' , $currentSubjectsSchedule);           
+        }
+
+        return redirect()->back();
+        
+
+    }
 }
+
+
+// if(Student::where('student_id', $id)->exists()){
+
+//     $student = Student::where('student_id', $id)->first();                            
+
+//     $appLink = $student->applicant;     
+    
+//     $member = Member::where('member_type', 'student')->where('member_id', $student->id)->first();                
+//     $userLink = User::where('id', $member->user_id)->first();                
+                                                
+//     $student->age = $student->id;
+//     $student->dept = $student->department;
+//     $student->program_desc = $student->program_id;
+//     $student->balance_amount = $student->balance_id;
+//     $student->level_desc = $student->level;
+
+//    return view('student.classes')
+//             ->with('student', $student)
+//             ->with('appLink', $appLink)                           
+//             ->with('userLink', $userLink);                           
+
+// }else {
+
+//     return redirect()->back();
+
+// }
+
+
+// if(auth()->user()->member->member_id != $id){
+
+//     $id = auth()->user()->member->member_id;                
+    
+//     $student = Student::where('id', $id)->first();
+
+//     $appLink = $student->applicant;  
+
+//     $member = Member::where('member_type', 'student')->where('member_id', $student->id)->first();                
+//     $userLink = User::where('id', $member->user_id)->first();                
+                                
+//     $student->age = $student->id;
+//     $student->dept = $student->department;
+//     $student->program_desc = $student->program_id;
+//     $student->balance_amount = $student->balance_id;
+//     $student->level_desc = $student->level;
+    
+    
+    
+
+//    return view('student.classes')
+//             ->with('student', $student)
+//             ->with('appLink', $appLink)                           
+//             ->with('userLink', $userLink);          
+    
+
+// } else {
+
+//     return redirect()->back();
+    
+// }

@@ -53,12 +53,12 @@
 
     @include('inc.navbar')
 
-    <div class="container-fluid mx-0 p-0" >
+    
     
                 {{-- ******************************* IF USER IS ADMIN --}}
                 @if (!Auth::guest() && Auth::user()->isAdmin())
 
-
+                <div class="container-fluid mx-0 p-0" >
                     <div class="row vh-100 no-gutters">    
                 
                         <div class="col-sm-1 mx-auto">
@@ -73,15 +73,15 @@
                         
                         </div> 
                     </div> 
+                </div> 
 
 
                 {{-- ******************************* IF USER IS STUDENT --}}
                 @elseif(!Auth::guest() && Auth::user()->isStudent())
 
-                    <?php                     
-                    return redirect('/student');
 
-                    ?>
+
+                    @yield('content')
 
 
                 {{-- ******************************* IF USER IS FACULTY --}}
@@ -110,6 +110,8 @@
                                         
                     ?>
 
+                <div class="container-fluid mx-0 p-0" >
+
                     @if($submitted)
 
                         {{-- {{dd('status')}} --}}
@@ -122,20 +124,11 @@
                         @yield('admission')
                     
                     @endisset
-            
+
+                <div class="container-fluid mx-0 p-0" > 
                     
 
                 @endif
-
-           
-                                                          
-
-          
-    </div>
-
-    
-
-    
     
   
     <script src="{{ asset('js/app.js') }}" defer></script>  

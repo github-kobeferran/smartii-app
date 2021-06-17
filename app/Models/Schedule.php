@@ -6,17 +6,66 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\StudentClass;
 use App\Models\Faculty;
+use Carbon\Carbon;
 
 class Schedule extends Model
 {
     use HasFactory;
+    
+   
 
     public $timestamps = false;   
-    protected $appends = ['faculty_name' => null, 'room_name' => null]; 
+    protected $appends = ['formatted_start' => null, 'formatted_until' => null, 'day_name' =>null, 'faculty_name' => null, 'room_name' => null]; 
 
     public function studentClass()
     {
         return $this->belongsTo(StudentClass::class, 'class_id', 'id');
+    }
+    
+    public function setFormattedStartAttribute($value){
+        
+        $this->attributes['formatted_start'] =  Carbon::parse($value)->format('h:i A');
+
+    }
+    public function getFormattedStartAttribute(){
+        return $this->attributes['formatted_start'];
+    }
+    public function setFormattedUntilAttribute($value){
+            $this->attributes['formatted_until'] =  Carbon::parse($value)->format('h:i A');
+    }
+    public function getFormattedUntilAttribute(){
+        return $this->attributes['formatted_until'];
+    }
+
+    public function setDayNameAttribute($value)
+    {
+        switch($value){
+            case 'mon':
+                $this->attributes['day_name'] = "Monday";
+            break;
+            case 'tue':
+                $this->attributes['day_name'] = "Tuesday";
+            break;
+            case 'wed':
+                $this->attributes['day_name'] = "Wednesday";
+            break;
+            case 'thu':
+                $this->attributes['day_name'] = "Thursday";
+            break;
+            case 'fri':
+                $this->attributes['day_name'] = "Friday";
+            break;
+            case 'sat':
+                $this->attributes['day_name'] = "Saturday";
+            break;
+        }
+
+        
+    }
+
+    public function getDayNameAttribute()
+    {
+        return $this->attributes['day_name'];
     }
 
     public function setFacultyNameAttribute($id)

@@ -153,7 +153,7 @@
 
         <div class="col mx-auto d-flex justify-content-center">
  
-            <a class="student-button">
+            <a href="{{route('studentClasses')}}" class="student-button">
 
                 My Classes
 
@@ -162,7 +162,7 @@
         </div>
         <div class="col mx-auto d-flex justify-content-center">
  
-            <a class="student-button">
+            <a href="/student/balance/" class="student-button">
 
                 Balance and Payments
 

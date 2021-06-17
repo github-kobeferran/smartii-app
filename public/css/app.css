@@ -135,11 +135,12 @@ tbody td {
   opacity: 0.5;
 }
 
-.name:hover .dropdown-menu {
-  display: block;
-  margin-top: 0;
+@media (min-width: 480px) {
+  .name:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+  }
 }
-
 .lds-ripple {
   display: inline-block;
   position: relative;
@@ -264,6 +265,10 @@ tbody td {
   position: relative;
   top: 1px;
   text-decoration: none;
+}
+
+.class-table-header {
+  background-color: rgba(159, 194, 226, 0.925);
 }
 
 /*!

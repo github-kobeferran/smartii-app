@@ -71,8 +71,7 @@ class SubjectsTakenController extends Controller
         foreach($enrolledTakenSubjects as $enrolledTakenSubject){
                                     
             if($enrolledTakenSubject->subject_id == $subj){  
-                
-                // return Student::find($enrolledTakenSubject->student_id);
+                                
 
                 if(Student::find($enrolledTakenSubject->student_id)->program_id == $prog){   
 
