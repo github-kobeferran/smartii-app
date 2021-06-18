@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\Member;
 use App\Models\Room;
 use App\Models\SubjectTaken;
+use App\Models\PaymentRequest;
 use App\Mail\WelcomeMember;
 use PDF;
 
@@ -170,7 +171,7 @@ class AdminsController extends Controller
 
                 $rooms = Room::all();        
 
-                return $rooms->toJson();
+            return $rooms->toJson();
             break;        
             case 'faculty':
 
@@ -190,6 +191,25 @@ class AdminsController extends Controller
                 }
 
                 return $applicants->toJson();
+            break;    
+            case 'paymentrequests':
+
+                $paymentrequests = PaymentRequest::whereNull('admin_id')
+                                        ->orderBy('created_at', 'asc')
+                                        ->get();  
+                
+                foreach($paymentrequests as $paymentrequest){                    
+                    
+                    $paymentrequest->stud_id = $paymentrequest->student_id;
+                    $paymentrequest->stud_name = $paymentrequest->student_id;
+                    $paymentrequest->stud_dept = $paymentrequest->student_id;
+                    $paymentrequest->stud_prog = $paymentrequest->student_id;
+                    $paymentrequest->stud_address = $paymentrequest->student_id;
+                    $paymentrequest->time_ago = $paymentrequest->created_at;
+
+                }
+
+                return $paymentrequests->toJson();
             break;    
 
             default:
@@ -226,6 +246,21 @@ class AdminsController extends Controller
                 
 
                 return $applicant->toJson();
+            break;           
+            case 'paymentrequests':
+
+                $paymentrequest = PaymentRequest::find($id);  
+                
+                           
+                $paymentrequest->stud_id = $paymentrequest->student_id;
+                $paymentrequest->stud_name = $paymentrequest->student_id;
+                $paymentrequest->stud_dept = $paymentrequest->student_id;
+                $paymentrequest->stud_prog = $paymentrequest->student_id;
+                $paymentrequest->stud_address = $paymentrequest->student_id;
+                $paymentrequest->time_ago = $paymentrequest->created_at;
+                
+
+                return $paymentrequest->toJson();
             break;           
             default:
             redirect('/home');
@@ -835,7 +870,25 @@ class AdminsController extends Controller
     }
 
 
+    public function viewPaymentRequests(){
 
+        $admin = Admin::find(auth()->user()->member->member_id);
+
+        return view('admin.payment_requests')->with('admin', $admin);
+
+    }
+
+    public function approvePaymentRequest(Request $request){    
+
+       $paymentrequest = PaymentRequest::find($request->input('payment_id'));
+
+       $paymentrequest->admin_id = auth()->user()->member->member_id;
+
+       $paymentrequest->save();
+
+       return  redirect()->route('viewPaymentRequests')->with('status', 'Payment Request Approved!');
+
+    }
    
 
 }

@@ -271,6 +271,27 @@ tbody td {
   background-color: rgba(159, 194, 226, 0.925);
 }
 
+.btn-back {
+  padding: 10px;
+  background-color: #093114;
+  color: white;
+  text-decoration: none;
+  border: 0.7px solid #9e9999;
+  border-radius: 10%;
+}
+
+.btn-back:hover {
+  padding: 10px;
+  background-color: white;
+  color: #093114;
+  text-decoration: none;
+  border: 0.7px solid #9e9999;
+}
+
+.payment-text {
+  color: #919191;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

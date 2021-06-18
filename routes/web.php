@@ -74,6 +74,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::post('/admin/requestupload', [App\Http\Controllers\AdminsController::class, 'requestFileResubmission'])->name('requestFileResubmission');
     Route::post('/admin/approveapplicant', [App\Http\Controllers\AdminsController::class, 'approveApplicant'])->name('approveApplicant');
 
+    Route::get('/admin/paymentrequests', [App\Http\Controllers\AdminsController::class, 'viewPaymentRequests'])->name('viewPaymentRequests');
+    Route::post('/admin/approvepaymentrequest', [App\Http\Controllers\AdminsController::class, 'approvePaymentRequest'])->name('approvePaymentRequest');
+
 });
 
 // APPLICANT protected routes 
@@ -91,7 +94,10 @@ Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])
 // STUDENT protected routes 
 Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->group(function () {
 
-    Route::get('/student/classes/{id?}', [App\Http\Controllers\StudentsController::class, 'getClasses'])->name('studentClasses')->middleware('verified');    
+    Route::get('/student/classes/', [App\Http\Controllers\StudentsController::class, 'getClasses'])->name('studentClasses')->middleware('verified');    
+    Route::get('/student/balance/', [App\Http\Controllers\StudentsController::class, 'getBalance'])->name('studentBalance')->middleware('verified');    
+    Route::get('/student/createpayment/', [App\Http\Controllers\PaymentRequestsController::class, 'create'])->name('createPaymentRequest')->middleware('verified');
+    Route::post('/student/request/payment', [App\Http\Controllers\PaymentRequestsController::class, 'store'])->name('storePaymentRequest')->middleware('verified');
 
 });
 

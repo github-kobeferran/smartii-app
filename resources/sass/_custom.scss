@@ -253,3 +253,26 @@ tbody td {
     
 }
 
+.btn-back{
+    
+    padding: 10px;
+    background-color: #093114;
+    color: white;
+    text-decoration: none;
+    border: 0.7px solid rgb(158, 153, 153);    
+    border-radius: 10%;
+}
+.btn-back:hover{
+    padding: 10px;
+    background-color: white;    
+    color: #093114;
+    text-decoration: none;
+    border: 0.7px solid rgb(158, 153, 153);
+}
+
+.payment-text{
+    color: rgb(145, 145, 145);
+}
+
+
+

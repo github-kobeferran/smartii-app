@@ -96,4 +96,17 @@ class InvoicesController extends Controller
          
     }
 
+    // public function showToStudent($id){
+
+    //     $change = 0;
+
+    //     $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
+
+    //     $data = ['rem_bal' => $remainingBal, 'change' => $change, 'totalBalance' => $totalBalance, 'payment' => $payment];
+
+    //     $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'subjectsTaken', 'settings', 'data'));
+    //     return $pdf->stream( 'invoice.pdf');  
+
+    // }
+
 }

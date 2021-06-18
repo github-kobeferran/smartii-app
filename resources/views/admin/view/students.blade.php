@@ -23,7 +23,7 @@
 
         <div class="form-group has-search">
             <span class="fa fa-search form-control-feedback"></span>
-            <input id="student-search" type="text" class="form-control" placeholder="Search by Name">
+            <input id="student-search" type="text" class="form-control" placeholder="Search by Name (not functioning pa)">
         </div>
         
         <div id="student-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" >

@@ -27,7 +27,7 @@
 
         <div class="col-sm d-flex justify-content-center">
             
-                <img  class="profile-pic " src="{{url('/storage/images/applicants/id_pics/' . $appLink->id_pic)}}" alt="">    
+                <img  class="profile-pic " src="{{url('/storage/images/applicants/id_pics/' . $appLink->id_pic)}}" alt="Id image">    
                                          
         </div>
 

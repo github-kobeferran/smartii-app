@@ -100,18 +100,7 @@
 	</div>
 
 	<div class="tab-pane {{ $faculties ? 'active' : '' }}" id="facultyMembers">
-        Faculty ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac est at eros malesuada lobortis eget quis elit. Mauris dapibus interdum mollis. Cras semper a.
-        <br>
-        <br>
-        <?php 
-            $id = 3;
-            $year =  date("y");
-            $prefix = "B";
-            $user_id = $prefix . $year . '-' . sprintf('%04d', $id);
-        
-        ?>
-
-        {{ 'for stud, emp, app id manipulation ' . $user_id}}
+        @include('admin.view.faculty')
 	</div>
 
     <div class="tab-pane {{ $admins ? 'active' : '' }}" id="admins">        

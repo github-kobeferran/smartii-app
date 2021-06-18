@@ -15,6 +15,8 @@ use App\Models\SubjectTaken;
 use App\Models\Setting;
 use App\Models\Member;
 use App\Models\User;
+use App\Models\Invoice;
+use App\Models\PaymentRequest;
 use App\Mail\WelcomeMember;
 
 class StudentsController extends Controller
@@ -461,130 +463,99 @@ class StudentsController extends Controller
         
     }
 
-    public function getClasses($id = null){
+    public function getClasses(){
+              
+        $stud_id = auth()->user()->member->member_id;        
+
+        $student = Student::where('id',$stud_id)->first();
         
-        if($id != null){      
+        $currentSubjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);
+
+        $currentSubjects = collect(new Subject);
+        $currentSubjectsSchedule = collect([]);
+
+        foreach($currentSubjectsTaken as $currentSubjectTaken){
             
-    
+            $subject = Subject::find($currentSubjectTaken->subject_id);
+
+            if($currentSubjectTaken->class_id != null){
+                $sched = Schedule::where('class_id', $currentSubjectTaken->class_id)->first();
+            }else{
+                $sched = null;
+            }         
+            
+            $currentSubjects->push($subject);
+            $currentSubjectsSchedule->push($sched);
+
+        }                                
         
-                 
 
-        } else {
+        foreach($currentSubjectsSchedule as $sched){
 
-            // $stud_id = auth()->user()->member->member_id;
-            $stud_id = 119;
+            if(!empty($sched)){
 
-            $student = Student::where('id',$stud_id)->first();
-            
-            $currentSubjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);
+                $sched->faculty_name = $sched->id;
+                $sched->room_name = $sched->id;
+                $sched->day_name = $sched->day;
+                $sched->formatted_start = $sched->start_time;
+                $sched->formatted_until = $sched->until;
 
-            $currentSubjects = collect(new Subject);
-            $currentSubjectsSchedule = collect([]);
-
-            foreach($currentSubjectsTaken as $currentSubjectTaken){
-                
-                $subject = Subject::find($currentSubjectTaken->subject_id);
-
-                if($currentSubjectTaken->class_id != null){
-                    $sched = Schedule::where('class_id', $currentSubjectTaken->class_id)->first();
-                }else{
-                    $sched = null;
-                }         
-                
-                $currentSubjects->push($subject);
-                $currentSubjectsSchedule->push($sched);
-
-            }                                
-            
-
-            foreach($currentSubjectsSchedule as $sched){
-
-                if(!empty($sched)){
-
-                    $sched->faculty_name = $sched->id;
-                    $sched->room_name = $sched->id;
-                    $sched->day_name = $sched->day;
-                    $sched->formatted_start = $sched->start_time;
-                    $sched->formatted_until = $sched->until;
-
-                }
-                
             }
             
-            $settings = Setting::first();
-
-            $settings->sem_desc = $settings->sem;
-            
-
-            return view('student.classes')
-                            ->with('student' , $student)       
-                            ->with('currentSubjects' , $currentSubjects)          
-                            ->with('settings' , $settings)          
-                            ->with('currentSubjectsSchedule' , $currentSubjectsSchedule);           
         }
 
-        return redirect()->back();
+        $allSubjectsTaken = SubjectTaken::getAllSubjectsTakenByStudent($student->id);
+        $allSubjects = collect(new Subject);
+
+        foreach($allSubjectsTaken as $subjectTaken){
+
+            $subject = Subject::find($subjectTaken->subject_id);
+
+            $allSubjects->push($subject);
+        }
         
 
+        
+        $settings = Setting::first();
+
+        $settings->sem_desc = $settings->sem;
+        
+
+        return view('student.classes')
+                        ->with('student' , $student)       
+                        ->with('currentSubjects' , $currentSubjects)          
+                        ->with('settings' , $settings)          
+                        ->with('currentSubjectsSchedule' , $currentSubjectsSchedule)                                  
+                        ->with('allSubjectsTaken' , $allSubjectsTaken)                                  
+                        ->with('allSubjects' , $allSubjects);                                   
+
     }
+
+    public function getBalance(){
+
+        $stud_id = auth()->user()->member->member_id;                
+
+        $student = Student::where('id',$stud_id)->first();
+        $student->balance_amount = $student->balance_id;
+
+        $settings = Setting::first();        
+
+        
+
+        $invoices = Invoice::where('student_id', $student->id)
+                           ->orderBy('created_at', 'desc')
+                           ->get();
+
+        $requests = PaymentRequest::where('student_id', $student->id)->get();        
+
+        return view('student.balance')                                           
+                        ->with('invoices' , $invoices)  
+                        ->with('settings' , $settings)  
+                        ->with('requests' , $requests)  
+                        ->with('student' , $student);    
+    }
+
+   
+
+
 }
-
-
-// if(Student::where('student_id', $id)->exists()){
-
-//     $student = Student::where('student_id', $id)->first();                            
-
-//     $appLink = $student->applicant;     
-    
-//     $member = Member::where('member_type', 'student')->where('member_id', $student->id)->first();                
-//     $userLink = User::where('id', $member->user_id)->first();                
-                                                
-//     $student->age = $student->id;
-//     $student->dept = $student->department;
-//     $student->program_desc = $student->program_id;
-//     $student->balance_amount = $student->balance_id;
-//     $student->level_desc = $student->level;
-
-//    return view('student.classes')
-//             ->with('student', $student)
-//             ->with('appLink', $appLink)                           
-//             ->with('userLink', $userLink);                           
-
-// }else {
-
-//     return redirect()->back();
-
-// }
-
-
-// if(auth()->user()->member->member_id != $id){
-
-//     $id = auth()->user()->member->member_id;                
-    
-//     $student = Student::where('id', $id)->first();
-
-//     $appLink = $student->applicant;  
-
-//     $member = Member::where('member_type', 'student')->where('member_id', $student->id)->first();                
-//     $userLink = User::where('id', $member->user_id)->first();                
-                                
-//     $student->age = $student->id;
-//     $student->dept = $student->department;
-//     $student->program_desc = $student->program_id;
-//     $student->balance_amount = $student->balance_id;
-//     $student->level_desc = $student->level;
-    
-    
-    
-
-//    return view('student.classes')
-//             ->with('student', $student)
-//             ->with('appLink', $appLink)                           
-//             ->with('userLink', $userLink);          
-    
-
-// } else {
-
-//     return redirect()->back();
-    
-// }

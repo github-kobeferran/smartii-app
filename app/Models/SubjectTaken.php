@@ -73,6 +73,15 @@ class SubjectTaken extends Model
         
     }
 
+    public static function getAllSubjectsTakenByStudent($id){
+
+        return static::where('student_id', $id)
+                     ->orderBy('from_year', 'desc')
+                     ->orderBy('semester', 'desc')     
+                     ->get();                   
+
+    }
+
     
     
 

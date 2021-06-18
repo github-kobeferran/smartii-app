@@ -3,8 +3,8 @@
 @section('content')
 <div class="container mt-2">
 
+    <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-arrow-left" aria-hidden="true"></i>   </a>
     <div class="row">
-        
         <div class="col-sm d-flex justify-content-center">
 
             <h5>{{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name) . '\'s' }} Classes</h5>
@@ -82,7 +82,78 @@
 
     <div class="row">
 
+        <div class="col-sm ">
 
+            <h5>All {{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name) . '\'s' }} Taken Subjects</h5>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <?php $the_from_year = $settings->from_year; ?>
+                
+        <div class="table-responsive">
+            
+            <table class="table table-bordered">
+
+                <thead>
+                    <tr>
+                      <th scope="col">Subject</th>
+                      <th scope="col">Units</th>
+                      <th scope="col">Rating</th>
+                      
+                    
+                    </tr>
+                  </thead>
+                  <tbody>                    
+                    
+                    @for ($i=0; $i<count($allSubjectsTaken); $i++)
+
+                        <tr>
+
+                            <td>
+                                
+                                {{$allSubjects[$i]->desc}}
+
+                            </td>
+                            <td>
+                                
+                                {{$allSubjects[$i]->units}}
+
+                            </td>
+                            <td>
+
+                                @if($allSubjectsTaken[$i]->rating <= 3)
+                                
+                                    {{$allSubjectsTaken[$i]->rating}}
+
+                                @elseif($allSubjectsTaken[$i]->rating > 4.5)
+
+                                    {{ 'Failed' }}
+
+                                @elseif($allSubjectsTaken[$i]->rating == 4)
+
+                                    {{ 'INC'}}
+                                @else
+
+                                    {{ 'N/A' }}
+
+                                @endif
+
+                            </td>
+
+                        </tr>
+
+                    @endfor
+
+
+                  </tbody>
+                
+            </table>
+            
+        </div>
 
     </div>
 
