@@ -19,9 +19,7 @@ class ChangeLevelColumn extends Migration
         Schema::table('subjects', function (Blueprint $table) {
             $table->smallInteger('level')->change();
         });
-        // Schema::table('subjects_taken', function (Blueprint $table) {
-        //     $table->smallInteger('rating')->nullable()->change();
-        // });
+     
     }
 
     /**

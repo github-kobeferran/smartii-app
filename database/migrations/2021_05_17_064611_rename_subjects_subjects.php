@@ -23,6 +23,6 @@ class RenameSubjectsSubjects extends Migration
      */
     public function down()
     {
-        //
+        Schema::rename('subjects_pre_req', 'subjects_subjects');        
     }
 }

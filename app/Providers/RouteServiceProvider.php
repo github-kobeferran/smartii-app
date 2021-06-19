@@ -22,8 +22,8 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/home';
     public const DASHBOARD = '/dashboard';
     public const ADMIN_DASHBOARD = '/admin';    
-    public const FACULTY_DASHBOARD = '/faculty';
-    public const STUDENT_DASHBOARD = '/student';
+    public const FACULTY_DASHBOARD = '/facultyClasses';
+    public const STUDENT_DASHBOARD = '/studentprofile';
     public const APPLICANT_DASHBOARD = '/admissionform';
 
     /**

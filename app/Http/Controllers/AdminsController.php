@@ -20,6 +20,7 @@ use App\Models\Member;
 use App\Models\Room;
 use App\Models\SubjectTaken;
 use App\Models\PaymentRequest;
+use App\Models\Invoice;
 use App\Mail\WelcomeMember;
 use App\Mail\ApprovedApplicant;
 use PDF;
@@ -29,8 +30,29 @@ use PDF;
 class AdminsController extends Controller
 {    
     
-    public function index(){
-        return view('admin.dashboard');
+    public function index(){            
+
+        if(!empty(Setting::first())){
+            return view('admin.dashboard');
+        } else {
+            $setting = new Setting;
+
+            $year = date('Y');
+
+            $setting->from_year = $year;
+            $setting->to_year = ++$year;
+            $setting->semester = 1;
+            $setting->shs_price_per_unit = 0;
+            $setting->college_price_per_unit = 300;
+            $setting->class_quantity = 25;
+            $setting->gcash_number = 'N/A';
+            $setting->bank_number = 'N/A';
+            $setting->bank_name = 'N/A';
+
+            $setting->save();
+
+            return view('admin.dashboard');            
+        }
     }
 
     public function adminCreate(){
@@ -316,6 +338,19 @@ class AdminsController extends Controller
                     }
 
                     return $applicants->toJson();
+
+                break;
+                case 'invoices':
+                    
+                    $invoices = Invoice::where($by, $value)                                           
+                                           ->get();
+
+                    foreach($invoices as $invoice){
+                        $invoice->stud_name = $invoice->student_id;
+                        $invoice->formatted_date = $invoice->created_at;
+                    }
+               
+                    return $invoices->toJson();
 
                 break;
 

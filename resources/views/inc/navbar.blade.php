@@ -63,13 +63,20 @@
 
                                 href="{{ route('studentProfile') }}"
 
+                            @elseif(!Auth::guest() && Auth::user()->isFaculty())
+
+                                href="{{ route('facultyClasses') }}"
+
 
 
                             @else
                                 href="{{ route($role . 'Dashboard') }}"
                             @endif  
 
-                                >
+                            >
+
+
+
                                 @if(!Auth::guest() && Auth::user()->isApplicant())
                                     @isset($submitted)
 
@@ -83,6 +90,8 @@
 
                                 @elseif(!Auth::guest() && Auth::user()->isStudent())
                                     Profile
+                                @elseif(!Auth::guest() && Auth::user()->isFaculty())
+                                    Classes
                                 @else
                                 {{ __(ucfirst($role) . ' Module') }}
                                 @endif

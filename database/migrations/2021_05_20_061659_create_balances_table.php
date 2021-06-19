@@ -36,5 +36,6 @@ class CreateBalancesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('balances');
+        Schema::dropIfExists('invoices');
     }
 }

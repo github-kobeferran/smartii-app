@@ -465,8 +465,7 @@ class StudentsController extends Controller
 
     public function getClasses(){
               
-        // $stud_id = auth()->user()->member->member_id;        
-        $stud_id = 123;        
+        $stud_id = auth()->user()->member->member_id;                
 
         $student = Student::where('id',$stud_id)->first();
         

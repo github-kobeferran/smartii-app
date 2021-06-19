@@ -21,7 +21,7 @@
         <table class="table table-striped border" >
             <thead style="">
                 <tr>
-                    <th scope="col" class="border-right bg-light">Action</th>
+                    <th scope="col" colspan="2" class="border-right bg-light text-center align-middle">Action</th>
                     <th scope="col" class="border-right bg-light" >Student ID</th>
                     <th scope="col" class="border-right bg-light">Name</th>
                     <th scope="col" class="border-right bg-light">Department and Program</th>           
@@ -86,7 +86,31 @@
     </div>
 
 {!! Form::close() !!}
+<div id="invoices-table" class="d-none">
     
+    <h5>Kobe Ferran's Invoices</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Invoice ID</th>
+                <th>Payment Date</th>
+                <th>Payment Amount</th>            
+            </tr>
+
+        </thead>
+
+        <tbody>
+            <tr>
+                {{-- <td><a href="">21-00000213</a></td>
+                <td>Jun 18 2021 1:54 PM</td>
+                <td>Php 2000</td>       --}}
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
 @endsection
 
 <script>
@@ -171,7 +195,8 @@ function studentsAjax() {
                 }
                 output += '<tr>' +
 
-                    '<td class="border-right"><button type="button"  onclick="selectForPayment(' +students[i].id + ')" class="btn btn-info text-white border">Select</button></td>' + 
+                    '<td class="border-right"><button type="button"  onclick="selectForPayment(' +students[i].id + ')" class="btn btn-info text-white ">Payment</button></td>' + 
+                    '<td class="border-right"><button type="button"  onclick="showInvoicesTable(' +students[i].id + ')" class="btn btn-warning text-secondary">Invoices</button></td>' + 
                     '<td class="border-right">' + students[i].student_id + '</td>' +
                     '<td class="border-right">' + students[i].last_name + ', ' + students[i].first_name + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '.' + '</td>' +
                     '<td class="border-right">' + department + ' | ' + students[i].program_desc + ' | ' + level + '</td>' +                    
@@ -278,6 +303,9 @@ xhr.send();
 function selectForPayment(id){    
 
     paymentForm.style.display = "inline-block";
+    let invoicesTable = document.getElementById('invoices-table');
+
+    invoicesTable.className = "d-none";
 
     let studDetails = document.getElementById('stud-details');
     let studBalance = document.getElementById('stud-balance');
@@ -362,6 +390,71 @@ function calculateChange(){
 
 }
 
+
+function showInvoicesTable(id){    
+
+    paymentForm.style.display = "none";
+
+    let invoicesTable = document.getElementById('invoices-table');
+
+    invoicesTable.className = "";
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', APP_URL + '/admin/view/invoices/student_id/' + id, true);
+
+    xhr.onload = function() {    
+
+    if (this.status == 200) {
+
+        
+
+        let invoices = JSON.parse(this.responseText);
+        console.log(invoices);
+
+        let output = '<div id="invoices-table" class="">';
+
+        if(typeof invoices[0] !== 'undefined'){
+
+            output+='<h5>'+ invoices[0].stud_name +'\'s Invoices</h5>';
+
+            output+='<table class="table table-bordered">';
+            output+='<thead>';
+                output+='<tr>';
+                    output+='<th>Invoice ID</th>';
+                    output+='<th>Payment Date</th>';
+                    output+='<th>Payment Amount</th>';
+                output+='</tr>';
+            output+='</thead>';
+            output+='<tbody>';
+
+                for(let i in invoices){
+
+                    output+='<tr>';
+                        output+='<td><a href="">#'+ invoices[i].invoice_id +'</a></td>';
+                        output+='<td>'+ invoices[i].formatted_date +'</td>';
+                        output+='<td>'+ invoices[i].payment +'</td>';
+                    output+='<tr>';
+                }
+                
+            output+='</tbody>';
+            output+='</table>';
+
+            output+='</div>';
+            
+        }else{
+            output+= 'No Invoices for this Student yet.';
+        }        
+
+        invoicesTable.innerHTML = output;
+                    
+    } 
+}
+
+xhr.send();    
+
+
+}
 
 
 

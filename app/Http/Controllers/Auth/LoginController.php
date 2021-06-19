@@ -32,13 +32,14 @@ class LoginController extends Controller
 
     public function redirectTo() {
         $user = Auth::user();
+        
         switch(true) {        
             case $user->isAdmin():
                 return '/admin';
             case $user->isStudent():
                 return '/studentprofile';
             case $user->isFaculty():
-                return '/faculty';
+                return '/myclasses';
             case $user->isApplicant():
                 
                 if(auth()->user()->member != null)                

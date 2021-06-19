@@ -31,4 +31,6 @@ class CreateSubjectsTakenTable extends Migration
     {
         Schema::dropIfExists('subjects_taken');
     }
+
+    
 }

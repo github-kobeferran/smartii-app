@@ -31,7 +31,7 @@ Auth::routes(['verify' => true]);
 
 // ADMIN protected routes 
 Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->group(function () {
-    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard')->middleware('verified');
+    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard');
     
     Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate');
     Route::post('/admin/create/student', [App\Http\Controllers\StudentsController::class, 'store'])->name('studentCreate');    
@@ -94,10 +94,10 @@ Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])
 // STUDENT protected routes 
 Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->group(function () {
 
-    Route::get('/student/classes/', [App\Http\Controllers\StudentsController::class, 'getClasses'])->name('studentClasses')->middleware('verified');    
-    Route::get('/student/balance/', [App\Http\Controllers\StudentsController::class, 'getBalance'])->name('studentBalance')->middleware('verified');    
-    Route::get('/student/createpayment/', [App\Http\Controllers\PaymentRequestsController::class, 'create'])->name('createPaymentRequest')->middleware('verified');
-    Route::post('/student/request/payment', [App\Http\Controllers\PaymentRequestsController::class, 'store'])->name('storePaymentRequest')->middleware('verified');
+    Route::get('/student/classes/', [App\Http\Controllers\StudentsController::class, 'getClasses'])->name('studentClasses');    
+    Route::get('/student/balance/', [App\Http\Controllers\StudentsController::class, 'getBalance'])->name('studentBalance');    
+    Route::get('/student/createpayment/', [App\Http\Controllers\PaymentRequestsController::class, 'create'])->name('createPaymentRequest');
+    Route::post('/student/request/payment', [App\Http\Controllers\PaymentRequestsController::class, 'store'])->name('storePaymentRequest');
 
 });
 
@@ -106,7 +106,7 @@ Route::get('/studentprofile/{id?}', [App\Http\Controllers\StudentsController::cl
 
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->group(function () {
-    Route::get('/faculty', [App\Http\Controllers\FacultiesController::class, 'index'])->name('facultyDashboard')->middleware('verified');
+    Route::get('/myclasses', [App\Http\Controllers\FacultiesController::class, 'getClasses'])->name('facultyClasses');
 });
 
 

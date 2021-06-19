@@ -87,8 +87,8 @@
                 {{-- ******************************* IF USER IS FACULTY --}}
                 @elseif(!Auth::guest() && Auth::user()->isFaculty())
 
-                    @include('inc.faculty.sidebar') 
-
+                    
+                    @yield('content')
 
 
                 {{-- ******************************* IF USER IS APPLICANT --}}

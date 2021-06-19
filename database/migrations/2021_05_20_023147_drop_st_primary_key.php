@@ -13,12 +13,7 @@ class DropStPrimaryKey extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('subjects_taken', function(Blueprint $table){            
-            $table->unsignedInteger('id')->change();
-            $table->dropColumn('id');                   
-        });
-
+        //      
         Schema::table('subjects_taken', function (Blueprint $table) {                        
             $table->year('from_year');
             $table->year('to_year');

@@ -6,7 +6,7 @@
             
                 <div class="form-group">
                     {{Form::label('code', 'Subject Code', ['class' => 'mt'])}}
-                    {{Form::text('code', '', ['class' => 'form-control w-25', 'placeholder' => 'Subject Code'])}}                 
+                    {{Form::text('code', '', ['class' => 'form-control w-50', 'placeholder' => 'Subject Code'])}}                 
                 </div>
                 
                 <div class = "form-group">        
@@ -60,9 +60,8 @@
             
             <div class="form-group">
                 {{Form::label('units', 'No. of Units', ['class' => 'mt'])}}
-                {{Form::number('units', '', ['class' => 'form-control w-25', 'step' => '3', 'min' => '3', 'max' => '12', 'required' => 'required', 'placeholder' => 'Units'])}}                 
+                {{Form::number('units', 3, ['class' => 'form-control w-25', 'step' => '3', 'min' => '3', 'max' => '12', 'required' => 'required', 'placeholder' => 'Units'])}}                 
             </div>
-
            
 
         </div>

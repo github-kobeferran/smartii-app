@@ -16,7 +16,7 @@ class StudentClassesController extends Controller
     public function store(Request $request){          
             
         $status = '';
-    $msg = '';
+        $msg = '';
 
         $noOfSched = $request->input('multi_sched');                
 

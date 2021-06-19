@@ -43,8 +43,8 @@ class SubjectsController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'code' => 'required|regex:/^[\s\w-]*$/', 
-            'desc' => 'required|regex:/^[\s\w-]*$/', 
+            'code' => 'required|max:12|regex:/^[\s\w-]*$/', 
+            'desc' => 'required|max:100|regex:/^[\s\w-]*$/', 
             'dept' => 'required', 
             'level' => 'required', 
             'prog' => 'required',
@@ -56,7 +56,7 @@ class SubjectsController extends Controller
             return redirect()->route('adminCreate')
                          ->withErrors($validator)
                          ->withInput()
-                         ->with('subject', true);
+                         ->with('active','subject');
         }
 
         $subject = new Subject;
@@ -65,7 +65,7 @@ class SubjectsController extends Controller
            Subject::where('desc', $request->input('desc'))->exists()){
             return redirect()->route('adminCreate')
                              ->with('error', 'Code or Description already exist')
-                             ->with('subject', true);
+                             ->with('active', 'subject');
                                         
         } else {
             $subject->code = $request->input('code');
@@ -87,7 +87,7 @@ class SubjectsController extends Controller
 
                 return redirect()->route('adminCreate')
                                  ->with('error', 'There is a problem saving, please try again.')
-                                 ->with('subject', true);
+                                 ->with('active', 'subject');
 
             } 
             
@@ -134,7 +134,7 @@ class SubjectsController extends Controller
 
         return redirect()->route('adminCreate')
                          ->with($status, $msg)
-                         ->with('subject', true);
+                         ->with('active', 'subject');
     }
 
     /**

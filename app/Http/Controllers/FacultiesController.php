@@ -156,4 +156,9 @@ class FacultiesController extends Controller
      }
 
 
+     public function getClasses(){
+         return view('faculty.classes');
+     }
+
+
 }

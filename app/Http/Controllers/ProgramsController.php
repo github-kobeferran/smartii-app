@@ -13,7 +13,7 @@ class ProgramsController extends Controller
 
         $validator = Validator::make($request->all(), [            
             'desc' => 'required|max:100', 
-            'abbrv' => 'required|max:10',                        
+            'abbrv' => 'required|max:12',                        
         ]);
     
         if ($validator->fails()){
@@ -21,7 +21,7 @@ class ProgramsController extends Controller
                             ->route('adminCreate')
                             ->withErrors($validator)
                             ->withInput()
-                            ->with('program', true);
+                            ->with('active', 'program');
         }        
                 
         $program = new Program;
@@ -60,7 +60,7 @@ class ProgramsController extends Controller
         }
 
 
-        return redirect()->route('adminCreate')->with($status, $msg)->with('program', true); 
+        return redirect()->route('adminCreate')->with($status, $msg)->with('active', 'program'); 
         
     }
 }
