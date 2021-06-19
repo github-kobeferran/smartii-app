@@ -112,7 +112,7 @@ class StudentClassesController extends Controller
                 $schedule = new Schedule;
 
                 $schedule->day = $days[$i];
-                $schedule->from = $froms[$i];
+                $schedule->start_time = $froms[$i];
                 $schedule->until = $untils[$i];
                 $schedule->room_id = $room_ids[$i];                            
                 $schedule->class_id = $classID;

@@ -23,7 +23,7 @@
 <h5 class="">Settings</h5>
 
 <div class="row">        
-    <div class="col-sm-6">                
+    <div class="col-sm-8">                
         <span clas=""><em class=" lead mb-3">Set your defaults here</em></span>
         <hr>
 {!! Form::open(['url' => 'admin/update/setting', 'id' => 'settingsForm']) !!}
@@ -61,6 +61,7 @@
         {{ Form::label('collegeprice', 'College price/unit', ['class' => 'm-2']) }}
         {{ Form::number('col_price', $currentSetting->college_price_per_unit, ['min' =>'0', 'max' => "1000", 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control']) }}
     </div>
+
     <hr>
 <b>Number of Student per Class</b> 
 
@@ -69,19 +70,35 @@
     </div>
 
     <hr class="shadow">
+    
 
-    <div class="form-group">
+<b>Payment Details</b> 
 
-        {{Form::submit('Save', ['class' => 'btn btn-success w-50'])}}
+<div class="form-inline m-2">            
+    {{ Form::label('gcash', 'Gcash', ['class' => 'm-2']) }}
+    {{ Form::text('gcash', $currentSetting->gcash_number, ['maxLength' => '25', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control']) }}
+</div>
 
-    </div>
+<div class="form-inline m-2">            
+    {{ Form::label('bank', 'Bank Details', ['class' => 'm-2']) }}
+    {{ Form::text('bank_name', $currentSetting->bank_name, ['maxLength' => '25', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control w-25']) }}
+    {{ Form::text('bank_number', $currentSetting->bank_number, ['maxLength' => '25', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control']) }}
+</div>
+
+<hr>
+
+<div class="form-group">
+
+    {{Form::submit('Save', ['class' => 'btn btn-success w-50'])}}
+
+</div>
         
 {!! Form::close() !!}
 
         
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-4">
 
 
     </div>

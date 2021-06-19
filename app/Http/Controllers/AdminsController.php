@@ -21,6 +21,7 @@ use App\Models\Room;
 use App\Models\SubjectTaken;
 use App\Models\PaymentRequest;
 use App\Mail\WelcomeMember;
+use App\Mail\ApprovedApplicant;
 use PDF;
 
 
@@ -656,9 +657,7 @@ class AdminsController extends Controller
                     ->with('active', 'applicants')                    
                     ->with('app-id', $id);
                 }
-
-               
-                
+                               
             break;
             case 'birthcert':
 
@@ -813,9 +812,18 @@ class AdminsController extends Controller
         $user->user_type = 'student';
         $user->save();
 
+        $student->dept = $student->department;
+        $student->program_desc = $student->program_id;
+
+        Mail::to($user)->send(new ApprovedApplicant($student->first_name . ' ' . $student->last_name,
+                                                    $student->student_id,
+                                                    $student->dept,
+                                                    $student->program_desc,
+                                                    ));
+
         Member::where('member_type', $member_old->member_type)
               ->where('member_id', $member_old->member_id)
-              ->where('user_id', $member_old->user_id)->delete();
+              ->where('user_id', $member_old->user_id)->delete();              
 
         $member_new = new Member;
         $member_new->user_id = $user_id;

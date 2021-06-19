@@ -42,7 +42,8 @@
         <div class="col-sm mx-auto text-center">
  
             <h5>{{ ucfirst($student->first_name) . ' ' .  ucfirst($student->last_name)}}</h5>
-            <em>student</em>
+            <em>{{$student->student_id}}</em>
+            
 
         </div>
 

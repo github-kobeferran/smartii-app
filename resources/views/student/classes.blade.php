@@ -34,39 +34,135 @@
                         <tr>
                             <th scope="row">{{ $currentSubjects[$i]->desc }}</th>
                             <td>
-                                @if(!empty($currentSubjectsSchedule[$i]))                                    
+                                @empty($currentSubjectsSchedule[$i])
 
-                                    {{$currentSubjectsSchedule[$i]->day_name}}
+                                {{ 'N/A' }}
+
                                 @else
+                              
+                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                        
+                                        
+                                    @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
 
-                                    {{ 'N/A' }}
+                                            {{$currentSubjectsSchedule[$i][$j]->day_name}} 
+                                            <br>                                                                                        
 
-                                @endif
+                                        @endfor
+                                        
+
+                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
+
+                                            {{$currentSubjectsSchedule[$i]->day_name}}
+
+                                    @else
+
+                                    
+
+                                    @endif
+
+                                    
+                                @endempty                                                               
                                 
                             </td>
+
+
                             <td>
-                                @if( !empty($currentSubjectsSchedule[$i]) )
-                                    {{$currentSubjectsSchedule[$i]->formatted_start . ' - ' . $currentSubjectsSchedule[$i]->formatted_until}}
+                                @empty($currentSubjectsSchedule[$i])
+
+                                {{ 'N/A' }}
+
                                 @else
-                                    {{ 'N/A' }}
-                                @endif
+                              
+                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                        
+                                        
+                                    @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
+
+                                            {{$currentSubjectsSchedule[$i][$j]->formatted_start . ' - ' . $currentSubjectsSchedule[$i][$j]->formatted_until}}   
+                                            <br>   
+                                        @endfor
+                                        
+
+                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
+
+                                    {{$currentSubjectsSchedule[$i]->formatted_start . ' - ' . $currentSubjectsSchedule[$i]->formatted_until}}   
+
+                                    @else
+
+                                    
+
+                                    @endif
+
+                                    
+                                @endempty
+
                                 
                             </td>
+
+
                             <td>
-                                @if( !empty($currentSubjectsSchedule[$i]) )
-                                    {{$currentSubjectsSchedule[$i]->room_name}}
+                                @empty($currentSubjectsSchedule[$i])
+
+                                {{ 'N/A' }}
+
                                 @else
-                                    {{ 'N/A' }}
-                                @endif
+                              
+                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                        
+                                        
+                                    @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
+
+                                            {{$currentSubjectsSchedule[$i][$j]->room_name}}
+                                            <br>   
+                                        @endfor
+                                        
+
+                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
+
+                                    {{$currentSubjectsSchedule[$i]->room_name}}   
+
+                                    @else
+
+                                    
+
+                                    @endif
+
+                                    
+                                @endempty
                                 
                             </td>
+
+                            
                             <td>
-                                @if( !empty($currentSubjectsSchedule[$i]) )
-                                    {{$currentSubjectsSchedule[$i]->faculty_name}}
+                                @empty($currentSubjectsSchedule[$i])
+
+                                {{ 'N/A' }}
+
                                 @else
-                                    {{ 'N/A' }}
-                                @endif
-                                
+                              
+                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                        
+                                        
+                                    @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
+
+                                            {{$currentSubjectsSchedule[$i][$j]->faculty_name}}
+                                            <br>   
+                                        @endfor
+                                        
+
+                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
+
+                                    {{$currentSubjectsSchedule[$i]->faculty_name}}   
+
+                                    @else
+
+                                    
+
+                                    @endif
+
+                                    
+                                @endempty
                             </td>
                                                                                   
                         </tr>

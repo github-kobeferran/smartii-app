@@ -465,7 +465,8 @@ class StudentsController extends Controller
 
     public function getClasses(){
               
-        $stud_id = auth()->user()->member->member_id;        
+        // $stud_id = auth()->user()->member->member_id;        
+        $stud_id = 123;        
 
         $student = Student::where('id',$stud_id)->first();
         
@@ -479,7 +480,18 @@ class StudentsController extends Controller
             $subject = Subject::find($currentSubjectTaken->subject_id);
 
             if($currentSubjectTaken->class_id != null){
-                $sched = Schedule::where('class_id', $currentSubjectTaken->class_id)->first();
+                if(Schedule::where('class_id', $currentSubjectTaken->class_id)->count() > 1){
+                    
+
+                    for($i=0; $i<Schedule::where('class_id', $currentSubjectTaken->class_id)->count(); $i++){
+
+                        $sched[$i] = Schedule::where('class_id', $currentSubjectTaken->class_id)->get()[$i];                    
+
+                    }
+                                      
+                }else{
+                    $sched = Schedule::where('class_id', $currentSubjectTaken->class_id)->first();
+                }
             }else{
                 $sched = null;
             }         
@@ -487,20 +499,40 @@ class StudentsController extends Controller
             $currentSubjects->push($subject);
             $currentSubjectsSchedule->push($sched);
 
-        }                                
+        }
+                
         
 
         foreach($currentSubjectsSchedule as $sched){
 
+
             if(!empty($sched)){
 
-                $sched->faculty_name = $sched->id;
-                $sched->room_name = $sched->id;
-                $sched->day_name = $sched->day;
-                $sched->formatted_start = $sched->start_time;
-                $sched->formatted_until = $sched->until;
+                if(count($sched) > 1){
 
-            }
+                    for($i=0; $i<count($sched); $i++){
+    
+                        if(!empty($sched)){      
+                                                            
+                            $sched[$i]->faculty_name = $sched[$i]->id;
+                            $sched[$i]->room_name = $sched[$i]->id;
+                            $sched[$i]->day_name = $sched[$i]->day;
+                            $sched[$i]->formatted_start = $sched[$i]->start_time;
+                            $sched[$i]->formatted_until = $sched[$i]->until;
+    
+                        }
+    
+                    }
+    
+                }else{
+                    $sched->faculty_name = $sched->id;
+                    $sched->room_name = $sched->id;
+                    $sched->day_name = $sched->day;
+                    $sched->formatted_start = $sched->start_time;
+                    $sched->formatted_until = $sched->until;
+                }
+
+            }                      
             
         }
 
