@@ -504,10 +504,11 @@ class StudentsController extends Controller
 
         foreach($currentSubjectsSchedule as $sched){
 
+            
 
             if(!empty($sched)){
 
-                if(count($sched) > 1){
+                if(is_array($sched)){
 
                     for($i=0; $i<count($sched); $i++){
     
@@ -520,9 +521,9 @@ class StudentsController extends Controller
                             $sched[$i]->formatted_until = $sched[$i]->until;
     
                         }
-    
                     }
     
+
                 }else{
                     $sched->faculty_name = $sched->id;
                     $sched->room_name = $sched->id;
@@ -530,8 +531,10 @@ class StudentsController extends Controller
                     $sched->formatted_start = $sched->start_time;
                     $sched->formatted_until = $sched->until;
                 }
-
-            }                      
+            }            
+    
+                
+                                
             
         }
 

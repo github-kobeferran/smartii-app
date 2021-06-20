@@ -92,4 +92,38 @@ class Schedule extends Model
         return $this->attributes['room_name'];
     }
 
+
+    // only 1 sched is working
+    public static function getSchedules($values = null){
+
+        $schedules = collect(new Schedule);
+
+        if(is_array($values)){
+            
+            for($i=0; $i<count($values); $i++){
+
+                $sched = static::where('class_id', $values[$i])->get();
+
+                if(is_array($sched)){
+
+                    for($j=0; $j<count($sched); $j++){
+
+                        $sched[$i] = $sched;
+                        
+                    }
+
+                }
+
+                $schedules->push($schedules);
+
+            }        
+
+        } else {
+            $schedules = static::where('class_id', $values)->first();
+        }
+        
+        return $schedules;
+
+    }
+
 }

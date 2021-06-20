@@ -324,11 +324,9 @@ Define your own CSS3 animations in the CSS.
                           
                                 
                                 <div class = "form-group text-center">     
-                                    {{Form::label('gender', 'Gender',  ['class' => 'mt-2'])}}
+                                    {{Form::label('gender', 'Sex',  ['class' => 'mt-2'])}}
                                     {{Form::select('gender', ['male' => 'Male',
-                                                                'female' => 'Female',
-                                                                'gay' => 'Gay',
-                                                                'lesbian' => 'Lesbian',
+                                                                'female' => 'Female',                                                              
                                                                 ], null,
                                                                 ['class' => 'custom-select w-50', 'id' => 'selectGender'])}}   
                                 </div>

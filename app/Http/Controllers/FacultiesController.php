@@ -12,6 +12,9 @@ use App\Models\User;
 use App\Models\Member;
 use App\Models\Schedule;
 use App\Models\StudentClass;
+use App\Models\SubjectTaken;
+use App\Models\Subject;
+use App\Models\Program;
 use App\Mail\WelcomeMember;
 
 class FacultiesController extends Controller
@@ -157,7 +160,52 @@ class FacultiesController extends Controller
 
 
      public function getClasses(){
-         return view('faculty.classes');
+
+        $id = auth()->user()->member->member_id;        
+
+        $classesByProgram = StudentClass::getFacultyClassesByProgram($id); //base the loop here
+        
+        
+        $programs = collect(new Program); 
+        $classes = collect(new StudentClass);        
+
+        if(is_array($classesByProgram)){
+
+            $program_ids = array_keys($classesByProgram);
+
+            foreach($program_ids as $id){        
+
+                $programs->push(Program::find($id));
+
+            }            
+
+            foreach($classesByProgram as $classids){ 
+                
+                
+                $classesToPush = collect(new StudentClass);
+
+                foreach($classids as $class){
+
+                    $class = StudentClass::find($class);
+
+                    $class->topic = $class->id;
+
+                    $classesToPush->push($class);
+
+                }
+                
+                $classes->push($classesToPush);
+
+            }
+
+        }        
+                
+    
+        return view('faculty.classes')
+                ->with('classesByProgram', collect($classesByProgram))
+                ->with('programs', $programs)
+                ->with('classes', $classes);
+
      }
 
 

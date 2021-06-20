@@ -60,7 +60,7 @@
 
         <div class ="table-responsive border shadow" style="max-height: 500px; overflow: auto; display:inline-block;">
             <table class="table table-striped table-responsive-sm border" >
-                <thead class="thead">
+                <thead class="thead bg-light">
                     <tr>                        
                         <th scope="col">Room Name</th>
                         <th scope="col">Status</th>

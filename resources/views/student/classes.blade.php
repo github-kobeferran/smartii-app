@@ -4,7 +4,7 @@
 <div class="container mt-2">
 
     <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-arrow-left" aria-hidden="true"></i>   </a>
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-sm d-flex justify-content-center">
 
             <h5>{{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name) . '\'s' }} Classes</h5>
@@ -40,7 +40,7 @@
 
                                 @else
                               
-                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                    @if(is_array($currentSubjectsSchedule[$i]))
                                         
                                         
                                     @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
@@ -51,11 +51,9 @@
                                         @endfor
                                         
 
-                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
-
-                                            {{$currentSubjectsSchedule[$i]->day_name}}
-
                                     @else
+
+                                            {{$currentSubjectsSchedule[$i]->day_name}}                                    
 
                                     
 
@@ -74,7 +72,7 @@
 
                                 @else
                               
-                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                    @if(is_array($currentSubjectsSchedule[$i]))
                                         
                                         
                                     @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
@@ -84,11 +82,9 @@
                                         @endfor
                                         
 
-                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
+                                    @else
 
                                     {{$currentSubjectsSchedule[$i]->formatted_start . ' - ' . $currentSubjectsSchedule[$i]->formatted_until}}   
-
-                                    @else
 
                                     
 
@@ -108,7 +104,7 @@
 
                                 @else
                               
-                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                    @if(is_array($currentSubjectsSchedule[$i]))
                                         
                                         
                                     @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
@@ -118,11 +114,10 @@
                                         @endfor
                                         
 
-                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
+                                    @else
 
                                     {{$currentSubjectsSchedule[$i]->room_name}}   
 
-                                    @else
 
                                     
 
@@ -141,7 +136,7 @@
 
                                 @else
                               
-                                    @if(count($currentSubjectsSchedule[$i]) > 1)
+                                    @if(is_array($currentSubjectsSchedule[$i]))
                                         
                                         
                                     @for ($j = 0; $j < count($currentSubjectsSchedule[$i]); $j++)                                        
@@ -151,11 +146,10 @@
                                         @endfor
                                         
 
-                                    @elseif(count($currentSubjectsSchedule[$i])  == 1 )
+                                    @else
 
                                     {{$currentSubjectsSchedule[$i]->faculty_name}}   
 
-                                    @else
 
                                     
 
