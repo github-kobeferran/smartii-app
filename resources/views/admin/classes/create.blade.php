@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div class="row shadow">    
+    <div class="row ">    
 
         <div class="col-sm">
             
@@ -43,9 +43,28 @@
        
     </div>
 
+    <hr>
+
+    <div class="row mt-2 ">
+
+        <div class="col-sm mx-auto text-center">
+            <p>Class Name</p>
+           
+
+            <input type="text" name="class_name" maxlength="25" class="text-center ml-2 w-25" required>
+
+
+        </div>
+
+        
+
+    </div>
+
     <div class="row mt-2 ">    
         
         <div class="col-sm">
+
+
             
             <div class ="table-responsive border shadow" style="max-height: 500px; overflow: auto; display:inline-block;">
                 <table class="table table-striped table-responsive-sm border" >

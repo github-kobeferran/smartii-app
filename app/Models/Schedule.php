@@ -93,37 +93,44 @@ class Schedule extends Model
     }
 
 
-    // only 1 sched is working
-    public static function getSchedules($values = null){
+    public static function getSchedulebyClass($id){
 
-        $schedules = collect(new Schedule);
-
-        if(is_array($values)){
-            
-            for($i=0; $i<count($values); $i++){
-
-                $sched = static::where('class_id', $values[$i])->get();
-
-                if(is_array($sched)){
-
-                    for($j=0; $j<count($sched); $j++){
-
-                        $sched[$i] = $sched;
-                        
-                    }
-
-                }
-
-                $schedules->push($schedules);
-
-            }        
-
-        } else {
-            $schedules = static::where('class_id', $values)->first();
-        }
-        
-        return $schedules;
+        return static::where('class_id', $id)->get();
 
     }
+
+
+    // only 1 sched is working
+    // public static function getSchedules($class_ids = null){
+
+    //     $schedules = collect(new Schedule);
+
+    //     if(is_array($class_ids)){
+            
+    //         for($i=0; $i<count($class_ids); $i++){
+
+    //             $sched = static::where('class_id', $class_ids[$i])->get();
+
+    //             if(is_array($sched)){
+
+    //                 for($j=0; $j<count($sched); $j++){
+
+    //                     $sched[$i] = $sched;
+                        
+    //                 }
+
+    //             }
+
+    //             $schedules->push($schedules);
+
+    //         }        
+
+    //     } else {
+    //         $schedules = static::where('class_id', $class_ids)->first();
+    //     }
+        
+    //     return $schedules;
+
+    // }
 
 }

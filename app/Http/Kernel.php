@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\Role::class,
         'applicant.submitted' => \App\Http\Middleware\ApplicantSubmitted::class,
         'applicant.new' => \App\Http\Middleware\ApplicantNew::class,
+        'member' => \App\Http\Middleware\Member::class,
 
     ];
 }

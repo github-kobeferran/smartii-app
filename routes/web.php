@@ -102,17 +102,15 @@ Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->
 });
 
 // about student but can be accessed by all
-Route::get('/studentprofile/{id?}', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentProfile')->middleware('verified');
+Route::get('/studentprofile/{id?}/', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentProfile')->middleware('member');
 
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->group(function () {
     Route::get('/myclasses', [App\Http\Controllers\FacultiesController::class, 'getClasses'])->name('facultyClasses');
+    Route::get('/myclass/{id}', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
+    Route::post('/faculty/updaterating/', [App\Http\Controllers\SubjectsTakenController::class, 'updateRating'])->name('updaterating');
 });
 
-
-
-
-// Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('home');
 
 
 

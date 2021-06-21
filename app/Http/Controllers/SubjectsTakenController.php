@@ -51,9 +51,7 @@ class SubjectsTakenController extends Controller
 
         }
                         
-        return $students->toJson();
-
-        // return $result = ['students' => $students->toJson(), 'programs' => $programs->toJson()];
+        return $students->toJson();        
         
     }
 
@@ -113,13 +111,17 @@ class SubjectsTakenController extends Controller
                 $schedules->push($collection);                 
                 
             }
-
             
-
         }
           
         return $schedules->toJson();
         
+    }
+
+    public function updateRating(Request $request){
+
+        return $request->all();
+
     }
 
 

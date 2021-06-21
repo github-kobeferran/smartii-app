@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
 use App\Models\SubjectTaken;
 use App\Models\Subject;
+use App\Models\Program;
 use App\Models\Setting;
 use App\Models\Schedule;
 
@@ -17,7 +18,7 @@ class StudentClass extends Model
     
     protected $table = 'classes';
     
-    protected $appends = ['topic' => null];
+    protected $appends = ['topic' => null, 'prog'=> null];
 
     public static function init(){
 
@@ -45,6 +46,21 @@ class StudentClass extends Model
     
         return $this->attributes['topic'];
 
+    }
+
+    public function setProgAttribute($id){
+
+        $subjecttaken = SubjectTaken::where('class_id', $id)->first();
+        $student = Student::find($subjecttaken->student_id);
+        $program = Program::find($student->program_id);
+
+        $this->attributes['prog'] = $program->desc;
+
+    }
+
+    public function getProgAttribute(){
+        
+        return  $this->attributes['prog'];
     }
 
 
@@ -82,12 +98,14 @@ class StudentClass extends Model
         if(static::where('faculty_id', $id)->where('archive', 0)->count() > 1){
 
             $classes = static::where('faculty_id', $id)->where('archive', 0)->get();
-            
+                                    
+            $length = $classes->count();
+            $i=0;
 
             foreach($classes as $class){                
 
-                $subjecttaken = SubjectTaken::where('class_id' , $class->id)->first();                                
-
+                $subjecttaken = SubjectTaken::where('class_id' , $class->id)->first();          
+                                
                 $student = Student::find($subjecttaken->student_id);                
 
                 $program = Program::find($student->program_id);   
@@ -98,7 +116,9 @@ class StudentClass extends Model
 
                 } else{
                     $classesByProgram[$program->id] = [$class->id];
-                }     
+                }
+                
+                $i++;
 
             }
 
@@ -121,5 +141,26 @@ class StudentClass extends Model
         return $classesByProgram;
         
     }
+
+    public static function getStudentsbyClass($id){
+
+        $subtakens = SubjectTaken::where('class_id', $id)->get();
+
+        $students = collect(new Student);
+
+
+        foreach($subtakens as $subtaken){
+
+            $student = Student::find($subtaken->student_id);
+
+            $students->push($student);
+
+        }
+
+        return $students;
+
+
+    }
+
     
 }

@@ -102,6 +102,7 @@ class StudentClassesController extends Controller
             $class = new StudentClass;
 
             $class->faculty_id = $request->input('instructor_id');
+            $class->class_name = $request->input('class_name');                            
 
             $class->save();
 
@@ -114,7 +115,7 @@ class StudentClassesController extends Controller
                 $schedule->day = $days[$i];
                 $schedule->start_time = $froms[$i];
                 $schedule->until = $untils[$i];
-                $schedule->room_id = $room_ids[$i];                            
+                $schedule->room_id = $room_ids[$i];                                            
                 $schedule->class_id = $classID;
                 
                 $schedule->save();
@@ -178,6 +179,7 @@ class StudentClassesController extends Controller
             $class = new StudentClass;
 
             $class->faculty_id = $request->input('instructor_id');
+            $class->class_name = $request->input('class_name');                            
 
             $class->save();
 
@@ -188,7 +190,7 @@ class StudentClassesController extends Controller
             $schedule->day = $request->input('day');
             $schedule->start_time = $request->input('from');
             $schedule->until = $request->input('until');
-            $schedule->room_id = $request->input('room_id');
+            $schedule->room_id = $request->input('room_id');            
             $schedule->class_id = $classID;
             
             $schedule->save();

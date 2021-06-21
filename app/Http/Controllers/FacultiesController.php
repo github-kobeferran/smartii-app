@@ -161,7 +161,7 @@ class FacultiesController extends Controller
 
      public function getClasses(){
 
-        $id = auth()->user()->member->member_id;        
+        $id = auth()->user()->member->member_id;                
 
         $classesByProgram = StudentClass::getFacultyClassesByProgram($id); //base the loop here
         
@@ -193,18 +193,70 @@ class FacultiesController extends Controller
                     $classesToPush->push($class);
 
                 }
+
+                $filtered = $classesToPush->filter(function ($value, $key) {
+                    return $value != null;
+                });
                 
-                $classes->push($classesToPush);
+                $classes->push($filtered);
 
             }
 
-        }        
+        }  
+
+        $classesArray = $classes->filter(function ($value, $key) {
+            return $value != null;
+        });            
                 
     
         return view('faculty.classes')
                 ->with('classesByProgram', collect($classesByProgram))
                 ->with('programs', $programs)
-                ->with('classes', $classes);
+                ->with('classesArray', $classesArray);
+
+     }
+
+     public function getClass($id){        
+
+        $class = StudentClass::find($id);
+
+        $class->topic = $class->id;
+        $class->prog = $class->id;
+
+        $faculty = Faculty::find(auth()->user()->member->member_id);
+        
+
+        if($class->faculty_id != $faculty->id){
+            return redirect()->back();
+        }
+
+        $students = StudentClass::getStudentsbyClass($class->id)->filter(function ($value, $key) {
+            return $value != null;
+        });                        
+        
+        
+        $alphabetical = $students->sortBy('last_name');
+        $idAsc = $students->sortBy('student_id');
+        $idDesc = $students->sortByDesc('student_id');
+        $schedules = Schedule::getSchedulebyClass($class->id)->sortBy('day');
+
+        
+        foreach($schedules as $sched){
+
+            $sched->formatted_start = $sched->start_time;
+            $sched->formatted_until = $sched->until;
+            $sched->day_name = $sched->day;
+            $sched->room_name = $sched->id;
+            
+        }
+
+        
+
+        return view('faculty.class')
+            ->with('class', $class)
+            ->with('alphabetical', $alphabetical)
+            ->with('idAsc', $idAsc)            
+            ->with('schedules', $schedules);
 
      }
 
