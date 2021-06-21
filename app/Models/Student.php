@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Program;
 use App\Models\Balance;
+use App\Models\SubjectTaken;
 use App\Models\Applicant;
 use Carbon\Carbon;
 
@@ -15,7 +16,7 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $appends = ['age' => null, 'level_desc' => null, 'dept' => null, 'program_desc' => null, 'balance_amount' => null];
+    protected $appends = ['age' => null, 'level_desc' => null, 'dept' => null, 'program_desc' => null, 'balance_amount' => null, 'rating' => null];
 
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
@@ -75,6 +76,22 @@ class Student extends Model
     public function getDeptAttribute()
     {
         return $this->attributes['dept'];
+    }
+
+    public function setRatingAttribute($values = [])
+    {
+        
+
+        $subjectTaken = SubjectTaken::where('student_id', $values['student_id'])
+                                    ->where('class_id', $values['class_id'])->first();
+
+        $this->attributes['rating'] = $subjectTaken->rating;
+    }
+
+    
+    public function getRatingAttribute()
+    {
+        return $this->attributes['rating'];
     }
 
 

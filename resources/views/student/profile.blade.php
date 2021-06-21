@@ -20,7 +20,7 @@
 
 <div class="container mt-2">
 
-    @if($show>0)
+    @if($show>0 && $student->created_by_admin == false)
 
     <div class="row border-bottom ">
         

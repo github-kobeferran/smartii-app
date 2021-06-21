@@ -216,7 +216,11 @@ class FacultiesController extends Controller
 
      }
 
-     public function getClass($id){        
+     public function getClass($id){      
+         
+        if(StudentClass::where('id', $id)->count() < 0){
+            return redirect()->route('facultyClasses');
+        }
 
         $class = StudentClass::find($id);
 
@@ -236,8 +240,7 @@ class FacultiesController extends Controller
         
         
         $alphabetical = $students->sortBy('last_name');
-        $idAsc = $students->sortBy('student_id');
-        $idDesc = $students->sortByDesc('student_id');
+        $idAsc = $students->sortBy('student_id');        
         $schedules = Schedule::getSchedulebyClass($class->id)->sortBy('day');
 
         
@@ -250,13 +253,20 @@ class FacultiesController extends Controller
             
         }
 
-        
+        foreach($alphabetical as $student){
+            $student->rating = $values = ['class_id' => $class->id, 'student_id' => $student->id];
+        }
+
+        foreach($idAsc as $student){
+            $student->rating = $values = ['class_id' => $class->id, 'student_id' => $student->id];
+        }       
 
         return view('faculty.class')
-            ->with('class', $class)
-            ->with('alphabetical', $alphabetical)
-            ->with('idAsc', $idAsc)            
-            ->with('schedules', $schedules);
+        ->with('class', $class)
+        ->with('students', $alphabetical)                   
+        ->with('schedules', $schedules);
+
+                     
 
      }
 

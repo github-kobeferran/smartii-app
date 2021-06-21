@@ -121,7 +121,7 @@ class StudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
 
         $validator = Validator::make($request->all(), [
             'department' => 'required', // 0 = shs, 1 = college
@@ -334,15 +334,16 @@ class StudentsController extends Controller
 
         $subjectsToBeTakenLength = count($subjects);
         $valid = true;
+                
         
-        
-        if(is_countable($subjects) > 0 ){
+        if(is_countable($subjects)){
 
             for($i=0; $i < $subjectsToBeTakenLength; $i++){
 
                 $subjectToTake = new SubjectTaken;
 
-                $subject = Subject::find($subjects[$i]->id);   
+                
+                $subject = Subject::find($subjects[$i]);   
     
                 $subjectToTake->student_id = $id;
                 $subjectToTake->subject_id = $subject->id;                                                
@@ -465,7 +466,8 @@ class StudentsController extends Controller
 
     public function getClasses(){
               
-        $stud_id = auth()->user()->member->member_id;                
+        // $stud_id = auth()->user()->member->member_id;                
+        $stud_id = 11;                
 
         $student = Student::where('id',$stud_id)->first();
         
@@ -553,6 +555,11 @@ class StudentsController extends Controller
         $settings = Setting::first();
 
         $settings->sem_desc = $settings->sem;
+        
+        $currentSubjectsSchedule = $currentSubjectsSchedule->filter(function ($value, $key) {
+            return $value != null;
+        });
+
         
 
         return view('student.classes')

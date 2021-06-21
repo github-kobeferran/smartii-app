@@ -118,9 +118,24 @@ class SubjectsTakenController extends Controller
         
     }
 
-    public function updateRating(Request $request){
+    public function updateRating(Request $request){   
+        
+        
+        $this->validate($request, [
+            'rating' => 'required',         
+        ]);
 
-        return $request->all();
+        
+        $subjectTaken = SubjectTaken::where('class_id', $request->input('class_id'))
+                                ->where('student_id', $request->input('stud_id'))->first();
+
+        $subjectTaken->rating = $request->input('rating');
+
+        $subjectTaken->save();
+
+        return redirect('/myclass/' . $request->input('class_id'))
+                       ->with('success', 'Rating Updated');
+        
 
     }
 

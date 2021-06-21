@@ -107,7 +107,8 @@ Route::get('/studentprofile/{id?}/', [App\Http\Controllers\StudentsController::c
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->group(function () {
     Route::get('/myclasses', [App\Http\Controllers\FacultiesController::class, 'getClasses'])->name('facultyClasses');
-    Route::get('/myclass/{id}', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
+    Route::get('/myclass/{id}/', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
+    Route::get('/sortclass/{classid}/{facultyid}/{sortby}', [App\Http\Controllers\StudentClassesController::class, 'sortStudents'])->name('sortStudents');
     Route::post('/faculty/updaterating/', [App\Http\Controllers\SubjectsTakenController::class, 'updateRating'])->name('updaterating');
 });
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\StudentClass;
 use App\Models\SubjectTaken;
+use App\Models\Faculty;
 use App\Models\Schedule;
 
 
@@ -225,6 +226,54 @@ class StudentClassesController extends Controller
         
             
         }
+
+    }
+
+    public static function sortStudents($classid, $facultyid, $sortby){
+
+        $class = StudentClass::find($classid);
+        $faculty = Faculty::find($facultyid);
+
+        if($class->faculty_id != $faculty->id){
+            return redirect()->back();
+        }
+
+
+        $students = StudentClass::getStudentsbyClass($class->id)->filter(function ($value, $key) {
+            return $value != null;
+        });
+                
+        
+
+        $alphabetical = $students->sortBy('last_name');
+        $idAsc = $students->sortBy('student_id');        
+
+        foreach($alphabetical as $student){
+            $student->rating = $values = ['class_id' => $class->id, 'student_id' => $student->id];
+        }
+
+        foreach($idAsc as $student){
+            $student->rating = $values = ['class_id' => $class->id, 'student_id' => $student->id];
+        }
+
+        $rating =  $alphabetical->sortBy('rating');
+        
+
+        switch($sortby){
+            case 'id':
+                return $idAsc->values()->all();;
+            break;
+
+            case 'alpha':
+                return $alphabetical->values()->all();
+            break;
+            case 'rating':
+                return $rating->values()->all();
+            break;
+
+            default:
+                return $alphabetical->values()->all();;
+        }       
 
     }
     

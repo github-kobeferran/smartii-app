@@ -291,6 +291,17 @@ tbody td {
   color: #919191;
 }
 
+.edit-rating {
+  font-size: large;
+  color: #0191f1;
+}
+
+.rating-text {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.2em;
+  padding-right: 2px;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors
