@@ -654,18 +654,29 @@ class StudentsController extends Controller
 
     }
 
-    public function enroll(Request $request){
+    public function enroll(Request $request){ 
 
+        if($request->method() != 'POST'){
+            redirect()->back();
+        }
 
+        $settings = Setting::first();
+        
+        if($settings->enrollment_mode == 0){
+            return redirect()->back();
+        }
+
+                
         if($request->input('student_id') != auth()->user()->member->member_id){
             return redirect()->back();
         }
 
-        $settings = Setting::first();
+      
 
         $student = Student::find($request->input('student_id'))->first();
 
-        $subject_ids = $request->input('subjects');
+        $subject_ids = $request->input('subjects');        
+
         $eligibles = $request->input('eligibility');
 
         $subjects = collect([]);        
@@ -680,6 +691,10 @@ class StudentsController extends Controller
             
             $counter++;
 
+        }
+
+        if($subjects->count() < 1){
+            return redirect()->back();
         }
 
         $length = count($subjects);

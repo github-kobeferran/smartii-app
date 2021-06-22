@@ -129,6 +129,11 @@ Define your own CSS3 animations in the CSS.
                   return redirect()->back();
               }
 
+              if(auth()->user()->member != null){           
+        
+                  return redirect()->back();
+              }
+
               $dept = false;
               $req = false;
               $personal = false;     

@@ -55,6 +55,14 @@ class ApplicantsController extends Controller
      */
     public function store(Request $request)    
     {                 
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }
+
+        if(Applicant::where('email', auth()->user()->email)->exists()) {
+            return redirect()->route('appStatus');
+        }
+
 
         $validator = Validator::make($request->all(), [
             
@@ -318,7 +326,10 @@ class ApplicantsController extends Controller
     }
 
     public function resubmit(Request $request){
-        
+
+        if($request->method() != 'POST'){
+            redirect()->back();
+        }                  
 
         $applicant = Applicant::find($request->input('id'));
         $newResubmitted = '0000';     
