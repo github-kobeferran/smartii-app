@@ -606,6 +606,8 @@ class StudentsController extends Controller
 
         $student = Student::find($id);
 
+       
+
         $subjects = SubjectTaken::subjectsToBeTaken($student);
         
         $lastSemStatus = collect([]);
@@ -617,6 +619,8 @@ class StudentsController extends Controller
         }
 
         $student->program_desc = $student->program_id;
+
+        
 
         $level = '';
         $semester = '';
@@ -641,7 +645,7 @@ class StudentsController extends Controller
             $semester = 'Second Semester';
         } else {
             $graduate = true;
-        }      
+        }              
         
         return view('student.enrollmentstatus')
              ->with('student', $student)
@@ -654,8 +658,8 @@ class StudentsController extends Controller
 
     }
 
-    public function enroll(Request $request){ 
-
+    public function enroll(Request $request){         
+        
         if($request->method() != 'POST'){
             redirect()->back();
         }
@@ -665,15 +669,16 @@ class StudentsController extends Controller
         if($settings->enrollment_mode == 0){
             return redirect()->back();
         }
-
                 
-        if($request->input('student_id') != auth()->user()->member->member_id){
+        // if($request->input('student_id') != auth()->user()->member->member_id){
+        //     return redirect()->back();
+        // }      
+
+        $student = Student::find($request->input('student_id'));        
+
+        if($student->access_grant == 1){
             return redirect()->back();
         }
-
-      
-
-        $student = Student::find($request->input('student_id'))->first();
 
         $subject_ids = $request->input('subjects');        
 
@@ -682,6 +687,7 @@ class StudentsController extends Controller
         $subjects = collect([]);        
 
         $counter = 0;
+
         foreach($subject_ids as $subj_id){
             $subject = Subject::find($subj_id);    
             
@@ -694,7 +700,7 @@ class StudentsController extends Controller
         }
 
         if($subjects->count() < 1){
-            return redirect()->back();
+            return redirect()->back()->with('warning', 'No Elligble Subjects, can\'t enroll.');
         }
 
         $length = count($subjects);
@@ -720,6 +726,7 @@ class StudentsController extends Controller
             $subjectToTake->from_year = $settings->from_year;
             $subjectToTake->to_year = $settings->to_year;
             $subjectToTake->semester = $settings->semester;
+            
             
             $subjectToTake->save();
 
@@ -762,8 +769,7 @@ class StudentsController extends Controller
         if($student->created_by_admin == false){
             $appLink = $student->applicant;   
         }
-
-      
+        
             
         $balance->save();
         $user->save();
@@ -775,10 +781,7 @@ class StudentsController extends Controller
         $student->balance_amount = $student->balance_id;
         $student->level_desc = $student->level;  
 
-        return view('student.profile')
-             ->with('student', $student)
-             ->with('appLink', $appLink)
-             ->with('userLink', $user);
+        return redirect('studentprofile/');           
 
     }
 

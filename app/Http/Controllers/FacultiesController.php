@@ -202,7 +202,8 @@ class FacultiesController extends Controller
 
         $classesArray = $classes->filter(function ($value, $key) {
             return $value != null;
-        });            
+        });    
+                
                 
     
         return view('faculty.classes')
