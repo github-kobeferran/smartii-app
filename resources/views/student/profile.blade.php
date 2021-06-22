@@ -2,7 +2,7 @@
 
 @section('studentprofile')
 
-<?php    $show = 0;     ?>
+<?php    $show = 0;  ?>
 
 @if(auth()->user()->id == $userLink->id )
 
@@ -18,16 +18,25 @@
 
 @endif
 
+
 <div class="container mt-2">
 
-    @if($show>0 && $student->created_by_admin == false)
+    @if($show > 0 && $student->created_by_admin == 0)
 
     <div class="row border-bottom ">
         
 
-        <div class="col-sm d-flex justify-content-center">
+        <div class="col-sm d-flex justify-content-center"> 
             
+            @if (is_object($appLink) )
+
                 <img  class="profile-pic " src="{{url('/storage/images/applicants/id_pics/' . $appLink->id_pic)}}" alt="Id image">    
+            @else
+            
+            
+            @endif
+            
+               
                                          
         </div>
 
@@ -42,7 +51,7 @@
         <div class="col-sm mx-auto text-center">
  
             <h5>{{ ucfirst($student->first_name) . ' ' .  ucfirst($student->last_name)}}</h5>
-            <em>{{$student->student_id}}</em>
+            <em>{{$student->student_id}} </em>
             
 
         </div>
@@ -52,6 +61,20 @@
     <div class="row m-3">
 
         <div class="col-sm mx-auto text-center">
+
+            @if ($show == 3)                
+
+                @if (\App\Models\Setting::first()->enrollment_mode == 1 && auth()->user()->access_grant == 0)
+                    <div class="">
+                        <h5>Enrollment is now Open! </h5>   
+                    </div> 
+                    <a href="/enroll/{{$student->id}}" class="btn btn-outline-success m-2">Proceed to Enrollment</a>                                        
+                @endif
+
+                
+            @endif
+
+            
  
             <table class="table table-striped border">
 
@@ -85,6 +108,22 @@
 
                     <td class="w-50">
                         {{ucfirst($student->level_desc)}}
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td class="border-right">
+                        Semester
+                    </td>
+
+                    <td class="w-50">
+                        
+                       @if ($student->semester == 1)
+                            Enrolled in First Semester
+                       @else
+                            Enrolled in Second Semester
+                       @endif
                     </td>
 
                 </tr>
@@ -207,7 +246,6 @@ function toggleDetails(){
 
     }
    
-
 }
 
 </script>

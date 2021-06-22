@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-2">
 
-    <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-arrow-left" aria-hidden="true"></i>   </a>
+    <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-angle-left" aria-hidden="true"></i>   </a>
     <div class="row mt-2">
         <div class="col-sm d-flex justify-content-center">
 

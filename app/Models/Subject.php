@@ -73,43 +73,71 @@ class Subject extends Model
    
     /**
      *  returns an array of arrays that store the subject's 
-     *     pre-requisite id and true if the student has a passed rating 
+     *     pre-requisite id and 0 => failed,
+     *                          1 => passed,
+     *                          2 => deffered,  
+     *      if the student has a passed rating 
      *        in subjects taken table, false if failed and null if it does 
      *           not exist in the subjects taken table
      */
-    public static function PreReqChecker($subject, $studentID){
-        $result = [];
-        $message = '';
-        if($subject['pre_req'] == 1){
+    public static function PreReqChecker($subjectid, $studentID){
+        $result = [];        
+
+        $subject = Subject::find($subjectid);
+
+        if($subject->pre_req == 1){
 
             $count = 0;
+                        
            foreach($subject->pre_reqs as $pre_req){
 
                 $passed = SubjectTaken::where('student_id', $studentID)
                                      ->where('subject_id' , $pre_req->id)
-                                     ->where('rating', '<', 4)
+                                     ->where('rating', '<=', 3)
                                      ->exists();
 
                 $failed = SubjectTaken::where('student_id', $studentID)
                                      ->where('subject_id' , $pre_req->id)
-                                     ->where('rating', '>', 4)
+                                     ->where('rating', '=', 5)
                                      ->exists();
 
-                if($passed){                    
-                    $result[$count] = [$pre_req, true]; 
+                $deferred = SubjectTaken::where('student_id', $studentID)
+                                     ->where('subject_id' , $pre_req->id)
+                                     ->where('rating', '=', 4)
+                                     ->exists();
+
+                $notSet = SubjectTaken::where('student_id', $studentID)
+                                     ->where('subject_id' , $pre_req->id)
+                                     ->where('rating', '=', 4.5)
+                                     ->exists();
+
+                $pending = SubjectTaken::where('student_id', $studentID)
+                                     ->where('subject_id' , $pre_req->id)
+                                     ->where('rating', '=', 3.5)
+                                     ->exists();
+
+                if($failed){   
                     
-                } elseif($failed)  {
-                    $result[$count] = [$pre_req, false]; 
+                    array_push($result, [$pre_req, 0]);                    
                     
-                } else {
-                    $result[$count] = [$pre_req, null];                    
+                } elseif($passed)  {
+                    array_push($result, [$pre_req, 1]);
+                    
+                } elseif($deferred) {
+                    array_push($result, [$pre_req, 2]);
+
+                }elseif($pending) {
+                    array_push($result, [$pre_req, 3]);         
+
+                }elseif($notSet){
+                    array_push($result, [$pre_req, 4]);
                 }
 
                 $count++;                
            }
 
         } else {
-            $result = ['', true];
+            $result = [null, null];
         }                 
 
         return $result;
@@ -172,4 +200,6 @@ class Subject extends Model
                                 [$values['department'], $values['program']])
                                 ->get();
     }
+
+
 }

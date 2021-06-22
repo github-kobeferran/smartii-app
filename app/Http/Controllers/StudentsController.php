@@ -28,7 +28,8 @@ class StudentsController extends Controller
      */
     public function index($id = null)
     {        
-        
+                
+
         if($id != null){      
             
     
@@ -45,12 +46,13 @@ class StudentsController extends Controller
                 $student->dept = $student->department;
                 $student->program_desc = $student->program_id;
                 $student->balance_amount = $student->balance_id;
-                $student->level_desc = $student->level;
+                $student->level_desc = $student->level;                
 
                return view('student.profile')
                         ->with('student', $student)
                         ->with('appLink', $appLink)                           
-                        ->with('userLink', $userLink);                           
+                        ->with('userLink', $userLink);
+                                               
 
             }else {
 
@@ -86,7 +88,7 @@ class StudentsController extends Controller
                return view('student.profile')
                         ->with('student', $student)
                         ->with('appLink', $appLink)                           
-                        ->with('userLink', $userLink);  
+                        ->with('userLink', $userLink);                         
                 
 
             } else {
@@ -466,11 +468,12 @@ class StudentsController extends Controller
 
     public function getClasses(){
               
-        // $stud_id = auth()->user()->member->member_id;                
-        $stud_id = 11;                
+        $stud_id = auth()->user()->member->member_id;                            
 
         $student = Student::where('id',$stud_id)->first();
-        
+
+        $settings = Setting::first();
+        // ->('from_year', $settings->from_year)
         $currentSubjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);
 
         $currentSubjects = collect(new Subject);
@@ -550,7 +553,7 @@ class StudentsController extends Controller
             $allSubjects->push($subject);
         }
         
-
+        
         
         $settings = Setting::first();
 
@@ -568,7 +571,7 @@ class StudentsController extends Controller
                         ->with('settings' , $settings)          
                         ->with('currentSubjectsSchedule' , $currentSubjectsSchedule)                                  
                         ->with('allSubjectsTaken' , $allSubjectsTaken)                                  
-                        ->with('allSubjects' , $allSubjects);                                   
+                        ->with('allSubjects' , $allSubjects->values()->all());                                   
 
     }
 
@@ -596,7 +599,172 @@ class StudentsController extends Controller
                         ->with('student' , $student);    
     }
 
-   
+    public function getSubjectsForNextSemester($id){
 
+        if($id != auth()->user()->member->member_id)
+            return redirect()->back();
+
+        $student = Student::find($id);
+
+        $subjects = SubjectTaken::subjectsToBeTaken($student);
+        
+        $lastSemStatus = collect([]);
+
+        foreach($subjects as $subject){
+
+            $lastSemStatus->push(Subject::PreReqChecker($subject->id, $student->id));            
+
+        }
+
+        $student->program_desc = $student->program_id;
+
+        $level = '';
+        $semester = '';
+
+        if($student->level == 11 && $student->semester == 1){
+            $level = 'Freshman Year';
+            $semester = 'Second Semester';
+        } elseif($student->level == 11 && $student->semester == 2){
+            $level = 'Sophomore Year';
+            $semester = 'First Semester';
+        } elseif($student->level == 12 && $student->semester == 1){
+            $level = 'Sophomore Year';
+            $semester = 'Second Semester';
+        } elseif($student->level == 1 && $student->semester == 1){
+            $level = 'Grade 11 ';
+            $semester = 'Second Semester';
+        } elseif($student->level == 1 && $student->semester == 2){
+            $level = 'Grade 12 ';
+            $semester = 'First Semester';
+        } elseif($student->level == 2 && $student->semester == 1){
+            $level = 'Grade 12';
+            $semester = 'Second Semester';
+        } else {
+            $graduate = true;
+        }      
+        
+        return view('student.enrollmentstatus')
+             ->with('student', $student)
+             ->with('level', $level)
+             ->with('semester', $semester)
+             ->with('subjectsToTake', $subjects)
+             ->with('lastSemStatus', $lastSemStatus);
+
+
+
+    }
+
+    public function enroll(Request $request){
+
+
+        if($request->input('student_id') != auth()->user()->member->member_id){
+            return redirect()->back();
+        }
+
+        $settings = Setting::first();
+
+        $student = Student::find($request->input('student_id'))->first();
+
+        $subject_ids = $request->input('subjects');
+        $eligibles = $request->input('eligibility');
+
+        $subjects = collect([]);        
+
+        $counter = 0;
+        foreach($subject_ids as $subj_id){
+            $subject = Subject::find($subj_id);    
+            
+            if($eligibles[$counter] == 1){
+                $subjects->push($subject);
+            }          
+            
+            $counter++;
+
+        }
+
+        $length = count($subjects);
+        $counter = 0;
+        $totalBalance = 0;
+        $price = 0;
+
+        if($student->department == 0){
+            $price = $settings->shs_price_per_unit;
+        } else {
+            $price = $settings->college_price_per_unit;
+        }
+
+        foreach($subjects as $subject){
+
+            $totalBalance+= $price;
+
+            $subjectToTake = new SubjectTaken;
+
+            $subjectToTake->student_id = $student->id;            
+            $subjectToTake->subject_id = $subject->id;
+            $subjectToTake->rating = 4.5;
+            $subjectToTake->from_year = $settings->from_year;
+            $subjectToTake->to_year = $settings->to_year;
+            $subjectToTake->semester = $settings->semester;
+            
+            $subjectToTake->save();
+
+            $counter++;
+
+        }
+
+        $user = auth()->user();
+
+        $user->access_grant = 1;
+        $balance = Balance::find($student->balance_id);
+
+        $balance->amount+= $totalBalance;
+
+
+        if($student->level == 11 && $student->semester == 1){
+            $student->level = 11;
+            $student->semester = 2;
+        } elseif($student->level == 11 && $student->semester == 2){
+            $student->level = 12;
+            $student->semester = 1;
+        } elseif($student->level == 12 && $student->semester == 1){
+            $student->level = 12;
+            $student->semester = 2;
+        } elseif($student->level == 1 && $student->semester == 1){
+            $student->level = 1;
+            $student->semester = 2;
+        } elseif($student->level == 1 && $student->semester == 2){
+            $student->level = 2;
+            $student->semester = 1;
+        } elseif($student->level == 2 && $student->semester == 1){
+            $student->level = 2;
+            $student->semester = 2;
+        } else {
+            $graduate = true;
+        }  
+
+        $appLink = null;
+
+        if($student->created_by_admin == false){
+            $appLink = $student->applicant;   
+        }
+
+      
+            
+        $balance->save();
+        $user->save();
+        $student->save();
+
+        $student->age = $student->id;
+        $student->dept = $student->department;
+        $student->program_desc = $student->program_id;
+        $student->balance_amount = $student->balance_id;
+        $student->level_desc = $student->level;  
+
+        return view('student.profile')
+             ->with('student', $student)
+             ->with('appLink', $appLink)
+             ->with('userLink', $user);
+
+    }
 
 }

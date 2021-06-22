@@ -123,11 +123,7 @@ class FacultiesController extends Controller
 
         
         if($day != null){
-
-            // $start = min($from, $until);
-            // $end = max($from, $until);
-
-            // return $from . ', ' . $until;
+         
 
              $faculty_id = Schedule::select('class_id')
              ->where('day', $day)

@@ -87,6 +87,15 @@
 
 <hr>
 
+<b>Enrollment Mode</b>
+
+    <div class="form-group m-2">
+        
+        {{Form::select('mode', ['0' => 'Close', '1' => 'Open'], $currentSetting->enrollment_mode, ['class' => 'form-control w-25'])}}
+
+    </div>
+<hr>
+
 <div class="form-group">
 
     {{Form::submit('Save', ['class' => 'btn btn-success w-50'])}}

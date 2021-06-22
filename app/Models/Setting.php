@@ -21,7 +21,7 @@ class Setting extends Model
         if($value == 1)
             $this->attributes['sem_desc'] = '1st';
         else 
-            $this->attributes['sem_desc'] = '1st';
+            $this->attributes['sem_desc'] = '2nd';
         
     }
     
