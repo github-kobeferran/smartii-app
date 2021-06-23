@@ -5,15 +5,48 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SubjectTaken;
+use App\Models\Subject;
+use App\Models\Student;
 
 
 class Subject extends Model
 {
     use HasFactory;
+
+    protected $appends = ['student_count' => null];
  
     public function pre_reqs(){
         return $this->belongsToMany(Subject::class, 'subjects_pre_req', 'subject_id', 'subject_pre_req_id');
     }
+
+    public function setStudentCountAttribute($values = []){
+
+        $subjectTakens = SubjectTaken::where('subject_id', $values['subject_id'])
+                                     ->where('rating', 4.5)
+                                     ->get();
+        $count = 0;
+
+        foreach($subjectTakens as $takenSubject){
+
+            $student = Student::find($takenSubject->student_id);
+
+            if($values['program_id'] == $student->program_id){
+                ++$count;
+            }
+
+        }
+
+        $this->attributes['student_count'] = $count;        
+
+    }
+
+    public function getStudentCountAttribute(){
+
+        return $this->attributes['student_count'];
+
+    }
+
+
 
     /**
      *  returns subjects to be taken based on a students
@@ -144,6 +177,7 @@ class Subject extends Model
        
     }
 
+    //for choosing pre req in subject creation
     public static function getPossiblePreReq($values){
 
         if( ($values['level'] == 1 || $values['level'] == 11) && $values['semester'] == 1  ){
@@ -159,11 +193,24 @@ class Subject extends Model
 
                 
                 if($values['level'] > 1){
-                    $query.= ' and level < ?';
+                    
+
+                    if($values['semester'] > 1){
+
+                        $query.= ' and level <= ?';    
+
+                    } else {
+
+                        $query.= ' and level = 1';                        
+
+                    }
+                                    
                     
                 }else {
+
                     $query.= ' and level = 1';
                     $query.= ' and semester = 1';
+
                 }
 
             }else{
@@ -171,11 +218,23 @@ class Subject extends Model
                 $query.= ' and (program_id = ? or program_id = 4)';                      
 
                 if($values['level'] > 11){
-                    $query.= ' and level < ?';
+
+                    if($values['semester'] > 1){
+
+                        $query.= ' and level <= ?';    
+
+                    } else {
+
+                        $query.= ' and level = 11';                        
+
+                    }
+                                       
                     
                 }else {
+
                     $query.= ' and level = 11';
                     $query.= ' and semester = 1';
+
                 }
                     
             }                                                      
@@ -189,6 +248,7 @@ class Subject extends Model
     }
 
     public static function subjectsForClasses($values = []){
+
         $query =  'dept = ? ';
         if($values['department']  == 0 ){                            
             $query.= ' and (program_id = ? or program_id = 3)';
@@ -196,9 +256,23 @@ class Subject extends Model
             $query.= ' and (program_id = ? or program_id = 4)';             
         }
                                     
-        return Subject::whereRaw($query, 
+        $subjects = Subject::whereRaw($query, 
                                 [$values['department'], $values['program']])
-                                ->get();
+                                ->get();  
+                                
+        
+                                
+        foreach($subjects as $subject){
+
+            $args['subject_id'] = $subject->id;
+            $args['program_id'] = $values['program'];
+
+            $subject->student_count = $args;
+
+        }
+
+        return $subjects;
+
     }
 
 

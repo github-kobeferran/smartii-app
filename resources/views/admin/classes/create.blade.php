@@ -431,8 +431,12 @@ function changeSubjects(){
 
             var subjects = JSON.parse(this.responseText);                                
 
-            for (let i in subjects) {                                        
-                selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc, subjects[i].id); 
+            for (let i in subjects) {     
+
+                if(subjects[i].student_count < 1)                                   
+                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc, subjects[i].id); 
+                else 
+                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc + '   (count:' + subjects[i].student_count + ')', subjects[i].id); 
             }
 
             classesTableData();

@@ -76,6 +76,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::get('/admin/paymentrequests', [App\Http\Controllers\AdminsController::class, 'viewPaymentRequests'])->name('viewPaymentRequests');
     Route::post('/admin/approvepaymentrequest', [App\Http\Controllers\AdminsController::class, 'approvePaymentRequest'])->name('approvePaymentRequest');
+    Route::any('/updateschedule', [App\Http\Controllers\AdminsController::class, 'updateSchedule'])->name('updateschedule');
 
 });
 
@@ -111,7 +112,8 @@ Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->
     Route::get('/myclasses', [App\Http\Controllers\FacultiesController::class, 'getClasses'])->name('facultyClasses');
     Route::get('/myclass/{id}/', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
     Route::get('/sortclass/{classid}/{facultyid}/{sortby}', [App\Http\Controllers\StudentClassesController::class, 'sortStudents'])->name('sortStudents');
-    Route::post('/faculty/updaterating/', [App\Http\Controllers\SubjectsTakenController::class, 'updateRating'])->name('updaterating');
+    Route::any('/faculty/updaterating/', [App\Http\Controllers\SubjectsTakenController::class, 'updateRating'])->name('updaterating');
+    Route::any('/archiveclass', [App\Http\Controllers\StudentClassesController::class, 'archiveClass'])->name('archiveclass');
 });
 
 

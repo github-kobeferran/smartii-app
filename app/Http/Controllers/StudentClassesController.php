@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Models\StudentClass;
 use App\Models\SubjectTaken;
 use App\Models\Faculty;
@@ -274,6 +275,28 @@ class StudentClassesController extends Controller
             default:
                 return $alphabetical->values()->all();;
         }       
+
+    }
+
+    public function archiveClass(Request $request){
+
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }
+
+        $class = StudentClass::find($request->input('class_id'));
+
+        if($class->faculty_id != $request->input('faculty_id')){
+            return redirect()->back();
+        }
+
+        $class->archive = 1;
+        $class->save();
+
+        DB::table('schedules')->delete(['class_id' => $class->id]);
+
+
+        return redirect()->route('facultyClasses');
 
     }
     

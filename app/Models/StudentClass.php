@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
 use App\Models\SubjectTaken;
 use App\Models\Subject;
+use App\Models\Faculty;
 use App\Models\Program;
 use App\Models\Setting;
 use App\Models\Schedule;
@@ -18,7 +19,7 @@ class StudentClass extends Model
     
     protected $table = 'classes';
     
-    protected $appends = ['topic' => null, 'prog'=> null];
+    protected $appends = ['topic' => null, 'prog'=> null, 'faculty_name' => null];
 
     public static function init(){
 
@@ -30,6 +31,20 @@ class StudentClass extends Model
 
     public function schedules(){
         return $this->hasMany(Schedule::class, 'class_id', 'id');
+    }
+
+    public function setFacultyNameAttribute($id){
+
+        $faculty = Faculty::find($id);
+
+        $this->attributes['faculty_name'] = ucfirst($faculty->first_name) . ' ' . ucfirst($faculty->last_name);
+
+    }
+
+    public function getFacultyNameAttribute(){
+
+        return $this->attributes['faculty_name'];
+
     }
 
     public function setTopicAttribute($id){

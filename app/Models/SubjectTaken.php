@@ -117,6 +117,11 @@ class SubjectTaken extends Model
             $graduate = true;
         }
 
+        if($graduate == true){
+            return 'graduated';
+        }
+
+
         $subjects = collect(new Subject);
         
 

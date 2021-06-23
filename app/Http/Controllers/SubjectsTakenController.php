@@ -62,19 +62,16 @@ class SubjectsTakenController extends Controller
         $schedules = collect();
         $faculties = new Faculty;
 
-        $schedArray = collect();
-        $counter = 0;        
-
+        $subjectsTakenThatMatchesProgram = collect();
+        $counter = 0;                   
 
         foreach($enrolledTakenSubjects as $enrolledTakenSubject){
                                     
             if($enrolledTakenSubject->subject_id == $subj){  
-                                
 
                 if(Student::find($enrolledTakenSubject->student_id)->program_id == $prog){   
 
-                    $schedArray->push($enrolledTakenSubject);
-
+                    $subjectsTakenThatMatchesProgram->push($enrolledTakenSubject);
                   
                 }
 
@@ -82,44 +79,51 @@ class SubjectsTakenController extends Controller
 
             ++$counter;
 
-        }
+        }     
         
-        // return $schedArray;
-        $collection = collect();
         
-        for($i=0; $i<count($schedArray); $i++){   
-                    
-            if(Student::find($schedArray[$i]->student_id)->program_id == $prog){                                 
+        $classAndItsSchedules = collect();
+        $classes = collect(new StudentClass);
 
-                $classSchedules = StudentClass::find($schedArray[$i]->class_id)->schedules;
+        $counter = 0;
+        $anothercounter = 0;
 
-                foreach($classSchedules as $classSched){
+        for($i=0; $i<count($subjectsTakenThatMatchesProgram); $i++){ 
 
-                    $classSched->start_time = Carbon::parse($classSched->start_time)->format('h:i A');
-                    $classSched->until = Carbon::parse($classSched->until)->format('h:i A');
-                    $classSched->faculty_name = $classSched->id;
-                    $classSched->room_name = $classSched->id;
+            $class = StudentClass::find($subjectsTakenThatMatchesProgram[$i]->class_id);
 
-                    if(!$collection->contains('id', $classSched->id)){
+            $classSchedules = [];
 
-                        $collection->push($classSched);       
-    
-                    }     
+            $class->faculty_name = $class->faculty_id;     
 
-                }
+            $class->schedules;          
 
-                $schedules->push($collection);                 
-                
+            foreach($class->schedules as $sched){
+
+                $sched->formatted_start = $sched->start_time;
+                $sched->formatted_until = $sched->until;
+                $sched->day_name = $sched->day;                
+                $sched->room_name = $sched->id;
+
             }
-            
-        }
-          
-        return $schedules->toJson();
+  
+
+            $classes->push($class);
+        }        
+
+        $classes = $classes->filter(function ($value, $key) {
+            return $value != null;
+        });
+
+        return $classes;       
         
     }
 
     public function updateRating(Request $request){   
         
+        if($request->method() != 'POST'){
+            redirect()->back();
+        }
         
         $this->validate($request, [
             'rating' => 'required',         

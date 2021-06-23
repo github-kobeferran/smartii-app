@@ -468,13 +468,13 @@ class StudentsController extends Controller
 
     public function getClasses(){
               
-        $stud_id = auth()->user()->member->member_id;                            
+        $stud_id = auth()->user()->member->member_id;                                                        
 
         $student = Student::where('id',$stud_id)->first();
 
         $settings = Setting::first();
-        // ->('from_year', $settings->from_year)
-        $currentSubjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);
+        
+        $currentSubjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);        
 
         $currentSubjects = collect(new Subject);
         $currentSubjectsSchedule = collect([]);
@@ -504,13 +504,10 @@ class StudentsController extends Controller
             $currentSubjectsSchedule->push($sched);
 
         }
-                
-        
+                        
 
         foreach($currentSubjectsSchedule as $sched){
-
             
-
             if(!empty($sched)){
 
                 if(is_array($sched)){
@@ -559,11 +556,15 @@ class StudentsController extends Controller
 
         $settings->sem_desc = $settings->sem;
         
+        $currentSubjects = $currentSubjects->filter(function ($value, $key) {
+            return $value != null;
+        });
         $currentSubjectsSchedule = $currentSubjectsSchedule->filter(function ($value, $key) {
             return $value != null;
         });
 
         
+                
 
         return view('student.classes')
                         ->with('student' , $student)       
@@ -571,7 +572,7 @@ class StudentsController extends Controller
                         ->with('settings' , $settings)          
                         ->with('currentSubjectsSchedule' , $currentSubjectsSchedule)                                  
                         ->with('allSubjectsTaken' , $allSubjectsTaken)                                  
-                        ->with('allSubjects' , $allSubjects->values()->all());                                   
+                        ->with('allSubjects' , $allSubjects);                                   
 
     }
 
@@ -609,6 +610,10 @@ class StudentsController extends Controller
        
 
         $subjects = SubjectTaken::subjectsToBeTaken($student);
+
+        if($subjects == 'graduated'){
+            return view('student.enrollmentstatus')->with('graduated', true);
+        }
         
         $lastSemStatus = collect([]);
 
@@ -739,7 +744,7 @@ class StudentsController extends Controller
         $user->access_grant = 1;
         $balance = Balance::find($student->balance_id);
 
-        $balance->amount+= $totalBalance;
+        $balance->amount += $totalBalance;
 
 
         if($student->level == 11 && $student->semester == 1){

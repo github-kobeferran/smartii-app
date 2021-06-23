@@ -135,7 +135,9 @@ class FacultiesController extends Controller
              
              if($faculty_id != null){
 
-                $class = StudentClass::where('id', $faculty_id->class_id)->first();                
+                $class = StudentClass::where('id', $faculty_id->class_id)
+                                     ->where('archive', 0)
+                                     ->first();                
 
                 return Faculty::where('id', '!=', $class->faculty_id)->get()->toJson();
                 
@@ -220,6 +222,10 @@ class FacultiesController extends Controller
         }
 
         $class = StudentClass::find($id);
+
+        if($class->archive == 1){
+            return redirect()->back();
+        }
 
         $class->topic = $class->id;
         $class->prog = $class->id;

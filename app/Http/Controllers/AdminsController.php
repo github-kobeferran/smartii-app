@@ -21,6 +21,7 @@ use App\Models\Room;
 use App\Models\SubjectTaken;
 use App\Models\PaymentRequest;
 use App\Models\Invoice;
+use App\Models\Schedule;
 use App\Mail\WelcomeMember;
 use App\Mail\ApprovedApplicant;
 use PDF;
@@ -285,6 +286,19 @@ class AdminsController extends Controller
 
                 return $paymentrequest->toJson();
             break;           
+            case 'schedule':
+
+                $schedule = Schedule::find($id);  
+                
+                           
+                $schedule->formatted_start = $schedule->start_time;
+                $schedule->formatted_until = $schedule->start_time;
+                $schedule->day_name = $schedule->day;
+                $schedule->room_name = $schedule->id;
+                
+
+                return $schedule;
+            break;           
             default:
             redirect('/home');
         }
@@ -366,8 +380,7 @@ class AdminsController extends Controller
                 $values = [$firstColumn => $firstValue,
                            $secondColumn => $secondValue];                
                         
-                return Subject::subjectsForClasses($values)->toJson();
-                break;
+                return Subject::subjectsForClasses($values)->toJson();                               
             }
     }    
 
@@ -930,6 +943,16 @@ class AdminsController extends Controller
        $paymentrequest->save();
 
        return  redirect()->route('viewPaymentRequests')->with('status', 'Payment Request Approved!');
+
+    }
+
+    public function updateSchedule(Request $request){
+
+        if($request->method() != 'POST'){
+            redirect()->back();
+        }
+
+        return $request->all();
 
     }
    

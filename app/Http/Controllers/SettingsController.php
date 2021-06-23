@@ -42,6 +42,9 @@ class SettingsController extends Controller
         $setting->shs_price_per_unit = $request->input('shs_price');
         $setting->college_price_per_unit = $request->input('col_price');
         $setting->class_quantity = $request->input('class_quantity');
+        $setting->gcash_number = $request->input('gcash');
+        $setting->bank_number = $request->input('bank_number');
+        $setting->bank_name = $request->input('bank_name');
 
         $mode = $request->input('mode');
 

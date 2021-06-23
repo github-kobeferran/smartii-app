@@ -38,7 +38,7 @@
 
 <div class="row " >    
     
-    <div class="col-sm-6">
+    <div class="col-sm-5">
 
         <h4 class="mb-3">Add a Room</h4>
 
@@ -58,13 +58,13 @@
 
         {!! Form::open(['url' => 'admin/update/room', 'id' => 'updateRoomForm']) !!}
 
-        <div class ="table-responsive border shadow" style="max-height: 500px; overflow: auto; display:inline-block;">
-            <table class="table table-striped table-responsive-sm border" >
+        <div class ="table-responsive border shadow bg-light" style="max-height: 500px; overflow: auto; display:inline-block;">
+            <table class="table table-striped bg-light table-responsive-sm border" >
                 <thead class="thead bg-light">
                     <tr>                        
-                        <th scope="col">Room Name</th>
-                        <th scope="col">Status</th>
-                        <th scope="col" colspan="2">Action</th>
+                        <th class="bg-light" scope="col">Room Name</th>
+                        <th class="bg-light" scope="col">Status</th>
+                        <th class="bg-light" scope="col" colspan="2">Action</th>
                     </tr>
                 </thead> 
                 <tbody id="rooms-table" >
@@ -188,84 +188,45 @@ function viewSchedules(){
     xhr.onload = function() {
         if (this.status == 200) {          
             
-            let schedules = JSON.parse(this.responseText);  
+            let classes = JSON.parse(this.responseText);
 
-            let row = document.createElement("DIV");
-            row.className = "row m-2";                              
+            let output = `<div class="col-sm-7" id="second-column">`;
 
-            for (let i in schedules[0]) {                                        
+            for(let i in classes){
+                
+            output += `<div id="sched-`+ classes[i].id +`" class="card bg-light mb-3 sched-card" >
+                      <div class="card-header">` + selectViewSubj.options[selectViewSubj.selectedIndex].textContent + `[`+ classes[i].class_name +`]</div>
+                         <div class="card-body">
+                             <h5 class="card-title">Instructor `+ classes[i].faculty_name + `</h5>
+                                <table class="table">
+                             
+                             `;
+                            classes[i].schedules.forEach(sched => {
 
-                let divCard = document.createElement("DIV");
-                                
-                divCard.className = "card bg-light border-warning mb-3 shadow-lg";
-                divCard.style.maxWidth = "18rem";
+                            output+=`
+                                    <tr>
+                                        <td>`+ sched.day_name +`</td>
+                                        <td>`+ sched.formatted_start  +` - `+ sched.formatted_until +`</td>
+                                        <td>`+ sched.room_name +`</td>                                                                                                  
+                                    </tr>
+                                    <tr>
+                                        <a href="{{url('editsched/`+ sched.id +`')}}" class="float-right btn btn-light btn-block border border-dark" >Edit Schedule</a>
+                                    </tr>
+                                `;                                
+                            });
 
-                let cardHeader = document.createElement("DIV");
+                             
+                output+=`</table>
+                        </div>
+                    
+                </div>
 
-                cardHeader.className = "card-header";
-                cardHeader.textContent = selectViewSubj.options[selectViewSubj.selectedIndex].textContent;
-
-                let cardBody = document.createElement("DIV");
-                cardBody.className = "card-body";
-
-                let cardTitle = document.createElement("H5");
-                cardTitle.className = "card-title border bg-warning h4";
-                cardTitle.textContent = "Instructor: " + schedules[0][i].faculty_name;   
-
-                let day = document.createElement("P");
-                day.className = "card-text h5";
-
-                let dayText = "";
-
-                switch(schedules[0][i].day){
-                    case 'mon':
-                        dayText = "Monday";
-                    break;
-                    case 'tue':
-                        dayText = "Tuesday";
-                    break;
-                    case 'wed':
-                        dayText = "Wednesday";
-                    break;
-                    case 'thu':
-                        dayText = "Thursday";
-                    break;
-                    case 'fri':
-                        dayText = "Friday";
-                    break;
-                    case 'sat':
-                        dayText = "Saturday";
-                    break;                 
-                }
-
-                day.textContent = "every: " + dayText;
-
-                let from = document.createElement("P");
-                from.className = "card-text h5";
-                from.textContent = "from: " + schedules[0][i].start_time;   
-
-                let until = document.createElement("P");
-                until.className = "card-text h5";
-                until.textContent = "until: " + schedules[0][i].until;   
-
-                let room = document.createElement("P");
-                room.className = "card-text h5";
-                room.textContent = "at: " + schedules[0][i].room_name;  
-
-                cardBody.appendChild(cardTitle);
-                cardBody.appendChild(day);
-                cardBody.appendChild(from);
-                cardBody.appendChild(until);
-                cardBody.appendChild(room);
-
-                divCard.appendChild(cardHeader);
-                divCard.appendChild(cardBody);
-
-            
-                row.appendChild(divCard);                
+                     `;             
             } 
 
-            secondColumn.appendChild(row);       
+            output += `</div>`;
+
+            secondColumn.innerHTML = output;     
 
         } else {
             secondColumn.innerHTML = `<p> no classes available </p>`
@@ -276,6 +237,10 @@ function viewSchedules(){
     xhr.send(); 
 
 }
+
+
+
+
 
 function fillRoomTable(){
 
@@ -352,4 +317,7 @@ function removeAllOptions(select){
     }
 }
 
+
 </script>
+
+  
