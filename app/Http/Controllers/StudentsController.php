@@ -131,6 +131,7 @@ class StudentsController extends Controller
             'program_id' => 'required', // 3 =>  shs, 4 => college
             'semester' => 'required', 
             'email' => 'required',
+            'gender' => 'required',
             'contact' => 'required|numeric',
             'last_name' => 'required|regex:/^[\s\w-]*$/|max:100',
             'first_name' => 'required|regex:/^[\s\w-]*$/|max:100',

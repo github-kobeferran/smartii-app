@@ -108,20 +108,37 @@ class RoomsController extends Controller
 
     }
 
-    public function availableRooms($from, $until, $day = null){
-        
-
+    public function availableRooms($from, $until, $day = null){        
         
         if($day != null){
-             $sched = Schedule::select('room_id')
-             ->where('day', $day)
-             ->where('start_time','<', $until)
-             ->where('until','>', $from)                                                  
-             ->first();
-             
-             if($sched != null){
+
+             $scheds = Schedule::where('day', $day)
+                               ->where('start_time','<', $until)
+                               ->where('until','>', $from)                                                  
+                               ->get();                                    
+
+             if($scheds != null){
+
+                $valids = collect();
+
+                foreach(Room::all() as $room){
+
+                    $bawal = false;
+
+                    foreach($scheds as $sched){
+
+                        if($room->id == $sched->room_id){
+                            $bawal = true;
+                        }
+                    
+                    }
+
+                    if(!$bawal)
+                        $valids->push($room);
+
+                }
                
-                return Room::where('id', '!=', $sched->room_id)->get()->toJson();
+                return $valids;
                 
              } else {
                 return Room::all()->toJson();
@@ -141,28 +158,49 @@ class RoomsController extends Controller
 
         
         if($day != null){
-             $sched = Schedule::select('room_id')
-             ->where('day', $day)
-             ->where('start_time','<', $until)
-             ->where('until','>', $from)                                                  
-             ->first();
-             
-             if($sched != null){
+
+            $scheds = Schedule::where('day', $day)
+                              ->where('start_time','<', $until)
+                              ->where('until','>', $from)                                                  
+                              ->get();                                    
+
+            if($scheds != null){
+
+               $valids = collect();
+
+               foreach(Room::all() as $room){
+
+                   $bawal = false;
+
+                   foreach($scheds as $sched){
+
+                       if($room->id == $sched->room_id){
+                           $bawal = true;
+                       }
+
+                       if($room->id == $exceptid)
+                          $bawal = false;
+
+                   
+                   }
+
+                   if(!$bawal)
+                       $valids->push($room);
+
+               }
+              
+               return $valids;
                
-                return Room::where('id', '!=', $sched->room_id)
-                           ->orWhere('id', $exceptid)
-                           ->get()->toJson();
-                
-             } else {
-                return Room::all()->toJson();
-                
-             }
- 
-             
- 
-        }else{
-            return Room::all()->toJson();
-        }
+            } else {
+               return Room::all()->toJson();
+               
+            }
+
+            
+
+       }else{
+           return Room::all()->toJson();
+       }
  
  
      }

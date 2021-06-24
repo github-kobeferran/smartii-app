@@ -320,7 +320,7 @@ function subjectSelect(subjid){
 
             let classes = JSON.parse(this.responseText);
 
-            let output = `<div id="view-panel" class="col-sm d-flex">`;
+            let output = `<div id="view-panel" class="col-sm d-flex align-content-between flex-wrap">`;
     
             for(let i in classes){                
 
@@ -376,6 +376,8 @@ function subjectSelect(subjid){
                 }
 
             }
+
+            
 
             output+=`</div>`;
 
@@ -474,7 +476,9 @@ function availableRoomsExcept(roomId){
 
             removeOptions(editRoom); 
             
-            let rooms = JSON.parse(this.responseText);                           
+            let rooms = JSON.parse(this.responseText); 
+            
+            console.log(rooms);
 
             for (let i in rooms) {                                        
                 editRoom.options[i] = new Option(rooms[i].name, rooms[i].id);
@@ -496,6 +500,8 @@ function availableRoomsExcept(roomId){
 function cancelEditSched(){
 
     editPanel.classList.add('d-none');
+
+    
 
 }
 

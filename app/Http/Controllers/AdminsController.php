@@ -22,6 +22,7 @@ use App\Models\SubjectTaken;
 use App\Models\PaymentRequest;
 use App\Models\Invoice;
 use App\Models\Schedule;
+use App\Models\StudentClass;
 use App\Mail\WelcomeMember;
 use App\Mail\ApprovedApplicant;
 use PDF;
@@ -336,6 +337,7 @@ class AdminsController extends Controller
 
                     foreach($students as $student){
                         $student->age = $student->id;
+                        $student->level_desc = $student->level;
                     }
 
                     return $students->toJson();
@@ -632,7 +634,45 @@ class AdminsController extends Controller
         
     }
 
-    public function searchBy($table, $by, $text = null){
+    public function searchBy($table, $by, $value, $text = null){
+
+        if($text != null){
+
+            switch($table){
+
+                case 'students':
+
+                    $students = Student::where($by, $value)
+                                ->where(function($query) use($text) {
+                                    $query->where('last_name', 'LIKE', '%' . $text . "%")
+                                    ->orWhere('first_name', 'LIKE', '%' . $text . "%")
+                                    ->orWhere('middle_name', 'LIKE', '%' . $text . "%");
+                                })
+                                ->get();
+
+                    foreach($students as $student){
+
+                        $student->age = $student->id;
+                        $student->level_desc = $student->level;
+
+                    }
+
+                    return $students;
+
+                break;
+
+
+            }
+
+
+        } else{
+
+           return $this->showTableBy($table, $by, $value, true);
+
+        }
+
+
+
 
     }
     
@@ -953,12 +993,26 @@ class AdminsController extends Controller
 
         if($request->method() != 'POST'){
             redirect()->back();
-        }
-
-        return $request->all();
+        }        
 
         $sched = Schedule::find($request->input('sched_id'));
-        $class = Schedule::find($request->input('sched_id'));
+        $class = StudentClass::find($request->input('class_id'));
+
+        $class->faculty_id = $request->input('instructor');
+        $class->class_name = $request->input('class_name');
+
+        $sched->day = $request->input('day');
+        $sched->start_time = $request->input('from');
+        $sched->until = $request->input('until');
+        $sched->room_id = $request->input('room');
+
+        $sched->save();
+        $class->save();
+
+
+        return redirect()->route('adminClasses')
+                         ->with('success', 'Schedule Updated')
+                         ->with('active', 'view');
 
     }
    

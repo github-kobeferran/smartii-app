@@ -33,17 +33,24 @@
                 <img  class="profile-pic " src="{{url('/storage/images/applicants/id_pics/' . $appLink->id_pic)}}" alt="Id image">    
                 
             @else
-            
-            
+                            
             @endif
-            
-               
-                                         
+                                       
         </div>
 
 
                
     </div>
+
+    @else
+
+    <div class="mx-auto text-center">
+
+        <em >Students Created by Admin - Profile Upload upcoming soon</em>
+
+    </div>
+
+    
 
     @endif
 
