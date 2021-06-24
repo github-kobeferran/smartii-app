@@ -353,12 +353,9 @@ function availableFaculty(){
     xhr.onload = function() {
         if (this.status == 200) { 
             
-            removeOptions(selectFaculty);
-            // for(i = 0; i <= selectFaculty.length; i++){
-            //     selectFaculty.remove(i);
-            // }
+            removeOptions(selectFaculty);       
 
-            var faculty = JSON.parse(this.responseText);                                
+            var faculty = JSON.parse(this.responseText);                          
 
             for (let i in faculty) {                                        
                 selectFaculty.options[i] = new Option(capitalizeFirstLetter(faculty[i].last_name) + ', ' + capitalizeFirstLetter(faculty[i].first_name), faculty[i].id); 

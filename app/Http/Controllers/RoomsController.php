@@ -109,6 +109,7 @@ class RoomsController extends Controller
     }
 
     public function availableRooms($from, $until, $day = null){
+        
 
         
         if($day != null){
@@ -121,6 +122,36 @@ class RoomsController extends Controller
              if($sched != null){
                
                 return Room::where('id', '!=', $sched->room_id)->get()->toJson();
+                
+             } else {
+                return Room::all()->toJson();
+                
+             }
+ 
+             
+ 
+        }else{
+            return Room::all()->toJson();
+        }
+ 
+ 
+     }
+
+    public function availableRoomsExcept($from, $until, $day = null, $exceptid){
+
+        
+        if($day != null){
+             $sched = Schedule::select('room_id')
+             ->where('day', $day)
+             ->where('start_time','<', $until)
+             ->where('until','>', $from)                                                  
+             ->first();
+             
+             if($sched != null){
+               
+                return Room::where('id', '!=', $sched->room_id)
+                           ->orWhere('id', $exceptid)
+                           ->get()->toJson();
                 
              } else {
                 return Room::all()->toJson();

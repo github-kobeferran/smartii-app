@@ -292,9 +292,11 @@ class AdminsController extends Controller
                 
                            
                 $schedule->formatted_start = $schedule->start_time;
-                $schedule->formatted_until = $schedule->start_time;
+                $schedule->formatted_until = $schedule->until;
                 $schedule->day_name = $schedule->day;
                 $schedule->room_name = $schedule->id;
+                $schedule->studentClass;                                
+                $schedule->faculty_name = $schedule->id;                                
                 
 
                 return $schedule;
@@ -954,6 +956,9 @@ class AdminsController extends Controller
         }
 
         return $request->all();
+
+        $sched = Schedule::find($request->input('sched_id'));
+        $class = Schedule::find($request->input('sched_id'));
 
     }
    

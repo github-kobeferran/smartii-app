@@ -21,15 +21,17 @@ class Schedule extends Model
     {
         return $this->belongsTo(StudentClass::class, 'class_id', 'id');
     }
-    
+
     public function setFormattedStartAttribute($value){
         
         $this->attributes['formatted_start'] =  Carbon::parse($value)->format('h:i A');
 
     }
+    
     public function getFormattedStartAttribute(){
         return $this->attributes['formatted_start'];
     }
+
     public function setFormattedUntilAttribute($value){
             $this->attributes['formatted_until'] =  Carbon::parse($value)->format('h:i A');
     }
@@ -97,40 +99,6 @@ class Schedule extends Model
 
         return static::where('class_id', $id)->get();
 
-    }
-
-
-    // only 1 sched is working
-    // public static function getSchedules($class_ids = null){
-
-    //     $schedules = collect(new Schedule);
-
-    //     if(is_array($class_ids)){
-            
-    //         for($i=0; $i<count($class_ids); $i++){
-
-    //             $sched = static::where('class_id', $class_ids[$i])->get();
-
-    //             if(is_array($sched)){
-
-    //                 for($j=0; $j<count($sched); $j++){
-
-    //                     $sched[$i] = $sched;
-                        
-    //                 }
-
-    //             }
-
-    //             $schedules->push($schedules);
-
-    //         }        
-
-    //     } else {
-    //         $schedules = static::where('class_id', $class_ids)->first();
-    //     }
-        
-    //     return $schedules;
-
-    // }
+    }  
 
 }

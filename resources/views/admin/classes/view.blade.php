@@ -46,33 +46,33 @@
 
 </div>
 
-<div id="edit-panel" class="row mt-2 text-center">
+<div id="edit-panel" class="row mt-2 text-center d-none">
+    
 
     <div class="col-sm d-flex justify-content-center">
+        
+        {!! Form::open(['url' => '/updateschedule', 'class' => 'border p-2']) !!}
+        <h5>EDIT SCHEDULE</h5>
 
-        {!! Form::open(['url' => '/updatesched']) !!}
+        {{Form::hidden('class_id', null, ['id' => 'hiddenClassID'])}}
+        {{Form::hidden('sched_id', null, ['id' => 'hiddenSchedID'])}}
+
     
         <div class="form-group">
 
-            {{Form::select('day', 
-            ['mon' => 'Monday',
-             'tue'=> 'Tuesday',
-             'wed'=> 'Wednesday',
-             'thu'=> 'Thursday',
-             'fri'=> 'Friday',
-             'sat'=> 'Saturday',                
-            ], null,
+            {{Form::select('instructor', 
+            [], null,
             [ 
-                'name' => 'day', 
-                'placeholder' => 'Epie Custodio', 
+                'name' => 'instructor',                 
                 'class' => 'custom-select bg-light text-dark border-secondary', 
                 'id' => 'editInstructor'
             ])}}            
 
         </div>
+
         <div class="form-group d-flex justify-content-center">
 
-            {{Form::text('class_name', 'BSIT 1-F1',['class' => 'form-control w-50'])}}
+            {{Form::text('class_name', '',['id' => 'editName', 'class' => 'form-control w-50', 'required' => 'required'])}}
 
         </div>
         <div class="form-group">
@@ -84,13 +84,60 @@
              'thu'=> 'Thursday',
              'fri'=> 'Friday',
              'sat'=> 'Saturday',                
-            ], null,
+            ], "mon",
             [ 
-                'name' => 'day', 
-                'placeholder' => 'Pick a Day', 
+                'name' => 'day',                 
                 'class' => 'custom-select bg-light text-dark border-secondary', 
                 'id' => 'editDay'
             ])}}            
+
+        </div>        
+
+        <div class="row no-gutters">            
+    
+            <div class="col-md">                                                                
+                
+                <p><strong >From:   </strong></p>
+
+                <input type="time" id="edit_from_time" name="from" value="07:00"
+                min="07:00" max="19:00" class="form-control bg-light text-dark border-secondary" required>          
+                
+
+            </div>
+
+            <div class="col-sm">
+                <p><strong >Until:   </strong></p>
+                <input type="time" id="edit_until_time"  name="until" value="08:00"
+                min="08:00" max="21:00" class="form-control bg-light text-dark border-secondary" required>          
+
+            </div>
+
+        </div>
+        <div class="form-group mt-2">
+
+            {{Form::select('room', 
+            [], null,
+            [ 
+                'name' => 'room',                 
+                'class' => 'custom-select bg-light text-dark border-secondary', 
+                'id' => 'editRoom'
+            ])}}            
+
+        </div>
+
+        <div class="form-group mt-2">
+
+            <button type="submit" class="btn btn-primary">
+
+                Update
+
+            </button>
+
+            <button type="button" onclick="cancelEditSched()" class="btn btn-warning">
+
+                Cancel
+
+            </button>
 
         </div>
 
@@ -102,7 +149,7 @@
 
 <div class="row mt-2">
 
-    <div id="view-panel" class="col-sm d-flex d-none">
+    <div id="view-panel" class="col-sm d-flex  d-none">
           
 
     </div>
@@ -112,10 +159,38 @@
 
 <script>
 
+let editPanel = document.getElementById('edit-panel');
+let editDay = document.getElementById('editDay');
+let editName = document.getElementById('editName');
+let editRoom = document.getElementById('editRoom');
+let editInstructor = document.getElementById('editInstructor');
+let edit_from_time = document.getElementById('edit_from_time');
+let edit_until_time = document.getElementById('edit_until_time');
+let hiddenClassID = document.getElementById('hiddenClassID');
+let hiddenSchedID = document.getElementById('hiddenSchedID');
+
 let programList = document.getElementById('program-list');
 let subjectsList = document.getElementById('subjects-list');
 let shsOption = document.getElementById('shsOption');
 let collegeOption = document.getElementById('collegeOption');
+
+let cur_sched_id = null;
+let cur_faculty_id = null;;
+
+editDay.addEventListener('change', () => {   
+    availableFacultyExcept(cur_sched_id);
+    availableRoomsExcept(cur_faculty_id);    
+});
+
+edit_from_time.addEventListener('input', () => {
+    availableFacultyExcept(cur_sched_id);
+    availableRoomsExcept(cur_faculty_id);     
+
+});
+edit_until_time.addEventListener('input', () => {
+    availableFacultyExcept(cur_sched_id);
+    availableRoomsExcept(cur_faculty_id);     
+});
 
 let dept = 0;
 let currentProgram = null;
@@ -169,6 +244,7 @@ xhr.send();
 }
 
 function programSelect(id){
+    cancelEditSched();
 
     currentProgram = id;
 
@@ -218,7 +294,8 @@ function programSelect(id){
 }
 
 
-function subjectSelect(subjid){    
+function subjectSelect(subjid){  
+    cancelEditSched();  
 
     let viewPanel = document.getElementById('view-panel');
 
@@ -245,7 +322,7 @@ function subjectSelect(subjid){
 
             let output = `<div id="view-panel" class="col-sm d-flex">`;
     
-            for(let i in classes){
+            for(let i in classes){                
 
                 let counter = 1;
                 
@@ -262,7 +339,8 @@ function subjectSelect(subjid){
                                             output+=`<li class="list-group-item list-group-item-success">`+ sched.formatted_start +`</li>`;
                                             output+=`<li class="list-group-item list-group-item-success">`+ sched.formatted_until +`</li>`;
                                             output+=`<li class="list-group-item list-group-item-success">`+ sched.room_name +`</li>`;
-                                            output+=`<li class="list-group-item list-group-item-success"><button class="btn btn-light">Edit this Sched</button></li>`;
+                                            output+=`<li class="list-group-item list-group-item-success"><button onclick="editSched(` +sched.id +`)" class="btn btn-light">Edit this Sched</button></li>`;
+
                                         output+=`</ul> 
                                             <hr>
                                         `;
@@ -284,7 +362,7 @@ function subjectSelect(subjid){
                                         output+=`<li class="list-group-item list-group-item-warning">`+ sched.formatted_start +`</li>`;
                                         output+=`<li class="list-group-item list-group-item-warning">`+ sched.formatted_until +`</li>`;
                                         output+=`<li class="list-group-item list-group-item-warning">`+ sched.room_name +`</li>`;
-                                        output+=`<li class="list-group-item list-group-item-warning"><button class="btn btn-light">Edit this Sched</button></li>`;
+                                        output+=`<li class="list-group-item list-group-item-warning"><button onclick="editSched(`+ sched.id +`)" class="btn btn-light">Edit this Sched</button></li>`;
                                         
                                     output+=`</ul> 
                                         <hr>
@@ -309,6 +387,115 @@ function subjectSelect(subjid){
     }
 
     xhr.send();
+
+}
+
+function editSched(schedID){
+
+    editPanel.classList.remove('d-none');
+    
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', APP_URL + '/admin/view/schedule/'+ schedID , true);
+
+    xhr.onload = function() {
+        if (this.status == 200) {
+
+            let schedule = JSON.parse(this.responseText); 
+            
+            cur_sched_id = schedule.id;
+            cur_faculty_id = schedule.student_class.faculty_id;
+            
+            editName.value = schedule.student_class.class_name;
+            edit_from_time.value = schedule.start_time;
+            edit_until_time.value = schedule.until;
+            hiddenClassID.value = schedule.class_id;
+            hiddenSchedID.value = schedule.id;
+
+            availableFacultyExcept(schedule.student_class.faculty_id);
+            availableRoomsExcept(schedule.room_id);
+
+        }
+    }
+
+    xhr.send();
+
+
+}
+
+function availableFacultyExcept(facultyID){
+
+    let xhr = new XMLHttpRequest();
+
+    let day = document.getElementById('editDay').value;
+    let from = document.getElementById('edit_from_time').value;
+    let until = document.getElementById('edit_until_time').value;
+    
+
+    xhr.open('GET', APP_URL + '/admin/availablefaculty/' + from + '/' + until + '/' + day + '/' + facultyID, true);
+
+    xhr.onload = function() {
+        if (this.status == 200) { 
+    
+            removeOptions(editInstructor); 
+            
+            let faculty = JSON.parse(this.responseText);                           
+
+            for (let i in faculty) {                                        
+                editInstructor.options[i] = new Option(capitalizeFirstLetter(faculty[i].last_name) + ', ' + capitalizeFirstLetter(faculty[i].first_name), faculty[i].id); 
+            }
+                          
+
+        } else {
+        
+        }                
+
+    }
+
+    xhr.send(); 
+
+
+
+}
+
+
+function availableRoomsExcept(roomId){
+
+    let xhr = new XMLHttpRequest();
+
+    let day = document.getElementById('editDay').value;
+    let from = document.getElementById('edit_from_time').value;
+    let until = document.getElementById('edit_until_time').value;
+
+    xhr.open('GET', APP_URL + '/admin/availablerooms/' + from + '/' + until + '/' + day + '/' + roomId, true);
+
+    xhr.onload = function() {
+        if (this.status == 200) { 
+
+            removeOptions(editRoom); 
+            
+            let rooms = JSON.parse(this.responseText);                           
+
+            for (let i in rooms) {                                        
+                editRoom.options[i] = new Option(rooms[i].name, rooms[i].id);
+            }
+                        
+
+        } else {
+        
+        }                
+
+    }
+
+    xhr.send(); 
+
+
+
+}
+
+function cancelEditSched(){
+
+    editPanel.classList.add('d-none');
 
 }
 

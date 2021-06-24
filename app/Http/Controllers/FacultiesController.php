@@ -189,6 +189,79 @@ class FacultiesController extends Controller
      }
 
 
+    public function availableFacultyExcept($from, $until, $day = null, $exceptid){
+
+        
+        if($day != null){
+         
+
+             $scheds = Schedule::select('class_id')
+             ->where('day', $day)
+             ->where('start_time','<', $until)
+             ->where('until','>', $from)                   
+             ->get();
+                                 
+             if($scheds != null){
+
+                $classes = collect();
+
+                foreach($scheds as $sched){
+
+                    $classes->push(StudentClass::where('id', $sched->class_id)
+                                     ->where('archive', 0)
+                                     ->first());  
+
+
+                }                
+
+                $invalids = collect();
+
+                foreach($classes as $class){
+
+                    $invalids->push(Faculty::find($class->faculty_id));
+
+                }
+
+                $valid = collect();
+                
+                foreach(Faculty::all() as $faculty){
+
+                    $bawal = false;
+
+                    foreach($invalids as $invalid){
+
+                        if($faculty->id == $invalid->id)
+                            $bawal = true;
+                        
+
+                        if($faculty->id == $exceptid)
+                            $bawal = false;
+
+                    }
+
+                    if(!$bawal)
+                        $valid->push($faculty);
+
+                }
+
+                return $valid;
+                
+             } else {
+                 
+                return Faculty::all()->toJson();
+                
+             }              
+ 
+        }else{
+
+            return Faculty::all()->toJson();
+
+        }
+ 
+ 
+     }
+
+
      public function getClasses(){
 
         $id = auth()->user()->member->member_id;                
