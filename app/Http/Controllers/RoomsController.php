@@ -22,7 +22,7 @@ class RoomsController extends Controller
             return redirect()->route('adminClasses')
                          ->withErrors($validator)
                          ->withInput()
-                         ->with('active', 'view');
+                         ->with('active', 'rooms');
         }
 
         $room = new Room;
@@ -34,12 +34,12 @@ class RoomsController extends Controller
 
             return redirect()->route('adminClasses')
             ->with('success', 'Room Saved!')
-            ->with('active', 'view');
+            ->with('active', 'rooms');
 
         } else {
             return redirect()->route('adminClasses')
             ->with('error', 'There is already a room with the same name')
-            ->with('active', 'view');
+            ->with('active', 'rooms');
         }        
 
     }
@@ -58,7 +58,7 @@ class RoomsController extends Controller
             return redirect()->route('adminClasses')
                          ->withErrors($validator)
                          ->withInput()
-                         ->with('active', 'view');
+                         ->with('active', 'rooms');
         }        
 
         $roomName = $request->input('room_update_name');
@@ -74,12 +74,12 @@ class RoomsController extends Controller
 
             return redirect()->route('adminClasses')
             ->with('success', 'Room ' . $oldname . ' changed to ' . $room->name)
-            ->with('active', 'view');
+            ->with('active', 'rooms');
 
         } else {
             return redirect()->route('adminClasses')
             ->with('error', 'Room update failed. There is already a room with the same name')
-            ->with('active', 'view');
+            ->with('active', 'rooms');
         }    
 
     }
@@ -96,13 +96,13 @@ class RoomsController extends Controller
 
             return redirect()->route('adminClasses')
             ->with('info', 'Room '. $name . ' is now deleted.')
-            ->with('active', 'view');
+            ->with('active', 'rooms');
 
         } else {
 
             return redirect()->route('adminClasses')
             ->with('warning', 'Room is currently used in a schedule. Change the schedule room first and try again.')
-            ->with('active', 'view');
+            ->with('active', 'rooms');
 
         }        
 

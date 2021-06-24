@@ -80,20 +80,14 @@ class SubjectsTakenController extends Controller
             ++$counter;
 
         }     
-        
-        
-        $classAndItsSchedules = collect();
-        $classes = collect(new StudentClass);
+                        
+        $classes = collect();
 
-        $counter = 0;
-        $anothercounter = 0;
+        $counter = 0;        
 
         for($i=0; $i<count($subjectsTakenThatMatchesProgram); $i++){ 
 
             $class = StudentClass::find($subjectsTakenThatMatchesProgram[$i]->class_id);
-
-            $classSchedules = [];
-
             $class->faculty_name = $class->faculty_id;     
 
             $class->schedules;          
@@ -104,16 +98,13 @@ class SubjectsTakenController extends Controller
                 $sched->formatted_until = $sched->until;
                 $sched->day_name = $sched->day;                
                 $sched->room_name = $sched->id;
-
-            }
-  
+            }  
 
             $classes->push($class);
+            
         }        
 
-        $classes = $classes->filter(function ($value, $key) {
-            return $value != null;
-        });
+        // $classes = $classes->filter()->all();
 
         return $classes;       
         

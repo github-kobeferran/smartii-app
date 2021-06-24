@@ -5,6 +5,7 @@
 <?php 
     $create = false;
     $view = false;
+    $rooms = false;
 ?>
 
 @if ( session()->has('active') )
@@ -18,6 +19,9 @@
             break;
         case 'view':
             $view = true;
+            break;     
+        case 'rooms':
+            $rooms = true;
             break;     
         
         default:
@@ -42,7 +46,10 @@
             <a class="nav-link {{ $create ? 'active' : '' }}" id="create-class-tab" data-toggle="tab" href="#create" role="tab" aria-controls="create" aria-selected="false">Class Assignment</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ $view ? 'active' : '' }}" id="view-class-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="false">View</a>
+            <a class="nav-link {{ $view ? 'active' : '' }}" id="view-class-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="false">View Classes</a>
+        </li>             
+        <li class="nav-item">
+            <a class="nav-link {{ $rooms ? 'active' : '' }}" id="rooms-class-tab" data-toggle="tab" href="#rooms" role="tab" aria-controls="view" aria-selected="false">Rooms</a>
         </li>             
     </ul>
 
@@ -64,6 +71,10 @@
 	<div class="tab-pane {{ $view ? 'active' : '' }}" id="view">
         @include('admin.classes.view') 
 	</div>                
+
+	<div class="tab-pane {{ $rooms ? 'active' : '' }}" id="rooms">
+        @include('admin.classes.rooms') 
+	</div>                
 </div>
 
 <script>
@@ -75,7 +86,7 @@
         availableRooms(); 
         availableFaculty();   
         updateSchedCounter();
-        changeViewSelects();
+        fillProgramList(0);
         fillRoomTable();
         
     }); 

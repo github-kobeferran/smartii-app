@@ -367,6 +367,7 @@ class AdminsController extends Controller
                     return $invoices->toJson();
 
                 break;
+                
 
                 default:
                 redirect('/home');

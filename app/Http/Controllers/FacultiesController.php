@@ -125,21 +125,53 @@ class FacultiesController extends Controller
         if($day != null){
          
 
-             $faculty_id = Schedule::select('class_id')
+             $scheds = Schedule::select('class_id')
              ->where('day', $day)
              ->where('start_time','<', $until)
              ->where('until','>', $from)                   
-             ->first();
-             
-            
-             
-             if($faculty_id != null){
+             ->get();
+                                 
+             if($scheds != null){
 
-                $class = StudentClass::where('id', $faculty_id->class_id)
+                $classes = collect();
+
+                foreach($scheds as $sched){
+
+                    $classes->push(StudentClass::where('id', $sched->class_id)
                                      ->where('archive', 0)
-                                     ->first();                
+                                     ->first());  
 
-                return Faculty::where('id', '!=', $class->faculty_id)->get()->toJson();
+
+                }                
+
+                $invalids = collect();
+
+                foreach($classes as $class){
+
+                    $invalids->push(Faculty::find($class->faculty_id));
+
+                }
+
+                $valid = collect();
+                
+                foreach(Faculty::all() as $faculty){
+
+                    $bawal = false;
+
+                    foreach($invalids as $invalid){
+
+                        if($faculty->id == $invalid->id){
+                            $bawal = true;
+                        }
+
+                    }
+
+                    if(!$bawal)
+                        $valid->push($faculty);
+
+                }
+
+                return $valid;
                 
              } else {
                  

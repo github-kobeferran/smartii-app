@@ -260,7 +260,6 @@ class Subject extends Model
                                 [$values['department'], $values['program']])
                                 ->get();  
                                 
-        
                                 
         foreach($subjects as $subject){
 

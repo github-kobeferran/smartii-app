@@ -48,7 +48,7 @@
     <div class="row mt-2 ">
 
         <div class="col-sm mx-auto text-center">
-            <p>Class Name</p>
+            <h5 class="">CLASS NAME</h5>
            
 
             <input type="text" name="class_name" maxlength="25" class="text-center ml-2 w-25" required>
@@ -185,18 +185,19 @@
 
 <script>
 
+
+
 var sectionLimit = {!! json_encode($sectionLimit) !!}
 
 let selectDept = document.getElementById('selectDept');
 let selectProg = document.getElementById('selectProg');
 let selectSubject = document.getElementById('selectSubject');
 let selectRoom = document.getElementById('selectRoom');
-let selectFaculty = document.getElementById('selectFaculty');
 let schedContainer = document.getElementById('sched-container');
+let selectFaculty = document.getElementById('selectFaculty');
 let from_time = document.getElementById('from_time');
 let until_time = document.getElementById('until_time');
 let selectDay = document.getElementById('selectDay');
-
 
 let counter = 1;
 
@@ -214,18 +215,18 @@ selectSubject.addEventListener('change', () => {
 });
 
 selectDay.addEventListener('change', () => {   
-    availableRooms();    
     availableFaculty();
+    availableRooms();    
 });
 
 from_time.addEventListener('input', () => {
-    availableRooms();    
     availableFaculty();
+    availableRooms();    
 
 });
 until_time.addEventListener('input', () => {
-    availableRooms();    
     availableFaculty();
+    availableRooms();    
 });
 
 
@@ -316,9 +317,10 @@ function availableRooms(){
     xhr.onload = function() {
         if (this.status == 200) { 
     
-            for(i = 0; i < selectRoom.length; i++){
-                selectRoom.remove(i);
-            }
+            removeOptions(selectRoom);
+            // for(i = 0; i < selectRoom.length; i++){
+            //     selectRoom.remove(i);
+            // }
             
             let rooms = JSON.parse(this.responseText);            
 
@@ -337,6 +339,8 @@ function availableRooms(){
 
 }
 
+
+
 function availableFaculty(){
     let xhr = new XMLHttpRequest();
 
@@ -348,10 +352,11 @@ function availableFaculty(){
 
     xhr.onload = function() {
         if (this.status == 200) { 
-    
-            for(i = 0; i < selectFaculty.length; i++){
-                selectFaculty.remove(i);
-            }
+            
+            removeOptions(selectFaculty);
+            // for(i = 0; i <= selectFaculty.length; i++){
+            //     selectFaculty.remove(i);
+            // }
 
             var faculty = JSON.parse(this.responseText);                                
 
@@ -385,9 +390,12 @@ function changeClassesSelects($isSelectProg = false){
         if (this.status == 200) { 
 
             if(!$isSelectProg){
-                for(i = 0; i < selectProg.length; i++){
-                    selectProg.remove(i);
-                }
+
+                removeOptions(selectProg);
+
+                // for(i = 0; i < selectProg.length; i++){
+                //     selectProg.remove(i);
+                // }
 
                 var programs = JSON.parse(this.responseText);                                
 
@@ -425,9 +433,11 @@ function changeSubjects(){
     xhr.onload = function() {
         if (this.status == 200) { 
 
-            for(i = 0; i < selectSubject.length; i++){
-                selectSubject.remove(i);
-            }
+            removeOptions(selectSubject);
+
+            // for(i = 0; i < selectSubject.length; i++){
+            //     selectSubject.remove(i);
+            // }
 
             var subjects = JSON.parse(this.responseText);                                
 
@@ -506,11 +516,11 @@ output +='<td>' + students[i].student_id + '</td>' +
 
 function removeAllOptions(select){
 
-for(i =  select.options.length; i >= 0 ; i--){
-    select.remove(i);        
-}
+    for(i =  select.options.length; i >= 0 ; i--){
+        select.remove(i);        
+    }
 
-select.setAttribute("placeholder", "--Select--");
+    select.setAttribute("placeholder", "--Select--");
 
 }
 
