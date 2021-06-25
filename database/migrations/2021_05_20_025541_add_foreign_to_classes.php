@@ -14,7 +14,7 @@ class AddForeignToClasses extends Migration
     public function up()
     {
         Schema::table('classes', function (Blueprint $table) {
-            $table->unsignedBigInteger('room_id');
+            // $table->unsignedBigInteger('room_id');
             
 
             $table->string('day', 25);
