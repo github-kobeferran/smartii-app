@@ -18,7 +18,7 @@ class AddForeignToClasses extends Migration
             $table->foreign('room_id')->references('id')->on('rooms');
 
             $table->string('day', 25);
-            $table->foreign('day')->references('name')->on('days');
+            
 
             $table->unsignedBigInteger('faculty_id');
             $table->foreign('faculty_id')->references('id')->on('faculty');
