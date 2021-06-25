@@ -13,9 +13,9 @@ class DeleteScheduleIdInClasses extends Migration
      */
     public function up()
     {
-        Schema::table('classes', function (Blueprint $table) {
-            $table->dropColumn('schedule_id');
-        });
+        // Schema::table('classes', function (Blueprint $table) {
+        //     $table->dropColumn('schedule_id');
+        // });
 
         Schema::table('schedules', function (Blueprint $table) {
             $table->foreignId('class_id');
