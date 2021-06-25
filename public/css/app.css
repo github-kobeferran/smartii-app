@@ -302,6 +302,14 @@ tbody td {
   padding-right: 2px;
 }
 
+.faculty-col {
+  background-color: #aef5c1;
+}
+
+.faculty-col-action {
+  background-color: #ffeea2;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

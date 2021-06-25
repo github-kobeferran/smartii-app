@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\Setting;
 use App\Models\Faculty;
 use App\Models\User;
@@ -115,6 +116,27 @@ class FacultiesController extends Controller
                              ->with($status , $msg)
                              ->with('active', 'faculty'); 
 
+
+    }
+
+
+    public function show($id = null){
+
+        $faculty = null;
+
+        if(!empty($id))
+            $faculty = Faculty::where('faculty_id', $id)->first();
+        else 
+           $faculty = Faculty::find(auth()->user()->member->member_id);            
+
+
+        if($faculty->id != auth()->user()->member->member_id){
+            return redirect()->back();
+        }
+
+        $faculty->age = $faculty->id;
+
+        return view('faculty.show')->with('faculty', $faculty);        
 
     }
 
@@ -375,6 +397,41 @@ class FacultiesController extends Controller
         ->with('schedules', $schedules);
 
                      
+
+     }
+
+     public function showDetail($id, $detail){
+
+        if($id != auth()->user()->member->member_id)
+            return redirect()->back();
+
+        return Faculty::select($detail . ' as detail')->where('id', $id)->first();
+
+     }
+
+     public function update(Request $request){
+
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }
+
+        if($request->input('detail_name') == 'dob'){
+
+            $this->validate($request, [            
+                'detail' => 'date',                        
+            ]);
+
+
+        }
+
+        
+
+
+        DB::table('faculty')
+              ->where('id', $request->input('faculty_id'))
+              ->update([$request->input('detail_name') => $request->input('detail')]);
+
+        return redirect()->route('facultydetails')->with('success', 'Update Successful');
 
      }
 

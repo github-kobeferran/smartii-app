@@ -23,34 +23,29 @@
 
     @if($show > 0 && $student->created_by_admin == 0)
 
-    <div class="row border-bottom ">
-        
-
-        <div class="col-sm d-flex justify-content-center"> 
+        <div class="row border-bottom ">
             
-            @if (is_object($appLink) )
-
-                <img  class="profile-pic " src="{{url('/storage/images/applicants/id_pics/' . $appLink->id_pic)}}" alt="Id image">    
+            <div class="col-sm d-flex justify-content-center"> 
                 
-            @else
-                            
-            @endif
-                                       
+                @if (is_object($appLink) )
+
+                    <img  class="profile-pic " src="{{url('/storage/images/applicants/id_pics/' . $appLink->id_pic)}}" alt="Id image">    
+                    
+                @else
+                                
+                @endif
+                                        
+            </div>
+                
         </div>
-
-
-               
-    </div>
 
     @else
 
-    <div class="mx-auto text-center">
+        <div class="mx-auto text-center">
 
-        <em >Students Created by Admin - Profile Upload upcoming soon</em>
+            <em >Students Created by Admin - Profile Upload upcoming soon</em>
 
-    </div>
-
-    
+        </div>
 
     @endif
 
@@ -168,6 +163,53 @@
                     </td>                   
 
                 </tr>
+
+                @endif
+
+                @if($show == 2)
+
+                <tr>
+
+                    <td id="" role="button" data-toggle="modal" data-target="#subjects" class="text-center bg-warning bg-info text-secondary" colspan="2">
+                        Enroll to a Subject
+                    </td>                   
+
+                </tr>
+
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                @include('inc.messages')
+
+                <!-- Modal -->
+                <div class="modal fade" id="subjects" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Input Subject Code</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                        {!!Form::open(['url' => 'enrolltosubject'])!!}
+
+                        {{Form::hidden('student_id', $student->id)}}
+                        {{Form::text('subject_code', '', ['class' => 'form-control', 'required'=>'required'])}}                        
+
+                       
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        {!!Form::close() !!}
+                        </div>
+                    </div>
+                    </div>
+                </div>
            
                 @endif
 

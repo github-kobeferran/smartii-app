@@ -629,6 +629,21 @@ class AdminsController extends Controller
                 }                                        
 
             break;
+
+            case 'faculty':
+
+                $faculties = Faculty::query()                        
+                ->where('last_name', 'LIKE', '%' . $text . "%")
+                ->orWhere('first_name', 'LIKE', '%' . $text . "%")
+                ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
+                ->orWhere('faculty_id', 'LIKE', '%' . $text . "%")
+                ->get();  
+                
+                return $faculties;
+               
+
+            break;
+
         }    
         
         
@@ -646,7 +661,9 @@ class AdminsController extends Controller
                                 ->where(function($query) use($text) {
                                     $query->where('last_name', 'LIKE', '%' . $text . "%")
                                     ->orWhere('first_name', 'LIKE', '%' . $text . "%")
-                                    ->orWhere('middle_name', 'LIKE', '%' . $text . "%");
+                                    ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
+                                    ->orWhere('student_id', 'LIKE', '%' . $text . "%");
+
                                 })
                                 ->get();
 
@@ -992,7 +1009,7 @@ class AdminsController extends Controller
     public function updateSchedule(Request $request){
 
         if($request->method() != 'POST'){
-            redirect()->back();
+            return redirect()->back();
         }        
 
         $sched = Schedule::find($request->input('sched_id'));
@@ -1013,6 +1030,76 @@ class AdminsController extends Controller
         return redirect()->route('adminClasses')
                          ->with('success', 'Schedule Updated')
                          ->with('active', 'view');
+
+    }
+
+    public function enrollToSubject(Request $request){
+
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }   
+
+        if(!Subject::where('code', $request->input('subject_code'))->exists()){
+            return redirect()->back()->with('error', 'Subject does not exist');
+        }
+
+        $subject = Subject::where('code', $request->input('subject_code'))->first();
+
+        $student = Student::find($request->input('student_id'));
+
+        if($student->department == 0){
+
+            if(($student->program_id != $subject->program_id) && ($subject->program_id != 3)){
+                return redirect()->back()->with('error', 'Subject invalid');
+            }
+
+        } else {
+
+            if(($student->program_id != $subject->program_id) && ($subject->program_id != 4)){
+                return redirect()->back()->with('error', 'Subject invalid');
+            }
+
+        }
+
+        if(SubjectTaken::where('subject_id', $subject->id)
+                        ->where('student_id', $student->id)
+                        ->where(function($query) {
+                            $query->where('rating', 4.5)
+                                  ->orWhere('rating', 3.5);
+                        })                       
+                        ->exists()
+          ){
+            return redirect()->back()->with('warning', 'Subject is currently taken or had been already passed by this student');
+        }
+        
+        
+        foreach($subject->pre_reqs as $pre_req){
+
+            if(!SubjectTaken::where('student_id', $student->id)
+                        ->where('subject_id', $pre_req->id)
+                        ->where('rating', '<=', 3)->exists()){
+
+                            return redirect()->back()->with('error', 'Subject ' . $pre_req->code . ' is not passed by this student');
+
+                        }
+
+        }
+
+        $settings = Setting::first();
+
+        $subjectToTake = new SubjectTaken; 
+
+        $subjectToTake->student_id = $student->id;
+        $subjectToTake->subject_id = $subject->id;
+        $subjectToTake->rating = 4.5;
+        $subjectToTake->from_year = $settings->from_year;
+        $subjectToTake->to_year = $settings->to_year;
+        $subjectToTake->semester = $settings->semester;      
+
+        $subjectToTake->save();
+
+        return redirect('studentprofile/' . $student->student_id)->with('success', 'Enrolled to ' . $subject->desc);
+
 
     }
    

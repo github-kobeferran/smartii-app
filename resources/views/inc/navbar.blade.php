@@ -73,9 +73,7 @@
                                 href="{{ route($role . 'Dashboard') }}"
                             @endif  
 
-                            >
-
-
+                            >                         
 
                                 @if(!Auth::guest() && Auth::user()->isApplicant())
                                     @isset($submitted)
@@ -97,6 +95,12 @@
                                 @endif
 
                             </a>
+
+                            @if(!Auth::guest() && Auth::user()->isFaculty())
+
+                                <a class="dropdown-item" href="/facultydetails"> Personal Details</a>
+
+                            @endif
 
 
                             <a class="dropdown-item" href="{{ route('logout') }}"
