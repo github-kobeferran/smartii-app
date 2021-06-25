@@ -13,9 +13,9 @@ class ClassIdToNullableInSubjectsTaken extends Migration
      */
     public function up()
     {
-        Schema::table('subjects_taken', function (Blueprint $table) {
-            $table->dropForeign('class_id');                              
-        });
+        // Schema::table('subjects_taken', function (Blueprint $table) {
+        //     $table->dropForeign('class_id');                              
+        // });
         
         Schema::table('subjects_taken', function (Blueprint $table) {            
             $table->foreign('class_id')->references('id')->on('classes')->nullable()->change();

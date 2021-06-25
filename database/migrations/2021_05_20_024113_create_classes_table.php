@@ -23,6 +23,7 @@ class CreateClassesTable extends Migration
             $table->string('name', 25)->unique();
             $table->boolean('enable');
         });
+        
         Schema::create('classes', function (Blueprint $table) {
             $table->id();            
             $table->time('time', $precision = 0);            
