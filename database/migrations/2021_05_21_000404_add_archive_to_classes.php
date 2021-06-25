@@ -16,7 +16,7 @@ class AddArchiveToClasses extends Migration
         Schema::table('classes', function (Blueprint $table) {
             $table->boolean('archive')->default(0);
             $table->time('time', $precision = 0)->nullable()->change();
-            $table->unsignedBigInteger('room_id')->nullable()->change();
+            // $table->unsignedBigInteger('room_id')->nullable()->change();
             $table->unsignedBigInteger('faculty_id')->nullable()->change();            
         });
     }
