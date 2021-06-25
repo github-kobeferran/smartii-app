@@ -441,18 +441,33 @@ class StudentsController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+   
+    public function update(Request $request)
     {
+        if($request->method() != 'POST'){
+            redirect()->back();
+        }
+
+        $id = auth()->user()->member->member_id;
+
+        $student = Student::find($id);
+    
+        $student->nationality = $request->input('nationality');
+        $student->civil_status = $request->input('civil_status');
+        $student->religion = $request->input('religion');
+        $student->contact = $request->input('contact');
+        $student->father_name = $request->input('father_name');
+        $student->mother_name = $request->input('mother_name');
+        $student->guardian_name = $request->input('guardian_name');
+        $student->emergency_person_contact = $request->input('emergency_person_contact');
+
+        $student->save();
+
+        return redirect('/studentprofile')->with('succes', 'Data Updated');
+
         
     }
 

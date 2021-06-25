@@ -149,7 +149,167 @@
                     </td>
 
                     <td class="w-50">
-                        {{ 'Php '. ucfirst($student->balance_amount)}}
+                        {{  ucfirst($student->balance_amount)}}
+                    </td>
+
+                </tr>
+
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Nationality
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->nationality)
+                        
+                            N\A
+
+                        @else
+
+                        {{  ucfirst($student->nationality)}}
+
+                        @endempty
+                    </td>
+
+                </tr>
+
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Civil Status
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->nationality)
+                        
+                            N\A
+
+                        @else
+
+                        {{  ucfirst($student->civil_status)}}
+
+                        @endempty
+                    </td>
+
+                </tr>
+                
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Religion
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->religion)
+                        
+                            N\A
+
+                        @else
+
+                        {{ ucfirst($student->religion)}}
+
+                        @endempty
+                    </td>
+
+                </tr>
+
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Contact Number
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->contact)
+                        
+                            N\A
+
+                        @else
+
+                        {{ ucfirst($student->contact)}}
+
+                        @endempty
+                    </td>
+
+                </tr>
+
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Father's Name
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->father_name)
+                        
+                            N\A
+
+                        @else
+
+                        {{  ucfirst($student->father_name)}}
+
+                        @endempty
+                    </td>
+
+                </tr>
+
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Mother's Name
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->mother_name)
+                        
+                            N\A
+
+                        @else
+
+                        {{ ucfirst($student->mother_name)}}
+
+                        @endempty
+                    </td>
+
+                </tr>
+
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Guardian's Name
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->guardian_name)
+                        
+                            N\A
+
+                        @else
+
+                        {{ ucfirst($student->guardian_name)}}
+
+                        @endempty
+                    </td>
+
+                </tr>
+
+                <tr class="other-detail d-none">
+
+                    <td class="border-right">
+                        Contact in case of Emergency
+                    </td>
+
+                    <td class="w-50">
+                        @empty($student->emergency_person_contact)
+                        
+                            N\A
+
+                        @else
+
+                        {{ ucfirst($student->emergency_person_contact)}}
+
+                        @endempty
                     </td>
 
                 </tr>
@@ -218,10 +378,49 @@
                 <tr>
 
                     <td class="border border-info" colspan="2">
-                       <a class=" " href="">Update Details</a>
+                       <button data-toggle="modal" data-target="#editForm" class="btn btn-light border-0 text-info" >Update Details</button>
                     </td>                   
 
                 </tr>
+
+                <div class="modal fade" id="editForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Edit Form</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        {!! Form::open(['url' => '/updatestudent'])!!}
+                        <div class="modal-body">                            
+                            Nationality
+                            {{Form::text('nationality', $student->nationality, ['class' => 'form-control'])}}
+                            Civil Status
+                            {{Form::text('civil_status', $student->civil_status, ['class' => 'form-control'])}}                            
+                            Religion
+                            {{Form::text('religion', $student->religion, ['class' => 'form-control'])}}                            
+                            Contact Number
+                            {{Form::text('contact', $student->contact, ['class' => 'form-control'])}}
+                            Father's Name
+                            {{Form::text('father_name', $student->father_name, ['class' => 'form-control'])}}
+                            Mother's Name
+                            {{Form::text('mother_name', $student->mother_name, ['class' => 'form-control'])}}
+                            Guardian's Name
+                            {{Form::text('guardian_name', $student->guardian_name, ['class' => 'form-control'])}}
+                            Contact in case of Emergency
+                            {{Form::text('emergency_person_contact', $student->emergency_person_contact, ['class' => 'form-control'])}}
+
+                          
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                        {!!Form::close() !!}
+                      </div>
+                    </div>
+                  </div>
 
 
                 @endif
