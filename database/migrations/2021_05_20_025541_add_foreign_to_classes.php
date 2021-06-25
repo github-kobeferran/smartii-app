@@ -15,7 +15,7 @@ class AddForeignToClasses extends Migration
     {
         Schema::table('classes', function (Blueprint $table) {
             $table->unsignedBigInteger('room_id');
-            $table->foreign('room_id')->references('id')->on('rooms');
+            
 
             $table->string('day', 25);
             
