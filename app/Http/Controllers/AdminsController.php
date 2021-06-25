@@ -236,6 +236,30 @@ class AdminsController extends Controller
 
                 return $paymentrequests->toJson();
             break;    
+            case 'paymentrequests':
+
+                $paymentrequests = PaymentRequest::whereNull('admin_id')
+                                        ->orderBy('created_at', 'asc')
+                                        ->get();  
+                
+                foreach($paymentrequests as $paymentrequest){                    
+                    
+                    $paymentrequest->stud_id = $paymentrequest->student_id;
+                    $paymentrequest->stud_name = $paymentrequest->student_id;
+                    $paymentrequest->stud_dept = $paymentrequest->student_id;
+                    $paymentrequest->stud_prog = $paymentrequest->student_id;
+                    $paymentrequest->stud_address = $paymentrequest->student_id;
+                    $paymentrequest->time_ago = $paymentrequest->created_at;
+
+                }
+
+                return $paymentrequests->toJson();
+            break;  
+            case 'allsubjects':
+
+                return Subject::orderBy('created_at', 'desc')->get();
+                
+            break;
 
             default:
             redirect('/home');
@@ -301,7 +325,29 @@ class AdminsController extends Controller
                 
 
                 return $schedule;
-            break;           
+            break;   
+            case 'subjects':
+
+                $subject = Subject::find($id);
+
+                $subject->program_desc = $subject->id;
+                $subject->level_desc = $subject->level;
+                $subject->semester_desc = $subject->semester;
+
+                $subject->pre_reqs;
+
+                return $subject;
+
+            break;        
+            case 'programs':
+
+                $program = Program::find($id); 
+
+                $program->dept_desc = $program->department;
+
+                return $program;
+
+            break;        
             default:
             redirect('/home');
         }
@@ -371,7 +417,12 @@ class AdminsController extends Controller
                     return $invoices->toJson();
 
                 break;
-                
+                case 'subjects':
+
+                    return Subject::where($by,$value)
+                                ->orderBy('created_at', 'desc')->get();
+
+                break;                
 
                 default:
                 redirect('/home');

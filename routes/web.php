@@ -81,6 +81,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::post('/admin/approvepaymentrequest', [App\Http\Controllers\AdminsController::class, 'approvePaymentRequest'])->name('approvePaymentRequest');
     Route::any('/updateschedule', [App\Http\Controllers\AdminsController::class, 'updateSchedule'])->name('updateschedule');
     Route::any('/enrolltosubject', [App\Http\Controllers\AdminsController::class, 'enrollToSubject'])->name('enrolltosubject');
+    Route::any('/updatesubject', [App\Http\Controllers\SubjectsController::class, 'update'])->name('updatesubject');
+    Route::any('/updateprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'updatePreReq'])->name('updateprereq');
+    Route::any('/updateprogram', [App\Http\Controllers\ProgramsController::class, 'update'])->name('updateProgram');
 
 });
 

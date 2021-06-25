@@ -63,4 +63,22 @@ class ProgramsController extends Controller
         return redirect()->route('adminCreate')->with($status, $msg)->with('active', 'program'); 
         
     }
+
+    public function update(Request $request){
+
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }   
+
+        $program = Program::find($request->input('id'));
+
+        $program->department = $request->input('dept');
+        $program->desc = $request->input('desc');
+        $program->abbrv = $request->input('abbrv');
+
+        $program->save();
+
+        return redirect()->route('adminCreate')->with('active', 'program')->with('success', 'Program updated');
+
+    }
 }

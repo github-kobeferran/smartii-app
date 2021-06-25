@@ -64,7 +64,7 @@
         <div class="col-sm">  
 
             <div class = "form-group">        
-                {{Form::label('email', 'Email Address', ['class' => 'mt'])}}
+                {{Form::label('', 'Email Address', ['class' => 'mt'])}}
                 {{Form::email('email', '', ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Email here..'])}}
             </div> 
 
@@ -108,7 +108,7 @@
                 {{Form::text('first_name', '', ['class' => 'form-control', 'placeholder' => 'First Name here..'])}}
             </div>  
 
-            {{Form::label('dob', 'Date of Birth')}}
+            {{Form::label('', 'Date of Birth')}}
             <div class = "form-group">                        
                 {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2', 'id' => 'dob'] )}}
             </div> 
@@ -159,9 +159,9 @@
 
             Transferee<strong>?</strong>
             <div class="form-check form-check-inline ml-4">  
-                {{Form::label('transferee', 'No')}}                 
+                {{Form::label('', 'No')}}                 
                 {{ Form::radio('transferee', '0', true, ['class' => 'mb-2 ml-2'] )}}
-                {{Form::label('transferee', 'Yes', ['class' => 'mb-2 ml-2'])}}                 
+                {{Form::label('', 'Yes', ['class' => 'mb-2 ml-2'])}}                 
                 {{ Form::radio('transferee', '1', false, ['class' => 'mb-2 ml-2'])}}
             </div>  
 
@@ -171,9 +171,9 @@
 
             Student Type<strong>?</strong>
             <div class="form-check form-check-inline ml-4">  
-                {{Form::label('cur_status', 'Regular')}}                 
+                {{Form::label('', 'Regular')}}                 
                 {{ Form::radio('cur_status', '0', true, ['class' => 'mb-2 ml-2'] )}}
-                {{Form::label('cur_status', 'Irregular', ['class' => 'mb-2 ml-2'])}}                 
+                {{Form::label('', 'Irregular', ['class' => 'mb-2 ml-2'])}}                 
                 {{ Form::radio('cur_status', '1', false, ['class' => 'mb-2 ml-2'])}}
             </div>  
             

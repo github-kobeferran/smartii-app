@@ -111,6 +111,8 @@ changeSelect();
 
 document.getElementById("preReqSwitch").checked = false;
 document.getElementById("newStudSwitch").checked = false;
+fillSubjectsList(0);
+fillProgramList(0);
 
 }); 
 

@@ -7,16 +7,76 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\SubjectTaken;
 use App\Models\Subject;
 use App\Models\Student;
+use App\Models\Program;
 
 
 class Subject extends Model
 {
     use HasFactory;
 
-    protected $appends = ['student_count' => null];
+    protected $appends = ['student_count' => null, 'program_desc' => null, 'level_desc' => null, 'semester_desc' => null];
  
     public function pre_reqs(){
         return $this->belongsToMany(Subject::class, 'subjects_pre_req', 'subject_id', 'subject_pre_req_id');
+    }
+
+    public function setSemesterDescAttribute($value)
+    {
+
+        if($value ==  1)
+            $this->attributes['semester_desc'] = "First Semester";
+        else
+            $this->attributes['semester_desc'] = "Second Semester";
+
+    }
+
+    public function getSemesterDescAttribute()
+    {
+        return $this->attributes['semester_desc'];
+    }
+
+
+    public function setLevelDescAttribute($value)
+    {
+        $level = "Undefined";
+        switch($value){
+            case 1:
+                $level = "Grade 11";
+            break;
+            case 2:
+                $level = "Grade 12";
+            break;
+            case 11:
+                $level = "Freshman";
+            break;
+            case 12:
+                $level = "Sophomore";
+            break;
+
+        }
+
+        $this->attributes['level_desc'] = $level;
+    }
+
+    public function getLevelDescAttribute()
+    {
+        return $this->attributes['level_desc'];
+    }
+
+    public function setProgramDescAttribute($id){
+
+        $subject = Subject::find($id);
+
+        $program = Program::find($subject->program_id);
+
+        $this->attributes['program_desc'] = $program->desc;
+
+    }
+
+    public function getProgramDescAttribute(){
+
+        return $this->attributes['program_desc'];
+
     }
 
     public function setStudentCountAttribute($values = []){

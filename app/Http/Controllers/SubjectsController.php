@@ -166,9 +166,25 @@ class SubjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }           
+
+        $subject = Subject::find($request->input('subject_id'));
+
+        $subject->code = $request->input('code');
+        $oldDesc = $subject->desc;
+        $subject->desc = $request->input('desc');
+        $subject->level = $request->input('level');
+        $subject->dept = $request->input('dept');
+        $subject->units = $request->input('units');
+
+        $subject->save();
+
+        return redirect()->route('adminCreate')->with('active', 'subject')->with('success', $oldDesc. ' is successfully Updated.');
+
     }
 
     /**
