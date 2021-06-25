@@ -23,9 +23,9 @@ class CreateMembersTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('members', function (Blueprint $table) {            
-            $table->foreign('member_type')->references('user_type')->on('users');
-        });
+        // Schema::create('members', function (Blueprint $table) {            
+        //     $table->foreign('member_type')->references('user_type')->on('users');
+        // });
     }
 
     /**
