@@ -28,9 +28,9 @@ class CreateSchedulesTable extends Migration
 
             $table->dropColumn('time');
             $table->dropColumn('day');            
-            $table->unsignedInteger('room_id')->change();
-            $table->dropColumn('room_id');       
-            $table->foreignId('schedule_id')->constrained();
+            // $table->unsignedInteger('room_id')->change();
+            // $table->dropColumn('room_id');       
+            // $table->foreignId('schedule_id')->constrained();
 
         });    
         
