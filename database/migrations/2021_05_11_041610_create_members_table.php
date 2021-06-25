@@ -17,10 +17,14 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {            
             $table->foreignId('user_id');
             $table->string('member_type', 11)->nullable();        
-            $table->foreign('member_type')->references('user_type')->on('users');
+            $table->string('member_type', 25);
             $table->foreignId('member_id'); 
             $table->primary(['user_id', 'member_id']);
             $table->timestamps();
+        });
+
+        Schema::create('members', function (Blueprint $table) {            
+            $table->foreign('member_type')->references('user_type')->on('users');
         });
     }
 
