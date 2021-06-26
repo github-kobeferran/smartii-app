@@ -194,7 +194,29 @@ class SubjectsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {     
+        
+        foreach(Subject::all() as $subject){
+
+            foreach($subject->pre_reqs as $pre_req){
+
+                if($pre_req->id == $id){
+
+                    return redirect()->route('adminCreate')
+                        ->with('active', 'subject')
+                        ->with('error', 'Can\'t delete a Pre Requisite');
+
+                }
+
+            }
+
+        }
+
+        Subject::find($id)->delete();
+
+        return redirect()->route('adminCreate')
+        ->with('active', 'subject')
+        ->with('info', 'Subject Deleted');
+
     }
 }

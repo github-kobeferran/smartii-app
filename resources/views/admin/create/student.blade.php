@@ -213,6 +213,8 @@ let selectProg = document.querySelector('#selectProg');
 let selectLevel = document.querySelector('#selectLevel');   
 let selectSemester = document.querySelector('#selectSemester');   
 
+
+
 document.querySelector('#newStudSwitch').addEventListener('click', () => {        
     toggleStudentID();
 });

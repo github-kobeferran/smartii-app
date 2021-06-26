@@ -22,9 +22,37 @@ Route::get('/home', function () {
     return view('home');
 });
 
+Route::get('/institute', function () {
+    return view('institute');
+});
+Route::get('/visionandmission', function () {
+    return view('vision_mission');
+});
+Route::get('/history', function () {
+    return view('history');
+});
+Route::get('/contactus', function () {
+    return view('contact');
+});
+
+
 Route::get('/admissionhelp', function () {
     return view('admission_guidelines');
 });
+Route::get('/admissionhelp', function () {
+    return view('admission_guidelines');
+});
+
+
+
+Route::get('/shsprograms', function () {
+    return view('shs');
+});
+Route::get('/collegeprograms', function () {
+    return view('college');
+});
+
+
 
 Auth::routes(['verify' => true]);
 // Route::resource('students', 'App\Http\Controllers\StudentsController');
@@ -84,6 +112,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/updatesubject', [App\Http\Controllers\SubjectsController::class, 'update'])->name('updatesubject');
     Route::any('/updateprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'updatePreReq'])->name('updateprereq');
     Route::any('/updateprogram', [App\Http\Controllers\ProgramsController::class, 'update'])->name('updateProgram');
+    Route::any('/deletesubject/{id}', [App\Http\Controllers\SubjectsController::class, 'destroy'])->name('destroySubject');
+    Route::any('/createannouncement', [App\Http\Controllers\AnnouncementsController::class, 'store'])->name('storeAnnouncement');
+    Route::any('/deleteannouncement/{id}', [App\Http\Controllers\AnnouncementsController::class, 'delete'])->name('storeAnnouncement');
 
 });
 

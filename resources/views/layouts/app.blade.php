@@ -24,6 +24,7 @@
     
 </head>
 <body>
+    
    
     <script>
         var APP_URL = {!! json_encode(url('/')) !!}
@@ -33,13 +34,12 @@
 
     @yield('studentprofile')
 
-    <div id="exTab1"  class="container-fluid">
+    
 
-        <main class="col bg-faded py-3 flex-grow-1">
+        <main >
             @yield('content')
         </main> 
         
-    </div>
 
     
     

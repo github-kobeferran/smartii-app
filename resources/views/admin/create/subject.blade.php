@@ -387,7 +387,7 @@ function subjectClicked(id){
                                 <tr>
 
                                     <td class="bg-danger">
-                                        <a href="" class="btn btn-danger btn-block text-white" > DELETE THIS SUBJECT</a>
+                                        <a href="/deletesubject/`+ subject.id +`" class="btn btn-danger btn-block text-white" > DELETE THIS SUBJECT</a>
                                     </td>
                                     <td role="button" class="btn btn-info btn-block">
                                         <button type="button" onclick="showEdit(`+ subject.id +`)" class="btn btn-info btn-block text-white" > EDIT THIS SUBJECT</a>
@@ -571,7 +571,8 @@ function changePreReqList(){
    
 
     var xhr = new XMLHttpRequest();   
-    xhr.open('GET', 'http://smartii-app.test/admin/view/prereqs'
+    xhr.open('GET', APP_URL
+                    + '/admin/view/prereqs'
                     +'/department/' + dept 
                     + '/program/' + program 
                     + '/level/' + level 

@@ -23,6 +23,7 @@ use App\Models\PaymentRequest;
 use App\Models\Invoice;
 use App\Models\Schedule;
 use App\Models\StudentClass;
+use App\Models\Announcement;
 use App\Mail\WelcomeMember;
 use App\Mail\ApprovedApplicant;
 use PDF;
@@ -35,7 +36,22 @@ class AdminsController extends Controller
     public function index(){            
 
         if(!empty(Setting::first())){
-            return view('admin.dashboard');
+
+            $setting = Setting::first();
+
+            return view('admin.dashboard')
+            ->with('setting', Setting::first())
+            ->with('applicantCount', Applicant::where('approved', 0)->count())
+            ->with('studentCount', Student::all()->count())
+            ->with('classCount', StudentClass::where('archive', 0)->count())
+            ->with('maleCount', Student::where('gender', 'male')->count())
+            ->with('femaleCount', Student::where('gender', 'female')->count())
+            ->with('genderNullCount', Student::whereNull('gender')->count())
+            ->with('passedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('failedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('defferedStudents', SubjectTaken::where('rating', '=', 4)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('programsOffered', Program::where('id','!=', 3)->where('id','!=', 4)->count())
+            ->with('announcements', Announcement::all());
         } else {
             $setting = new Setting;
 
@@ -53,7 +69,19 @@ class AdminsController extends Controller
 
             $setting->save();
 
-            return view('admin.dashboard');            
+            return view('admin.dashboard')
+            ->with('setting', $setting)
+            ->with('applicantCount', Applicant::where('approved', 0)->count())
+            ->with('studentCount', Student::all()->count())
+            ->with('classCount', StudentClass::where('archive', 0)->count())
+            ->with('maleCount', Student::where('gender', 'male')->count())
+            ->with('femaleCount', Student::where('gender', 'female')->count())
+            ->with('genderNullCount', Student::whereNull('gender')->count())
+            ->with('passedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('failedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('defferedStudents', SubjectTaken::where('rating', '=', 4)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('programsOffered', Program::all()->count())
+            ->with('announcements', Announcement::all());
         }
     }
 
@@ -453,14 +481,15 @@ class AdminsController extends Controller
                     
                     $subjects = Subject::allWhere($values, true);
                     $subjects->toJson();                    
-                    $programs;
-                    $pre_reqs;
+                    $programs = [];
+                    $pre_reqs = [];
                                         
                     
                     $count = 0;
                     foreach($subjects as $subject){                        
                         $subCount = 0;                        
                         $programs[$count] = Program::find($subject->program_id);
+                       
 
                         if(count($subject->pre_reqs)){
 

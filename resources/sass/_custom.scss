@@ -2,6 +2,7 @@
 //     color: blue;
 // }
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap');
 thead th {
     position: sticky;
     top: 0;
@@ -293,3 +294,78 @@ tbody td {
 .faculty-col-action{
     background-color: #ffeea2;
 }
+
+.dashboard-card{
+
+    background-color: rgb(233, 222, 185) !important;
+
+}
+
+.announcement-body{
+
+    background-color: #fcf5ac !important;
+
+}
+
+.homepage-title{
+
+    font-family: 'Cinzel', serif;
+    color: #05551b;
+    text-decoration: underline;
+    font-size: x-large;
+    
+
+}
+
+.carousel{
+
+    border: .5px solid #05551b;;
+   
+}
+
+.homepage-dropdown{
+
+    font-family: 'Cinzel', serif;
+    font-size: small;
+    color: #034e18;
+
+}
+
+@media (min-width: 480px){
+
+    .homepage-dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; // remove the gap so it doesn't close
+        color: #05551b;
+    }
+    
+}
+
+.announcement-banner{
+    background-color: #fdfdba !important;
+    border: 1px solid rgb(255, 85, 85, 0.5) !important;
+    border-radius: 0 !important;
+    box-shadow: 5px 10px #88b996;
+    min-width: 20rem !important;
+    padding: 0 !important;
+
+}
+
+.footer-line-1{
+
+    background-color: #05551b;
+    height: 10px;
+    border: none;
+    height: 1px;
+
+}
+.footer-line-2{
+
+    background-color: #05551b;
+    height: 5px;
+    border: none;
+    height: 1px;
+    width: 50%;
+
+}
+
