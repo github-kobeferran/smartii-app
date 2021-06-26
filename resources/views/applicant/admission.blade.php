@@ -586,9 +586,11 @@ function fillPrograms(dept){
     xhr.onload = function() {
         if (this.status == 200) {
             
-            for(i = 0; i < selectProg.length; i++){
-                selectProg.remove(i);
-            }
+
+            removeOptions(selectProg);
+            // for(i = 0; i < selectProg.length; i++){
+            //     selectProg.remove(i);
+            // }
 
             let programs = JSON.parse(this.responseText);                                
 
@@ -599,6 +601,7 @@ function fillPrograms(dept){
             } else {
             
             }   
+            
             theProgramOutput = " | " + selectProg.options[selectProg.selectedIndex].text;
             updateMonitorOutput();                              
 
