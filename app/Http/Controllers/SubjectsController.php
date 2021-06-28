@@ -156,7 +156,7 @@ class SubjectsController extends Controller
      */
     public function edit($id)
     {
-        //
+        //asdfasdfasd
     }
 
     /**
