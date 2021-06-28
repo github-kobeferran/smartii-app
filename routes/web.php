@@ -26,7 +26,7 @@ Route::get('/institute', function () {
     return view('institute');
 });
 Route::get('/visionandmission', function () {
-    return view('vision_mission');
+    return view('vission_mission');
 });
 Route::get('/history', function () {
     return view('history');

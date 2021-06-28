@@ -10,22 +10,26 @@
 
     </div>
 
+    @empty(!$graduated)
+
+    
     @if($graduated != null && $graduated == true )
-
-        <div class="row">
-
-            <div class="col-sm mx-auto">
-
-                <img class="img-fluid text-center" src="{{url('/storage/images/system/icons/graduate.jpg')}}" alt="">               
-
-                <h1>CONGRATULATIONS!!!</h1>
-
-            </div>
-
+    
+    <div class="row">
+        
+        <div class="col-sm mx-auto">
+            
+            <img class="img-fluid text-center" src="{{url('/storage/images/system/icons/graduate.jpg')}}" alt="">               
+            
+            <h1>CONGRATULATIONS!!!</h1>
+            
         </div>
-
+        
+    </div>
+    
     @else
-
+    
+    @endempty
     <div class="row mt-3">       
         
         <div class="col-sm mx-auto ">

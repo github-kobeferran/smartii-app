@@ -7,7 +7,7 @@
 
         <div>
 
-            <h2 id="reqs">FILE REQUIREMENTS GUIDELINES</h2>
+            <h2 style="font-family: 'Cinzel', serif; background-color:#05551b; color: white;" id="reqs">FILE REQUIREMENTS GUIDELINES</h2>
 
         </div>              
 
@@ -28,11 +28,7 @@
                     </li>
                     <li>
                         Taken in the past seven (7) days prior to filing of online application
-                    </li>
-
-                    <li>
-                        With complete, readable name tag following this format: First Name, Middle Name, and Last Name (as indicated in you NSO-copy of Birth Certificate) positioned at the chest
-                    </li>
+                    </li>                
 
                 </ul>
 
