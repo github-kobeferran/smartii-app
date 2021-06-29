@@ -168,7 +168,7 @@
                 Department
                 {{Form::select('dept', ['0' => 'SHS', '1' => 'College'], '', ['id'=> 'edit-dept', 'class' => 'form-control'])}}                
                 Program
-                {{Form::select('dept', [], null, ['id'=> 'edit-prog', 'class' => 'form-control'])}}                
+                {{Form::select('prog', [], null, ['id'=> 'edit-prog', 'class' => 'form-control'])}}                
                 Level
                 {{Form::select('level', [
                                         '1' => 'Grade 11',
