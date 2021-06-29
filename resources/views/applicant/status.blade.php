@@ -377,12 +377,18 @@
                     @default
                         
                 @endswitch
-                            
+                                            
                 <div class = "form-group mt-3">   
                          
                     {{Form::submit('Resubmit',  ['class' => 'btn btn-primary btn-block '])}}
 
                 </div> 
+
+                <div class="card bg-light border-info mb-3 text-center" >                              
+                    <div class="card-body">                                                               
+                        <p class="card-text "><i class="fa fa-info-circle mr-2 text-primary" aria-hidden="true"></i><a href="/admissionhelp" target="_blank">See Admission Requirements Guidelines</a></p>
+                    </div>
+                </div>
 
             </div>
 
