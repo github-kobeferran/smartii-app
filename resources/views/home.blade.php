@@ -177,7 +177,7 @@
 
         <div class="col border-right ">
 
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iure sint aliquam ad. Quos veniam modi inventore nisi. Officia, quod dolorem dolorum aperiam, eum doloribus quia possimus in eaque aspernatur suscipit eligendi corporis perspiciatis aliquam quos quo ipsum debitis quam deleniti nisi hic et. Saepe est voluptatem eligendi corporis consectetur officiis.
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
             
         </div>
         <div class="col ">
@@ -186,13 +186,13 @@
             Myca Ponce, Kobe Ferran
             <br>
             <br>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Obcaecati atque fugit sunt, exercitationem dolore praesentium nobis magnam consectetur incidunt inventore, nostrum dolorem illum. Dicta, doloremque?
+            
             
             
         </div>
         <div class="col border-left ">
 
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt corrupti doloremque placeat non numquam! Itaque aliquid quia dolorem earum molestiae officia quas quidem veniam quos omnis, voluptatum, cupiditate dolores, iste illum non autem deserunt explicabo velit aut! Voluptates aliquid vero voluptas ullam reprehenderit ipsum neque velit eligendi id, assumenda quod.
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
             
         </div>
       
