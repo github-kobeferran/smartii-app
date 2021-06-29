@@ -487,7 +487,6 @@ function showEdit(id, dept){
             editDept.value = subject.dept;
             editUnits.value = subject.units;   
             editProg.value = subject.program_id;                    
-                                 
 
         }
 

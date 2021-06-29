@@ -177,6 +177,7 @@ class SubjectsController extends Controller
         $subject->code = $request->input('code');
         $oldDesc = $subject->desc;
         $subject->desc = $request->input('desc');
+        $subject->program_id = $request->input('prog');
         $subject->level = $request->input('level');
         $subject->dept = $request->input('dept');
         $subject->units = $request->input('units');
