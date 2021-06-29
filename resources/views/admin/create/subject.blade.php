@@ -165,20 +165,34 @@
                 {{Form::text('code', '', ['id'=> 'edit-code', 'class' => 'form-control'])}}
                 Description
                 {{Form::text('desc', '', ['id'=> 'edit-desc', 'class' => 'form-control'])}}                
+                Department
+                {{Form::select('dept', ['0' => 'SHS', '1' => 'College'], '', ['id'=> 'edit-dept', 'class' => 'form-control'])}}                
+                Program
+                {{Form::select('dept', [], null, ['id'=> 'edit-prog', 'class' => 'form-control'])}}                
                 Level
                 {{Form::select('level', [
                                         '1' => 'Grade 11',
-                                        '2' => 'Grade 12',
+                                        '2' => 'Grade 12',                                      
+                                       ], null, ['id'=> 'edit-level-shs', 'class' => 'd-none form-control'])}}
+                {{Form::select('level', [
                                         '11' => 'First Year',
-                                        '12' => 'Second Year'
-                                       ], '', ['id'=> 'edit-level', 'class' => 'form-control'])}}
-                Department
-                {{Form::select('dept', ['0' => 'SHS', '1' => 'College'], '', ['id'=> 'edit-dept', 'class' => 'form-control'])}}
+                                        '12' => 'Second Year',                                      
+                                       ], null, ['id'=> 'edit-level-col', 'class' => 'd-none form-control'])}}
+                Semester 
+                {{Form::select('level', [
+                    '1' => 'First Semester',
+                    '2' => 'Second Semester',                                      
+                   ], '', ['id'=> 'edit-level-sem', 'class' => 'd-none form-control'])}}
+               
                 Units
                 {{Form::number('units', 3, ['min' => '3', 'id'=> 'edit-units', 'class' => 'form-control'])}}
 
-                <button type="submit" class="btn btn-primary">Update</button>
+                <div class="form-group mt-2">
+
+                    <button type="submit" class="btn btn-primary">Update</button>
                 <button type="button" onclick="cancelSubjEdit()" class="btn btn-danger">Cancel</button>
+
+                </div>
 
                 {!! Form::close() !!}
 
@@ -204,17 +218,21 @@ let editPanel = document.getElementById('edit-panel');
 let editCode = document.getElementById('edit-code');
 let editDesc = document.getElementById('edit-desc');
 let editProg = document.getElementById('edit-prog');
-let editLevel = document.getElementById('edit-level');
+let editLevelSHS = document.getElementById('edit-level-shs');
+let editLevelCOL = document.getElementById('edit-level-col');
 let editDept = document.getElementById('edit-dept');
 let editUnits = document.getElementById('edit-units');
 let subjid = document.getElementById('subj-id');
 
+
 shsOption.onclick = () => {
     fillSubjectsList(0);
+    cancelSubjEdit();
 }
 
 collegeOption.onclick = () => {
     fillSubjectsList(1);
+    cancelSubjEdit();
 }
 
 function fillSubjectsList(dept){
@@ -251,6 +269,11 @@ function subjectClicked(id){
 
     btn = document.getElementById('subj-' + id);
     btns = document.getElementsByClassName('btn-subject');
+
+    editPanel.classList.add('d-none');
+    editLevelSHS.classList.add('d-none');
+    editLevelCOL.classList.add('d-none');
+
 
 
     for(let i=0; i<btns.length; i++){
@@ -390,7 +413,7 @@ function subjectClicked(id){
                                         <a href="/deletesubject/`+ subject.id +`" class="btn btn-danger btn-block text-white" > DELETE THIS SUBJECT</a>
                                     </td>
                                     <td role="button" class="btn btn-info btn-block">
-                                        <button type="button" onclick="showEdit(`+ subject.id +`)" class="btn btn-info btn-block text-white" > EDIT THIS SUBJECT</a>
+                                        <button type="button" onclick="showEdit(`+ subject.id +`,`+ subject.dept+`)" class="btn btn-info btn-block text-white" > EDIT THIS SUBJECT</a>
                                     </td>
 
                                 </tr>
@@ -409,9 +432,19 @@ function subjectClicked(id){
 
 }
 
-function showEdit(id){
+function showEdit(id, dept){   
 
     editPanel.classList.remove('d-none');
+    
+    if(dept == 0){
+        editLevelSHS.classList.remove('d-none');
+
+    }else {
+        editLevelCOL.classList.remove('d-none');
+
+    }
+
+    fillProgramSelect(dept);
 
     let xhr = new XMLHttpRequest();
 
@@ -425,11 +458,35 @@ function showEdit(id){
 
             subjid.value = subject.id;  
             editCode.value = subject.code;
-            editDesc.value = subject.desc;
-            editProg.value = subject.program_id;                       
-            editLevel.value = subject.level;
+            editDesc.value = subject.desc;            
+
+            console.log();
+
+            if(dept == 0){                                
+
+                for(let i=0; i<editLevelSHS.length; i++){
+
+                    if(editLevelSHS.options[i].value == subject.level)
+                        editLevelSHS.selectedIndex = i;
+
+                }
+                
+
+            }else{
+                
+                
+                for(let i=0; i<editLevelCOL.length; i++){
+
+                    if(editLevelCOL.options[i].value == subject.level)
+                    editLevelCOL.selectedIndex = i;
+
+                }
+                
+            }                
+
             editDept.value = subject.dept;
-            editUnits.value = subject.units;                       
+            editUnits.value = subject.units;   
+            editProg.value = subject.program_id;                    
                                  
 
         }
@@ -443,10 +500,37 @@ function showEdit(id){
 function cancelSubjEdit(){          
 
     editPanel.classList.add('d-none');
+    editLevelSHS.classList.add('d-none');
+    editLevelCOL.classList.add('d-none');
 
 }
 
+function fillProgramSelect(dept){
 
+    removeAllOptions(editProg);
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', APP_URL + '/admin/view/programs/department/'+ dept + '/true', true)
+
+    xhr.onload = function() {
+
+        if(this.status == 200){                               
+                                 
+            let programs = JSON.parse(this.responseText);                         
+        
+            for(let i in programs){                                                         
+                    editProg.options[i] = new Option(programs[i].desc, programs[i].id); 
+            }
+
+        }
+
+    }
+
+    xhr.send();
+
+
+}
 
 
 
@@ -579,7 +663,7 @@ function changePreReqList(){
                     + '/semester/' + semester, true);
 
     xhr.onload = function() {
-    if (this.status == 200) {
+        if (this.status == 200) {
         let subjects = JSON.parse(this.responseText); 
                                                             
            if( (level == 1 || level == 11) &&  (semester == 1) ){
