@@ -673,7 +673,8 @@ class StudentsController extends Controller
              ->with('level', $level)
              ->with('semester', $semester)
              ->with('subjectsToTake', $subjects)
-             ->with('lastSemStatus', $lastSemStatus);
+             ->with('lastSemStatus', $lastSemStatus)             
+             ->with('graduated', false);
 
 
 
