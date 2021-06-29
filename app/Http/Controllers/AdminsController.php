@@ -48,7 +48,7 @@ class AdminsController extends Controller
             ->with('femaleCount', Student::where('gender', 'female')->count())
             ->with('genderNullCount', Student::whereNull('gender')->count())
             ->with('passedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
-            ->with('failedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('failedStudents', SubjectTaken::where('rating', '>', 4.5)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
             ->with('defferedStudents', SubjectTaken::where('rating', '=', 4)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
             ->with('programsOffered', Program::where('id','!=', 3)->where('id','!=', 4)->count())
             ->with('announcements', Announcement::all());
@@ -78,7 +78,7 @@ class AdminsController extends Controller
             ->with('femaleCount', Student::where('gender', 'female')->count())
             ->with('genderNullCount', Student::whereNull('gender')->count())
             ->with('passedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
-            ->with('failedStudents', SubjectTaken::where('rating', '<=', 3)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
+            ->with('failedStudents', SubjectTaken::where('rating', '>', 4.5)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
             ->with('defferedStudents', SubjectTaken::where('rating', '=', 4)->where('from_year', $setting->from_year)->where('semester', $setting->semester)->count())
             ->with('programsOffered', Program::all()->count())
             ->with('announcements', Announcement::all());
