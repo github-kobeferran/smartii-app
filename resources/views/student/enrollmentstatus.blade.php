@@ -8,10 +8,7 @@
     <div class="row">
         <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-angle-left" aria-hidden="true"></i>   </a>
 
-    </div>
-
-    @empty(!$graduated)
-
+    </div>    
     
     @if($graduated != null && $graduated == true )
     
@@ -28,8 +25,7 @@
     </div>
     
     @else
-    
-    @endempty
+        
     <div class="row mt-3">       
         
         <div class="col-sm mx-auto ">
