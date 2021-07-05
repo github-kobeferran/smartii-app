@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('inc.homenav')
+
 <div class="container">
 
     <h5 class="text-center mt-2">ST. MARK ARTS AND TRAINING INSTITUTE</h5>

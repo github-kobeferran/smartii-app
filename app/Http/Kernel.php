@@ -66,6 +66,9 @@ class Kernel extends HttpKernel
         'applicant.submitted' => \App\Http\Middleware\ApplicantSubmitted::class,
         'applicant.new' => \App\Http\Middleware\ApplicantNew::class,
         'member' => \App\Http\Middleware\Member::class,
+        'admin.superadmin' => \App\Http\Middleware\isSuperAdmin::class,
+        'admin.registrar' => \App\Http\Middleware\isRegistrar::class,
+        'admin.accounting' => \App\Http\Middleware\isAccounting::class,
 
     ];
 }

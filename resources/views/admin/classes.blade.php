@@ -79,20 +79,23 @@
 
 <script>
 
-    window.addEventListener('load', (event) => {
-        
+if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+                location.reload();
+}
 
-        changeClassesSelects(); 
-        availableRooms(); 
-        availableFaculty();   
-        updateSchedCounter();
-        fillProgramList(0);
-        fillRoomTable();
+window.addEventListener('load', (event) => {
+    
+
+    changeClassesSelects(); 
+    availableRooms(); 
+    availableFaculty();   
+    updateSchedCounter();
+    fillProgramList(0);
+    fillRoomTable();
+    
+}); 
         
-    }); 
-    
-    
-    </script>
+</script>
 
 
 @endsection

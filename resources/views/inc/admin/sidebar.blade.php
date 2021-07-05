@@ -146,76 +146,144 @@
             
 </style>
 
-{{-- <button id="toggle" type="button" onclick="showMenu()" class="navbar navbar-expand-lg navbar-light bg-light"> --}}
+
 
 <nav class="main-menu">
     <ul>
-        <li>
-            <a href="/admin">
-                <i class="fa fa-map-o sidebar-icon" aria-hidden="true"></i>
-                <span class="nav-text">
-                    Dashboard
-                </span>
-            </a>
-          
-        </li>
-        <li class="has-subnav">
-            <a href="/admin/view">
-                <i class="fa fa-laptop fa-2x sidebar-icon"></i>
-                <span class="nav-text">
-                    View
-                </span>
-            </a>
+
+        <?php
+
+        $admin = \App\Models\Admin::find(auth()->user()->member->member_id);
+
+        ?>
+
+        @if ($admin->position == 'superadmin')
+
+            <li>
+                <a href="/admin">
+                    <i class="fa fa-map-o sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Dashboard
+                    </span>
+                </a>
             
-        </li>
-        <li class="has-subnav">
-            <a href="{{ route('adminCreate') }}">
-                <i class="fa fa-pencil-square-o sidebar-icon" aria-hidden="true"></i>
-                <span class="nav-text">
-                    Create
-                </span>
-            </a>
-            
-        </li>
-        <li class="has-subnav">
-            <a href="/admin/classes">
-                <i class="fa fa-puzzle-piece sidebar-icon" aria-hidden="true"></i>
-                <span class="nav-text">
-                    Classes
-                </span>
-            </a>
-            
-        </li>
-        <li class="has-subnav">
-            <a href="/admin/payment">
-                <i class="fa fa-money sidebar-icon" aria-hidden="true"></i>
-                <span class="nav-text">
-                   Payments
-                </span>
-            </a>
-           
-        </li>
-        <li class="has-subnav">
-            @if(\App\Models\PaymentRequest::pendingRequestCount() > 0)
-                <span class="badge badge-primary ">{{\App\Models\PaymentRequest::pendingRequestCount()}}</span>
-            @endif
-            <a href="/admin/paymentrequests/">
-                <i  class="fa fa-bell sidebar-icon" aria-hidden="true"></i>
-                <span class="nav-text">
-                   Payment Requests
-                </span>
+            </li>
+            <li class="has-subnav">
+                <a href="/admin/view">
+                    <i class="fa fa-laptop fa-2x sidebar-icon"></i>
+                    <span class="nav-text">
+                        View
+                    </span>
+                </a>
                 
-            </a>            
-           
-        </li>
-        <li>
-            <a href="/admin/settings">
-                <i class="fa fa-cogs sidebar-icon" aria-hidden="true"></i>
-                <span class="nav-text">
-                    Settings
-                </span>
-            </a>
-        </li>
+            </li>
+            <li class="has-subnav">
+                <a href="{{ route('adminCreate') }}">
+                    <i class="fa fa-pencil-square-o sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Create
+                    </span>
+                </a>
+                
+            </li>
+            <li class="has-subnav">
+                <a href="/admin/classes">
+                    <i class="fa fa-puzzle-piece sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Classes
+                    </span>
+                </a>
+                
+            </li>
+            <li class="has-subnav">
+                <a href="/admin/payment">
+                    <i class="fa fa-money sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                    Payments
+                    </span>
+                </a>
+            
+            </li>
+            <li class="has-subnav">
+                @if(\App\Models\PaymentRequest::pendingRequestCount() > 0)
+                    <span class="badge badge-primary ">{{\App\Models\PaymentRequest::pendingRequestCount()}}</span>
+                @endif
+                <a href="/admin/paymentrequests/">
+                    <i  class="fa fa-bell sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                    Payment Requests
+                    </span>
+                    
+                </a>            
+            
+            </li>
+            <li>
+                <a href="/admin/settings">
+                    <i class="fa fa-cogs sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Settings
+                    </span>
+                </a>
+            </li>
+
+        @elseif($admin->position == 'registrar')
+
+            <li class="has-subnav">
+                <a href="/admin/view">
+                    <i class="fa fa-laptop fa-2x sidebar-icon"></i>
+                    <span class="nav-text">
+                        View
+                    </span>
+                </a>
+                
+            </li>
+            <li class="has-subnav">
+                <a href="{{ route('adminCreate') }}">
+                    <i class="fa fa-pencil-square-o sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Create
+                    </span>
+                </a>
+                
+            </li>
+            <li class="has-subnav">
+                <a href="/admin/classes">
+                    <i class="fa fa-puzzle-piece sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Classes
+                    </span>
+                </a>
+                
+            </li>
+
+        @elseif($admin->position == 'accounting')
+
+            <li class="has-subnav">
+                <a href="/admin/payment">
+                    <i class="fa fa-money sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                    Payments
+                    </span>
+                </a>
+            
+            </li>
+            <li class="has-subnav">
+                @if(\App\Models\PaymentRequest::pendingRequestCount() > 0)
+                    <span class="badge badge-primary ">{{\App\Models\PaymentRequest::pendingRequestCount()}}</span>
+                @endif
+                <a href="/admin/paymentrequests/">
+                    <i  class="fa fa-bell sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                    Payment Requests
+                    </span>
+                    
+                </a>            
+            
+            </li>
+            
+        @endif
+
+       
        
     </ul>
 

@@ -38,7 +38,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right color-custom-green" aria-labelledby="navbarDropdown">
 
-                            <?php $role = auth()->user()->user_type ?>
+                            <?php $role = auth()->user()->user_type; ?>
                             <a href="/home" class="dropdown-item">Smartii Homepage</a>
 
                             <a class="dropdown-item"
@@ -68,9 +68,19 @@
                                 href="{{ route('facultyClasses') }}"
 
 
+                            @elseif(!Auth::guest() && Auth::user()->isAdmin())
+                            
+                            <?php  $admin = \App\Models\Admin::find(auth()->user()->member->member_id); ?>
 
-                            @else
-                                href="{{ route($role . 'Dashboard') }}"
+                                @if($admin->position == 'superadmin')
+                                    href="{{ route('adminDashboard') }}"
+                                @elseif($admin->position == 'accounting')
+                                    href="{{ route('adminPayment') }}"
+                                @elseif($admin->position == 'registrar')
+                                    href="{{ route('adminView') }}"
+                                @endif
+
+
                             @endif  
 
                             >                         

@@ -55,13 +55,13 @@ Route::get('/collegeprograms', function () {
 
 
 Auth::routes(['verify' => true]);
-// Route::resource('students', 'App\Http\Controllers\StudentsController');
+
 
 // ADMIN protected routes 
 Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->group(function () {
-    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard');
+    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard')->middleware(['admin.superadmin']);
     
-    Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate');
+    Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate')->middleware(['admin.registrar']);
     Route::post('/admin/create/student', [App\Http\Controllers\StudentsController::class, 'store'])->name('studentCreate');    
     Route::post('/admin/create/program', [App\Http\Controllers\ProgramsController::class, 'store'])->name('programStore');    
     Route::post('/admin/create/subject', [App\Http\Controllers\SubjectsController::class, 'store'])->name('subjectStore');    
@@ -95,17 +95,17 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::get('/admin/delete/room/{id}', [App\Http\Controllers\RoomsController::class, 'destroy'])->name('deleteRoom');
 
-    Route::get('/admin/payment', [App\Http\Controllers\AdminsController::class, 'adminPayment'])->name('adminPayment');
-    Route::get('/admin/settings', [App\Http\Controllers\AdminsController::class, 'adminSettings'])->name('adminSettings');
+    Route::get('/admin/payment', [App\Http\Controllers\AdminsController::class, 'adminPayment'])->name('adminPayment')->middleware(['admin.accounting']);
+    Route::get('/admin/settings', [App\Http\Controllers\AdminsController::class, 'adminSettings'])->name('adminSettings')->middleware(['admin.superadmin']);
     
-    Route::get('/admin/classes', [App\Http\Controllers\AdminsController::class, 'adminClasses'])->name('adminClasses');
+    Route::get('/admin/classes', [App\Http\Controllers\AdminsController::class, 'adminClasses'])->name('adminClasses')->middleware(['admin.registrar']);
     Route::get('/admin/schedules/{prog}/{subj}', [App\Http\Controllers\SubjectsTakenController::class, 'showClassSchedules'])->name('showClassSchedules');
 
     Route::get('/admin/download/{type}/{filename}', [App\Http\Controllers\AdminsController::class, 'download'])->name('AdminDownload');
     Route::post('/admin/requestupload', [App\Http\Controllers\AdminsController::class, 'requestFileResubmission'])->name('requestFileResubmission');
     Route::post('/admin/approveapplicant', [App\Http\Controllers\AdminsController::class, 'approveApplicant'])->name('approveApplicant');
 
-    Route::get('/admin/paymentrequests', [App\Http\Controllers\AdminsController::class, 'viewPaymentRequests'])->name('viewPaymentRequests');
+    Route::get('/admin/paymentrequests', [App\Http\Controllers\AdminsController::class, 'viewPaymentRequests'])->name('viewPaymentRequests')->middleware(['admin.accounting']);
     Route::post('/admin/approvepaymentrequest', [App\Http\Controllers\AdminsController::class, 'approvePaymentRequest'])->name('approvePaymentRequest');
     Route::any('/updateschedule', [App\Http\Controllers\AdminsController::class, 'updateSchedule'])->name('updateschedule');
     Route::any('/enrolltosubject', [App\Http\Controllers\AdminsController::class, 'enrollToSubject'])->name('enrolltosubject');

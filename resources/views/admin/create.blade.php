@@ -2,12 +2,16 @@
 
 @section('content')
 
+
 <?php 
     $student = false;
     $faculty = false;
     $admin = false;
     $subject = false;
     $program = false;
+
+    $the_admin = \App\Models\Admin::find(auth()->user()->member->member_id);
+
 ?>
 
 @if ( session()->has('active') )
@@ -58,9 +62,18 @@
         <li class="nav-item">
             <a class="nav-link {{ $faculty ? 'active' : ''}}" id="faculty-create-tab" data-toggle="tab" href="#faculty" role="tab" aria-controls="faculty" aria-selected="false">Faculty</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{ $admin ? 'active' : ''}}" id="admin-create-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Admin</a>
-        </li>
+
+        @if ($the_admin->position == 'superadmin')
+
+            <li class="nav-item">
+                <a class="nav-link {{ $admin ? 'active' : ''}}" id="admin-create-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Admin</a>
+            </li>
+
+        @else 
+
+        @endif
+
+
         <li class="nav-item">
             <a class="nav-link {{ $subject ? 'active' : '' }}" id="subject-create-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject</a>
         </li>
@@ -89,9 +102,14 @@
         @include('admin.create.faculty')  
 	</div>
 
-    <div class="tab-pane {{ $admin ? 'active' : '' }}" id="admin">
-        @include('admin.create.admin')  
-	</div>  
+    @if ($the_admin->position == 'superadmin')
+        <div class="tab-pane {{ $admin ? 'active' : '' }}" id="admin">
+            @include('admin.create.admin')  
+        </div>  
+    @else 
+
+    @endif
+    
 
     <div class="tab-pane {{ $subject ? 'active' : '' }}" id="subject">
         @include('admin.create.subject')  
@@ -103,6 +121,10 @@
 </div>   
 
 <script>
+
+if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+                location.reload();
+}
 
 window.addEventListener('load', (event) => {
 

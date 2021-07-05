@@ -127,6 +127,10 @@
 
 <script>
 
+if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+                location.reload();
+}
+
 window.onload = function() {
 
     selectTable('alpha');

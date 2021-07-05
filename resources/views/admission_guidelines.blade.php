@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+@include('inc.homenav')
+
+
 <div class="container">
+
+    
 
     <div class="row mt-3">
 

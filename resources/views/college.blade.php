@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
+
 @section('content')
+
+@include('inc.homenav')
 
     <div class="container border border-success rounded p-5 mt-5 mx-auto">
 

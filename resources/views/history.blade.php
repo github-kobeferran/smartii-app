@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('inc.homenav')
+
     <div class="row border border-success rounded p-5 mt-5 mx-auto">
 
         <h5 class="text-center"> HISTORY OF SMARTII</h5>

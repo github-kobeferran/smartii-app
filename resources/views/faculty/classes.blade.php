@@ -63,6 +63,11 @@
 
 <script>
 
+if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+                location.reload();
+}
+
+
 function showClasses(id){
     btns = document.getElementsByClassName('btn-progs');
     classlists = document.getElementsByClassName('class-list');
