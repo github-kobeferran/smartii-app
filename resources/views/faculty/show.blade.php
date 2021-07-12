@@ -53,7 +53,7 @@
 
             <tr>
 
-                <td id="gender_name" class="faculty-col"> Gender </td>
+                <td id="gender_name" class="faculty-col"> Sex </td>
                 @empty($faculty->gender)
                     <td id="gender"> N\A</td>
                 @else 

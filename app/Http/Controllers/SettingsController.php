@@ -26,12 +26,14 @@ class SettingsController extends Controller
             'shs_price' => 'required|min:0|max:1000',
             'col_price' => 'required|min:0|max:1000',             
             'class_quantity' => 'required|min:1|max:50',             
+            'gcash' => 'required|digits:11',             
+            'bank_name' => 'required|regex:/^[\.\s\w-]*$/|max:191',             
+            'bank_number' => 'required|regex:/^[0-9\w\s]+$/|max:191',                         
         ]);
 
         if ($validator->fails()) {
             return redirect()->route('adminSettings')
-                         ->withErrors($validator)
-                         ->withInput();                    
+                         ->withErrors($validator);                    
         }
 
         $setting = Setting::first();

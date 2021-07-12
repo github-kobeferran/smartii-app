@@ -86,6 +86,42 @@
         </tr>
             
         @endforeach
+
+        <?php 
+
+        $fees = null;
+
+        if($student->department == 0){
+            $fees = \App\Models\Fee::where('dept', 2)->orWhere('dept', 0)->get();
+        }else{
+            $fees = \App\Models\Fee::where('dept', 2)->orWhere('dept', 1)->get();
+        }     
+
+        ?>
+
+        @empty(!$fees)
+
+        <tr class="item">
+            <td>Fees:</td>
+
+            <td></td>
+            
+        </tr>
+
+        @foreach ($fees as $fee)
+
+            <tr class="item">
+
+                <td>{{ $fee->desc }}</td>
+
+                <td>{{ $fee->amount }}</td>
+               
+            </tr>
+           
+        @endforeach
+            
+            
+        @endempty
                    
 
         <tr class="total">

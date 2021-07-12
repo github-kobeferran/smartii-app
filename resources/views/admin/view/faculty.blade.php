@@ -68,7 +68,7 @@ function viewFaculty(){
                         <div class="modal-body">
                             <p>email : `+ faculty[i].email +`</p>
                             <p>contact : `+ faculty[i].contact +`</p>
-                            <p>gender : `+ faculty[i].gender +`</p>
+                            <p>sex : `+ faculty[i].gender +`</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -129,7 +129,7 @@ function searchFaculty(){
                         <div class="modal-body">
                             <p>email : `+ faculty[i].email +`</p>
                             <p>contact : `+ faculty[i].contact +`</p>
-                            <p>gender : `+ faculty[i].gender +`</p>
+                            <p>sex : `+ faculty[i].gender +`</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -115,6 +115,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/deletesubject/{id}', [App\Http\Controllers\SubjectsController::class, 'destroy'])->name('destroySubject');
     Route::any('/createannouncement', [App\Http\Controllers\AnnouncementsController::class, 'store'])->name('storeAnnouncement');
     Route::any('/deleteannouncement/{id}', [App\Http\Controllers\AnnouncementsController::class, 'delete'])->name('storeAnnouncement');
+    Route::any('/addfee', [App\Http\Controllers\FeesController::class, 'store'])->name('addfee');
+    Route::any('/deletefee', [App\Http\Controllers\FeesController::class, 'delete'])->name('editfee');
+    Route::any('/editfee', [App\Http\Controllers\FeesController::class, 'update'])->name('update');
 
 });
 

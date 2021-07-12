@@ -22,8 +22,9 @@ use App\Models\SubjectTaken;
 use App\Models\PaymentRequest;
 use App\Models\Invoice;
 use App\Models\Schedule;
-use App\Models\StudentClass;
 use App\Models\Announcement;
+use App\Models\Fee;
+use App\Models\StudentClass;
 use App\Mail\WelcomeMember;
 use App\Mail\ApprovedApplicant;
 use PDF;
@@ -111,8 +112,11 @@ class AdminsController extends Controller
         $msg = '';
         $id = 0;
 
+        $before_date = Carbon::now()->subYears(15);       
+        $after_date = new Carbon('1903-01-01');
+
         $validator = Validator::make($request->all(), [
-            'name' => 'required|regex:/^[\s\w-]*$/', 
+            'name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100', 
             'email' => 'required', 
             'address' => 'required|max:100', 
             'contact' => 'required|numeric',
@@ -374,6 +378,13 @@ class AdminsController extends Controller
                 $program->dept_desc = $program->department;
 
                 return $program;
+
+            break;        
+            case 'fees':
+
+                $fee = Fee::find($id);                 
+
+                return $fee;
 
             break;        
             default:
@@ -1030,6 +1041,36 @@ class AdminsController extends Controller
         $totalBalance = 0;
         $studentBalance = Balance::find($student->balance_id);
 
+        $allStudentEverySemesterFee = null;
+        $allStudentFirstSemesterFee = null;
+
+        $shsAllEverySemFee = null;
+        $shsGrade11FirstSemFee = null;
+
+        $colAllEverySemFee = null;
+        $colFirstYearFirstSemFee = null;
+
+        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 5)->count() > 0)
+        $allStudentEverySemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 5)->get();
+
+        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 1)->count() > 0)
+            $allStudentFirstSemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 1)->get();
+
+        
+        if(Fee::where('dept', 0)->where('level', 5)->where('sem', 5)->count() > 0)
+            $shsAllEverySemFee = Fee::where('dept', 0)->where('level', 5)->where('sem', 5)->get();
+
+        if(Fee::where('dept', 0)->where('level', 1)->where('sem', 1)->count() > 0)
+            $shsGrade11FirstSemFee = Fee::where('dept', 0)->where('level', 1)->where('sem', 1)->get();
+
+        if(Fee::where('dept', 1)->where('level', 15)->where('sem', 5)->count() > 0)
+            $colAllEverySemFee = Fee::where('dept', 1)->where('level', 15)->where('sem', 5)->get();
+
+        if(Fee::where('dept', 1)->where('level', 11)->where('sem', 1)->count() > 0)
+            $colFirstYearFirstSemFee = Fee::where('dept', 1)->where('level', 11)->where('sem', 1)->get();
+
+        
+
         $subjectsToBeTakenLength = count($subjects);                  
 
         for($i=0; $i < $subjectsToBeTakenLength; $i++){
@@ -1046,7 +1087,63 @@ class AdminsController extends Controller
             else 
                 $totalBalance+= Setting::first()->college_price_per_unit * $subject->units; 
 
-            if($i == $subjectsToBeTakenLength - 1 ) {                
+            if($i == $subjectsToBeTakenLength - 1 ) {  
+                
+                if(!empty($allStudentEverySemesterFee)){
+
+                    foreach($allStudentEverySemesterFee as $fee){
+                        $totalBalance+= $fee->amount;
+                    }
+                    
+                }
+
+                if(!empty($allStudentFirstSemesterFee)){
+
+                    foreach($allStudentFirstSemesterFee as $fee){
+                        $totalBalance+= $fee->amount;
+                    }
+
+                }
+
+                if($student->department == 0){
+
+                    if(!empty($shsAllEverySemFee)){
+
+                        foreach($shsAllEverySemFee as $fee){
+                            $totalBalance+= $fee->amount;
+                        }
+
+                    }
+
+                    if(!empty($shsGrade11FirstSemFee)){
+    
+                        foreach($shsGrade11FirstSemFee as $fee){
+                            $totalBalance+= $fee->amount;
+                        }
+
+                    }
+
+                }else{
+
+                    if(!empty($colAllEverySemFee)){
+
+                        foreach($colAllEverySemFee as $fee){
+                            $totalBalance+= $fee->amount;
+                        }
+
+                    }
+
+                    if(!empty($colFirstYearFirstSemFee)){
+    
+                        foreach($colFirstYearFirstSemFee as $fee){
+                            $totalBalance+= $fee->amount;
+                        }
+
+                    }
+
+                }
+                
+
                 $studentBalance->amount = $totalBalance;
                 $studentBalance->save();
             }

@@ -17,6 +17,7 @@ use App\Models\SubjectTaken;
 use App\Models\Subject;
 use App\Models\Program;
 use App\Mail\WelcomeMember;
+use Carbon\Carbon;
 
 class FacultiesController extends Controller
 {
@@ -31,11 +32,14 @@ class FacultiesController extends Controller
         $msg = '';
         $id = 0;
 
+        $before_date = Carbon::now()->subYears(15);       
+        $after_date = new Carbon('1903-01-01');
+
         $validator = Validator::make($request->all(), [
-            'last_name' => 'required|regex:/^[\pL\s\-]+$/u', 
-            'first_name' => 'required|regex:/^[\pL\s\-]+$/u', 
-            'middle_name' => 'regex:/^[\pL\s\-]+$/u', 
-            'dob' => 'required|date',
+            'last_name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100', 
+            'first_name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100', 
+            'middle_name' => 'regex:/^[a-z ,.\'-]*$/|max:100', 
+            'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
             'email' => 'required',             
         ]);
 
@@ -411,18 +415,99 @@ class FacultiesController extends Controller
 
      public function update(Request $request){
 
+        $before_date = Carbon::now()->subYears(18);       
+        $after_date = new Carbon('1903-01-01');
+
         if($request->method() != 'POST'){
             return redirect()->back();
         }
 
-        if($request->input('detail_name') == 'dob'){
+        switch($request->input('detail_name')){
 
-            $this->validate($request, [            
-                'detail' => 'date',                        
-            ]);
+            case 'dob': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
+                ]);
+
+            break;
+            case 'last_name': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',
+                ]);
+
+            break;
+            case 'first_name': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',                      
+                ]);
+
+            break;
+            case 'middle_name': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',                       
+                ]);
+
+            break;
+            case 'contact': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|digits:11',                           
+                ]);
+
+            break;
+            case 'gender': 
+
+                $this->validate($request, [           
+                    'detail' => 'in:male,female',                       
+                ]);
+
+            break;
+            case 'civil_status': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',                       
+                ]);
+
+            break;
+            case 'religion': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:25',                      
+                ]);
+
+            break;
+            case 'college_alumni': 
+
+                $this->validate($request, [            
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',                     
+                ]);
+
+            break;
 
 
-        }
+        }       
+
+        $validator = Validator::make($request->all(), [
+            'nationality' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',
+            'civil_status' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50', 
+            'religion' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',
+            'contact' => 'nullable|digits:11',             
+            'father_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
+            'mother_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
+            'guardian_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
+            'emergency_person_contact' => 'nullable|digits:11',                      
+        ]);
+       
+        if ($validator->fails()) {
+            return redirect()
+                            ->route('studentProfile')
+                            ->withErrors($validator);                            
+                            
+        }  
 
         
 

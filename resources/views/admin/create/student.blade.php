@@ -140,10 +140,10 @@
         </div>
 
         <div class="col-sm">
-            {{Form::label('program', 'Gender')}}
+            {{Form::label('program', 'Sex')}}
             <div class="form-inline">
             
-                {{Form::select('gender', [null => 'Choose Gender', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select w-75 ml-2' , 'id' => 'selectProg'])}}                   
+                {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select w-75 ml-2' , 'id' => 'selectProg'])}}                   
           </div>
 
         </div>

@@ -16,9 +16,26 @@
                 <p class="m-1">
                     Gcash - {{$setting->gcash_number}}
                 </p>
-                <p class="m-1">
-                    Bank {{$setting->bank_name}} -  {{$setting->bank_number}}
-                </p>
+
+                
+
+                <div class="row no-gutters">
+                   
+                    <div class="col">
+                        <p class="mr-1">
+                            <?php echo nl2br($setting->bank_name);?>                             
+                       </p>
+                    </div>
+                    <div class="col">
+                        <p class="ml-1">
+                            <?php echo nl2br($setting->bank_number);?>
+        
+                        </p>
+                    </div>
+
+                </div>
+               
+                
             </div>                               
 
         </div>

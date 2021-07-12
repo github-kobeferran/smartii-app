@@ -12,6 +12,7 @@ use App\Models\Applicant;
 use App\Models\Program;
 use App\Models\Member;
 use App\Models\User;
+use Carbon\Carbon;
 
 
 
@@ -78,9 +79,12 @@ class ApplicantsController extends Controller
         
         if ($validator->fails()) {
             return redirect()->route('admissionForm')
-                         ->withErrors($validator)
+                         ->withErrors($validator)                        
                          ->with('active', 'dept');
         }
+
+        $before_date = Carbon::now()->subYears(15);       
+        $after_date = new Carbon('1903-01-01');
 
         $validated = ['dept' => $request->input('dept'),
                       'prog' => $request->input('program_id'),
@@ -89,24 +93,27 @@ class ApplicantsController extends Controller
 
         $validator = Validator::make($request->all(), [
             
-            'l_name' => 'required|max:100', 
-            'f_name' => 'required|max:100', 
-            'm_name' => 'required|max:100', 
+            'l_name' => 'required|max:100|regex:/^[a-z ,.\w\'-]*$/', 
+            'f_name' => 'required|max:100|regex:/^[a-z ,.\w\'-]*$/', 
+            'm_name' => 'required|max:100|regex:/^[a-z ,.\w\'-]*$/', 
             'present_address' => 'required|max:191', 
-            'last_school' => 'required|max:191',
-            'dob' => 'required|date',
+            'last_school' => 'required|max:191|regex:/^[a-z ,.\w\'-]*$/',
+            'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
 
         ],
         [
 
             'l_name.required' => 'Last Name is required.',
             'l_name.max' => 'Last Name must be less than a hundred characters.',
+            'l_name.regex' => 'some Last Name characters are invalid.',
 
             'f_name.required' => 'First Name is required.',
             'f_name.max' => 'First Name must be less than a hundred characters.',
+            'f_name.regex' => 'some First Name characters are invalid.',
 
             'm_name.required' => 'Middle Name is required.',
             'm_name.max' => 'Middle Name must be less than a hundred characters.',
+            'm_name.regex' => 'some Middle Name characters are invalid.',
 
             'present_address.required' => 'Present Address is required.',
 

@@ -336,13 +336,7 @@
 
                 </tr>
 
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
-                @include('inc.messages')
+                
 
                 <!-- Modal -->
                 <div class="modal fade" id="subjects" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -374,6 +368,14 @@
                 @endif
 
                 @if($show > 2)
+
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                @include('inc.messages')
 
                 <tr>
 
