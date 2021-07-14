@@ -10,6 +10,58 @@
                 <input type="radio" name="options" id="collegeOption" autocomplete="off"> College
             </label>
         </div>
+        
+        <button data-toggle="modal" data-target="#exportStudent" class="btn-sm btn-success float-right mt-1">
+            Export to Excel
+        </button>
+
+        <div class="modal fade" id="exportStudent" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">SELECT REPORT</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  <div class="container">
+
+                    <div class="row">
+
+                        <div class="col text-center border-right">
+
+                            <a href="/allstudents/export" class="d-block btn-primary mb-2">
+
+                                All-Time Students
+
+                            </a>                            
+                            
+                            
+                        </div>
+
+                        <div class="col text-center">
+                            
+                            <a href="/allactivestudents/export" class="d-block btn-primary mb-2">
+
+                                All Active Students
+
+                            </a>                           
+
+                        </div>
+
+                    </div>                    
+
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                  
+                </div>
+              </div>
+            </div>
+          </div>
 
         <div id="program-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">                               
     

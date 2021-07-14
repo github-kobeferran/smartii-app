@@ -119,6 +119,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/deletefee', [App\Http\Controllers\FeesController::class, 'delete'])->name('editfee');
     Route::any('/editfee', [App\Http\Controllers\FeesController::class, 'update'])->name('update');
 
+    Route::get('allstudents/export/', [App\Http\Controllers\StudentsController::class, 'allStudentsExport']);
+    Route::get('allactivestudents/export/', [App\Http\Controllers\StudentsController::class, 'allActiveStudentsExport']);
+
 });
 
 // APPLICANT protected routes 
@@ -158,8 +161,10 @@ Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->
     Route::any('/archiveclass', [App\Http\Controllers\StudentClassesController::class, 'archiveClass'])->name('archiveclass');
     Route::get('/facultydetails/{id?}', [App\Http\Controllers\FacultiesController::class, 'show'])->name('facultydetails');
     Route::get('/showfacultydetail/{id}/{detail}', [App\Http\Controllers\FacultiesController::class, 'showDetail'])->name('showdetail');
-    Route::any('/updatefaculty', [App\Http\Controllers\FacultiesController::class, 'update'])->name('updatefaculty');
+    Route::any('/updatefaculty', [App\Http\Controllers\FacultiesController::class, 'update'])->name('updatefaculty');    
 });
+
+
 
 
 

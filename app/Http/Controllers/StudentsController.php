@@ -20,6 +20,9 @@ use App\Models\PaymentRequest;
 use App\Models\Fee;
 use App\Mail\WelcomeMember;
 use Carbon\Carbon;
+use App\Exports\StudentsExport;
+use App\Exports\ActiveStudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentsController extends Controller
 {
@@ -1226,6 +1229,30 @@ class StudentsController extends Controller
 
         return redirect('studentprofile/');           
 
+    }
+
+    public function allStudentsExport() 
+    {        
+        $semester = "";
+
+        if(Setting::first()->semester == 1)
+            $semester = "First Semester";
+        else 
+            $semester = "Second Semester";            
+
+        return Excel::download(new StudentsExport, 'SMARTII All-Time Students upto-A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
+    }
+
+    public function allActiveStudentsExport() 
+    {        
+        $semester = "";
+
+        if(Setting::first()->semester == 1)
+            $semester = "First Semester";
+        else 
+            $semester = "Second Semester";            
+
+        return Excel::download(new ActiveStudentsExport, 'SMARTII Active Students as of A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
     }
 
 }

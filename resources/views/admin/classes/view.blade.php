@@ -3,11 +3,7 @@
 
     <div class="col-sm d-flex justify-content-center">
 
-        <h5>CLASSES AND SCHEDULES</h5>
-
-        
-        
-
+        <h5>CLASSES AND SCHEDULES</h5>                
 
     </div>
 
@@ -268,25 +264,44 @@ function programSelect(id){
         if (this.status == 200) {
 
             let subjects = JSON.parse(this.responseText);
+
+            if(typeof subjects !== 'undefined'){            
     
-        output = `<div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
-        output = `<ul class="list-group mt-2">`;
+                output = `<div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
+                output +=`<ul class="list-group mt-2">`;
 
-            for(let i in subjects){
+                    for(let i in subjects){
 
-                output+='<li role="button" id="subj-'+ subjects[i].id +'" onclick="subjectSelect('+ subjects[i].id +')" class="subject-button list-group-item list-group-item-action">'+ subjects[i].desc +'</li>';
+                        output+='<li role="button" id="subj-'+ subjects[i].id +'" onclick="subjectSelect('+ subjects[i].id +')" class="subject-button list-group-item list-group-item-action">'+ subjects[i].desc +'</li>';
 
-            }    
+                    }    
 
-        output +=`</ul>`;       
-        output +=`</div>`;   
-        
+                output +=`</ul>`;       
+                output +=`</div>`;   
+                
 
-        subjectsList.innerHTML = output;
+                subjectsList.innerHTML = output;
 
+            } else {
 
+                output = `<div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
+                output +=`<h5>No Classes</h5>`;   
+                output +=`</div>`;   
+
+                subjectsList.innerHTML = output;
+
+            }
+
+        }else {
+
+            output = `<div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
+            output +=`<h5>No Classes</h5>`;   
+            output +=`</div>`;   
+
+            subjectsList.innerHTML = output;
 
         }
+
     }
 
     xhr.send();
