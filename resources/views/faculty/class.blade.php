@@ -76,6 +76,8 @@
             
             <h4 class="mt-5">Students List </h4>   
 
+          
+
 
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
@@ -86,16 +88,35 @@
             @include('inc.messages')
 
 
-            <div class="dropdown float-left">
+            <div class="dropdown float-left mb-2">
+
                 <button class="btn btn-light border dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Sort By
                 </button>
+
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <button class="dropdown-item" onclick="selectTable('alpha')">Alphabetical</button>              
                   <button class="dropdown-item" onclick="selectTable('id')">Student ID</button>              
                   <button class="dropdown-item" onclick="selectTable('rating')">Rating</button>              
                 </div>
-            </div>
+
+            </div>            
+            
+            <div class="row no-gutters float-right mb-2">
+
+                <div class="col">
+                    <a href="/myclass/{{$class->id}}/export" class="btn btn-success rounded-0" type="button" data-toggle="tooltip" title="Export to Excel" aria-haspopup="true" aria-expanded="false">
+                       Export
+                    </a> 
+                </div>
+
+                {{-- <div class="col">
+                    <button class="btn btn-primary rounded-0" type="button" data-toggle="tooltip" title="Import Excel File" aria-haspopup="true" aria-expanded="false">
+                       Import
+                    </button> 
+                </div> --}}
+                
+            </div>           
             
             <table class="table">
                 <tr>

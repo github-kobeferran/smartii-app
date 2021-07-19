@@ -78,7 +78,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/admin/view/{table}/{by}/{value}/{all?}', [App\Http\Controllers\AdminsController::class, 'showTableBy'])->name('adminViewTableBy');    
     Route::get('/admin/view/{table}/{dept}/{deptvalue}/{prog}/{progvalue}', [App\Http\Controllers\AdminsController::class, 'showTableByTwo'])->name('adminViewTableByTwo');
     Route::get('/admin/view/{table}/{department}/{departmentvalue}/{program}/{programvalue}/{level}/{levelvalue}/{semester}/{semestervalue}', [App\Http\Controllers\AdminsController::class, 'showTableByFour'])->name('adminViewTableByFour');
-    Route::get('/admin/available/rooms/{from}/{until}/{day?}', [App\Http\Controllers\RoomsController::class, 'availableRooms'])->name('availableRooms');    
+    Route::get('/admin/available/rooms/{from}/{utnil}/{day?}', [App\Http\Controllers\RoomsController::class, 'availableRooms'])->name('availableRooms');    
     Route::get('/admin/available/faculty/{from}/{until}/{day?}', [App\Http\Controllers\FacultiesController::class, 'availableFaculty'])->name('availableFaculty');    
     Route::get('/admin/availablerooms/{from}/{until}/{day}/{exceptid}', [App\Http\Controllers\RoomsController::class, 'availableRoomsExcept'])->name('availableRoomsExcept');    
     Route::get('/admin/availablefaculty/{from}/{until}/{day}/{exceptid}', [App\Http\Controllers\FacultiesController::class, 'availableFacultyExcept'])->name('availableFacultyExcept');    
@@ -155,13 +155,17 @@ Route::get('/studentprofile/{id?}/', [App\Http\Controllers\StudentsController::c
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->group(function () {
     Route::get('/myclasses', [App\Http\Controllers\FacultiesController::class, 'getClasses'])->name('facultyClasses');
+
     Route::get('/myclass/{id}/', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
+    Route::get('/myclass/{id}/export', [App\Http\Controllers\FacultiesController::class, 'exportClass'])->name('exportClass');
+
     Route::get('/sortclass/{classid}/{facultyid}/{sortby}', [App\Http\Controllers\StudentClassesController::class, 'sortStudents'])->name('sortStudents');
     Route::any('/faculty/updaterating/', [App\Http\Controllers\SubjectsTakenController::class, 'updateRating'])->name('updaterating');
     Route::any('/archiveclass', [App\Http\Controllers\StudentClassesController::class, 'archiveClass'])->name('archiveclass');
     Route::get('/facultydetails/{id?}', [App\Http\Controllers\FacultiesController::class, 'show'])->name('facultydetails');
     Route::get('/showfacultydetail/{id}/{detail}', [App\Http\Controllers\FacultiesController::class, 'showDetail'])->name('showdetail');
     Route::any('/updatefaculty', [App\Http\Controllers\FacultiesController::class, 'update'])->name('updatefaculty');    
+    
 });
 
 

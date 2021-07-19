@@ -137,7 +137,7 @@ class StudentsController extends Controller
             'semester' => 'required', 
             'email' => 'required',
             'gender' => 'required',
-            'contact' => 'required|digits:10',
+            'contact' => 'required|digits:11',
             'last_name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100',
             'first_name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100',
             'middle_name' => 'regex:/^[a-z ,.\w\'-]*$/|max:100',

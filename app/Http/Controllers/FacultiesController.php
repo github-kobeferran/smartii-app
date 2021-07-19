@@ -18,6 +18,9 @@ use App\Models\Subject;
 use App\Models\Program;
 use App\Mail\WelcomeMember;
 use Carbon\Carbon;
+use App\Exports\ClassStudenList;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class FacultiesController extends Controller
 {
@@ -517,6 +520,64 @@ class FacultiesController extends Controller
               ->update([$request->input('detail_name') => $request->input('detail')]);
 
         return redirect()->route('facultydetails')->with('success', 'Update Successful');
+
+    }
+
+    public function exportClass($id){      
+         
+        if(StudentClass::where('id', $id)->count() < 0){
+            return redirect()->route('facultyClasses');
+        }
+
+        $class = StudentClass::find($id);
+
+        if($class->archive == 1){
+            return redirect()->back();
+        }
+
+        $class->topic = $class->id;
+        $class->prog = $class->id;
+
+        $faculty = Faculty::find(auth()->user()->member->member_id);
+        
+
+        if($class->faculty_id != $faculty->id){
+            return redirect()->back();
+        }
+
+        $students = StudentClass::getStudentsbyClass($class->id)->filter(function ($value, $key) {
+            return $value != null;
+        });                        
+        
+        
+        $alphabetical = $students->sortBy('last_name');
+        $idAsc = $students->sortBy('student_id');        
+        $schedules = Schedule::getSchedulebyClass($class->id)->sortBy('day');
+
+        
+        foreach($schedules as $sched){
+
+            $sched->formatted_start = $sched->start_time;
+            $sched->formatted_until = $sched->until;
+            $sched->day_name = $sched->day;
+            $sched->room_name = $sched->id;
+            
+        }
+
+        foreach($alphabetical as $student){
+            $student->rating = $values = ['class_id' => $class->id, 'student_id' => $student->id];
+        }             
+
+        $class->topic = $class->id;
+
+        $semester = "";
+
+        if(Setting::first()->semester == 1)
+            $semester = "First Semester";
+        else 
+            $semester = "Second Semester";            
+
+        return Excel::download(new ClassStudenList($alphabetical), 'SMARTII Class ' . strtoupper($class->class_name) . ' ' . Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');            
 
      }
 
