@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+//google oauth
+
+Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [App\Http\Controllers\GoogleController::class, 'handleGoogleCallback']);
+
+//-------
+
 Route::get('/', function () {
     return view('home');
 });
