@@ -136,6 +136,10 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);
     Route::get('/events/delete/{id}', [App\Http\Controllers\EventsController::class, 'delete']);
     Route::any('/events/update', [App\Http\Controllers\EventsController::class, 'update']);
+    
+    Route::any('/homepageimage/store', [App\Http\Controllers\AdminsController::class, 'homepageImageStore']);
+    Route::get('/homepageimage/delete/{id}', [App\Http\Controllers\AdminsController::class, 'homepageImageDelete']);
+    Route::any('/homepageimage/update/', [App\Http\Controllers\AdminsController::class, 'homepageImageUpdate']);
 
 });
 

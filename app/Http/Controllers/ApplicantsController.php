@@ -151,7 +151,6 @@ class ApplicantsController extends Controller
 
         ],
         [
-
             'id_pic.required' => 'The 1x1 ID Picture is required.',
             'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
             'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',

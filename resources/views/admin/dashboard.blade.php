@@ -133,15 +133,24 @@
 
         </div>
 
-        <div class="d-flex">
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
+        
+        @include('inc.messages')
+        
 
-            <button type="button" class="btn btn-primary btn-lg m-2">
+        <div class="d-flex flex-wrap justify-content-center">
+
+            <button type="button" class="btn btn-primary btn-lg m-1">
                 Applicants <span class="badge badge-light">{{$applicantCount}}</span>
               </button>
-              <button type="button" class="btn btn-primary btn-lg m-2">
+              <button type="button" class="btn btn-primary btn-lg m-1">
                 Students <span class="badge badge-light">{{$studentCount}}</span>
               </button>
-              <button type="button" class="btn btn-primary btn-lg m-2">
+              <button type="button" class="btn btn-primary btn-lg m-1">
                 Programs offerred <span class="badge badge-light">{{$programsOffered}}</span>
               </button>
 
@@ -205,10 +214,101 @@
         <a href="/events/create" class="float-right mr-2">>>> create school event</a>
         <br>
         <a href="/events" class="float-right mr-2">>>> see school events</a>
+        <br>
+        <a role="button" class="float-right mr-2" data-toggle="modal" data-target="#showGallery">>> see Homepage Images</a>
         
+        <div class="modal fade" id="showGallery" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content"  style="min-height: 21rem;">
+                <div class="modal-header bg-info text-white">
+                  <div class="modal-title" id="exampleModalLabel">Images in Homepage</div>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                {!!Form::open(['url' => '/homepageimage/store', 'files' => true])!!}
+                <div class="modal-body">
+                    <div class="d-flex flex-wrap justify-content-center">
 
-        <div class="d-flex mt-3">
+                        @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'))
 
+                        @else         
+                        
+                            @foreach (\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc') as $item)
+
+                                <a role="button"  data-toggle="modal" data-target="#showImage-{{$item->id}}">
+                                    
+                                    <img  src="{{url('/storage/images/system/homepage_images/' . $item->image)}}" alt="" class="border img-fluid my-2 w-50">
+
+                                </a>   
+                                
+                            @endforeach
+
+                             
+                            
+                        @endempty                        
+
+                                                                                     
+
+                    </div>
+
+                    <div class="form-group border mt-3">
+
+                        <p class="">Add New Image</p>
+                        {{Form::file('image', ['class' => 'form-control-file', 'id' => 'file'])}}
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                     
+                  <button id="addNewButton" type="submit" class="btn btn-primary d-none">Add Image</button>                  
+                </div>
+                {!!Form::close()!!}                
+              </div>
+            </div>
+          </div>
+
+        @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'))
+
+        @else         
+        
+            @foreach (\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc') as $item)
+                
+
+
+                <div class="modal fade" id="showImage-{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered " role="document">
+                      <div class="modal-content ">
+                        <div class="modal-header bg-warning">
+                          <div class="modal-title " id="exampleModalLabel"><img  src="{{url('/storage/images/system/homepage_images/' . $item->image)}}" alt="" class="border img-fluid w-25"></div>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        {!!Form::open(['url' => '/homepageimage/update', 'files' => true])!!}                        
+                        <div class="modal-body">
+                            <p class="">Change this Image</p>
+                            {{Form::hidden('id', $item->id)}}
+                            {{Form::file('image', ['class' => 'form-control-file', 'id' => 'editfile'])}}
+                        </div>
+                        <div class="modal-footer">
+                          <a href="homepageimage/delete/{{$item->id}}" class="btn btn-danger" >Delete</a>
+                          <button id="updateImage" type="submit" class="btn btn-info">Submit</button>
+                        </div>
+                        {!!Form::close()!!}
+                      </div>
+                    </div>
+                  </div>
+
+            @endforeach
+
+                
+            
+        @endempty  
+
+          
+
+        <div class="d-flex mt-5">
             
             <div id="donutchart" style="width: 900px; height: 500px;"></div>
             <div id="piechart" style="width: 900px; height: 500px;"></div>
@@ -228,6 +328,25 @@
 if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
                 location.reload();
 }
+
+
+let addNewButton = document.getElementById('addNewButton');
+let updateImage = document.getElementById('updateImage');
+
+
+file.addEventListener('input', () => {
+
+    if(file.value == ''){
+        addNewButton.className = "btn btn-primary d-none";        
+    } else {        
+        addNewButton.className = "btn btn-primary";
+    }
+
+});
+
+
+
+
 
 </script>
 

@@ -12,61 +12,65 @@
     
 
     <div  style="" id="carouselExampleIndicators" data-interval="7000" class="carousel slide carousel-fade" style="width=100%;" data-ride="carousel">
-        <ol class="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" ></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="3" ></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="6" ></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
-            
-        </ol>
 
+        @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images'))
+
+        @else         
+            
+            <?php $images = \Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'); ?>
+                        
+            <ol class="carousel-indicators">
+
+                @for ($i = 0; $i < count($images); $i++)
+                
+                    @if ($i == 0)
+
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{$i}}" class="active"></li>
+
+                    @else
+
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{$i}}" ></li>
+                        
+                    @endif
+
+                @endfor
+
+            </ol>                                                                                   
+
+                    {{-- <a role="button" data-toggle="modal" data-target="#showImage">
+                        
+                        <img src="{{url('/storage/images/system/homepage_images/' . $item->image)}}" alt="" class="img-fluid my-2 w-50">
+
+                    </a>   
+                        --}}
+                                                                                     
+        @endempty                            
 
         <div class="carousel-inner">
 
-            <div class="carousel-item active">
-            <img  src="{{url('/storage/images/system/icons/building.png')}}" class="img-fluid w-100 d-block mx-auto" alt="" >
-            
-            </div>
 
-            <div class="carousel-item">
-            <img  src="{{url('/storage/images/system/icons/event.jpg')}}" class="img-fluid w-100 d-block mx-auto"  alt="" >
-            
-            </div>
+            @for ($i = 0; $i < count($images); $i++)
+                            
+                @if ($i == 0)
 
-            <div class="carousel-item">
-            <img  src="{{url('/storage/images/system/icons/bartending.jpg')}}" class="img-fluid w-100 d-block mx-auto"  alt="" >
-           
-            </div>
+                    <div class="carousel-item active">
 
-            <div class="carousel-item">
-            <img  src="{{url('/storage/images/system/icons/basketball.jpg')}}" class="img-fluid w-100 d-block mx-auto"  alt="">
-            
-            </div>
-           
-            <div class="carousel-item">
-            <img  src="{{url('/storage/images/system/icons/sports.jpg')}}" class="img-fluid w-100 d-block mx-auto" alt="" >
-            
-            </div>
+                        <img  src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" class="img-fluid w-100 d-block mx-auto" alt="" >
+                    
+                    </div>
 
-            <div class="carousel-item">
-            <img  src="{{url('/storage/images/system/icons/seaman.jpg')}}" alt="" class="img-fluid w-100 d-block mx-auto">
-            
-            </div>           
+                @else 
 
-            <div class="carousel-item">
-            <img  src="{{url('/storage/images/system/icons/intrams.jpg')}}" alt="" class="img-fluid w-100 d-block mx-auto">
-            
-            </div>
+                    <div class="carousel-item">
 
-            <div class="carousel-item">
-            <img  src="{{url('/storage/images/system/icons/ball.jpg')}}" alt="" class="img-fluid w-100 d-block mx-auto">
-            
-            </div>
+                        <img  src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" class="img-fluid w-100 d-block mx-auto" alt="" >
+                
+                    </div>
+                    
+                @endif
 
+            @endfor           
+            
         </div>
         
         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

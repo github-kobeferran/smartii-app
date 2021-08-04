@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -1279,6 +1280,86 @@ class AdminsController extends Controller
 
 
     }
-   
+
+    public function homepageImageStore(Request $request){
+
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }   
+
+        
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'image|max:10000',                                              
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('adminDashboard')
+                         ->withErrors($validator)
+                         ->withInput();                         
+        }
+
+        
+        // get filename with the extension
+        $filenameWithExt = $request->file('image')->getClientOriginalName();
+        // get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // get just ext
+        $extension = $request->file('image')->getClientOriginalExtension();
+        //Filename to store
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+        // upload image
+        $path = $request->file('image')->storeAs('public/images/system/homepage_images/', $fileNameToStore);
+        
+
+
+        DB::insert('insert into homepage_images (image) values (?)', [$fileNameToStore]);
+
+        return redirect()->route('adminDashboard')->with('success', 'Image Added');
+
+
+    }
+
+    public function homepageImageDelete($id){
+        
+
+        DB::delete('delete from homepage_images where id = ?', [$id]);
+
+        return redirect()->route('adminDashboard')->with('info', 'Image Deleted');
+    }
+
+    public function homepageImageUpdate(Request $request){
+        
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }           
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|max:10000',                                              
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('adminDashboard')
+                         ->withErrors($validator)
+                         ->withInput();                         
+        }
+
+          // get filename with the extension
+        $filenameWithExt = $request->file('image')->getClientOriginalName();
+        // get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // get just ext
+        $extension = $request->file('image')->getClientOriginalExtension();
+        //Filename to store
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+        // upload image
+        $path = $request->file('image')->storeAs('public/images/system/homepage_images/', $fileNameToStore);
+          
+
+
+        DB::update ('update homepage_images set image = ? where id = ?', [$fileNameToStore, $request->input('id')]);
+
+        return redirect()->route('adminDashboard')->with('info', 'Image Updated');
+    }
 
 }
