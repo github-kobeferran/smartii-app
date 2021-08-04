@@ -13,11 +13,13 @@
 
     <div  style="" id="carouselExampleIndicators" data-interval="7000" class="carousel slide carousel-fade" style="width=100%;" data-ride="carousel">
 
-        @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images'))
+        <?php $images = \Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'); ?>
+
+        @empty($images))
 
         @else         
             
-            <?php $images = \Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'); ?>
+           
                         
             <ol class="carousel-indicators">
 
