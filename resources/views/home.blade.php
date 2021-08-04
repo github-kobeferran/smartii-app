@@ -57,7 +57,7 @@
 
                     <div class="carousel-item active">
 
-                        <img  src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" class="img-fluid w-100 d-block mx-auto" alt="" >
+                        <img  src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" class="img-fluid d-block mx-auto" alt="" >
                     
                     </div>
 
@@ -65,7 +65,7 @@
 
                     <div class="carousel-item">
 
-                        <img  src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" class="img-fluid w-100 d-block mx-auto" alt="" >
+                        <img  src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" class="img-fluid d-block mx-auto" alt="" >
                 
                     </div>
                     
