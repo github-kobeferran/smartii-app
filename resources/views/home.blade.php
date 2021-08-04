@@ -108,9 +108,9 @@
 
             <u><h4 class="m-2" style="text-shadow: 1px 1px 2px pink; font-family: 'Roboto Condensed', sans-serif; color: #044716;">{{\Carbon\Carbon::now()->isoFormat('dddd, Do MMMM OY')}}</h4></u>
 
-            @empty(\App\Models\Event::where('from', \Carbon\Carbon::now()->toDateString())->orderBy('from', 'asc')->get())
+            @empty(\App\Models\Event::where('from', \Carbon\Carbon::now()->toDateString())->first())
 
-                <div class="row mx-5 mt-5 justify-content-center " style="text-shadow: 1px 1px 2px pink;">
+                <div class="row mx-5 my-5 justify-content-center " style="text-shadow: 1px 1px 2px pink;">
                     No events today
                 </div>
 
