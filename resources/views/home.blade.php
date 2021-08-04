@@ -92,7 +92,7 @@
                         <div id="announce-{{$announcement->id}}" class="shadow bg-warning w-100 text-left mt-2 mb-2" style="min-width: 21rem;">
                             <u><h4 class="card-header " style="text-shadow: 1px 1px 2px #fdfdba; font-family: 'Roboto Condensed', sans-serif; color: #044716;"> {{ strtoupper("Announcement")  }} <span class="float-right ml-2" role="button" onclick="closeAnnounceMent({{$announcement->id}})"> <i class="fa fa-window-close text-danger" aria-hidden="true"></i></span> </h4></u>
                             <div class="card-body ">
-                            <h3 class="card-title" style="font-family: 'Roboto Condensed', sans-serif;">>{{$announcement->title}}</h3>
+                            <h3 class="card-title" style="font-family: 'Roboto Condensed', sans-serif; text-shadow: 1px 1px 2px #fdfdba;">{{$announcement->title}}</h3>
                             <p class="card-text">{{$announcement->content}}</p>
                             <p class="float-right text-secondary">{{\Carbon\Carbon::parse($announcement->created_at)->diffForHumans()  }} </p>
                             </div>
