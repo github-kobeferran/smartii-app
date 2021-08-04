@@ -78,7 +78,7 @@
                 </div>                
             </div>
 
-            <div class="border border-primary rounded p-4 mt-1 text-center">
+            <div class="border border-primary rounded p-4 mt-1 text-center mb-2">
 
                 Note: This registration is only for <strong> New Applicants </strong>, if you are already an existing Student or Faculty. Please go to the registrar for your User Details.
 

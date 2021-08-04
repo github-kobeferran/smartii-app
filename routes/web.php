@@ -60,6 +60,8 @@ Route::get('/collegeprograms', function () {
     return view('college');
 });
 
+Route::get('/events', [App\Http\Controllers\EventsController::class, 'showEvents']);
+
 
 
 Auth::routes(['verify' => true]);
@@ -129,6 +131,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::get('allstudents/export/', [App\Http\Controllers\StudentsController::class, 'allStudentsExport']);
     Route::get('allactivestudents/export/', [App\Http\Controllers\StudentsController::class, 'allActiveStudentsExport']);
+
+    Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
+    Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);
 
 });
 

@@ -1,7 +1,7 @@
 <div class="row vw-100 border no-gutters mt-2">
         
     <div class="col text-right">
-        <h1 class="homepage-title mt-1 ml-2 mr-0 pr-0">Saint Mark Institute Integrated System  </h1>                                        
+        <h1 class="homepage-title mt-1 ml-2 mr-0 pr-0">St. Mark Institute Integrated System  </h1>                                        
        
     </div>  
     <div class="col d-flex flex-wrap">

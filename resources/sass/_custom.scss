@@ -3,6 +3,9 @@
 // }
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+
+
 thead th {
     position: sticky;
     top: 0;
@@ -317,11 +320,22 @@ tbody td {
 
 }
 
-.carousel{
 
-    border: .5px solid #05551b;;
-   
+// .carousel{
+    
+// }
+
+.carousel-item{
+    
+    max-height: 320px !important
 }
+
+.carousel-control-next,
+.carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
+
+
 
 .homepage-dropdown{
 
@@ -368,6 +382,7 @@ tbody td {
     width: 50%;
 
 }
+
 
 // .program-box {
 

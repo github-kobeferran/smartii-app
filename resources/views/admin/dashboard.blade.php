@@ -184,29 +184,30 @@
                 </div>
               </div>
 
-        <div class="d-flex flex-wrap">
+            <div class="d-flex justify-content-center  flex-wrap">
 
+                @foreach ($announcements as $announcement)
 
-            @foreach ($announcements as $announcement)
-
-            <div class="card text-white bg-warning text-secondary mb-3" style="min-width: 18rem;">
-                <div class="card-header">{{\Carbon\Carbon::parse($announcement->created_at)->format('g:i A, D d F')}} <span><a class="float-right" href="/deleteannouncement/{{$announcement->id}}">X</a></span> </div>
-                <div class="card-body announcement-body">
-                  <h5 class="card-title">{{$announcement->title}}</h5>
-                  <p class="card-text">{{$announcement->content}}</p>
-                </div>
-              </div>   
-                
-            @endforeach
-
-
-                              
-           
-        </div>
+                <div class="card text-white bg-warning text-secondary mb-3 m-2" style="min-width: 18rem;">
+                    <div class="card-header">{{\Carbon\Carbon::parse($announcement->created_at)->format('g:i A, D d F')}} <span><a class="float-right" href="/deleteannouncement/{{$announcement->id}}">X</a></span> </div>
+                    <div class="card-body announcement-body">
+                    <h5 class="card-title">{{$announcement->title}}</h5>
+                    <p class="card-text">{{$announcement->content}}</p>
+                    </div>
+                </div>   
+                    
+                @endforeach                              
+            
+            </div>
 
         </div>
 
-        <div class="d-flex">
+        <a href="/events/create" class="float-right mr-2">>>> create school event</a>
+        <br>
+        <a href="/events" class="float-right mr-2">>>> see school events</a>
+        
+
+        <div class="d-flex mt-3">
 
             
             <div id="donutchart" style="width: 900px; height: 500px;"></div>
