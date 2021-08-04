@@ -254,8 +254,14 @@
 
                     <div class="form-group border mt-3">
 
-                        <p class="">Add New Image</p>
+                        <p class="">Add New Image</p>                        
                         {{Form::file('image', ['class' => 'form-control-file', 'id' => 'file'])}}
+
+                        <div class="p-2">
+
+                            Note: The ideal height for <b>Homepage Images</b> is <b>350px</b>.
+
+                        </div>
 
                     </div>
                 </div>
@@ -290,6 +296,11 @@
                             <p class="">Change this Image</p>
                             {{Form::hidden('id', $item->id)}}
                             {{Form::file('image', ['class' => 'form-control-file', 'id' => 'editfile'])}}
+                            <div class="p-2">
+
+                                Note: The ideal height for <b>Homepage Images</b> is <b>350px</b>.
+    
+                            </div>
                         </div>
                         <div class="modal-footer">
                           <a href="homepageimage/delete/{{$item->id}}" class="btn btn-danger" >Delete</a>
