@@ -66,14 +66,28 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Register') }}
                                 </button>
+
+                                
+                            </div>                            
+                        </div>      
+
+                        <div class="form-group row mb-0 ml-2">
+                            <div class="col-md-6 offset-md-4">
+                               
+                                or
+                                
+                            </div>                            
+                        </div>                        
+
+                        <div class="form-group row mb-0 ">
+                            <div class="col-md-6 offset-md-4">
+                                <a href="{{ url('auth/google') }}">
+                                    <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png" >
+                                </a>
                             </div>
                         </div>
 
-                        <div class="text-center justify-end mt-4">
-                            <a href="{{ url('auth/google') }}">
-                                <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png" style="margin-left: 3em;">
-                            </a>
-                        </div>
+                        
                     </form>
                 </div>                
             </div>

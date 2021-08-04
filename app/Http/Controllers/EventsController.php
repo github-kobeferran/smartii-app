@@ -33,7 +33,7 @@ class EventsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:100', 
-            'from' => 'date|before:' . Carbon::now()->addYear()->toDateString() . '|after:' . Carbon::now()->subDays(1)->toDateString(), 
+            'from' => 'date|before:' . Carbon::now()->addYear()->toDateString() . '|before_or_equal:until,|after:' . Carbon::now()->subDays(1)->toDateString(), 
             'until' => 'date|before:' . Carbon::now()->addYear()->toDateString() . '|after:' . Carbon::now()->subDays(1)->toDateString(), 
         ]);
 
@@ -55,6 +55,51 @@ class EventsController extends Controller
 
         return redirect()->route('createEvent')->with('success', 'Event Created!');
 
+    }
+
+    public function update(Request $request){
+
+        if($request->method() != 'POST')
+            return redirect()->back();
+
+            $id = auth()->user()->member->member_id;
+
+            $author_id = Admin::find($id)->admin_id;
+    
+            $validator = Validator::make($request->all(), [
+                'title' => 'required|max:100',
+                'from' => 'date|before:' . Carbon::now()->addYear()->toDateString() . '|before_or_equal:until,|after:' . Carbon::now()->subDays(1)->toDateString(), 
+                'until' => 'date|before:' . Carbon::now()->addYear()->toDateString() . '|after:' . Carbon::now()->subDays(1)->toDateString(), 
+            ]);
+    
+            if ($validator->fails()) {
+                return redirect()
+                                ->route('events')
+                                ->withErrors($validator)
+                                ->withInput();                            
+            }
+            
+            $event = Event::find($request->input('id'));
+
+            $event->title = $request->input('title');
+            $event->from = $request->input('from');
+            $event->until = $request->input('until');
+            $event->author = $author_id;
+            
+            $event->save();
+
+            return redirect()->route('events')->with('info', 'Event Updated');
+
+    }
+
+    public function delete($id){
+
+        $event = Event::find($id);
+
+        $event->delete();
+
+        return redirect()->route('events')->with('info', 'Event Deleted');
+        
     }
 
 }

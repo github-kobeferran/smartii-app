@@ -60,7 +60,7 @@ Route::get('/collegeprograms', function () {
     return view('college');
 });
 
-Route::get('/events', [App\Http\Controllers\EventsController::class, 'showEvents']);
+Route::get('/events', [App\Http\Controllers\EventsController::class, 'showEvents'])->name('events');
 
 
 
@@ -134,6 +134,8 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);
+    Route::get('/events/delete/{id}', [App\Http\Controllers\EventsController::class, 'delete']);
+    Route::any('/events/update', [App\Http\Controllers\EventsController::class, 'update']);
 
 });
 
