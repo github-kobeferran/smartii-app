@@ -1321,9 +1321,17 @@ class AdminsController extends Controller
     }
 
     public function homepageImageDelete($id){
+
+        $images = DB::select('select * from homepage_images where id = ?', [$id]);
+      
+        foreach($images as $image){                        
+            Storage::disk('public')->delete('images/system/homepage_images/' . $image->image);
+        }
         
 
         DB::delete('delete from homepage_images where id = ?', [$id]);
+
+        
 
         return redirect()->route('adminDashboard')->with('info', 'Image Deleted');
     }

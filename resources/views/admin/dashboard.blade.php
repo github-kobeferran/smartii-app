@@ -275,13 +275,11 @@
           </div>
 
         @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'))
-
+        
         @else         
         
             @foreach (\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc') as $item)
                 
-
-
                 <div class="modal fade" id="showImage-{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered " role="document">
                       <div class="modal-content ">

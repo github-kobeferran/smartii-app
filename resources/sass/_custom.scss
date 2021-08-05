@@ -383,6 +383,51 @@ tbody td {
 
 }
 
+.article-card{
+    margin: 8px auto;
+    min-width: 200px;
+    min-height: 300px;    
+    max-width: 200px;
+    max-height: 300px;    
+    box-shadow: 1px 1px 10px rgb(141, 137, 137);
+    border-radius: 5%;
+}
+
+.article-card span{
+    color: rgb(78, 78, 78);    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 7; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
+.article-title{
+    color: rgb(78, 78, 78);  
+    border: 1px solid black;
+    text-transform: uppercase;
+    font-family: Georgia, 'Times New Roman', Times, serif, Times, serif;  
+    display:inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 30ch;
+}
+
+
+.article-title:hover{
+    color: rgb(78, 78, 78);  
+    border: 1px solid black;
+    text-transform: uppercase;
+    font-family: Georgia, 'Times New Roman', Times, serif, Times, serif;  
+    display:inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 30ch;
+}
+
+
 
 // .program-box {
 
