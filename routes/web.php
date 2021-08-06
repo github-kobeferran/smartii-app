@@ -61,7 +61,10 @@ Route::get('/collegeprograms', function () {
 });
 
 Route::get('/events', [App\Http\Controllers\EventsController::class, 'showEvents'])->name('events');
-
+Route::get('/post/{id}', [App\Http\Controllers\PostsController::class, 'show'])->name('post.show')->middleware(['verified']);
+Route::get('/posts', [App\Http\Controllers\PostsController::class, 'showAll'])->name('post.showall')->middleware(['verified']);
+Route::get('/createpost', [App\Http\Controllers\PostsController::class, 'create'])->name('post.create')->middleware(['verified', 'adminAndFaculty']);
+Route::any('/uploadpost', [App\Http\Controllers\PostsController::class, 'store'])->middleware(['verified', 'adminAndFaculty']);
 
 
 Auth::routes(['verify' => true]);
@@ -139,7 +142,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     
     Route::any('/homepageimage/store', [App\Http\Controllers\AdminsController::class, 'homepageImageStore']);
     Route::get('/homepageimage/delete/{id}', [App\Http\Controllers\AdminsController::class, 'homepageImageDelete']);
-    Route::any('/homepageimage/update/', [App\Http\Controllers\AdminsController::class, 'homepageImageUpdate']);
+    Route::any('/homepageimage/update/', [App\Http\Controllers\AdminsController::class, 'homepageImageUpdate']);    
 
 });
 
@@ -183,7 +186,7 @@ Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->
     Route::any('/archiveclass', [App\Http\Controllers\StudentClassesController::class, 'archiveClass'])->name('archiveclass');
     Route::get('/facultydetails/{id?}', [App\Http\Controllers\FacultiesController::class, 'show'])->name('facultydetails');
     Route::get('/showfacultydetail/{id}/{detail}', [App\Http\Controllers\FacultiesController::class, 'showDetail'])->name('showdetail');
-    Route::any('/updatefaculty', [App\Http\Controllers\FacultiesController::class, 'update'])->name('updatefaculty');    
+    Route::any('/updatefaculty', [App\Http\Controllers\FacultiesController::class, 'update'])->name('updatefaculty');        
     
 });
 

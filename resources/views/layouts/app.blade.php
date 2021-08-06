@@ -12,7 +12,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="https://kit.fontawesome.com/6421dddc90.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/6421dddc90.js" crossorigin="anonymous"></script>    
+    <script src="https://cdn.ckeditor.com/4.16.1/basic/ckeditor.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -40,9 +41,9 @@
         <main >
             @yield('content')
         </main> 
-        
-
-    
-    
+            
+    <script>
+            CKEDITOR.replace( 'editor' );
+    </script>
 </body>
 </html>

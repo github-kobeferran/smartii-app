@@ -160,7 +160,7 @@
     <?php $featured_posts = \App\Models\Post::where('approved', 1)->where('featured', 1)->get();         
     ?> 
 
-    @if(count($featured_posts) > 0))    
+    @if(count($featured_posts) > 0) 
 
     <hr class="w-50 mx-auto">
 
@@ -176,19 +176,23 @@
 
         <div class="text-center mx-auto">
             
-            <a href="">
+            <a href="/post/{{$post->id}}">
 
                 <span onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-title">{{$post->title}}</span>
 
             </a>
 
-            <a href="">
+            <a href="/post/{{$post->id}}">
 
                 <div onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-card">
-                    
-                    <img src="{{url('/storage/images/posts/' . $post->post_image)}}" alt="" class="img-thumbnail m-auto">
+                                                        
+                    @if (!empty($post->post_image) )                    
 
-                    <span> {{$post->body}}</span>
+                        <img src="{{url('/storage/images/posts/' . $post->post_image)}}" alt="" class="img-thumbnail m-auto">
+                                            
+                    @endif
+
+                    <span> {!!$post->body!!}</span>
                         
                 </div>      
 
@@ -203,7 +207,7 @@
 
     </div>
 
-    <u><a href="" style="font-family: 'Roboto Condensed', sans-serif;" class="text-info float-right mr-2">See More</a></u>
+    <u><a href="/posts" style="font-family: 'Roboto Condensed', sans-serif;" class="text-info float-right mr-2">See More</a></u>
         
     @endif
     

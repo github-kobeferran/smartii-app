@@ -6,6 +6,15 @@
 
 <div class="container">
 
+
+    <a href="createpost" class="btn btn-primary btn-block mt-3 mb-4">
+
+        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Create Blog/Article
+    
+    </a>
+
+    <hr>
+
     @if($classesByProgram->count() < 1)
 
     <h5>No Classes yet.</h5>

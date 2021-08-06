@@ -211,11 +211,23 @@
 
         </div>
 
-        <a href="/events/create" class="float-right mr-2">>>> create school event</a>
-        <br>
-        <a href="/events" class="float-right mr-2">>>> see school events</a>
-        <br>
-        <a role="button" class="float-right mr-2" data-toggle="modal" data-target="#showGallery">>> see Homepage Images</a>
+        <div class="btn-group dropleft float-right mt-2">
+            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Other Actions
+            </button>
+            <div class="dropdown-menu border-info">
+                <ul class="list-group list-group-flush p-0 m-0">
+                    <a href="/events/create" class="dropdown-item list-group-item">Create a School Event</a>
+                    <br>
+                    <a href="/events" class="dropdown-item list-group-item">View School Events</a>
+                    <br>
+                    <a role="button" class="dropdown-item list-group-item" data-toggle="modal" data-target="#showGallery">Homepage Images</a>
+                    <br>
+                    <a href="/createpost" class="dropdown-item list-group-item">Create a Blog/Article Post</a>
+                </ul>                
+            </div>
+          </div>
+        
         
         <div class="modal fade" id="showGallery" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -315,9 +327,14 @@
             
         @endempty  
 
-          
+        
+        <br>
+        <br>
+        <br>
+        <hr>
+        <h5>Statistics</h5>
 
-        <div class="d-flex mt-5">
+        <div class="d-flex ">
             
             <div id="donutchart" style="width: 900px; height: 500px;"></div>
             <div id="piechart" style="width: 900px; height: 500px;"></div>

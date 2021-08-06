@@ -1363,8 +1363,6 @@ class AdminsController extends Controller
         // upload image
         $path = $request->file('image')->storeAs('public/images/system/homepage_images/', $fileNameToStore);
           
-
-
         DB::update ('update homepage_images set image = ? where id = ?', [$fileNameToStore, $request->input('id')]);
 
         return redirect()->route('adminDashboard')->with('info', 'Image Updated');
