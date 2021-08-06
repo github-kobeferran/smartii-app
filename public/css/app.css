@@ -381,6 +381,7 @@ tbody td {
   max-height: 300px;
   box-shadow: 1px 1px 10px #8d8989;
   border-radius: 5%;
+  margin-bottom: 25px;
 }
 
 .article-card span {
@@ -391,11 +392,22 @@ tbody td {
   -webkit-line-clamp: 7;
   /* number of lines to show */
   -webkit-box-orient: vertical;
+  text-decoration: none;
+}
+
+.article-card span:hover {
+  color: #4e4e4e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  /* number of lines to show */
+  -webkit-box-orient: vertical;
+  text-decoration: none !important;
 }
 
 .article-title {
   color: #4e4e4e;
-  border: 1px solid black;
   text-transform: uppercase;
   font-family: Georgia, "Times New Roman", Times, serif, Times, serif;
   display: inline-block;
@@ -403,11 +415,13 @@ tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 30ch;
+  box-shadow: 0.5px 0.5px 5px #8d8989;
+  padding: 0px 10px;
 }
 
 .article-title:hover {
   color: #4e4e4e;
-  border: 1px solid black;
+  box-shadow: 1px 1px 10px #8d8989;
   text-transform: uppercase;
   font-family: Georgia, "Times New Roman", Times, serif, Times, serif;
   display: inline-block;

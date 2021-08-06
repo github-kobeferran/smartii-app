@@ -157,6 +157,11 @@
         
     </div>
 
+    <?php $featured_posts = \App\Models\Post::where('approved', 1)->where('featured', 1)->get();         
+    ?> 
+
+    @if(count($featured_posts) > 0))    
+
     <hr class="w-50 mx-auto">
 
     <div class="text-center">
@@ -166,104 +171,42 @@
     <hr class="w-25 mb-4 mx-auto">
 
     <div class="d-flex justify-content-between flex-wrap">
+
+        @foreach ($featured_posts as $post)
+
+        <div class="text-center mx-auto">
+            
+            <a href="">
+
+                <span onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-title">{{$post->title}}</span>
+
+            </a>
+
+            <a href="">
+
+                <div onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-card">
+                    
+                    <img src="{{url('/storage/images/posts/' . $post->post_image)}}" alt="" class="img-thumbnail m-auto">
+
+                    <span> {{$post->body}}</span>
+                        
+                </div>      
+
+            </a> 
+                                                                
+        </div>    
+
+            
+        @endforeach        
         
-        <div class="text-center mx-auto">
-
-            <a href="">
-
-                <span  class="article-title">Kobe Ferran is so handsome Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur sint, dicta aliquam at assumenda ipsam. Qui iste at beatae, quibusdam voluptate eaque perspiciatis vitae! Velit dolore, facilis alias quisquam error ab rerum optio nemo voluptatum assumenda magnam ipsum iure cum culpa voluptatem omnis enim illum cupiditate placeat tempore esse! Itaque?</span>
-
-            </a>
-
-            <a href="">
-
-                <div class="article-card">
-
-                    <img src="{{url('/storage/images/system/homepage_images/zxczxczxc_1628140285.jpg')}}" alt="" class="img-thumbnail m-auto">
-
-
-                    <span> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi dignissimos voluptate nisi vitae non repellendus asperiores aspernatur aperiam odio fugit mollitia similique, perspiciatis laborum saepe at ipsam quidem recusandae a, fuga doloribus minima sint esse odit harum. Illum iste voluptate vitae autem molestias sint quo eveniet aliquam distinctio nobis ea quia magnam odit, ratione tempore officia fugit reprehenderit? Veritatis eaque et soluta nam magni quam, corrupti cupiditate sed unde tempora quis adipisci libero laboriosam aut amet nisi magnam quo eligendi consequuntur, quos nulla illo. Cumque facilis ea natus impedit, magni explicabo in mollitia dignissimos voluptas eum voluptatibus corrupti alias amet.</span>
-
-                        
-                </div>      
-
-            </a>                              
-            
-        </div>
-        <div class="text-center mx-auto">
-
-            <a href="">
-
-                <span  class="article-title">Kobe Ferran is so handsome Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur sint, dicta aliquam at assumenda ipsam. Qui iste at beatae, quibusdam voluptate eaque perspiciatis vitae! Velit dolore, facilis alias quisquam error ab rerum optio nemo voluptatum assumenda magnam ipsum iure cum culpa voluptatem omnis enim illum cupiditate placeat tempore esse! Itaque?</span>
-
-            </a>
-
-            <a href="">
-
-                <div class="article-card">
-
-                    <img src="{{url('/storage/images/system/homepage_images/zxczxczxc_1628140285.jpg')}}" alt="" class="img-thumbnail m-auto">
-
-
-                    <span> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi dignissimos voluptate nisi vitae non repellendus asperiores aspernatur aperiam odio fugit mollitia similique, perspiciatis laborum saepe at ipsam quidem recusandae a, fuga doloribus minima sint esse odit harum. Illum iste voluptate vitae autem molestias sint quo eveniet aliquam distinctio nobis ea quia magnam odit, ratione tempore officia fugit reprehenderit? Veritatis eaque et soluta nam magni quam, corrupti cupiditate sed unde tempora quis adipisci libero laboriosam aut amet nisi magnam quo eligendi consequuntur, quos nulla illo. Cumque facilis ea natus impedit, magni explicabo in mollitia dignissimos voluptas eum voluptatibus corrupti alias amet.</span>
-
-                        
-                </div>      
-
-            </a>                              
-            
-        </div>
-        <div class="text-center mx-auto">
-
-            <a href="">
-
-                <span  class="article-title">Kobe Ferran is so handsome Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur sint, dicta aliquam at assumenda ipsam. Qui iste at beatae, quibusdam voluptate eaque perspiciatis vitae! Velit dolore, facilis alias quisquam error ab rerum optio nemo voluptatum assumenda magnam ipsum iure cum culpa voluptatem omnis enim illum cupiditate placeat tempore esse! Itaque?</span>
-
-            </a>
-
-            <a href="">
-
-                <div class="article-card">
-
-                    <img src="{{url('/storage/images/system/homepage_images/zxczxczxc_1628140285.jpg')}}" alt="" class="img-thumbnail m-auto">
-
-
-                    <span> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi dignissimos voluptate nisi vitae non repellendus asperiores aspernatur aperiam odio fugit mollitia similique, perspiciatis laborum saepe at ipsam quidem recusandae a, fuga doloribus minima sint esse odit harum. Illum iste voluptate vitae autem molestias sint quo eveniet aliquam distinctio nobis ea quia magnam odit, ratione tempore officia fugit reprehenderit? Veritatis eaque et soluta nam magni quam, corrupti cupiditate sed unde tempora quis adipisci libero laboriosam aut amet nisi magnam quo eligendi consequuntur, quos nulla illo. Cumque facilis ea natus impedit, magni explicabo in mollitia dignissimos voluptas eum voluptatibus corrupti alias amet.</span>
-
-                        
-                </div>      
-
-            </a>                              
-            
-        </div>
-        <div class="text-center mx-auto">
-
-            <a href="">
-
-                <span  class="article-title">Kobe Ferran is so handsome Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur sint, dicta aliquam at assumenda ipsam. Qui iste at beatae, quibusdam voluptate eaque perspiciatis vitae! Velit dolore, facilis alias quisquam error ab rerum optio nemo voluptatum assumenda magnam ipsum iure cum culpa voluptatem omnis enim illum cupiditate placeat tempore esse! Itaque?</span>
-
-            </a>
-
-            <a href="">
-
-                <div class="article-card">
-
-                    <img src="{{url('/storage/images/system/homepage_images/zxczxczxc_1628140285.jpg')}}" alt="" class="img-thumbnail m-auto">
-
-
-                    <span> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi dignissimos voluptate nisi vitae non repellendus asperiores aspernatur aperiam odio fugit mollitia similique, perspiciatis laborum saepe at ipsam quidem recusandae a, fuga doloribus minima sint esse odit harum. Illum iste voluptate vitae autem molestias sint quo eveniet aliquam distinctio nobis ea quia magnam odit, ratione tempore officia fugit reprehenderit? Veritatis eaque et soluta nam magni quam, corrupti cupiditate sed unde tempora quis adipisci libero laboriosam aut amet nisi magnam quo eligendi consequuntur, quos nulla illo. Cumque facilis ea natus impedit, magni explicabo in mollitia dignissimos voluptas eum voluptatibus corrupti alias amet.</span>
-
-                        
-                </div>      
-
-            </a>                              
-            
-        </div>
-                       
+                                              
 
     </div>
 
     <u><a href="" style="font-family: 'Roboto Condensed', sans-serif;" class="text-info float-right mr-2">See More</a></u>
+        
+    @endif
+    
 
     <br>    
     
@@ -298,12 +241,7 @@
         </div> --}}
       
 
-    </div>
-
-    
-
-    
-
+    </div>    
 
 <script>
 
@@ -312,6 +250,22 @@ function closeAnnounceMent(id){
     let banner = document.getElementById('announce-' + id);
 
     banner.classList.add('d-none');
+
+}
+
+function onHover(el){   
+
+   for(let i = 0; i < el.length; i++){
+       el[i].style.backgroundColor = "#b7d3bf";   
+   }
+
+}
+
+function onOut(el){   
+
+   for(let i = 0; i < el.length; i++){
+       el[i].style.backgroundColor = "";   
+   }
 
 }
 
