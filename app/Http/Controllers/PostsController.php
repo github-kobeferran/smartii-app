@@ -34,9 +34,11 @@ class PostsController extends Controller
         $all = Post::where('approved', 1)->get();
         $featured = Post::where('featured', 1)->oldest()->get();                   
         $posts = Post::where('approved', 1)->where('featured', 0)->latest()->get();                   
+        $unapproved = Post::where('approved', 0)->latest()->get();                   
 
         return view('posts')->with('posts',  $posts)
                             ->with('featured', $featured)
+                            ->with('unapproved', $unapproved)
                             ->with('all', $all);
 
     }
@@ -49,7 +51,7 @@ class PostsController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:50', 
             'image' => 'image|max:1000', 
-            'body' => 'required|min:25',                  
+            'body' => 'required|min:50',                  
         ]);
 
         if ($validator->fails()) {
@@ -104,6 +106,44 @@ class PostsController extends Controller
         $post->save();
 
         return redirect()->route('post.create')->with('success', $msg);
+
+    }
+
+    public function toggleStatus($id){
+
+        if(Post::find($id)->doesntExist())
+            return redirect()->back();
+        
+        $post = Post::find($id);
+
+        if($post->approved == 0)
+            $post->approved = 1;
+        else
+            $post->approved = 0;
+        
+        $post->save();
+
+        return redirect('/post/'. $id);
+        
+
+    }
+
+    public function feature($id){
+
+        if(Post::find($id)->doesntExist())
+            return redirect()->back();
+        
+        $post = Post::find($id);
+
+        if($post->featured == 0)
+            $post->featured = 1;
+        else
+            $post->featured = 0;
+        
+        $post->save();
+
+        return redirect('/post/'. $id);
+        
 
     }
 

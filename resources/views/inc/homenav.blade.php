@@ -15,6 +15,7 @@
               <a class="dropdown-item" href="{{url('/visionandmission')}}">Vision and Mission</a>
               <a class="dropdown-item" href="{{url('/history')}}">History</a>
               <a class="dropdown-item" href="{{url('/contactus')}}">Contact Us</a>
+              <a class="dropdown-item" href="{{url('/posts')}}">School Articles</a>
             </div>
           </div>
         <div class="dropdown homepage-dropdown">

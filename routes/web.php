@@ -144,6 +144,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/homepageimage/delete/{id}', [App\Http\Controllers\AdminsController::class, 'homepageImageDelete']);
     Route::any('/homepageimage/update/', [App\Http\Controllers\AdminsController::class, 'homepageImageUpdate']);    
 
+    Route::get('/togglepoststatus/{id}', [App\Http\Controllers\PostsController::class, 'togglestatus']);    
+    Route::get('/featurepost/{id}', [App\Http\Controllers\PostsController::class, 'feature']);    
+
 });
 
 // APPLICANT protected routes 

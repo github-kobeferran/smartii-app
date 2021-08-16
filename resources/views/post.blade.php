@@ -22,6 +22,22 @@
         <p class="" style="font-family: 'Times New Roman', serif;">{{$post->author_name}}</p>
 
     </div>
+
+    @if (auth()->user()->user_type == 'admin')
+
+        <span data-toggle="tooltip" title="{{$post->approved == 0 ? 'approve' : 'unapprove'}}" class="float-right">Status: <a href="{{url('/togglepoststatus/' . $post->id)}}"> {{$post->approved == 0 ? 'Unapproved' : 'Approved'}}</a></span>
+        <br>
+        <span data-toggle="tooltip" title="{{$post->featured == 0 ? 'Feature this' : 'Unfeature'}}" class="float-right"><a href="{{url('/featurepost/' . $post->id)}}"> 
+
+            @if ($post->featured == 0)
+                <i class="fa fa-star-o text-warning" style=" -webkit-text-stroke: 2px black; /* width and color */" aria-hidden="true"></i>                
+            @else
+                <i class="fa fa-star text-warning" style=" -webkit-text-stroke: 2px black; /* width and color */" aria-hidden="true"></i>                
+            @endif            
+                    </a>  {{$post->featured == 0 ? 'Unfeatured' : 'Featured'}}</span>
+        <br>
+        
+    @endif
     
     @if (!empty($post->post_image) )         
         
@@ -33,12 +49,10 @@
     @endif
 
 
-    <p class="float-right mr-2 mb-4" style="font-size: .8em; color:gray">{{\Carbon\Carbon::parse($post->created_at)->isoFormat('OY-MM-DD hh:mm:ss A') }}</p>
+    <p class="float-right mr-2 mb-2" style="font-size: .8em; color:gray">{{\Carbon\Carbon::parse($post->created_at)->isoFormat('Do MMM OY hh:mm:ss A') }}</p>
 
     <br>
-
-
-        
+    <br>
 
     <div class="text-justify">
 

@@ -42,7 +42,7 @@
 
             <div class="form-group">
                 {{Form::label('post_body', 'Post Body' ,  ['style' => 'font-family: \'Roboto Condensed\', sans-serif;'])}}
-                {{Form::textarea('body', '', ['id' => 'editor', 'class' => 'form-control', 'placeholder' => 'Post Body here..' , 'required' => 'required', 'minlength' => '25'])}}
+                {{Form::textarea('body', '', ['id' => 'editor', 'class' => 'form-control', 'placeholder' => 'Post Body here..' , 'required' => 'required', 'minlength' => '50'])}}
     
             </div>
 
@@ -59,6 +59,8 @@
 
 </div>
 
-
+<script>
+    CKEDITOR.replace( 'editor' );
+</script>
     
 @endsection
