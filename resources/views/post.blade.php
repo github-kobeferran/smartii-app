@@ -47,7 +47,7 @@
 
         @if (auth()->user()->member->member_id == $post->member_id)
 
-            <span class="float-right bg-info"><a style="color: white !important;" href="{{url('/editpost/' . auth()->user()->email . '/' . $post->id)}}">Edit this post</a></span>
+            <span class="float-right bg-info px-2"><a style="color: white !important;" href="{{url('/editpost/' . auth()->user()->email . '/' . $post->id)}}">Edit this post</a></span>
 
             <br>
                         
