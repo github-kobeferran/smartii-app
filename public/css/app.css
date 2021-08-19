@@ -384,6 +384,10 @@ tbody td {
   margin-bottom: 25px;
 }
 
+.article-card img {
+  max-height: 200px !important;
+}
+
 .article-card span {
   color: #4e4e4e;
   overflow: hidden;
