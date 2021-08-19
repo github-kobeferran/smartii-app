@@ -192,7 +192,11 @@
                                             
                     @endif
 
-                    <span> {!!$post->body!!}</span>
+                    @if (strpos($post->body, '</a>') !== false)                    
+                        Click to view article content
+                    @else
+                        <span> {!! $post->body !!}</span>
+                    @endif
                         
                 </div>      
 
