@@ -6,9 +6,12 @@
     <link rel="icon" href="{{url('/storage/images/system/logo/smartii.png')}}">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">    
 
-    <title>Smartii</title>
+    <title>Smartii</title>    
+
+    <meta name="description" content="@yield('meta-content')">
+    <meta property="og:url"  content="{{url('/')}}" />
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

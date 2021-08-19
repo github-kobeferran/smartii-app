@@ -11,6 +11,8 @@
 
     <title>Smartii</title>
 
+    <meta name="description" content="@yield('meta-content')">
+
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/6421dddc90.js" crossorigin="anonymous"></script>
    

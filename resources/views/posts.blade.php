@@ -1,6 +1,8 @@
-{{-- {{dd($posts)}} --}}
-
 @extends('layouts.app')
+
+@section('meta-content')
+Posts, Articles and News page of St Mark Institute Integrated Information System, platform for handling services offered by St Mark Arts and Training Institute Incorporated
+@endsection
 
 @section('content')
 
