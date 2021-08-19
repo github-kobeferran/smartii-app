@@ -89,10 +89,10 @@
         
         let data = google.visualization.arrayToDataTable([
         ["Type", "Count", { role: "style" } ],
-        ['SHS',     {!! json_encode(\App\Models\Applicant::where('dept', 0)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#b87333" ],
-        ['SHS Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 0)->where('approved', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#C8A583" ],             
-        ['College',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#BB6ECC" ],             
-        ['College Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->where('approved', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#DBB7E2" ],             
+        ['SHS',     {!! json_encode(\App\Models\Applicant::where('dept', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#b87333" ],
+        ['SHS Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 0)->where('approved', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#C8A583" ],             
+        ['College',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#BB6ECC" ],             
+        ['College Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->where('approved', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#DBB7E2" ],             
         ]);
 
         let options = {
@@ -290,14 +290,14 @@
         <div class="d-flex flex-wrap justify-content-center">
 
             <button data-toggle="modal" data-target="#applicantsCount" type="button" class="btn btn-primary btn-lg m-1">
-                Applicants <span class="badge badge-light">{{\App\Models\Applicant::where('approved', 0)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span>
+                Applicants <span class="badge badge-light">{{\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span>
               </button>
-              <button data-toggle="modal" data-target="#studentsCount" type="button" class="btn btn-primary btn-lg m-1">
+              <a href="#statistics" type="button" class="btn btn-primary btn-lg m-1">
                 Students <span class="badge badge-light">{{$studentCount}}</span>
-              </button>
-              <button ata-toggle="modal" data-target="#programsCount" type="button" class="btn btn-primary btn-lg m-1">
+              </a>
+              <a href={{url('/viewprogramsfromdashboard')}} class="btn btn-primary btn-lg m-1">
                 Programs offerred <span class="badge badge-light">{{$programsOffered}}</span>
-              </button>
+              </a>
 
         </div>
 
@@ -312,7 +312,7 @@
                 </div>
                 <div class="modal-body">
 
-                  @if (\App\Models\Applicant::whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count() > 0)
+                  @if (\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count() > 0)
 
                     <div class="container">
 
@@ -320,11 +320,11 @@
 
                             <div class="col">
 
-                                <b>Applicants this semester: <span class="ml-2">{{\App\Models\Applicant::whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span></b>
+                                <b>Applicants this semester: <span class="ml-2">{{\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
                                 <br>
-                                <b>Pending applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 0)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span></b>
+                                <b>Pending applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
                                 <br>
-                                <b>Approved applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span></b>
+                                <b>Approved applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
                                                             
                             </div>
 
@@ -340,7 +340,7 @@
                     </div>
                       
                   @else
-                      There are no programs offered.
+                      There are no Applicant Data this semester
                   @endif
 
                 </div>
@@ -527,7 +527,7 @@
         <br>
         <br>
         <hr>
-        <h5>Statistics <i class="fa fa-bar-chart" aria-hidden="true"></i></h5>
+        <h5 id="statistics">Statistics <i class="fa fa-bar-chart" aria-hidden="true"></i></h5>
 
         <div class="d-flex flex-wrap justify-content-center">
             

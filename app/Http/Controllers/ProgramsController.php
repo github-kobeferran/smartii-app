@@ -81,4 +81,10 @@ class ProgramsController extends Controller
         return redirect()->route('adminCreate')->with('active', 'program')->with('success', 'Program updated');
 
     }
+
+    public function viewFromDashboard(){
+
+        return redirect()->route('adminCreate')->with('active', 'program'); 
+
+    }
 }

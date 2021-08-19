@@ -148,6 +148,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::get('/togglepoststatus/{id}', [App\Http\Controllers\PostsController::class, 'togglestatus']);    
     Route::get('/featurepost/{id}', [App\Http\Controllers\PostsController::class, 'feature']);    
+    Route::get('/viewprogramsfromdashboard', [App\Http\Controllers\ProgramsController::class, 'viewFromDashboard']);    
 
 });
 
