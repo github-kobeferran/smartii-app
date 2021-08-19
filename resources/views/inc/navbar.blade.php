@@ -32,8 +32,35 @@
                     @endif
                 @else
                     <li class="name nav-item dropdown">
-                        <a style="font-weight: 900px; color:#044716" id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->name }}
+                        <a style="font-weight: 900px; color:#044716" id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>                            
+                            @empty(Auth::user()->member)
+
+                                {{Auth::user()->name}}
+                                
+                            @else
+
+
+                                @switch(Auth::user()->member->member_type)
+                                    @case('admin')
+                                        {{\App\Models\Admin::find(auth()->user()->member->member_id)->name}}
+                                        @break
+                                    @case('faculty')
+                                        {{ucfirst(\App\Models\Faculty::find(auth()->user()->member->member_id)->first_name) . ' ' . ucfirst(\App\Models\Faculty::find(auth()->user()->member->member_id)->last_name)}}
+                                        @break
+                                    @case('student')
+                                        {{ucfirst(\App\Models\Student::find(auth()->user()->member->member_id)->first_name) . ' ' . ucfirst(\App\Models\Student::find(auth()->user()->member->member_id)->last_name)}}
+                                        @break
+                                    @case('applicant')
+                                        {{ucfirst(\App\Models\Applicant::find(auth()->user()->member->member_id)->first_name) . ' ' . ucfirst(\App\Models\Applicant::find(auth()->user()->member->member_id)->last_name)}}
+                                        @break
+                                    @default
+                                        {{ucfirst(Auth::user()->name)}}
+                                        
+                                @endswitch
+                            @endempty
+       
+
+
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right color-custom-green" aria-labelledby="navbarDropdown">

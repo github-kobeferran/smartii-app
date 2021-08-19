@@ -39,16 +39,23 @@
         
     @endif        
 
-    @if (auth()->user()->member->member_type == $post->member_type)
+   @empty(auth()->user()->member)
+
+   @else
+
+   @if (auth()->user()->member->member_type == $post->member_type)
 
         @if (auth()->user()->member->member_id == $post->member_id)
 
             <span class="float-right bg-info"><a style="color: white !important;" href="{{url('/editpost/' . auth()->user()->email . '/' . $post->id)}}">Edit this post</a></span>
+
             <br>
-            
+                        
         @endif
-        
+    
     @endif
+       
+   @endempty
     
     @if (!empty($post->post_image) )         
         
