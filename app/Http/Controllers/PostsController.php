@@ -50,7 +50,7 @@ class PostsController extends Controller
             return redirect()->back(); 
             
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:50', 
+            'title' => 'required|max:100', 
             'image' => 'image|max:5000', 
             'body' => 'required|min:50',                  
         ]);
@@ -176,7 +176,7 @@ class PostsController extends Controller
         
         
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:50', 
+            'title' => 'required|max:100', 
             'image' => 'image|max:5000', 
             'body' => 'required|min:50',                  
         ]);

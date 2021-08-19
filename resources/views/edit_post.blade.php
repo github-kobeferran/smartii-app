@@ -45,7 +45,7 @@
 
             <div class="form-group">
                 {{Form::label('post_title', 'Post Title', ['style' => 'font-family: \'Roboto Condensed\', sans-serif;'])}}
-                {{Form::text('title', $post->title, ['class' => 'form-control', 'placeholder' => 'Post Title here..', 'required' => 'required', 'minlength' => '1', 'maxlength' => '50' ])}}
+                {{Form::text('title', $post->title, ['class' => 'form-control', 'placeholder' => 'Post Title here..', 'required' => 'required', 'minlength' => '1', 'maxlength' => '100' ])}}
     
             </div>
 
