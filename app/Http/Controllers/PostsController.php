@@ -188,7 +188,7 @@ class PostsController extends Controller
         }
                       
 
-        $fileNameToStore = null;
+        $fileNameToStore = $post->post_image;
 
         if($request->hasFile('image')){
 
