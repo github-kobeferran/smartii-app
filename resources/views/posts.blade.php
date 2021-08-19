@@ -9,6 +9,7 @@
 <div class="text-center">
     <h4 class="m-2 " style="text-shadow: 1px 1px 2px pink; font-family: 'Times New Roman', serif; color: #044716;">ARTICLES <span style="font-size: .6em;">AND</span> SCHOOL NEWS</h4>
 </div>
+<hr class="w-50">
 
 @if (auth()->user()->user_type == 'admin')
 
@@ -144,6 +145,8 @@
     </div>
     
    </div>
+
+   
 
 <script>
 
