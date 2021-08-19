@@ -6,6 +6,10 @@
 
 @include('inc.homenav')
 
+<div class="text-center">
+    <h4 class="m-2 " style="text-shadow: 1px 1px 2px pink; font-family: 'Times New Roman', serif; color: #044716;">ARTICLES <span style="font-size: .6em;">AND</span> SCHOOL NEWS</h4>
+</div>
+
 @if (auth()->user()->user_type == 'admin')
 
 
@@ -15,6 +19,7 @@
     
 
   @else   
+  
 
   <div class="custom-control custom-switch text-right mr-5 my-3 ">
         <input type="checkbox" class="custom-control-input" id="customSwitch1">
@@ -68,6 +73,8 @@
     <h5 class="text-center m-2">Nothing to see here..</h5>
 
 @else 
+
+   
 
    <div id="post-panel">
 
