@@ -37,19 +37,30 @@
                     </a>  {{$post->featured == 0 ? 'Unfeatured' : 'Featured'}}</span>
         <br>
         
+    @endif        
+
+    @if (auth()->user()->member->member_type == $post->member_type)
+
+        @if (auth()->user()->member->member_id == $post->member_id)
+
+            <span class="float-right bg-info"><a style="color: white !important;" href="{{url('/editpost/' . auth()->user()->email . '/' . $post->id)}}">Edit this post</a></span>
+            <br>
+            
+        @endif
+        
     @endif
     
     @if (!empty($post->post_image) )         
         
         <div class="m-1 border">
             
-            <img src="{{url('storage/images/posts/' . $post->post_image)}}" alt="" class="img-fluid">
+            <img src="{{url('storage/images/posts/' . $post->post_image)}}" alt="" class="img-fluid d-block mx-auto">
         </div>
     
     @endif
 
 
-    <p class="float-right mr-2 mb-2" style="font-size: .8em; color:gray">{{\Carbon\Carbon::parse($post->created_at)->isoFormat('Do MMM OY hh:mm:ss A') }}</p>
+    <p class="float-right mr-2 mb-2" style="font-size: .8em; color:gray">{{\Carbon\Carbon::parse($post->created_at)->isoFormat('Do MMM OY hh:mm A') }}</p>
 
     <br>
     <br>

@@ -65,6 +65,8 @@ Route::get('/post/{id}', [App\Http\Controllers\PostsController::class, 'show'])-
 Route::get('/posts', [App\Http\Controllers\PostsController::class, 'showAll'])->name('post.showall')->middleware(['verified']);
 Route::get('/createpost', [App\Http\Controllers\PostsController::class, 'create'])->name('post.create')->middleware(['verified', 'adminAndFaculty']);
 Route::any('/uploadpost', [App\Http\Controllers\PostsController::class, 'store'])->middleware(['verified', 'adminAndFaculty']);
+Route::get('/editpost/{email}/{id}', [App\Http\Controllers\PostsController::class, 'edit'])->middleware(['verified', 'adminAndFaculty']);
+Route::any('/updatepost', [App\Http\Controllers\PostsController::class, 'update'])->middleware(['verified', 'adminAndFaculty']);
 
 
 Auth::routes(['verify' => true]);

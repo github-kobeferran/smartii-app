@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
+use App\Models\User;
 
 
 class PostsController extends Controller
@@ -50,7 +51,7 @@ class PostsController extends Controller
             
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:50', 
-            'image' => 'image|max:1000', 
+            'image' => 'image|max:5000', 
             'body' => 'required|min:50',                  
         ]);
 
@@ -144,6 +145,74 @@ class PostsController extends Controller
 
         return redirect('/post/'. $id);
         
+
+    }
+
+    public function edit($email, $id){
+        
+        if(auth()->user()->email != $email)
+            return redirect()->back();
+
+        $user = User::where('email', $email)->first();
+        $post = Post::where('member_id', $user->member->member_id)->where('id', $id)->first();        
+
+        return view('edit_post')->with('user', $user)->with('post', $post);
+
+    }
+
+    public function update(Request $request){
+
+        if($request->method() != 'POST')
+            return redirect()->back(); 
+
+        if(Post::where('member_type', auth()->user()->member->member_type)
+                ->where('member_id', auth()->user()->member->member_id)
+                ->where('id', $request->input('id'))->exists() )
+            $post = Post::find($request->input('id'));
+        else
+            return redirect()->back();
+
+
+        
+        
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:50', 
+            'image' => 'image|max:5000', 
+            'body' => 'required|min:50',                  
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/editpost/' . auth()->user()->email . '/' . $post->id)
+                ->withErrors($validator)
+                ->withInput();                         
+        }
+                      
+
+        $fileNameToStore = null;
+
+        if($request->hasFile('image')){
+
+            // get filename with the extension
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            // get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // get just ext
+            $extension = $request->file('image')->getClientOriginalExtension();
+            //Filename to store
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            // upload image
+            $path = $request->file('image')->storeAs('public/images/posts/', $fileNameToStore);
+        } 
+
+
+        $post->title = $request->input('title');
+        $post->post_image = $fileNameToStore;
+        $post->body = $request->input('body');
+                                     
+        $post->save();
+
+        return redirect('/editpost/' . auth()->user()->email . '/' . $post->id)->with('info', 'Post updated');
+
 
     }
 

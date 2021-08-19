@@ -375,10 +375,10 @@ tbody td {
 
 .article-card {
   margin: 8px auto;
-  min-width: 200px;
-  min-height: 300px;
-  max-width: 200px;
-  max-height: 300px;
+  min-width: 200px !important;
+  min-height: 300px !important;
+  max-width: 200px !important;
+  max-height: 300px !important;
   box-shadow: 1px 1px 10px #8d8989;
   border-radius: 5%;
   margin-bottom: 25px;
@@ -417,18 +417,6 @@ tbody td {
   max-width: 30ch;
   box-shadow: 0.5px 0.5px 5px #8d8989;
   padding: 0px 10px;
-}
-
-.article-title:hover {
-  color: #4e4e4e;
-  box-shadow: 1px 1px 10px #8d8989;
-  text-transform: uppercase;
-  font-family: Georgia, "Times New Roman", Times, serif, Times, serif;
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 30ch;
 }
 
 /*!
