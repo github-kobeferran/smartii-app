@@ -46,7 +46,7 @@ class SettingsController extends Controller
         $setting->class_quantity = $request->input('class_quantity');
         $setting->gcash_number = $request->input('gcash');
         $setting->bank_number = $request->input('bank_number');
-        $setting->bank_name = $request->input('bank_name');
+        $setting->bank_name = $request->input('bank_name');        
 
         $mode = $request->input('mode');
 
@@ -58,6 +58,9 @@ class SettingsController extends Controller
         }
 
         $setting->enrollment_mode = $request->input('mode');      
+
+        if($setting->isDirty('semester'))
+            $setting->semester_updated_at = Carbon::now();
                 
         if($setting->save()){
             return redirect()->route('adminSettings')

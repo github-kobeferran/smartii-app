@@ -10,14 +10,37 @@
     var passedStudents = {!! json_encode($passedStudents) !!}    
     var failedStudents = {!! json_encode($failedStudents) !!}    
     var defferedStudents = {!! json_encode($defferedStudents) !!}    
+    var setting_obj = {!! json_encode(\App\Models\Setting::first()) !!}    
 </script>
+
+<?php 
+
+    $shsPrograms = \App\Models\Program::where('department', 0)->where('id', '!=', 3)->orderBy('created_at', 'asc')->get();
+
+    foreach ($shsPrograms as $prog) {
+        $prog->student_count;
+        $prog->append('student_count')->toArray();
+    }    
+
+    $colPrograms = \App\Models\Program::where('department', 1)->where('id', '!=', 4)->orderBy('created_at', 'asc')->get();
+
+    foreach ($colPrograms as $prog) {
+        $prog->student_count;
+        $prog->append('student_count')->toArray();
+    }    
+
+    
+
+?>
+
+
 
 @section('charts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
     
-    google.charts.load("current", {packages:["corechart"]});
+    google.charts.load("current", {packages:["corechart", 'bar']});
     google.charts.setOnLoadCallback(drawDonut);
 
     function drawDonut() {
@@ -38,7 +61,7 @@
         chart.draw(data, options);
     }
     
-    google.charts.load("current", {packages:["corechart"]});
+    
     google.charts.setOnLoadCallback(drawPie);
 
     function drawPie() {
@@ -58,10 +81,126 @@
         chart.draw(data, options);
     }
 
+    
+    google.charts.setOnLoadCallback(drawApplicants);
+    
+
+    function drawApplicants() {
+        
+        let data = google.visualization.arrayToDataTable([
+        ["Type", "Count", { role: "style" } ],
+        ['SHS',     {!! json_encode(\App\Models\Applicant::where('dept', 0)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#b87333" ],
+        ['SHS Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 0)->where('approved', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#C8A583" ],             
+        ['College',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#BB6ECC" ],             
+        ['College Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->where('approved', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()) !!}, "#DBB7E2" ],             
+        ]);
+
+        let options = {
+            title: 'Applicants this Semester S.Y.' + setting_obj.from_year + '-' + setting_obj.to_year +  (setting_obj.semester == 1 ? ' First ' : ' Second ') + 'Semester',        
+        };
+
+        let chart = new google.visualization.ColumnChart(document.getElementById('applicantsChart'));
+        chart.draw(data, options);
+    }
+
+    google.charts.setOnLoadCallback(drawSHS);
+    
+
+    function drawSHS() {
+        
+        let data = google.visualization.arrayToDataTable([
+        ["Type", "Count", { role: "style" } ],
+        ['SHS All',     {!! json_encode(\App\Models\Student::where('department', 0)->count()) !!}, "#ebedaf" ],           
+        ['SHS Grade 11',     {!! json_encode(\App\Models\Student::where('department', 0)->where('level', 1)->count()) !!}, "#ecf086" ],           
+        ['SHS Grade 12',     {!! json_encode(\App\Models\Student::where('department', 0)->where('level', 2)->count()) !!}, "#e1e835" ],           
+        
+        ]);
+
+        let options = {
+            title: 'SHS Students Chart',        
+        };
+
+        let chart = new google.visualization.ColumnChart(document.getElementById('shsChart'));
+        chart.draw(data, options);
+    }
+
+    google.charts.setOnLoadCallback(drawCol);
+
+    function drawCol() {
+        
+        let data = google.visualization.arrayToDataTable([
+        ["Type", "Count", { role: "style" } ],
+        ['College All',     {!! json_encode(\App\Models\Student::where('department', 1)->count()) !!}, "#039c27" ],           
+        ['College First Year',     {!! json_encode(\App\Models\Student::where('department', 1)->where('level', 11)->count()) !!}, "#75fa95" ],           
+        ['College Second Year',     {!! json_encode(\App\Models\Student::where('department', 1)->where('level', 12)->count()) !!}, "#47b561" ],           
+        
+        ]);
+
+        let options = {
+            title: 'College Students Chart',        
+        };
+
+        let chart = new google.visualization.ColumnChart(document.getElementById('colChart'));
+        chart.draw(data, options);
+    }
+
+    let shsPrograms = {!! json_encode($shsPrograms) !!};       
+
+    let shsProgramsArray = [['Program', 'Count']];
+
+    for(let i in shsPrograms){
+
+        shsProgramsArray.push([shsPrograms[i].abbrv , shsPrograms[i].student_count]);
+
+    }
+
+    google.charts.setOnLoadCallback(drawSHSPrograms);
 
     
+    function drawSHSPrograms() {
+        
+        let data = google.visualization.arrayToDataTable(shsProgramsArray);
+
+        let options = {
+        title: 'SHS Programs and number of Students',  
+        colors: ['#fff305', '#f7f288', '#fffcc4', '#f5f3d0', '#f2f1df']      
+        };
+
+        let chart = new google.visualization.PieChart(document.getElementById('shsPrograms'));
+        chart.draw(data, options);
+    }
+
+    let colPrograms = {!! json_encode($colPrograms) !!};       
+
+    let colProgramsArray = [['Program', 'Count']];
+
+    for(let i in colPrograms){
+
+        colProgramsArray.push([colPrograms[i].abbrv , colPrograms[i].student_count]);
+
+    }
+
+    google.charts.setOnLoadCallback(drawColPrograms);
+
     
-    </script>
+    function drawColPrograms() {
+        
+        let data = google.visualization.arrayToDataTable(colProgramsArray);
+
+        let options = {
+        title: 'College Programs and number of Students',  
+        colors: ['#14ad00', '#1ade00', '#83f274', '#b3faaa', '#d6f7d2']      
+        };
+
+        let chart = new google.visualization.PieChart(document.getElementById('colPrograms'));
+        chart.draw(data, options);
+    }
+    
+   
+       
+
+    
+</script>
 
     
 @endsection
@@ -73,6 +212,8 @@
 <div class="row">
 
     <div class="col">
+
+        {{-- ##########################  OVERVIEW  #########################--}}
 
         <div class="card dashboard-card">
             
@@ -133,6 +274,8 @@
 
         </div>
 
+         {{--######################### OVERVIEW END #########################--}}
+
         @if (session('status'))
             <div class="alert alert-success" role="alert">
                 {{ session('status') }}
@@ -142,19 +285,71 @@
         @include('inc.messages')
         
 
+        {{--######################### COUNTS BADGES #########################--}}
+
         <div class="d-flex flex-wrap justify-content-center">
 
-            <button type="button" class="btn btn-primary btn-lg m-1">
-                Applicants <span class="badge badge-light">{{$applicantCount}}</span>
+            <button data-toggle="modal" data-target="#applicantsCount" type="button" class="btn btn-primary btn-lg m-1">
+                Applicants <span class="badge badge-light">{{\App\Models\Applicant::where('approved', 0)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span>
               </button>
-              <button type="button" class="btn btn-primary btn-lg m-1">
+              <button data-toggle="modal" data-target="#studentsCount" type="button" class="btn btn-primary btn-lg m-1">
                 Students <span class="badge badge-light">{{$studentCount}}</span>
               </button>
-              <button type="button" class="btn btn-primary btn-lg m-1">
+              <button ata-toggle="modal" data-target="#programsCount" type="button" class="btn btn-primary btn-lg m-1">
                 Programs offerred <span class="badge badge-light">{{$programsOffered}}</span>
               </button>
 
         </div>
+
+        <div class="modal fade bd-example-modal-lg" id="applicantsCount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-info">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Applicant Data S.Y. {{\App\Models\Setting::first()->from_year . '-' . \App\Models\Setting::first()->to_year . (\App\Models\Setting::first()->semester == 1 ? ' First' : ' Second')}} SEMESTER</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  @if (\App\Models\Applicant::whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count() > 0)
+
+                    <div class="container">
+
+                        <div class="row text-left mx-auto">
+
+                            <div class="col">
+
+                                <b>Applicants this semester: <span class="ml-2">{{\App\Models\Applicant::whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span></b>
+                                <br>
+                                <b>Pending applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 0)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span></b>
+                                <br>
+                                <b>Approved applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 1)->whereBetween('created_at', [\Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek(), \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->addWeek() ])->count()}}</span></b>
+                                                            
+                            </div>
+
+
+                        </div>
+
+                        <div class="row">
+
+                            <div id="applicantsChart" style="width: 100%; height: 100%;"></div>
+
+                        </div>
+
+                    </div>
+                      
+                  @else
+                      There are no programs offered.
+                  @endif
+
+                </div>
+              
+              </div>
+            </div>
+          </div>
+        
+        {{--######################### END OF BADGES #########################--}}
 
         <div class="container border" style="min-height: 100px;">
 
@@ -332,16 +527,20 @@
         <br>
         <br>
         <hr>
-        <h5>Statistics</h5>
+        <h5>Statistics <i class="fa fa-bar-chart" aria-hidden="true"></i></h5>
 
-        <div class="d-flex ">
+        <div class="d-flex flex-wrap justify-content-center">
             
-            <div id="donutchart" style="width: 900px; height: 500px;"></div>
-            <div id="piechart" style="width: 900px; height: 500px;"></div>
-            
+            <div class="mx-auto mb-2 px-auto w-100" id="donutchart" ></div>
+            <div class="mx-auto mb-2 px-auto w-100" id="piechart" ></div>
+            <div class="mx-auto mb-2 px-auto w-100" id="shsChart" ></div>
+            <div class="mx-auto mb-2 px-auto w-100" id="shsPrograms" ></div>
+            <div class="mx-auto mb-2 px-auto w-100" id="colChart" ></div>
+            <div class="mx-auto mb-2 px-auto w-100" id="colPrograms" ></div>
             
 
         </div>
+   
 
 
 

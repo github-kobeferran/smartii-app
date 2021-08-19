@@ -42,7 +42,15 @@
    
         <div id="appFilesPanel" class="row no-gutters mw-25 mh-25">                                                               
 
-            <h5 class="mx-auto mt-5">Select an Applicant</h5>
+            @empty(\App\Models\Applicant::where('approved', 0)->first())
+                
+                <h5 class="mx-auto mt-5">No Pending Applicants <i class="fa fa-smile-o" aria-hidden="true"></i></h5>
+
+            @else
+
+                <h5 class="mx-auto mt-5">Select an Applicant</h5>
+
+            @endempty
 
         </div>
         

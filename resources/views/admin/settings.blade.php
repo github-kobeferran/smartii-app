@@ -50,19 +50,19 @@
 
         <div class="form-inline m-2">            
             {{ Form::label('fromyear', 'Starting Year', ['class' => 'm-2']) }}
-            {{ Form::number('from', $currentSetting->from_year, ['min' => $min, 'max' => $maxFrom, 'placeholder' => $currentSetting->from_year, 'class' => 'form-control']) }}
+            {{ Form::number('from', $currentSetting->from_year, ['id' => 'fromYear', 'min' => $min, 'max' => $maxFrom, 'placeholder' => $currentSetting->from_year, 'class' => 'form-control']) }}            
         </div>
         
         <div class="form-inline m-2">            
             {{ Form::label('toyear', 'Ending Year', ['class' => 'm-2']) }}
-            {{ Form::number('to', $currentSetting->to_year, ['min' => $now, 'max' => $maxTo, 'placeholder' => $currentSetting->from_year, 'class' => 'form-control']) }}
+            {{ Form::number('to', $currentSetting->to_year, ['id' => 'toYear','min' => $now, 'max' => $maxTo, 'placeholder' => $currentSetting->from_year, 'class' => 'form-control']) }}
         </div>        
 
         <p class="mt-2"> <b> Semester</b></p>
 
         <div class="form-group mb-3">
             
-            {{Form::select('sem', ['1' => 'First', '2' => 'Second'], $currentSetting->semester, ['class' => 'form-control w-25'])}}
+            {{Form::select('sem', ['1' => 'First', '2' => 'Second'], $currentSetting->semester, ['id' => 'semester','class' => 'form-control w-25'])}}
 
         </div>
 
@@ -137,8 +137,28 @@
 
     <div class="form-group">
 
-        {{Form::submit('Save', ['class' => 'btn btn-success w-50'])}}
-        
+        {{Form::submit('Save', ['id' => 'submitButton', 'class' => 'btn btn-success w-50'])}}            
+          
+          <!-- Modal -->
+          <div class="modal fade" id="confirmSubmit" tabindex="-1" role="dialog" aria-labelledby="confirmSubmit" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>                
+                <div id="confirmSubmitBody" class="modal-body">
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+              </div>
+            </div>
+          </div>        
 
     </div>
         
@@ -708,6 +728,80 @@
 
 <script>
 
+let fromYear = document.getElementById('fromYear');
+let toYear = document.getElementById('toYear');
+let semester = document.getElementById('semester');
+let submitButton = document.getElementById('submitButton');
+let confirmSubmitBody = document.getElementById('confirmSubmitBody');
+let changes = {};
+
+fromYear.addEventListener('change', () => {
+
+    changes.fromYear = true;
+
+    submitButton.type = 'button';
+    submitButton.dataset.toggle = 'modal';
+    submitButton.dataset.target = '#confirmSubmit';
+
+    output = '';
+
+    if(changes.fromYear == true)
+        output += 'Starting Year, ';
+    if(changes.toYear == true)
+        output += 'Ending Year, ';
+    if(changes.semester == true)
+        output += 'Semester, ';
+
+
+    confirmSubmitBody.textContent = output + (Object.keys(changes).length > 1 ? ' value' : ' values' ) + ' has been changed wish to continue?';
+
+});
+
+toYear.addEventListener('change', () => {
+
+    changes.toYear = true;
+
+    submitButton.type = 'button';
+    submitButton.dataset.toggle = 'modal';
+    submitButton.dataset.target = '#confirmSubmit';
+
+    output = '';
+
+    if(changes.fromYear == true)
+        output += 'Starting Year, ';
+    if(changes.toYear == true)
+        output += 'Ending Year, ';
+    if(changes.semester == true)
+        output += 'Semester, ';
+
+
+        confirmSubmitBody.textContent = output + (Object.keys(changes).length > 1 ? ' value' : ' values' ) + ' has been changed wish to continue?';
+
+});
+
+semester.addEventListener('change', () => {
+
+    changes.semester = true;
+
+    submitButton.type = 'button';
+    submitButton.dataset.toggle = 'modal';
+    submitButton.dataset.target = '#confirmSubmit';
+
+    output = '';
+
+    if(changes.fromYear == true)
+        output += 'Starting Year, ';
+    if(changes.toYear == true)
+        output += 'Ending Year, ';
+    if(changes.semester == true)
+        output += 'Semester, ';
+
+
+        confirmSubmitBody.textContent = output + (Object.keys(changes).length > 1 ? ' value' : ' values' ) + ' has been changed wish to continue?';
+
+});
+
+
 
 if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
                 location.reload();
@@ -747,7 +841,7 @@ function createFee(){
 
     let btn = document.getElementById('addButton');
     let panel = document.getElementById('addFeePanel');
-    let feeForm = document.getElementById('feeForm');
+    let feeForm = document.getElementById('feeForm');    
 
     btn.classList.add('d-none');
     panel.classList.remove('d-none');
@@ -996,11 +1090,11 @@ function editFee(id){
             document.getElementById('semSelect').innerHTML = output;
 
                             document.getElementById('feeFormSubmit').innerHTML = `{{Form::submit('Update Fee', ['id' => 'feeFormSubmit', 'class' => 'btn btn-success'])}}`;
-                        
-        } 
-}
+                            
+            } 
+    }
 
-xhr.send(); 
+    xhr.send(); 
 
 }
 
@@ -1010,66 +1104,3 @@ xhr.send();
 
 @endsection
 
-{{--  panel.innerHTML = `
-            
-            <h5>ADD A FEE</h5>
-
-            <div  class="form-inline mt-2">
-                {!!Form::open(['url' => 'addfee'])!!}
-                    
-                    Fee Description
-                    <div class="form-group">
-
-                        {{Form::text('desc', '', ['class' => 'form-control', 'placeholder' => 'ex. miscellaneous fee'])}}
-
-                    </div>
-
-                    Amount
-
-                    <div class="form-group">
-
-                        {{Form::number('amount', '', ['class' => 'form-control mb-2', 'step' => '.01' , 'placeholder' => 'enter amount here'])}}
-
-                    </div>
-
-                    For whom:
-
-                    <div class="form-group mb-2">
-
-                        {{Form::select('dept', ['2' => "All Students",
-                                                '0' => "SHS Students",
-                                                '1' => "College Students"], null,
-                                                ['id' => 'deptSelect', 'class' => 'form-control', 'placeholder' => 'select'])}}
-
-                    </div>
-
-                    Level:
-
-                    <div class="form-group mb-2">
-
-                        {{Form::select('level', ['50' => "All Levels"], 50,
-                                                ['id' => 'levelSelect', 'class' => 'form-control'])}}                                          
-
-                    </div>
-
-                    Semester:
-
-                    <div class="form-group mb-2">
-
-                        {{Form::select('sem', ['5' => "Every Semester",
-                                                '1' => "For First Semester",
-                                                '2' => "For Second Semester"], 5,
-                                                ['class' => 'form-control', 'placeholder' => 'select'])}}
-
-                    </div>
-
-                    
-                
-                    {{Form::submit('Add Fee', ['class' => 'btn btn-success'])}}
-                        <button type="button" onclick="cancelAdd()" class="btn btn-secondary">Cancel</button>
-                    {!!Form::close()!!}                      
-
-            </div>
-
-
-           `; --}}

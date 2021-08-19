@@ -63,7 +63,7 @@
 
             <input id="stud-hidden" name="stud_id" type="hidden" class="">
             <input id="stud-hidden-balance" name="balance" type="hidden" class="">
-            <input id="payment-input" name="amount" min="1" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Payment Amount" required>
+            <input id="payment-input" name="amount" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Payment Amount" required>
             
             <hr>
 
@@ -204,7 +204,7 @@ function studentsAjax() {
                     '<td class="border-right">' + students[i].student_id + '</td>' +
                     '<td class="border-right">' + students[i].last_name + ', ' + students[i].first_name + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '.' + '</td>' +
                     '<td class="border-right">' + department + ' | ' + students[i].program_desc + ' | ' + level + '</td>' +                    
-                    '<td class="border-left"><b>' + students[i].balance_amount + '</b></td>' +
+                    '<td class="border-left">&#8369;  <b>' + students[i].balance_amount + '</b></td>' +
 
                     '</tr>';
             }

@@ -10,7 +10,7 @@ class Program extends Model
 {
     use HasFactory;
 
-    protected $appends = ['dept_desc' => null];
+    protected $appends = ['dept_desc' => null, 'student_count' => null];
 
 
     public function setDeptDescAttribute($value){
@@ -33,9 +33,17 @@ class Program extends Model
 
     }
 
-    // public function student()
-    // {
-    //     return $this->belongsToMany(Student::class);
-    // }
+    public function students(){
+
+        return $this->hasMany(Student::class);
+
+    }
+
+    public function getStudentCountAttribute(){
+
+        return $this->hasMany(Student::class)->count();
+
+    }
+
    
 }
