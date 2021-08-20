@@ -28,7 +28,22 @@
         <div class = "form-group">        
             {{Form::label('email', 'Email Address', ['class' => 'mt'])}}
             {{Form::email('email', '', ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Email here..'])}}
-        </div>             
+        </div>      
+        
+        <?php
+            $programs = \App\Models\Program::orderBy('id', 'asc')->pluck('abbrv', 'id');            
+        ?>
+
+        <label for="">Specialty (Select Program)</label>
+        <div class="form-inline">            
+            {{Form::select('program_id', $programs, null, ['required' => 'required', 'id' => 'programSelect', 'placeholder' => '--Select a Specialty--', 'class' => 'form-control mr-2'])}}
+            {{Form::hidden('all_program', 0)}}
+            <input type="checkbox" name="all_program" value="1" class="form-check-input" style="width: 25px; height: 25px;" id="programCheck">
+            <label class="form-check-label" for="exampleCheck1">Check to make faculty elligble for all Programs</label>
+
+        </div>  
+
+
 
     </div>
 
@@ -57,6 +72,21 @@ window.onbeforeunload = function(event)
 {
     return '';
 };
+
+let programCheck = document.getElementById('programCheck');
+let programSelect = document.getElementById('programSelect');
+
+programCheck.addEventListener('change', () => {
+
+    if(programCheck.checked == true){
+        programSelect.disabled = true;
+        programSelect.required = false;
+    }else{
+        programSelect.disabled = false;
+        programSelect.required = true;
+    }
+
+});
 
 document.getElementById("facultyForm").onsubmit = function(e) {
     window.onbeforeunload = null;

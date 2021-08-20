@@ -29,7 +29,7 @@ class FacultiesController extends Controller
         return view('faculty.dashboard');
     }
 
-    public function store(Request $request){
+    public function store(Request $request){                             
         
         $status ='';
         $msg = '';
@@ -39,9 +39,9 @@ class FacultiesController extends Controller
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
-            'last_name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100', 
-            'first_name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100', 
-            'middle_name' => 'regex:/^[a-z ,.\'-]*$/|max:100', 
+            'last_name' => 'required|regex:/^[\pL\s\-]+$/u|max:100', 
+            'first_name' => 'required|regex:/^[\pL\s\-]+$/u|max:100', 
+            'middle_name' => 'regex:/^[\pL\s\-]+$/u|max:100', 
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
             'email' => 'required',             
         ]);
@@ -69,6 +69,9 @@ class FacultiesController extends Controller
         $faculty->middle_name = $request->input('middle_name');
         $faculty->dob = $request->input('dob');
         $faculty->email = $request->input('email');
+
+        if($request->input('all_program') == 0)
+            $faculty->program_id = $request->input('program_id');
 
         $user = new User;
         $password = Setting::generateRandomString();
