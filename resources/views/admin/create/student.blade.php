@@ -25,12 +25,12 @@
                     {{Form::select('department', 
                       ['0' => 'Senior High School',                              
                       '1' => 'College'], 0,
-                      ['class' => 'custom-select w-75 ml-2', 'id' => 'selectDept'])}}                   
+                      ['class' => 'custom-select ml-2', 'id' => 'selectDept'])}}                   
                 </div>
                 
                 <div class="form-inline">
                     {{Form::label('level', 'Student Level',  ['class' => 'mt-2'])}}
-                    {{Form::select('level', [], null, ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectLevel'])}}                   
+                    {{Form::select('level', [], null, ['class' => 'custom-select mt-2 ml-2', 'id' => 'selectLevel'])}}                   
                 </div>
 
         </div>
@@ -39,14 +39,14 @@
 
             <div class="form-inline">
                   {{Form::label('program', 'Program')}}
-                  {{Form::select('program_id', [], null, ['class' => 'custom-select w-75 ml-2' , 'id' => 'selectProg'])}}                   
+                  {{Form::select('program_id', [], null, ['class' => 'custom-select ml-2' , 'id' => 'selectProg'])}}                   
             </div>
 
             <div class="form-inline">
                   {{Form::label('semester', 'Semester',  ['class' => 'mt-2'])}}
                   {{Form::select('semester', ['1' => 'First Semester',
                                               '2' => 'Second Semester'], null,
-                                              ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectSemester'])}}                   
+                                              ['class' => 'custom-select mt-2 ml-2', 'id' => 'selectSemester'])}}                   
             </div>
 
         </div>

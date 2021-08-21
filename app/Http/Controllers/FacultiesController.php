@@ -151,9 +151,9 @@ class FacultiesController extends Controller
     }
 
 
-    public function availableFaculty($from, $until, $day = null){
-
+    public function availableFaculty($programid, $from, $until, $day = null){
         
+
         if($day != null){
          
 
@@ -173,7 +173,6 @@ class FacultiesController extends Controller
                                      ->where('archive', 0)
                                      ->first());  
 
-
                 }                
 
                 $invalids = collect();
@@ -186,15 +185,19 @@ class FacultiesController extends Controller
 
                 $valid = collect();
                 
-                foreach(Faculty::all() as $faculty){
+                foreach($faculties = Faculty::where('program_id', $programid)->orWhere('program_id', null)->get() as $faculty){
 
                     $bawal = false;
 
                     foreach($invalids as $invalid){
 
-                        if($faculty->id == $invalid->id){
+                        if($faculty->id == $invalid->id)
                             $bawal = true;
-                        }
+                        
+                        if($faculty->program_id != $programid || $faculty->program_id != null)
+                            $bawal = true;
+                        
+                        
 
                     }
 
@@ -207,7 +210,7 @@ class FacultiesController extends Controller
                 
              } else {
                  
-                return Faculty::all()->toJson();
+                return Faculty::whereNull('program_id')->orWhere('program_id', '=', $programid)->toJson();
                 
              }              
  

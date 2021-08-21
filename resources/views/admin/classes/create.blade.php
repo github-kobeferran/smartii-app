@@ -36,7 +36,8 @@
                     
                 {{Form::select('subj', 
                 [], null,
-                ['class' => 'custom-select w-50 m-1', 'id' => 'selectSubject'])}}            
+                ['class' => 'custom-select w-50 m-1', 'id' => 'selectSubject'])}}    
+                {{Form::hidden('programid', '', ['id' => 'programID'])}}                        
             </div>    
 
         </div>
@@ -185,8 +186,6 @@
 
 <script>
 
-
-
 var sectionLimit = {!! json_encode($sectionLimit) !!}
 
 let selectDept = document.getElementById('selectDept');
@@ -203,30 +202,35 @@ let counter = 1;
 
 selectDept.addEventListener('change', () => {
     changeClassesSelects();
-    
+    // changeProgramID(selectSubject.value);
 });
 selectProg.addEventListener('change', () => {
     changeClassesSelects(true);
-    
+    // changeProgramID(selectSubject.value);
 });
 selectSubject.addEventListener('change', () => {
     classesTableData();
-    
+    availableFaculty();
+    availableRooms();   
+    changeProgramID(selectSubject.value);
 });
 
 selectDay.addEventListener('change', () => {   
     availableFaculty();
     availableRooms();    
+    changeProgramID(selectSubject.value);
 });
 
 from_time.addEventListener('input', () => {
     availableFaculty();
-    availableRooms();    
+    availableRooms();  
+    changeProgramID(selectSubject.value);  
 
 });
 until_time.addEventListener('input', () => {
     availableFaculty();
     availableRooms();    
+    changeProgramID(selectSubject.value);
 });
 
 
@@ -304,7 +308,8 @@ function deleteSched(){
 
 }
 
-function availableRooms(){
+function availableRooms(){    
+
     let xhr = new XMLHttpRequest();
 
     let day = document.getElementById('selectDay').value;
@@ -341,14 +346,17 @@ function availableRooms(){
 
 
 
-function availableFaculty(){
+function availableFaculty(programID){
+
+    
+
     let xhr = new XMLHttpRequest();
 
     let day = document.getElementById('selectDay').value;
     let from = document.getElementById('from_time').value;
-    let until = document.getElementById('until_time').value;
+    let until = document.getElementById('until_time').value;    
 
-    xhr.open('GET', APP_URL + '/admin/available/faculty/' + from + '/' + until + '/' + day , true);
+    xhr.open('GET', APP_URL + '/admin/available/faculty/' + programID + '/' + from + '/' + until + '/' + day , true);
 
     xhr.onload = function() {
         if (this.status == 200) { 
@@ -372,13 +380,15 @@ function availableFaculty(){
     xhr.send(); 
 }
 
-function changeClassesSelects($isSelectProg = false){
+function changeClassesSelects($isSelectProg = false){  
     
     removeAllOptions(selectSubject);    
 
     dept = selectDept.value;
     prog = selectProg.value;
     subj = selectSubject.value;   
+
+    
 
     let xhr = new XMLHttpRequest();
 
@@ -391,13 +401,9 @@ function changeClassesSelects($isSelectProg = false){
 
                 removeOptions(selectProg);
 
-                // for(i = 0; i < selectProg.length; i++){
-                //     selectProg.remove(i);
-                // }
-
                 var programs = JSON.parse(this.responseText);                                
 
-                for (let i in programs) {                                        
+                for (let i in programs) {                  
                     selectProg.options[i] = new Option(programs[i].abbrv + ' - ' + programs[i].desc, programs[i].id); 
                 }
 
@@ -439,14 +445,22 @@ function changeSubjects(){
 
             var subjects = JSON.parse(this.responseText);                                
 
-            for (let i in subjects) {     
+            for (let i in subjects) {   
+               
+                // if(i == 0)
+                //     changeProgramID();     
+                
+                //     console.log(programID.value)
 
-                if(subjects[i].student_count < 1)                                   
-                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc, subjects[i].id); 
-                else 
-                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc + '   (count:' + subjects[i].student_count + ')', subjects[i].id); 
-            }
+                if(subjects[i].student_count < 1)
+                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc  + ' [units: ' + subjects[i].units + ']', subjects[i].id);                                    
+                else
+                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc + ' [units: '+ subjects[i].units +']   (pending:' + subjects[i].student_count + ')', subjects[i].id); 
+                
+                
+            }  
 
+                    
             classesTableData();
 
         } else {
@@ -461,11 +475,13 @@ function changeSubjects(){
 }
 
 function classesTableData(){
-
+    
     dept = selectDept.value;
     prog = selectProg.value;
     subj = selectSubject.value;  
     
+   
+
     let xhr = new XMLHttpRequest();
     xhr.open('GET', APP_URL + '/admin/pendingstudentclass/' + dept + '/' + prog + '/' + subj, true);
 
@@ -531,6 +547,30 @@ function updateSchedCounter(){
     multiSched.setAttribute('value', counter);
 
    
+}
+
+function changeProgramID(subjectid){
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', APP_URL + '/admin/view/subjects/' + subjectid, true);
+
+    xhr.onload = function() {
+        if (this.status == 200) { 
+      
+            var subject = JSON.parse(this.responseText);                                                    
+            
+            programID.value = subject.program_id;
+            availableFaculty(programID.value);
+
+        }    
+
+    }
+
+    xhr.send(); 
+    
+    
+    
 }
 
 </script>

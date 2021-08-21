@@ -150,7 +150,7 @@ function cancelEdit(){
 
 }
 
-function programSelect(id){
+function programsSelect(id){
 
     showProgram.classList.remove('d-none');
     editProgram.classList.add('d-none')
@@ -251,7 +251,7 @@ output = `<ul class="list-group mt-2">`;
 
     for(let i in programs){
 
-        output += ` <li id="prog-`+ programs[i].id +`" onclick="programSelect(\'`+ programs[i].id + `\')" class="list-group-item program-button">`+ programs[i].abbrv + ' - ' + programs[i].desc  +`</li>`;
+        output += ` <li id="prog-`+ programs[i].id +`" onclick="programsSelect(\'`+ programs[i].id + `\')" class="list-group-item program-button">`+ programs[i].abbrv + ' - ' + programs[i].desc  +`</li>`;
 
     }    
 

@@ -83,16 +83,19 @@ if (window.performance && window.performance.navigation.type === window.performa
                 location.reload();
 }
 
-window.addEventListener('load', (event) => {
-    
+var programID = {value : null};
 
-    changeClassesSelects(); 
+window.addEventListener('load', (event) => {        
+
+    changeClassesSelects();     
     availableRooms(); 
-    availableFaculty();   
+    availableFaculty();       
     updateSchedCounter();
     fillProgramList(0);
-    fillRoomTable();
+    fillRoomTable();    
     
+   
+
 }); 
         
 </script>

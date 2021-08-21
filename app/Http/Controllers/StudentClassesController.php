@@ -9,14 +9,18 @@ use App\Models\StudentClass;
 use App\Models\SubjectTaken;
 use App\Models\Faculty;
 use App\Models\Schedule;
+use App\Models\Subject;
+use \Carbon\Carbon;
 
 
 class StudentClassesController extends Controller
 {
     
 
-    public function store(Request $request){          
-            
+    public function store(Request $request){ 
+        
+        $theSubject = Subject::find($request->input('subj'));
+
         $status = '';
         $msg = '';
 
@@ -53,7 +57,7 @@ class StudentClassesController extends Controller
                         'day_' . $i => 'required',                                          
                         'day_' . $i => 'required',  
                         'student_ids' => 'required',                                        
-                        'instructor_id_' . $i => 'in:'. $request->input('instructor_id'),                                          
+                        'instructor_id_' . $i => 'required|in:'. $request->input('instructor_id'),                                          
 
                     ],
                     [
@@ -94,6 +98,30 @@ class StudentClassesController extends Controller
                 }
               
             }
+
+           
+
+            $totalDuration = 0; 
+
+             for($i = 0; $i<$noOfSched; $i++){
+
+                $from_time = Carbon::parse($froms[$i]);
+                $until_time = Carbon::parse($untils[$i]);
+
+                $totalDuration+= $until_time->diffInHours($from_time);
+
+            }            
+
+            if($totalDuration > $theSubject->units){
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+            }elseif($totalDuration < $theSubject->units){
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+            }
+
+
+
+           
+
 
             $students = $request->input('student_ids');
 
@@ -174,6 +202,17 @@ class StudentClassesController extends Controller
                              ->withErrors($validator)
                              ->withInput()
                              ->with('active', 'create');
+            }
+
+            $from_time = Carbon::parse(($request->input('from')));
+            $until_time = Carbon::parse(($request->input('until')));
+
+            $totalDuration = $until_time->diffInHours($from_time);
+
+            if($totalDuration > $theSubject->units){
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+            }elseif($totalDuration < $theSubject->units){
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is below the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
             }
 
             $students = $request->input('student_ids');

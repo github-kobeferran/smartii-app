@@ -88,7 +88,10 @@ class Subject extends Model
 
         foreach($subjectTakens as $takenSubject){
 
-            $student = Student::find($takenSubject->student_id);
+            if(Student::where('id', $takenSubject->student_id)->doesntExist())
+                return;
+
+            $student = Student::find($takenSubject->student_id);            
 
             if($values['program_id'] == $student->program_id){
                 ++$count;

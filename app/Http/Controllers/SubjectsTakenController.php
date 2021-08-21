@@ -44,10 +44,17 @@ class SubjectsTakenController extends Controller
 
         for($i=0; $i<count($pendingClasses); $i++){
             $student = new Student;
-            if($pendingClasses[$i]->subject_id == $subj) 
+
+            if($pendingClasses[$i]->subject_id == $subj) {
+
+                if(Student::where('id', $pendingClasses[$i]->student_id)->doesntExist())
+                    return;
+
                 $student = Student::find($pendingClasses[$i]->student_id);
                 if($student->program_id == $prog)
                     $students[$i] = $student;
+                
+            }
 
         }
                         
