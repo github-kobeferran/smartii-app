@@ -736,6 +736,13 @@ class AdminsController extends Controller
 
             break;
 
+            case 'rooms':
+
+                return Room::query()                        
+                ->where('name', 'LIKE', '%' . $text . "%")->get();                                  
+               
+            break;
+
         }    
         
         

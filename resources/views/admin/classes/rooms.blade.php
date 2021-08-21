@@ -6,13 +6,22 @@
 
     <input id="room-name" name="room_name" type="text" class="form-control" placeholder="Room name" aria-describedby="basic-addon2" required>
 
-    <div class="input-group-append">
+    <div class="input-group-append"> 
+
       <button type="submit" id="add-room" data-toggle="tooltip" data-placement="right" title="Add" class="btn btn-outline-success" ><i class="fa fa-plus" aria-hidden="true"></i></button>
+
     </div>
 
 </div>                
 
 {!! Form::close() !!}
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+    </div>
+    <input id="roomSearch" type="text" class="form-control" placeholder="Room name" aria-label="Username" aria-describedby="basic-addon1">
+  </div>
 
 {!! Form::open(['url' => 'admin/update/room', 'id' => 'updateRoomForm']) !!}
 
@@ -35,46 +44,96 @@
 
 <script>
 let roomsTables = document.getElementById('rooms-table');
+let roomSearch = document.getElementById('roomSearch');
+
+roomSearch.addEventListener('input', () => {
+
+    searchRoom();
+
+});
 
 
 function fillRoomTable(){
 
-let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
 
-xhr.open('GET', APP_URL + '/admin/view/rooms', true);
+    xhr.open('GET', APP_URL + '/admin/view/rooms', true);
 
-xhr.onload = function() {
+    xhr.onload = function() {
 
-    if (this.status == 200) {
+        if (this.status == 200) {
 
-        let rooms = JSON.parse(this.responseText);
+            let rooms = JSON.parse(this.responseText);
 
-        output = '<tbody id="rooms-table">';
+            output = '<tbody id="rooms-table">';
 
-        for(let i in rooms){
-            output+= '<tr id="room-row-' + rooms[i].id + '">';
-            output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
-            output+= '<td id="room-name" >' + rooms[i].name + '</td>';
+            for(let i in rooms){
+                output+= '<tr id="room-row-' + rooms[i].id + '">';
+                output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
+                output+= '<td id="room-name" >' + rooms[i].name + '</td>';
 
-            if(rooms[i].enable == 1)
-                output+= '<td>Enabled</td>';
-            else
-                output+= '<td>Disabled</td>';
+                if(rooms[i].enable == 1)
+                    output+= '<td>Enabled</td>';
+                else
+                    output+= '<td>Disabled</td>';
 
-            output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
-            output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;
-            output+= '</tr>';
-        }  
+                output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
+                output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;
+                output+= '</tr>';
+            }  
 
-        output+= '</tbody>';
+            output+= '</tbody>';
 
-        roomsTables.innerHTML = output;
+            roomsTables.innerHTML = output;
 
-    } 
+        } 
+
+    }
+
+    xhr.send();
 
 }
 
-xhr.send();
+function searchRoom(){
+
+    let txt = roomSearch.value;
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('GET', APP_URL + '/admin/search/rooms/' + txt, true);
+
+    xhr.onload = function() {
+
+        if (this.status == 200) {
+
+            let rooms = JSON.parse(this.responseText);
+
+            output = '<tbody id="rooms-table">';
+
+            for(let i in rooms){
+                output+= '<tr id="room-row-' + rooms[i].id + '">';
+                output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
+                output+= '<td id="room-name" >' + rooms[i].name + '</td>';
+
+                if(rooms[i].enable == 1)
+                    output+= '<td>Enabled</td>';
+                else
+                    output+= '<td>Disabled</td>';
+
+                output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
+                output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;
+                output+= '</tr>';
+            }  
+
+            output+= '</tbody>';
+
+            roomsTables.innerHTML = output;
+
+        } 
+
+    }
+
+    xhr.send();
 
 }
 
