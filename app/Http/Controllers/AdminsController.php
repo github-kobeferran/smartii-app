@@ -743,6 +743,41 @@ class AdminsController extends Controller
                
             break;
 
+            case 'subjects':
+
+                if($dept == 0){
+
+                   if($text == 'SearchInputIsEmpty'){
+
+                       return Subject::where('dept', 0)->get();
+                       
+                   } else {
+
+                        return Subject::query()                        
+                        ->where('desc', 'LIKE', '%' . $text . "%")
+                        ->where('dept', 0)
+                        ->get();
+                   }
+
+                } else if ($dept == 1){
+
+                    if($text == 'SearchInputIsEmpty'){
+
+                        return Subject::where('dept', 1)->get();
+                        
+                    } else {
+                        return Subject::query()                        
+                        ->where('desc', 'LIKE', '%' . $text . "%")
+                        ->where('dept', 1)
+                        ->get();
+                    }
+
+                } else {
+                    return Subject::where('dept', 0)->get();
+                }
+
+            break;
+
         }    
         
         

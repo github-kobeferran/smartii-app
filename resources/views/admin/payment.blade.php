@@ -1,5 +1,9 @@
 @extends('layouts.module')
 
+@section('page-title')
+    Payments
+@endsection
+
 @section('content')
     <h5 class="mb-3">Payment</h5>
 

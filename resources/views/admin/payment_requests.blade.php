@@ -1,5 +1,8 @@
 @extends('layouts.module')
 
+@section('page-title')
+    Payment Requests
+@endsection
 
 @section('content')
 

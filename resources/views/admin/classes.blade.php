@@ -1,5 +1,9 @@
 @extends('layouts.module')
 
+@section('page-title')
+    Classes
+@endsection
+
 @section('content')
 
 <?php 

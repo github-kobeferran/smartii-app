@@ -1,5 +1,9 @@
 @extends('layouts.module')
 
+@section('page-title')
+    Admin Dashboard
+@endsection
+
 <script>
     var applicantCount = {!! json_encode($applicantCount) !!}    
     var studentCount = {!! json_encode($studentCount) !!}    

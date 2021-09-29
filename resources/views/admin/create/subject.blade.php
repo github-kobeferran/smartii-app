@@ -223,16 +223,19 @@ let editLevelCOL = document.getElementById('edit-level-col');
 let editDept = document.getElementById('edit-dept');
 let editUnits = document.getElementById('edit-units');
 let subjid = document.getElementById('subj-id');
+let curDept = 0;
 
 
 shsOption.onclick = () => {
     fillSubjectsList(0);
     cancelSubjEdit();
+    curDept = 0;
 }
 
 collegeOption.onclick = () => {
     fillSubjectsList(1);
     cancelSubjEdit();
+    curDept = 1;
 }
 
 function fillSubjectsList(dept){
@@ -568,6 +571,7 @@ let selectSubjLevel = document.getElementById('selectSubjLevel');
 let selectSubjProg = document.getElementById('selectSubjProg');
 let selectSubjSem = document.getElementById('selectSubjSem');
 let selectPreReq = document.getElementById('selectPreReq');
+let subjectSearch = document.getElementById('subject-search');
 
 
 selectSubjDept.addEventListener('change', () => {    
@@ -594,6 +598,28 @@ selectSubjSem.addEventListener('change', () => {
 selectPreReq.addEventListener('change', () => {    
     preReqToAddList();
     
+});
+
+subjectSearch.addEventListener('keyup' , async () => {
+
+    const res = await fetch(APP_URL + '/admin/search/subjects/' + (subjectSearch.value == '' ? 'SearchInputIsEmpty' : subjectSearch.value )+ '/' + curDept)
+                        .catch((error) => {console.log(error)});
+
+    const subjects = await res.json();
+
+
+    let output = `<div id="subject-list" style="max-height: 75%; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
+    
+    subjects.forEach((subject) => {
+
+        output+= `<li role="button" id="subj-${subject.id}" onclick="subjectClicked(${subject.id})" class="btn-subject list-group-item">${subject.desc} </li>`;    
+
+    });
+
+    output+= `</div>`;
+
+    subjectList.innerHTML = output;
+
 });
 
 
@@ -772,6 +798,8 @@ function clearList(){
 
 
 }
+
+
 
 
 </script>

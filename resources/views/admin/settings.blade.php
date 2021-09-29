@@ -1,5 +1,9 @@
 @extends('layouts.module')
 
+@section('page-title')
+    Settings
+@endsection
+
 @section('content')
 
 @if (session('status'))
