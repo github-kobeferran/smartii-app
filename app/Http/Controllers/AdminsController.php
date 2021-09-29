@@ -460,7 +460,7 @@ class AdminsController extends Controller
                 case 'subjects':
 
                     return Subject::where($by,$value)
-                                ->orderBy('created_at', 'desc')->get();
+                                ->orderBy('desc', 'asc')->get();
 
                 break;                
 
@@ -749,31 +749,34 @@ class AdminsController extends Controller
 
                    if($text == 'SearchInputIsEmpty'){
 
-                       return Subject::where('dept', 0)->get();
+                       return Subject::where('dept', 0)
+                            ->orderBy('desc', 'asc')->get();
                        
                    } else {
 
                         return Subject::query()                        
                         ->where('desc', 'LIKE', '%' . $text . "%")
                         ->where('dept', 0)
-                        ->get();
+                        ->orderBy('desc', 'asc')->get();
                    }
 
                 } else if ($dept == 1){
 
                     if($text == 'SearchInputIsEmpty'){
 
-                        return Subject::where('dept', 1)->get();
+                        return Subject::where('dept', 1)
+                            ->orderBy('desc', 'asc')->get();
                         
                     } else {
                         return Subject::query()                        
                         ->where('desc', 'LIKE', '%' . $text . "%")
                         ->where('dept', 1)
-                        ->get();
+                        ->orderBy('desc', 'asc')->get();
                     }
 
                 } else {
-                    return Subject::where('dept', 0)->get();
+                    return Subject::where('dept', 0)
+                    ->orderBy('desc', 'asc')->get();
                 }
 
             break;
