@@ -65,10 +65,11 @@ function viewFaculty(){
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <p>email : `+ faculty[i].email +`</p>
-                            <p>contact : `+ faculty[i].contact +`</p>
-                            <p>sex : `+ faculty[i].gender +`</p>
+                        <div class="modal-body">                                                   
+                            <p>email : ${(faculty[i].email == null ? 'N\\A' :  faculty[i].email)}</p>
+                            <p>contact : ${(faculty[i].contact == null ? 'N\\A' :  faculty[i].contact)}</p>
+                            <p>sex : ${(faculty[i].gender == null ? 'N\\A' :  faculty[i].gender)}</p>
+                            <p>can teach in ${faculty[i].specialty}</p>
                         </div>
                        
                         </div>
@@ -124,9 +125,10 @@ function searchFaculty(){
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>email : `+ faculty[i].email +`</p>
-                            <p>contact : `+ faculty[i].contact +`</p>
-                            <p>sex : `+ faculty[i].gender +`</p>
+                            <p>email : ${(faculty[i].email == null ? 'N\\A' :  faculty[i].email)}</p>
+                            <p>contact : ${(faculty[i].contact == null ? 'N\\A' :  faculty[i].contact)}</p>
+                            <p>sex : ${(faculty[i].gender == null ? 'N\\A' :  faculty[i].gender)}</p>
+                            <p>can teach in ${faculty[i].specialty}</p>
                         </div>                        
                         </div>
                     </div>

@@ -172,19 +172,20 @@ let collegeOption = document.getElementById('collegeOption');
 
 let cur_sched_id = null;
 let cur_faculty_id = null;;
+let cur_school_id = null;;
 
 editDay.addEventListener('change', () => {   
-    availableFacultyExcept(cur_sched_id);
+    availableFacultyExcept(cur_faculty_id);
     availableRoomsExcept(cur_faculty_id);    
 });
 
 edit_from_time.addEventListener('input', () => {
-    availableFacultyExcept(cur_sched_id);
+    availableFacultyExcept(cur_faculty_id);
     availableRoomsExcept(cur_faculty_id);     
 
 });
 edit_until_time.addEventListener('input', () => {
-    availableFacultyExcept(cur_sched_id);
+    availableFacultyExcept(cur_faculty_id);
     availableRoomsExcept(cur_faculty_id);     
 });
 
@@ -421,8 +422,15 @@ function editSched(schedID){
             let schedule = JSON.parse(this.responseText); 
             
             cur_sched_id = schedule.id;
-            cur_faculty_id = schedule.student_class.faculty_id;
-            
+            cur_faculty_id = schedule.student_class.faculty_id;            
+                        
+            for(let i, j = 0; i = editDay.options[j]; j++) {
+                if(i.value == schedule.day) {
+                    editDay.selectedIndex = j;
+                    break;
+                }
+            }
+
             editName.value = schedule.student_class.class_name;
             edit_from_time.value = schedule.start_time;
             edit_until_time.value = schedule.until;
@@ -460,6 +468,9 @@ function availableFacultyExcept(facultyID){
 
             for (let i in faculty) {                                        
                 editInstructor.options[i] = new Option(capitalizeFirstLetter(faculty[i].last_name) + ', ' + capitalizeFirstLetter(faculty[i].first_name), faculty[i].id); 
+
+                if(faculty[i].id == facultyID)
+                    editInstructor.selectedIndex = i;
             }
                           
 
@@ -491,13 +502,16 @@ function availableRoomsExcept(roomId){
 
             removeOptions(editRoom); 
             
-            let rooms = JSON.parse(this.responseText); 
-            
-            console.log(rooms);
+            let rooms = JSON.parse(this.responseText);                         
 
             for (let i in rooms) {                                        
                 editRoom.options[i] = new Option(rooms[i].name, rooms[i].id);
+
+                if(rooms[i].id == roomId)
+                    editRoom.selectedIndex = i;
             }
+            
+
                         
 
         } else {

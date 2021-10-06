@@ -98,6 +98,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/admin/availablerooms/{from}/{until}/{day}/{exceptid}', [App\Http\Controllers\RoomsController::class, 'availableRoomsExcept'])->name('availableRoomsExcept');    
     Route::get('/admin/availablefaculty/{from}/{until}/{day}/{exceptid}', [App\Http\Controllers\FacultiesController::class, 'availableFacultyExcept'])->name('availableFacultyExcept');    
 
+    //search, searchby
     Route::get('/admin/search/{table}/{text?}/{dept?}', [App\Http\Controllers\AdminsController::class, 'search'])->name('AdminSearch');    
     Route::get('/admin/searchby/{table}/{by}/{value}/{text?}/', [App\Http\Controllers\AdminsController::class, 'searchBy'])->name('AdminSearchBy');    
     

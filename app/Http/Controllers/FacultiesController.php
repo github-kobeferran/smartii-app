@@ -162,6 +162,7 @@ class FacultiesController extends Controller
              ->where('start_time','<', $until)
              ->where('until','>', $from)                   
              ->get();
+
                                  
              if($scheds != null){
 
@@ -173,7 +174,11 @@ class FacultiesController extends Controller
                                      ->where('archive', 0)
                                      ->first());  
 
-                }                
+                } 
+                
+                $classes = $classes->filter(function ($value, $key) {
+                    return $value != null;
+                });
 
                 $invalids = collect();
 
@@ -182,10 +187,19 @@ class FacultiesController extends Controller
                     $invalids->push(Faculty::find($class->faculty_id));
 
                 }
+                
+
+                $invalids = $invalids->filter(function ($value, $key) {
+                    return $value != null;
+                });
 
                 $valid = collect();
+
+                $faculties = Faculty::where('program_id', $programid)->orWhere('program_id', null)->get();                
+
+                // return $invalids;
                 
-                foreach($faculties = Faculty::where('program_id', $programid)->orWhere('program_id', null)->get() as $faculty){
+                foreach($faculties as $faculty){
 
                     $bawal = false;
 
@@ -194,10 +208,8 @@ class FacultiesController extends Controller
                         if($faculty->id == $invalid->id)
                             $bawal = true;
                         
-                        if($faculty->program_id != $programid || $faculty->program_id != null)
-                            $bawal = true;
-                        
-                        
+                        // if($faculty->program_id != $programid || $faculty->program_id != null)
+                        //     $bawal = true;
 
                     }
 
@@ -205,6 +217,10 @@ class FacultiesController extends Controller
                         $valid->push($faculty);
 
                 }
+
+                $valid = $valid->filter(function ($value, $key) {
+                    return $value != null;
+                });
 
                 return $valid;
                 

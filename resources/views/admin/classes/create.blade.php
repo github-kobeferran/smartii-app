@@ -240,6 +240,13 @@ function anotherSched(){
     let schedRow = document.getElementById('sched-row');
     let minusButton = document.getElementById('minusButton');
 
+    let selects = {
+            day: null,
+            room: null,
+            faculty: null,
+        }
+  
+
     schedContainerChildCount = schedContainer.childElementCount;
 
     let newSchedRow = schedRow.cloneNode([true]);
@@ -252,13 +259,26 @@ function anotherSched(){
 
                 if(newSchedRow.childNodes[i].childNodes[j].tagName  == "DIV"){
 
-                    for(let k=0; k<newSchedRow.childNodes[i].childNodes[j].childNodes.length; k++){                        
-
+                
+                    for(let k=0; k<newSchedRow.childNodes[i].childNodes[j].childNodes.length; k++){                                                                                                
                         if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].tagName  == "SELECT" ) {
-                                                                            
+
                            newSchedRow.childNodes[i].childNodes[j].childNodes[k].name += '_' + schedContainerChildCount;
+                           newSchedRow.childNodes[i].childNodes[j].childNodes[k].id += '_' + schedContainerChildCount;  
+
+                           if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('day')){                                
+                                selects.day = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
+                           }else if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('room')){
+                               selects.room = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
+                           }else if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('instructor')){
+                               selects.faculty = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
+                           }
+                                                   
                         
                         }
+
+                      
+                        
 
                         if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].tagName  == "DIV"){                          
 
@@ -273,22 +293,26 @@ function anotherSched(){
                         }
 
                     }
-
+                
                 }
-                    
+                                        
             }
+            
         }
 
-    }        
+    }    
+
+    selects.day.addEventListener('change', () => {
+            availableRooms();    
+            changeProgramID(selectSubject.value, selects.faculty);
+    });
 
     if(schedContainerChildCount <= 2){
         schedContainer.appendChild(newSchedRow);
         counter++;   
         updateSchedCounter();             
     }            
-    minusButton.className = "btn btn-light border-danger";        
-  
-    
+    minusButton.className = "btn btn-light border-danger";              
 
 }
 
@@ -346,37 +370,44 @@ function availableRooms(){
 
 
 
-function availableFaculty(programID){
+function availableFaculty(programID, anotherSelect = null){
 
-    
+    let selectElement = null;
+    let day = null;
 
-    let xhr = new XMLHttpRequest();
+    if(anotherSelect != null){
+        let count = anotherSelect.id.slice(-1)
+        day = document.getElementById('selectDay_' + count).value;
+        selectElement = anotherSelect;
+    } else {
+        day = document.getElementById('selectDay').value;
+        selectElement = selectFaculty;
+    }
 
-    let day = document.getElementById('selectDay').value;
     let from = document.getElementById('from_time').value;
     let until = document.getElementById('until_time').value;    
 
-    xhr.open('GET', APP_URL + '/admin/available/faculty/' + programID + '/' + from + '/' + until + '/' + day , true);
 
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', APP_URL + '/admin/available/faculty/' + programID + '/' + from + '/' + until + '/' + day , true);
     xhr.onload = function() {
         if (this.status == 200) { 
             
-            removeOptions(selectFaculty);       
+            removeOptions(selectElement);       
 
-            var faculty = JSON.parse(this.responseText);                          
+            var faculty = JSON.parse(this.responseText);  
 
-            for (let i in faculty) {                                        
-                selectFaculty.options[i] = new Option(capitalizeFirstLetter(faculty[i].last_name) + ', ' + capitalizeFirstLetter(faculty[i].first_name), faculty[i].id); 
-            }
-                          
+            
+
+            for (let i in faculty) {                                                        
+                selectElement.options[i] = new Option(capitalizeFirstLetter(faculty[i].last_name) + ', ' + capitalizeFirstLetter(faculty[i].first_name), faculty[i].id); 
+            }                                     
 
         } else {
         
         }                
         
-
     }
-
     xhr.send(); 
 }
 
@@ -439,18 +470,11 @@ function changeSubjects(){
 
             removeOptions(selectSubject);
 
-            // for(i = 0; i < selectSubject.length; i++){
-            //     selectSubject.remove(i);
-            // }
-
             var subjects = JSON.parse(this.responseText);                                
 
             for (let i in subjects) {   
-               
-                // if(i == 0)
-                //     changeProgramID();     
+                               
                 
-                //     console.log(programID.value)
 
                 if(subjects[i].student_count < 1)
                     selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc  + ' [units: ' + subjects[i].units + ']', subjects[i].id);                                    
@@ -549,7 +573,7 @@ function updateSchedCounter(){
    
 }
 
-function changeProgramID(subjectid){
+function changeProgramID(subjectid, selectElement = null){
 
     let xhr = new XMLHttpRequest();
 
@@ -561,7 +585,11 @@ function changeProgramID(subjectid){
             var subject = JSON.parse(this.responseText);                                                    
             
             programID.value = subject.program_id;
-            availableFaculty(programID.value);
+            
+            if(selectElement == null)
+                availableFaculty(programID.value);
+            else
+                availableFaculty(programID.value, selectElement);
 
         }    
 

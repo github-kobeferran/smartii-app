@@ -32,7 +32,8 @@ class StudentClassesController extends Controller
         $froms;
         $untils;
         $room_ids;
-        $instructor_ids;        
+        $instructor_ids;   
+        $proceed = false;
 
         $counter = 1;
 
@@ -87,7 +88,15 @@ class StudentClassesController extends Controller
                     $untils[$i] = $request->input('until');
                     $room_ids[$i] = $request->input('room_id');
                     $instructor_ids[$i] = $request->input('instructor_id');
-                } else {                   
+                } else {                                       
+
+                    if($days[--$i] == $request->input('day_' . $counter )){
+                        $proceed = false;
+                        $msg = "Day can't be the same on separate schedule.";
+                        $status = 'warning';
+                        break;
+                    }
+                        
 
                     $days[$i] = $request->input('day_' . $counter );
                     $froms[$i] = $request->input('from_' .$counter );
@@ -96,6 +105,9 @@ class StudentClassesController extends Controller
                     $instructor_ids[$i] = $request->input('instructor_id_' . $counter );
                     ++$counter;
                 }
+
+                if($proceed)
+                    break;
               
             }
 
@@ -105,6 +117,9 @@ class StudentClassesController extends Controller
 
              for($i = 0; $i<$noOfSched; $i++){
 
+                if($proceed)
+                    break;
+
                 $from_time = Carbon::parse($froms[$i]);
                 $until_time = Carbon::parse($untils[$i]);
 
@@ -113,15 +128,10 @@ class StudentClassesController extends Controller
             }            
 
             if($totalDuration > $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
             }elseif($totalDuration < $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
             }
-
-
-
-           
-
 
             $students = $request->input('student_ids');
 
@@ -172,12 +182,20 @@ class StudentClassesController extends Controller
                             
             }        
 
-            $status ="success";
-            $msg ="Class Added Successfully";
+            if(!$proceed){
+                $status ="success";
+                $msg ="Class Added Successfully";
 
-            return redirect()->route('adminClasses')
-                             ->with($status , $msg)
-                             ->with('active', 'create');
+                return redirect()->route('adminClasses')
+                                 ->with($status , $msg)
+                                 ->with('active', 'create');
+            }else{
+                return redirect()->route('adminClasses')
+                                 ->with($status , $msg)
+                                 ->with('active', 'create');
+            }
+
+           
             
             
             
@@ -210,9 +228,9 @@ class StudentClassesController extends Controller
             $totalDuration = $until_time->diffInHours($from_time);
 
             if($totalDuration > $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is  above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
             }elseif($totalDuration < $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule time is below the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
             }
 
             $students = $request->input('student_ids');
@@ -260,6 +278,7 @@ class StudentClassesController extends Controller
             $msg ="Class Added Successfully";
 
             return redirect()->route('adminClasses')
+                             ->withInput()
                              ->with($status , $msg)
                              ->with('active', 'create');
             

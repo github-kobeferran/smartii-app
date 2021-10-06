@@ -233,9 +233,13 @@ class AdminsController extends Controller
             break;        
             case 'faculty':
 
-                $faculty = Faculty::all();        
+                $faculties = Faculty::all();        
 
-                return $faculty->toJson();
+                foreach($faculties as $faculty ){
+                    $faculty->specialty = $faculty->id;
+                }
+
+                return $faculties->toJson();
             break;    
             case 'applicants':
 
@@ -730,6 +734,12 @@ class AdminsController extends Controller
                 ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
                 ->orWhere('faculty_id', 'LIKE', '%' . $text . "%")
                 ->get();  
+
+                $faculties = Faculty::all();        
+
+                foreach($faculties as $faculty ){
+                    $faculty->specialty = $faculty->id;
+                }
                 
                 return $faculties;
                
@@ -1248,7 +1258,6 @@ class AdminsController extends Controller
 
         $sched->save();
         $class->save();
-
 
         return redirect()->route('adminClasses')
                          ->with('success', 'Schedule Updated')

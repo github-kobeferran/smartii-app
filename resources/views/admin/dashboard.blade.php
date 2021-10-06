@@ -231,10 +231,12 @@
                         <td>
                             Enrollment Mode 
                         </td>
-                        <td>
+                        <td
+                        style="{{$setting->enrollment_mode == 0 ? 'color: red' : 'color: green'}}"
+                        >
                             @if ($setting->enrollment_mode == 0)
                     
-                                Close
+                                Closed
                                 
                             @else
                                 

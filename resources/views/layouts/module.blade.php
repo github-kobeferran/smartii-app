@@ -11,7 +11,7 @@
 
     <title>
         @hasSection('page-title')
-            @yield('page-title')
+            @yield('page-title') / Smartii
         @else
             Smartii
         @endif

@@ -63,6 +63,7 @@
 
         <tr class="heading">
             <td>Subjects Taken</td>
+
             <?php 
 
             $total = 0;
@@ -73,7 +74,9 @@
                 $price = $settings->college_price_per_unit;
             
             ?>
+
             <td>Price Per Unit/{{$price}}</td>
+            
         </tr>
 
         @foreach ( $subjectsTaken as $subTaken )
