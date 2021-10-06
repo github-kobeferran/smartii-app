@@ -42,12 +42,12 @@
 
 </div>
 
-<div id="edit-panel" class="row mt-2 text-center d-none">
+<div id="edit-panel" class="row mt-2 text-center d-none" >
     
 
     <div class="col-sm d-flex justify-content-center">
         
-        {!! Form::open(['url' => '/updateschedule', 'class' => 'border p-2']) !!}
+        {!! Form::open(['url' => '/updateschedule', 'class' => 'border p-2', "style"=>"box-shadow: 1.5px 1.5px 25px 3.5px #ababab;"]) !!}
         <h5>EDIT SCHEDULE</h5>
 
         {{Form::hidden('class_id', null, ['id' => 'hiddenClassID'])}}
@@ -68,7 +68,7 @@
 
         <div class="form-group d-flex justify-content-center">
 
-            {{Form::text('class_name', '',['id' => 'editName', 'class' => 'form-control w-50', 'required' => 'required'])}}
+            {{Form::text('class_name', '',['id' => 'editName', 'class' => 'form-control w-50 border border-dark', 'required' => 'required'])}}
 
         </div>
         <div class="form-group">
@@ -336,7 +336,7 @@ function subjectSelect(subjid){
 
             let classes = JSON.parse(this.responseText);
 
-            let output = `<div id="view-panel" class="col-sm d-flex align-content-between flex-wrap">`;
+            let output = `<div id="view-panel" class="col-sm d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;
     
             for(let i in classes){                
 

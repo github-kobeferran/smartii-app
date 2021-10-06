@@ -135,7 +135,7 @@
     
                 </div>
     
-            </div>        
+            </div>
             
             <div class="col-sm">
     
@@ -145,7 +145,7 @@
                         
                     {{Form::select('room', 
                     [], null,
-                    ['placeholder' => 'Pick a Room', 'name' => 'room_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom'])}}            
+                    [ 'name' => 'room_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom'])}}            
                 </div>    
     
             </div>
@@ -168,10 +168,10 @@
     </div>
     
 
-    <div class = "form-group ">
+    <div class = "form-group mt-2">
         <button onclick="anotherSched()" type="button" class="btn btn-light border-success"><i class="fa fa-plus" aria-hidden="true"></i> Add another schedule</button>
         <button id="minusButton" onclick="deleteSched()" type="button" class="btn btn-light border-danger d-none"><i class="fa fa-minus-circle" aria-hidden="true"></i> Remove the last schedule</button>
-    </div>    
+    </div>
 
     <hr class= ""/>
     
@@ -244,6 +244,8 @@ function anotherSched(){
             day: null,
             room: null,
             faculty: null,
+            from: null,
+            until: null,
         }
   
 
@@ -275,9 +277,7 @@ function anotherSched(){
                            }
                                                    
                         
-                        }
-
-                      
+                        }                      
                         
 
                         if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].tagName  == "DIV"){                          
@@ -286,8 +286,20 @@ function anotherSched(){
 
                                 if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].tagName == "INPUT")
 
-                                    newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name += '_' + schedContainerChildCount;
-                                    
+
+                                    if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name != null){
+                                        newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name += '_' + schedContainerChildCount;
+                                        newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].id += '_' + schedContainerChildCount;
+
+
+                                        if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name.includes('from')){                                
+                                                selects.from = newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l];
+                                        }else if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name.includes('until')){
+                                                selects.until = newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l];
+                                        }
+
+                                    }
+
                             }
 
                         }
@@ -301,11 +313,23 @@ function anotherSched(){
         }
 
     }    
+    
 
     selects.day.addEventListener('change', () => {
-            availableRooms();    
-            changeProgramID(selectSubject.value, selects.faculty);
+        availableRooms(selects.room);    
+        changeProgramID(selectSubject.value, selects.faculty);
     });
+
+    selects.from.addEventListener('input', () => {
+        availableRooms(selects.room);  
+        changeProgramID(selectSubject.value, selects.faculty);  
+
+    });
+    selects.until.addEventListener('input', () => {
+        availableRooms(selects.room);    
+        changeProgramID(selectSubject.value, selects.faculty);
+    });
+    
 
     if(schedContainerChildCount <= 2){
         schedContainer.appendChild(newSchedRow);
@@ -332,29 +356,41 @@ function deleteSched(){
 
 }
 
-function availableRooms(){    
+function availableRooms(anotherSelect = null){  
+
+
+    let selectElement = null;
+    let day = null;
+    let from = null;
+    let until = null;  
+
+    if(anotherSelect != null){
+        let count = anotherSelect.id.slice(-1)
+        day = document.getElementById('selectDay_' + count).value;
+        from = document.getElementById('from_time_' + count).value;
+        until = document.getElementById('until_time_' + count).value;        
+        selectElement = anotherSelect;
+    } else {
+        day = document.getElementById('selectDay').value;
+        from = document.getElementById('from_time').value;
+        until = document.getElementById('until_time').value;    
+        selectElement = selectRoom;
+    }
 
     let xhr = new XMLHttpRequest();
 
-    let day = document.getElementById('selectDay').value;
-    let from = document.getElementById('from_time').value;
-    let until = document.getElementById('until_time').value;
-    
 
     xhr.open('GET', APP_URL + '/admin/available/rooms/' + from + '/' + until + '/' + day , true);
 
     xhr.onload = function() {
         if (this.status == 200) { 
     
-            removeOptions(selectRoom);
-            // for(i = 0; i < selectRoom.length; i++){
-            //     selectRoom.remove(i);
-            // }
-            
+            removeOptions(selectElement);
+         
             let rooms = JSON.parse(this.responseText);            
 
             for (let i in rooms) {                                        
-                selectRoom.options[i] = new Option(rooms[i].name, rooms[i].id); 
+                selectElement.options[i] = new Option(rooms[i].name, rooms[i].id); 
             }
                           
 
@@ -374,19 +410,21 @@ function availableFaculty(programID, anotherSelect = null){
 
     let selectElement = null;
     let day = null;
+    let from = null;
+    let until = null;
 
     if(anotherSelect != null){
         let count = anotherSelect.id.slice(-1)
         day = document.getElementById('selectDay_' + count).value;
+        from = document.getElementById('from_time_' + count).value;
+        until = document.getElementById('until_time_' + count).value;        
         selectElement = anotherSelect;
     } else {
         day = document.getElementById('selectDay').value;
+        from = document.getElementById('from_time').value;
+        until = document.getElementById('until_time').value;    
         selectElement = selectFaculty;
     }
-
-    let from = document.getElementById('from_time').value;
-    let until = document.getElementById('until_time').value;    
-
 
     let xhr = new XMLHttpRequest();
     xhr.open('GET', APP_URL + '/admin/available/faculty/' + programID + '/' + from + '/' + until + '/' + day , true);
