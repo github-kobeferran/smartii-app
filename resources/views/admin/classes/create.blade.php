@@ -169,8 +169,11 @@
     
 
     <div class = "form-group mt-2">
-        <button onclick="anotherSched()" type="button" class="btn btn-light border-success"><i class="fa fa-plus" aria-hidden="true"></i> Add another schedule</button>
+        <div>
+            <button onclick="anotherSched()" type="button" class="btn btn-light border-success"><i class="fa fa-plus" aria-hidden="true"></i> Add another schedule</button>
         <button id="minusButton" onclick="deleteSched()" type="button" class="btn btn-light border-danger d-none"><i class="fa fa-minus-circle" aria-hidden="true"></i> Remove the last schedule</button>
+        </div>
+        <span class="ml-2" style="font-size: .8em;">NOTE: <b class="text-primary">ONCE SUBMITTED</b>, YOU CAN EDIT, BUT <b class="text-danger">UNABLE TO ADD AND DELETE</b> A SCHEDULE INTO THIS CLASS</span>                
     </div>
 
     <hr class= ""/>

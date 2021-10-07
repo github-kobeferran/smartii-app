@@ -143,12 +143,9 @@
 
 </div>
 
-<div class="row mt-2">
+<div id="view-panel" >
 
-    <div id="view-panel" class="col-sm d-flex  d-none">
-          
-
-    </div>
+    
 
 </div>
 
@@ -176,7 +173,7 @@ let cur_school_id = null;;
 
 editDay.addEventListener('change', () => {   
     availableFacultyExcept(cur_faculty_id);
-    availableRoomsExcept(cur_faculty_id);    
+    availableRoomsExcept(cur_faculty_id);        
 });
 
 edit_from_time.addEventListener('input', () => {
@@ -273,7 +270,7 @@ function programSelect(id){
 
                     for(let i in subjects){
 
-                        output+='<li role="button" id="subj-'+ subjects[i].id +'" onclick="subjectSelect('+ subjects[i].id +')" class="subject-button list-group-item list-group-item-action">'+ subjects[i].desc +'</li>';
+                        output+='<li role="button" id="subj-'+ subjects[i].id +'" onclick="subjectSelect('+ subjects[i].id + ', \' ' + subjects[i].code +' - ' + subjects[i].desc + '\', '+ subjects[i].program_id +')" class="subject-button list-group-item list-group-item-action">'+ subjects[i].desc +'</li>';
 
                     }    
 
@@ -310,8 +307,8 @@ function programSelect(id){
 }
 
 
-function subjectSelect(subjid){  
-    cancelEditSched();  
+function subjectSelect(subjid, subjDescAndCode, programid){  
+    cancelEditSched();      
 
     let viewPanel = document.getElementById('view-panel');
 
@@ -336,7 +333,13 @@ function subjectSelect(subjid){
 
             let classes = JSON.parse(this.responseText);
 
-            let output = `<div id="view-panel" class="col-sm d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;
+            let output = `<div class="text-center container ">
+                            <div class=" row mt-2">
+                                <h5 class="mx-auto">${subjDescAndCode} Schedules</h5>                            
+                            </div>`;
+
+            output += `<div id="view-panel" class="row mt-2 d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;
+
     
             for(let i in classes){                
 
@@ -395,7 +398,8 @@ function subjectSelect(subjid){
 
             
 
-            output+=`</div>`;
+            output+=`</div>
+                </div>`;
 
 
             viewPanel.innerHTML = output;
@@ -405,6 +409,9 @@ function subjectSelect(subjid){
     }
 
     xhr.send();
+
+
+    currentProgram = programid;
 
 }
 
@@ -445,10 +452,14 @@ function editSched(schedID){
 
     xhr.send();
 
+    editPanel.scrollIntoView({behavior: 'smooth'});
+
 
 }
 
 function availableFacultyExcept(facultyID){
+
+    
 
     let xhr = new XMLHttpRequest();
 
@@ -457,7 +468,7 @@ function availableFacultyExcept(facultyID){
     let until = document.getElementById('edit_until_time').value;
     
 
-    xhr.open('GET', APP_URL + '/admin/availablefaculty/' + from + '/' + until + '/' + day + '/' + facultyID, true);
+    xhr.open('GET', APP_URL + '/admin/availablefaculty/' + from + '/' + until + '/' + day + '/' + facultyID + '/' + currentProgram, true);
 
     xhr.onload = function() {
         if (this.status == 200) { 

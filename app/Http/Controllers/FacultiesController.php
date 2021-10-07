@@ -240,7 +240,7 @@ class FacultiesController extends Controller
      }
 
 
-    public function availableFacultyExcept($from, $until, $day = null, $exceptid){
+    public function availableFacultyExcept($from, $until, $day = null, $exceptid, $programid){
 
         
         if($day != null){
@@ -273,9 +273,12 @@ class FacultiesController extends Controller
 
                 }
 
-                $valid = collect();
+                $valid = collect();           
                 
-                foreach(Faculty::all() as $faculty){
+                foreach(Faculty::orWhere(function($query) use($programid){
+                                            $query->where('program_id', $programid)
+                                                  ->orWhereNull('program_id');
+                                        })->get() as $faculty){
 
                     $bawal = false;
 

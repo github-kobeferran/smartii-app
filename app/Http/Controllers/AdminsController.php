@@ -28,6 +28,7 @@ use App\Models\Fee;
 use App\Models\StudentClass;
 use App\Mail\WelcomeMember;
 use App\Mail\ApprovedApplicant;
+use Carbon\Carbon;
 use PDF;
 
 
@@ -1243,10 +1244,29 @@ class AdminsController extends Controller
 
         if($request->method() != 'POST'){
             return redirect()->back();
-        }        
+        }         
+        
+        $valid = true;
 
         $sched = Schedule::find($request->input('sched_id'));
         $class = StudentClass::find($request->input('class_id'));
+
+        $otherScheds = Schedule::where('id', '!=', $request->input('sched_id'))
+                               ->where('class_id', $request->input('class_id'))->get();
+                               
+        
+        
+        if(count($otherScheds) > 0){
+            foreach($otherScheds as $otherSched){
+                if($otherSched->day == $request->input('day')){
+                    $valid = false;                
+                    $status = 'error';
+                    $msg = 'Day must not duplicate in a class';                    
+                }
+                if(!$valid)
+                    break;
+            }
+        }        
 
         $class->faculty_id = $request->input('instructor');
         $class->class_name = $request->input('class_name');
@@ -1256,12 +1276,20 @@ class AdminsController extends Controller
         $sched->until = $request->input('until');
         $sched->room_id = $request->input('room');
 
-        $sched->save();
-        $class->save();
+        if($valid){
+
+            $sched->save();
+            $class->save();
+
+            $status = 'success';
+            $msg = 'Schedule Updated';
+
+        }
 
         return redirect()->route('adminClasses')
-                         ->with('success', 'Schedule Updated')
+                         ->with($status, $msg)
                          ->with('active', 'view');
+
 
     }
 
