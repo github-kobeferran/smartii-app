@@ -7,15 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
 use App\Models\Setting;
 use App\Models\Subject;
+use App\Models\StudentClass;
 
 class SubjectTaken extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
+
     protected $table = 'subjects_taken';
-    protected $appends = ['units'=> null, 'subj_desc' => null];
+
+    protected $appends = ['units'=> null, 'subj_desc' => null, 'sy_and_sem' => null];
+
     // protected $primaryKey = ['student_id', 'subject_id', 'from_year', 'semester'];
+
+    public function class(){
+        return $this->belongsTo(StudentClass::class);
+    }
+
+    public function student(){
+        return $this->belongsTo(Student::class, 'student_id', 'id');
+    }    
+
+    public function subject(){
+        return $this->belongsTo(Subject::class, 'subject_id', 'id');
+    }
 
     public function setUnitsAttribute($id)
     {
@@ -39,6 +55,16 @@ class SubjectTaken extends Model
     public function getSubjDescAttribute()
     {
         return $this->attributes['subj_desc'];
+    }
+    
+    // public function setSyAndSemAttribute()
+    // {                
+    // }
+    
+    public function getSyAndSemAttribute()
+    {
+        $this->attributes['sy_and_sem'] = $this->from_year . '-' . $this->to_year . ' ' . ($this->semester == 1? '1st sem' : '2nd sem');
+        return $this->attributes['sy_and_sem'];
     }
     
     public static function pendingClasses(){

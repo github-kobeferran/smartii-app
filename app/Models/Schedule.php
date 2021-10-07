@@ -11,8 +11,6 @@ use Carbon\Carbon;
 class Schedule extends Model
 {
     use HasFactory;
-    
-   
 
     public $timestamps = false;   
     protected $appends = ['formatted_start' => null, 'formatted_until' => null, 'day_name' =>null, 'faculty_name' => null, 'room_name' => null]; 

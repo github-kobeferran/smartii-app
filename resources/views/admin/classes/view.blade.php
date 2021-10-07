@@ -43,7 +43,6 @@
 </div>
 
 <div id="edit-panel" class="row mt-2 text-center d-none" >
-    
 
     <div class="col-sm d-flex justify-content-center">
         
@@ -201,40 +200,40 @@ collegeOption.onclick = () => {
 
 function fillProgramList(dept){
 
-let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
 
-xhr.open('GET', APP_URL + '/admin/view/programs/department/' + dept , true);
+    xhr.open('GET', APP_URL + '/admin/view/programs/department/' + dept , true);
 
-xhr.onload = function() {
-    if (this.status == 200) {
+    xhr.onload = function() {
+        if (this.status == 200) {
 
-    let programs = JSON.parse(this.responseText);
+        let programs = JSON.parse(this.responseText);
 
-    
-    
-output = `<div id="program-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
-output = `<ul class="list-group mt-2">`;
-
-    for(let i in programs){
-
-        output += ` <li id="prog-`+ programs[i].id +`" onclick="programSelect(`+ programs[i].id + `)" class="list-group-item program-button">`+ programs[i].abbrv + ' - ' + programs[i].desc  +`</li>`;
-
-    }    
-
-output +=`</ul>`;       
-output +=`</div>`;   
-   
-
-    programList.innerHTML = output;
-
-    } else {
-        output = '';
-        programList.innerHTML = output;
-    }
-}
-
-xhr.send();
         
+        
+    output = `<div id="program-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
+    output = `<ul class="list-group mt-2">`;
+
+        for(let i in programs){
+
+            output += ` <li id="prog-`+ programs[i].id +`" onclick="programSelect(`+ programs[i].id + `)" class="list-group-item program-button">`+ programs[i].abbrv + ' - ' + programs[i].desc  +`</li>`;
+
+        }    
+
+    output +=`</ul>`;       
+    output +=`</div>`;   
+    
+
+        programList.innerHTML = output;
+
+        } else {
+            output = '';
+            programList.innerHTML = output;
+        }
+    }
+
+    xhr.send();
+            
 }
 
 function programSelect(id){

@@ -10,6 +10,7 @@
     $create = false;
     $view = false;
     $rooms = false;
+    $archived = false;
 ?>
 
 @if ( session()->has('active') )
@@ -27,6 +28,9 @@
         case 'rooms':
             $rooms = true;
             break;     
+        case 'archived':
+            $archived = true;
+            break;     
         
         default:
             $create = true;
@@ -42,7 +46,14 @@
     
 @endif
 
-<h5>Classes</h5>
+@if ($active == 'archived')
+    <?php
+        $archived = true;
+        $create = false;
+    ?>
+@endif
+
+<h5>Classes </h5>
 
 <div  id="classesTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
@@ -51,6 +62,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link {{ $view ? 'active' : '' }}" id="view-class-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="false">View Classes</a>
+        </li>             
+        <li class="nav-item">
+            <a class="nav-link {{ $archived ? 'active' : '' }}" id="archived-class-tab" data-toggle="tab" href="#archived" role="tab" aria-controls="view" aria-selected="false">View Archived Classes</a>
         </li>             
         <li class="nav-item">
             <a class="nav-link {{ $rooms ? 'active' : '' }}" id="rooms-class-tab" data-toggle="tab" href="#rooms" role="tab" aria-controls="view" aria-selected="false">Rooms</a>
@@ -74,6 +88,10 @@
 
 	<div class="tab-pane {{ $view ? 'active' : '' }}" id="view">
         @include('admin.classes.view') 
+	</div>                
+
+	<div class="tab-pane {{ $archived ? 'active' : '' }}" id="archived">
+        @include('admin.classes.archived') 
 	</div>                
 
 	<div class="tab-pane {{ $rooms ? 'active' : '' }}" id="rooms">

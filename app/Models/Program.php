@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Faculty;
 
 class Program extends Model
 {
@@ -12,6 +14,16 @@ class Program extends Model
 
     protected $appends = ['dept_desc' => null, 'student_count' => null];
 
+    public function subjects(){
+        return $this->hasMany(Subject::class);
+    }
+
+    public function faculties(){
+        return Faculty::where(function($query){
+                            $query->where('program_id', $this->id)
+                                  ->orWhereNull('program_id');
+                        })->get();
+    }
 
     public function setDeptDescAttribute($value){
 

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Program;
 use App\Models\Balance;
+use App\Models\Member;
+use App\Models\User;
 use App\Models\SubjectTaken;
 use App\Models\Applicant;
 use Carbon\Carbon;
@@ -18,12 +20,24 @@ class Student extends Model
 
     protected $appends = ['age' => null, 'level_desc' => null, 'dept' => null, 'program_desc' => null, 'balance_amount' => null, 'rating' => null];
 
+    public function member(){
+        return $this->hasOne(Member::class, 'member_id', 'id');
+    }
+
+    // public function user(){
+    //     return $this->hasOne(User::class, $this->member->user_id, 'id');
+    // }
+
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
     } 
 
     public function applicant(){
         return $this->hasOne(Applicant::class);
+    }  
+
+    public function program(){
+        return $this->belongsTo(Program::class);
     }  
 
     public function setAgeAttribute($id)

@@ -28,12 +28,12 @@ class StudentClassesController extends Controller
 
         if($noOfSched > 1){
 
-        $days;
-        $froms;
-        $untils;
-        $room_ids;
-        $instructor_ids;   
-        $proceed = false;
+        $days = [];
+        $froms = [];
+        $untils = [];
+        $room_ids = [];
+        $instructor_ids = [];   
+        $proceed = true;
 
         $counter = 1;
 
@@ -82,107 +82,107 @@ class StudentClassesController extends Controller
 
             for($i=0; $i<$noOfSched; $i++){ 
 
-                if($i < 1){
-                    $days[$i] = $request->input('day');
-                    $froms[$i] = $request->input('from');
-                    $untils[$i] = $request->input('until');
-                    $room_ids[$i] = $request->input('room_id');
-                    $instructor_ids[$i] = $request->input('instructor_id');
+                if($i == 0){
+
+                    array_push($days, $request->input('day'));
+                    array_push($froms, $request->input('from'));
+                    array_push($untils, $request->input('until'));
+                    array_push($room_ids, $request->input('room_id'));
+                    array_push($instructor_ids, $request->input('instructor_id'));
+
+                   
                 } else {                                       
 
-                    if($days[--$i] == $request->input('day_' . $counter )){
+                    if(end($days) == $request->input('day_' . $counter )){
                         $proceed = false;
                         $msg = "Day can't be the same on separate schedule.";
                         $status = 'warning';
                         break;
-                    }
-                        
+                    }                
+                    
+                    array_push($days, $request->input('day_' . $counter));
+                    array_push($froms, $request->input('from_' . $counter));
+                    array_push($untils, $request->input('until_' . $counter));
+                    array_push($room_ids, $request->input('room_id_' . $counter));
+                    array_push($instructor_ids, $request->input('instructor_id_' . $counter));
 
-                    $days[$i] = $request->input('day_' . $counter );
-                    $froms[$i] = $request->input('from_' .$counter );
-                    $untils[$i] = $request->input('until_' . $counter );
-                    $room_ids[$i] = $request->input('room_id_' . $counter );
-                    $instructor_ids[$i] = $request->input('instructor_id_' . $counter );
                     ++$counter;
                 }
 
-                if($proceed)
+                if(!$proceed)
                     break;
               
-            }
+            }                          
 
-           
+            if($proceed){
 
-            $totalDuration = 0; 
+                $totalDuration = 0;          
 
-             for($i = 0; $i<$noOfSched; $i++){
-
-                if($proceed)
-                    break;
-
-                $from_time = Carbon::parse($froms[$i]);
-                $until_time = Carbon::parse($untils[$i]);
-
-                $totalDuration+= $until_time->diffInHours($from_time);
-
-            }            
-
-            if($totalDuration > $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
-            }elseif($totalDuration < $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
-            }
-
-            $students = $request->input('student_ids');
-
-           /**
-            *  INSERT DATA INTO CLASSES, SCHEDULES and LINK IT TO SUBJECT TAKEN
-            */
+                for($i = 0; $i<$noOfSched; $i++){
+    
+                 
+                    $from_time = Carbon::parse($froms[$i]);
+                    $until_time = Carbon::parse($untils[$i]);
+    
+                    $totalDuration+= $until_time->diffInHours($from_time);
+    
+                }            
+    
+                if($totalDuration > $theSubject->units){
+                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+                }elseif($totalDuration < $theSubject->units){
+                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+                }
+    
+                $students = $request->input('student_ids');
+    
+               /**
+                *  INSERT DATA INTO CLASSES, SCHEDULES and LINK IT TO SUBJECT TAKEN
+                */
+                
+                $class = new StudentClass;
+    
+                $class->faculty_id = $request->input('instructor_id');
+                $class->class_name = $request->input('class_name');                            
+    
+                $class->save();
+    
+                $classID = $class->id;
             
-            $class = new StudentClass;
-
-            $class->faculty_id = $request->input('instructor_id');
-            $class->class_name = $request->input('class_name');                            
-
-            $class->save();
-
-            $classID = $class->id;
-        
-            for($i=0; $i<$noOfSched; $i++){
-
-                $schedule = new Schedule;
-
-                $schedule->day = $days[$i];
-                $schedule->start_time = $froms[$i];
-                $schedule->until = $untils[$i];
-                $schedule->room_id = $room_ids[$i];                                            
-                $schedule->class_id = $classID;
-                
-                $schedule->save();
-                
-            }
-
-            $takenSubjects = SubjectTaken::pendingClasses();            
-
-            for($i=0; $i<count($takenSubjects); $i++){
-
-              for($j=0; $j<count($students); $j++){
-
-                    if($takenSubjects[$i]->subject_id == $request->input('subj') 
-                        && $takenSubjects[$i]->student_id == $students[$j]){
-                        
-                        $takenSubjects[$i]->rating = 3.5;
-                        $takenSubjects[$i]->class_id = $classID;
-
-                        $takenSubjects[$i]->save();
-                                
-                    }
-
-              }
+                for($i=0; $i<$noOfSched; $i++){
+    
+                    $schedule = new Schedule;
+    
+                    $schedule->day = $days[$i];
+                    $schedule->start_time = $froms[$i];
+                    $schedule->until = $untils[$i];
+                    $schedule->room_id = $room_ids[$i];                                            
+                    $schedule->class_id = $classID;
+                    
+                    $schedule->save();
+                    
+                }
+    
+                $takenSubjects = SubjectTaken::pendingClasses();            
+    
+                for($i=0; $i<count($takenSubjects); $i++){
+    
+                  for($j=0; $j<count($students); $j++){
+    
+                        if($takenSubjects[$i]->subject_id == $request->input('subj') 
+                            && $takenSubjects[$i]->student_id == $students[$j]){
                             
-            }        
-
-            if(!$proceed){
+                            $takenSubjects[$i]->rating = 3.5;
+                            $takenSubjects[$i]->class_id = $classID;
+    
+                            $takenSubjects[$i]->save();
+                                    
+                        }
+    
+                  }
+                                
+                }    
+                
                 $status ="success";
                 $msg ="Class Added Successfully";
 
@@ -356,6 +356,16 @@ class StudentClassesController extends Controller
 
         return redirect()->route('facultyClasses');
 
+    }
+
+    public function viewArchived(){        
+
+        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+        $archivedClasses->withPath('/admin/classes/archived');
+
+        return view('admin.classes')
+               ->with('active', 'archived')               
+               ->with('archivedClasses', $archivedClasses);               
     }
     
 }

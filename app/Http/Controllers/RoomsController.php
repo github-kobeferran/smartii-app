@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Schedule;
+use App\Models\StudentClass;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -110,12 +111,16 @@ class RoomsController extends Controller
 
     public function availableRooms($from, $until, $day = null){        
         
-        if($day != null){
+        if($day != null){            
 
-             $scheds = Schedule::where('day', $day)
+            $scheds = Schedule::where('day', $day)
                                ->where('start_time','<', $until)
                                ->where('until','>', $from)                                                  
                                ->get();                                    
+
+            $scheds = $scheds->filter(function ($sched, $key) {
+                return $sched->studentClass->archive == 0;
+            });
 
              if($scheds != null){
 

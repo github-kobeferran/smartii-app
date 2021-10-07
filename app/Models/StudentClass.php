@@ -21,14 +21,19 @@ class StudentClass extends Model
     
     protected $appends = ['topic' => null, 'prog'=> null, 'faculty_name' => null];
 
+    
     public static function init(){
-
+        
         $class = new StudentClass;
         $class->save();
         return $class->id;
-
+        
     }
 
+    public function subjectsTaken(){
+        return $this->hasMany(SubjectTaken::class, 'class_id', 'id');
+    }
+    
     public function schedules(){
         return $this->hasMany(Schedule::class, 'class_id', 'id');
     }

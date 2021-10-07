@@ -20,6 +20,10 @@ class Subject extends Model
         return $this->belongsToMany(Subject::class, 'subjects_pre_req', 'subject_id', 'subject_pre_req_id');
     }
 
+    public function program() {
+        return $this->belongsTo(Program::class, 'program_id', 'id');
+    }
+
     public function setSemesterDescAttribute($value)
     {
 
