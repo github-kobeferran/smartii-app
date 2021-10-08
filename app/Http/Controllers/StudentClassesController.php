@@ -16,6 +16,99 @@ use \Carbon\Carbon;
 class StudentClassesController extends Controller
 {
     
+    public function view(){
+
+        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+        $archivedClasses->withPath('/admin/classes/archived');                        
+        
+
+        return view('admin.classes')
+             ->with('active', 'create')
+             ->with('archivedClasses', $archivedClasses);             
+
+    }
+
+    public function viewArchived(){        
+    
+        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+        $archivedClasses->withPath('/admin/classes/archived');
+
+        return view('admin.classes')
+               ->with('active', 'archived')               
+               ->with('archivedClasses', $archivedClasses);
+    }
+
+    // public function searchArchived($text = null){
+
+    //     $archivedClasses = collect(new StudentClass);
+    
+    //     if(!is_null($text)){
+
+    //         $archivedClasses = StudentClass::where('archive', 1)->paginate(2);
+
+    //         $archivedClasses->getCollection()->transform(function($archived_class) use($text){
+
+    //             $valid = false;
+
+    //             $text = strtolower($text);
+
+    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->sy_and_sem), $text)){
+    //                 $valid = true;
+    //             }
+
+    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->student->program->desc), $text)){
+    //                 $valid = true;
+    //             }
+
+    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->student->program->abbrv), $text)){
+    //                 $valid = true;
+    //             }
+
+    //             if(str_contains(strtolower($archived_class->class_name), $text)){
+    //                 $valid = true;
+    //             }
+
+    //             if(str_contains(strtolower($archived_class->class_name), $text)){
+    //                 $valid = true;
+    //             }
+
+    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->subject->desc), $text)){
+    //                 $valid = true;
+    //             }
+
+    //             if(str_contains(strtolower($archived_class->faculty->first_name), $text)){
+    //                 $valid = true;
+    //             }
+
+    //             if(str_contains(strtolower($archived_class->faculty->last_name), $text)){
+    //                 $valid = true;
+    //             }              
+
+    //             if($valid) 
+    //                 return $archived_class;
+
+    //         });  
+            
+    //         // $archivedClasses->getCollection()->filter(function($item){
+    //         //     return $item != null;
+    //         // });
+                    
+
+    
+    //     }else{
+
+    //         $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+            
+    //     }
+            
+        
+
+    //     return view('admin.classes')
+    //            ->with('active', 'archived')
+    //            ->with('archivedClasses', $archivedClasses);               
+    // }
+
+
 
     public function store(Request $request){ 
         
@@ -289,7 +382,7 @@ class StudentClassesController extends Controller
     }
 
     public static function sortStudents($classid, $facultyid, $sortby){
-
+  
         $class = StudentClass::find($classid);
         $faculty = Faculty::find($facultyid);
 
@@ -358,14 +451,5 @@ class StudentClassesController extends Controller
 
     }
 
-    public function viewArchived(){        
-
-        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
-        $archivedClasses->withPath('/admin/classes/archived');
-
-        return view('admin.classes')
-               ->with('active', 'archived')               
-               ->with('archivedClasses', $archivedClasses);               
-    }
     
 }

@@ -1,12 +1,8 @@
 <div class="container">
     <div class="row">
-
         <div class="col text-center">
-    
             <h5 >ARCHIVED CLASSES</h5>    
-    
         </div>
-    
     </div>
 
     
@@ -14,12 +10,12 @@
 
         @if ($archivedClasses->count() > 0)
 
-            <div class="input-group mb-3">
+            {{-- <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Search.." aria-label="Username" aria-describedby="basic-addon1">
-            </div>
+                <input id="search-text" type="text" class="form-control" placeholder="Search.. NOT FUNCTIONING" aria-label="Username" aria-describedby="basic-addon1">
+            </div> --}}
 
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -35,7 +31,19 @@
         
         
                     <tbody>
+                        <?php
+                            $archivedClasses->getCollection()->filter(function($value){
+                                return $value != null;
+                            });
+                        ?>                        
+
                         @foreach ($archivedClasses as $class)
+
+                            @empty($class)
+                                @continue
+                            @endempty
+                                                      
+
                             <tr>
                                 <?php
                                     $class->subjectsTaken->first()->student->program_desc = $class->subjectsTaken->first()->student->program_id;
@@ -64,8 +72,8 @@
                                                 <div class="text-center">
                                                     <h5>Schedule </h5>
                                                     @foreach ($class->schedules as $schedule)
-                                                        <div class="border m-2 w-50 mx-auto">
-                                                            {{$schedule->day}}
+                                                        <div class="m-2 w-50 mx-auto">
+                                                            {{strtoupper($schedule->day)}}
                                                             {{$schedule->start_time}}
                                                             {{$schedule->until}}
                                                         </div>                                                    
@@ -142,3 +150,19 @@
     
     
 </div>
+
+<script>
+
+    // let searchText = document.getElementById('search-text');
+
+    // searchText.addEventListener('keyup', async () => {
+        
+    //     const res = await fetch(APP_URL + '/admin/searcharchived/' + searchText.value);
+
+    //     const data = await res.json();
+
+    //     window.location.replace(APP_URL + '/admin/searcharchived/' + searchText.value);
+
+    // });
+
+</script>

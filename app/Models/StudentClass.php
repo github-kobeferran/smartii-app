@@ -38,6 +38,10 @@ class StudentClass extends Model
         return $this->hasMany(Schedule::class, 'class_id', 'id');
     }
 
+    public function faculty(){
+        return $this->belongsTo(Faculty::class);
+    }
+
     public function setFacultyNameAttribute($id){
 
         $faculty = Faculty::find($id);
