@@ -18,7 +18,7 @@ class StudentClassesController extends Controller
     
     public function view(){
 
-        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+        $archivedClasses = StudentClass::where('archive', 1)->paginate(25);     
         $archivedClasses->withPath('/admin/classes/archived');                        
         
 
@@ -30,7 +30,7 @@ class StudentClassesController extends Controller
 
     public function viewArchived(){        
     
-        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+        $archivedClasses = StudentClass::where('archive', 1)->paginate(25);     
         $archivedClasses->withPath('/admin/classes/archived');
 
         return view('admin.classes')

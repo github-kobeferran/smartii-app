@@ -104,18 +104,7 @@ class AdminsController extends Controller
         return view('admin.settings');
     }
 
-    public function adminClasses(){
-
-        $archivedClasses = StudentClass::where('archive', 1)->paginate(25);     
-        $archivedClasses->withPath('/admin/classes/archived');                        
-        
-
-        return view('admin.classes')
-             ->with('active', 'create')
-             ->with('archivedClasses', $archivedClasses);             
-
-    }
-
+    
     public function store(Request $request){
 
         $status ='';
