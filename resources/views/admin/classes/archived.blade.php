@@ -6,16 +6,16 @@
     </div>
 
     
-    <div class="row">
+    <div class="row">        
 
         @if ($archivedClasses->count() > 0)
 
-            {{-- <div class="input-group mb-3">
+            <div class="input-group mb-3">
+                <input value="{{ !is_null($searchText) ? $searchText : '' }}" id="search-text" type="text" class="form-control" placeholder="Type the query and then click the search icon" aria-label="Username" aria-describedby="basic-addon1">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                    <button onclick="searchArchived()" class="input-group-text btn btn-lg btn-light" id="basic-addon1"><i class="fa fa-search"></i></button>
                 </div>
-                <input id="search-text" type="text" class="form-control" placeholder="Search.. NOT FUNCTIONING" aria-label="Username" aria-describedby="basic-addon1">
-            </div> --}}
+            </div>
 
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -30,7 +30,8 @@
                     </thead>    
         
         
-                    <tbody>
+                    <tbody id="archive-list">
+
                         <?php
                             $archivedClasses->getCollection()->filter(function($value){
                                 return $value != null;
@@ -153,16 +154,20 @@
 
 <script>
 
-    // let searchText = document.getElementById('search-text');
+    let searchText = document.getElementById('search-text');
+    let archiveList = document.getElementById('archive-list');
 
-    // searchText.addEventListener('keyup', async () => {
-        
-    //     const res = await fetch(APP_URL + '/admin/searcharchived/' + searchText.value);
 
-    //     const data = await res.json();
 
-    //     window.location.replace(APP_URL + '/admin/searcharchived/' + searchText.value);
+    async function searchArchived(){  
+      
+       window.location.href = APP_URL + '/admin/searcharchived/' + searchText.value;       
 
-    // });
+    }
+
+    searchText.addEventListener('keyup', (e) => {
+        if(e.key == 'Enter' || e.keyCode == 13)
+            searchArchived();
+    });
 
 </script>

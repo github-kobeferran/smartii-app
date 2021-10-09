@@ -18,7 +18,7 @@ class StudentClassesController extends Controller
     
     public function view(){
 
-        $archivedClasses = StudentClass::where('archive', 1)->paginate(25);     
+        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
         $archivedClasses->withPath('/admin/classes/archived');                        
         
 
@@ -30,7 +30,7 @@ class StudentClassesController extends Controller
 
     public function viewArchived(){        
     
-        $archivedClasses = StudentClass::where('archive', 1)->paginate(25);     
+        $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
         $archivedClasses->withPath('/admin/classes/archived');
 
         return view('admin.classes')
@@ -38,75 +38,82 @@ class StudentClassesController extends Controller
                ->with('archivedClasses', $archivedClasses);
     }
 
-    // public function searchArchived($text = null){
+    public function searchArchived($text = null){
 
-    //     $archivedClasses = collect(new StudentClass);
+        $archivedClasses = collect(new StudentClass);
     
-    //     if(!is_null($text)){
+        if(!is_null($text)){
 
-    //         $archivedClasses = StudentClass::where('archive', 1)->paginate(2);
+            $archivedClasses = StudentClass::where('archive', 1)->paginate();
 
-    //         $archivedClasses->getCollection()->transform(function($archived_class) use($text){
+            $counter = 1;
 
-    //             $valid = false;
+            $archivedClasses->getCollection()->transform(function($archived_class) use($text, $counter){
 
-    //             $text = strtolower($text);
 
-    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->sy_and_sem), $text)){
-    //                 $valid = true;
-    //             }
+                $valid = false;
 
-    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->student->program->desc), $text)){
-    //                 $valid = true;
-    //             }
+                $text = strtolower($text);
 
-    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->student->program->abbrv), $text)){
-    //                 $valid = true;
-    //             }
+                if(str_contains(strtolower($archived_class->subjectsTaken->first()->sy_and_sem), $text)){
+                    $valid = true;
+                }
 
-    //             if(str_contains(strtolower($archived_class->class_name), $text)){
-    //                 $valid = true;
-    //             }
+                if(str_contains(strtolower($archived_class->subjectsTaken->first()->student->program->desc), $text)){
+                    $valid = true;
+                }
 
-    //             if(str_contains(strtolower($archived_class->class_name), $text)){
-    //                 $valid = true;
-    //             }
+                if(str_contains(strtolower($archived_class->subjectsTaken->first()->student->program->abbrv), $text)){
+                    $valid = true;
+                }
 
-    //             if(str_contains(strtolower($archived_class->subjectsTaken->first()->subject->desc), $text)){
-    //                 $valid = true;
-    //             }
+                if(str_contains(strtolower($archived_class->class_name), $text)){
+                    $valid = true;
+                }
 
-    //             if(str_contains(strtolower($archived_class->faculty->first_name), $text)){
-    //                 $valid = true;
-    //             }
+                if(str_contains(strtolower($archived_class->class_name), $text)){
+                    $valid = true;
+                }
 
-    //             if(str_contains(strtolower($archived_class->faculty->last_name), $text)){
-    //                 $valid = true;
-    //             }              
+                if(str_contains(strtolower($archived_class->subjectsTaken->first()->subject->desc), $text)){
+                    $valid = true;
+                }
 
-    //             if($valid) 
-    //                 return $archived_class;
+                if(str_contains(strtolower($archived_class->faculty->first_name), $text)){
+                    $valid = true;
+                }
 
-    //         });  
+                if(str_contains(strtolower($archived_class->faculty->last_name), $text)){
+                    $valid = true;
+                }              
+
+                if($valid) {
             
-    //         // $archivedClasses->getCollection()->filter(function($item){
-    //         //     return $item != null;
-    //         // });
-                    
+                    return $archived_class;
 
-    
-    //     }else{
+                } else{
 
-    //         $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+                }
+
+                $counter++;
+
+            });             
+                        
+        }else{
+
+            $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
             
-    //     }
-            
+        }           
         
+        $archivedClasses->getCollection()->filter(function($item){
+            return $item != null;
+        });        
 
-    //     return view('admin.classes')
-    //            ->with('active', 'archived')
-    //            ->with('archivedClasses', $archivedClasses);               
-    // }
+        return view('admin.classes')
+               ->with('active', 'archived')
+               ->with('searchText', $text)
+               ->with('archivedClasses', $archivedClasses);               
+    }
 
 
 
