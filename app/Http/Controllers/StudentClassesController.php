@@ -388,6 +388,89 @@ class StudentClassesController extends Controller
 
     }
 
+    public function updateSchedule(Request $request){
+
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }         
+        
+        $valid = true;
+
+        $sched = Schedule::find($request->input('sched_id'));
+        $class = StudentClass::find($request->input('class_id'));                
+
+        $otherScheds = Schedule::where('id', '!=', $request->input('sched_id'))
+                               ->where('class_id', $request->input('class_id'))->get();
+
+        $otherSchedHours = 0;
+                               
+                
+        if(count($otherScheds) > 0){
+            foreach($otherScheds as $otherSched){                            
+
+                $otherSchedHours+= Carbon::parse($otherSched->until)->diffInHours(Carbon::parse($otherSched->start_time));
+
+                if($otherSched->day == $request->input('day')){
+                    $valid = false;                
+                    $status = 'error';
+                    $msg = 'Day must not duplicate in a class';                    
+                }
+
+                if(!$valid)
+                    break;
+            }
+        }        
+
+        $class->faculty_id = $request->input('instructor');
+        $class->class_name = $request->input('class_name');
+
+        $sched->day = $request->input('day');
+
+        $inputHours = Carbon::parse($request->input('until'))->diffInHours(Carbon::parse($request->input('from')));        
+
+        $subject = $class->subjectsTaken->first()->subject;
+
+        if(($inputHours + $otherSchedHours) > $subject->units ){
+
+            $status = 'warning';
+            $msg = 'Update failed, schedule total hours is above the units of the subject. '. $subject->desc . ' has only ' . $subject->units . ' units.';
+
+            $valid = false;
+            
+        }
+        
+        if(($inputHours + $otherSchedHours) < $subject->units ){
+            
+            $status = 'warning';
+            $msg = 'Update failed, schedule total hours is below the units of the subject. '. $subject->desc . ' has ' . $subject->units . ' units.';
+            
+            $valid = false;
+        }
+
+        $sched->start_time = $request->input('from');
+        $sched->until = $request->input('until');
+
+
+        $sched->room_id = $request->input('room');
+
+        if($valid){
+
+            $sched->save();
+            $class->save();
+
+            $status = 'success';
+            $msg = 'Schedule Updated';
+
+        }
+
+        return redirect()->route('adminClasses')
+                         ->with($status, $msg)
+                         ->with('active', 'view');
+
+
+    }
+
+
     public static function sortStudents($classid, $facultyid, $sortby){
   
         $class = StudentClass::find($classid);
@@ -452,8 +535,7 @@ class StudentClassesController extends Controller
         $class->save();
 
         DB::table('schedules')->delete(['class_id' => $class->id]);
-
-
+        
         return redirect()->route('facultyClasses');
 
     }

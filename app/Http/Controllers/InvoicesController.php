@@ -31,16 +31,7 @@ class InvoicesController extends Controller
 
         $student->dept = $student->department;    
         $student->program_desc = $student->program_id;
-        $student->level_desc = $student->level;
-
-        $subjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($studID);
-
-        foreach($subjectsTaken as $subTaken){
-
-            $subTaken->units = $subTaken->subject_id;
-            $subTaken->subj_desc = $subTaken->subject_id;
-
-        }
+        $student->level_desc = $student->level;        
 
         // get Balance rel
         $balance = Balance::find($student->balance_id);
@@ -78,15 +69,15 @@ class InvoicesController extends Controller
         $year =  date("y");        
         $invoiceID = $year . '-' . sprintf('%08d', $invoice->id);   
 
-        $invoice->invoice_id = $invoiceID;
+        $invoice->invoice_id = $invoiceID;        
 
         $invoice->save();
         
         if($request->input('print_receipt')){
 
             $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
-            $data = ['rem_bal' => $remainingBal, 'change' => $change, 'totalBalance' => $totalBalance, 'payment' => $payment];
-            $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'subjectsTaken', 'settings', 'data'));
+            $data = ['rem_bal' => $remainingBal, 'change' => $change, 'totalBalance' => $totalBalance, 'payment' => $payment];            
+            $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'settings', 'data'));
             return $pdf->stream( 'invoice.pdf');  
 
         } else {
@@ -96,17 +87,38 @@ class InvoicesController extends Controller
          
     }
 
-    // public function showToStudent($id){
+    public function show($invoice_id){                
 
-    //     $change = 0;
+        if(Invoice::where('invoice_id', $invoice_id)->doesntExist()){
+            return redirect()->back();
+        } 
 
-    //     $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
+        $user_id = auth()->user()->id;
 
-    //     $data = ['rem_bal' => $remainingBal, 'change' => $change, 'totalBalance' => $totalBalance, 'payment' => $payment];
+        $invoice =  Invoice::where('invoice_id', $invoice_id)->first();
 
-    //     $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'subjectsTaken', 'settings', 'data'));
-    //     return $pdf->stream( 'invoice.pdf');  
+        if($user_id != $invoice->student->member->user->id){            
+            if(auth()->user()->isAdmin() == false )
+                return redirect()->back();
+        }      
 
-    // }
+        $student = $invoice->student;
+        $student->dept = $student->department;    
+        $student->program_desc = $student->program_id;
+        $student->level_desc = $student->level;
+
+        $admin = $invoice->admin;
+        $settings = Setting::first();
+
+        $change = 0;
+
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
+
+        $data = ['rem_bal' => $invoice->remaining_bal, 'change' => ($invoice->payment > $invoice->balance ? $invoice->balance - $invoice->payment : 0), 'totalBalance' => $invoice->balance, 'payment' => $invoice->payment];
+
+        $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'settings', 'data'));
+        return $pdf->stream( 'invoice.pdf');  
+
+    }
 
 }

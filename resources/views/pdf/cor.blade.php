@@ -1,10 +1,12 @@
 @extends('layouts.pdf')
 
 @section('pdf-title')
-    {{$invoice->invoice_id}} Receipt
+    COR {{strtoupper($student->first_name) . ' ' . strtoupper($student->last_name)}}
 @endsection
 
 @section('content')
+
+
 <div class="invoice-box">
     <table cellpadding="0" cellspacing="0">
         <tr class="top">
@@ -16,10 +18,9 @@
                         </td>
                         
                         <td>
-                            {{'#'.$invoice->invoice_id}}<br />
-                            <?php  $date = \Carbon\Carbon::parse($invoice->created_at)->format('g:i a l jS F Y');  ?>
-                            Payment Date: <br />
-                            {{$date}} <br />                            
+                            St. Mark Arts and Training Institute Inc.<br />
+                            J.P. Rizal St., Camilmil, Calapan City<br />
+                            Oriental Mindoro, MIMAROPA                                                      
                         </td>
                     </tr>
                 </table>
@@ -31,16 +32,10 @@
                 <table>
                     <tr>
                         <td>
-                            St. Mark Arts and Training Institute Inc.<br />
-                            J.P. Rizal St., Camilmil, Calapan City<br />
-                            Oriental Mindoro, MIMAROPA
+                            <b style="font-size: 1.7em;">Certificate Of Registration</b>
                         </td>
 
-                        <td>
-                            {{$admin->name}}<br />
-                            {{$admin->admin_id}}<br />
-                            
-                        </td>
+                        <td style="font-size: ">S.Y. {{$settings->from_year . '-' . $settings->to_year . ' | ' . $settings->sem_desc}} semester</td>
                     </tr>
                 </table>
             </td>
@@ -63,31 +58,37 @@
                     </tr>
                 </table>
             </td>
-        </tr>               
-                   
-        <tr class="total">
-            <td>Remaining Balance: Php {{number_format($data['totalBalance'], 2)}}</td>         
-            <td>Payment: Php {{number_format($data['payment'], 2)}}</td>                     
-            
-        </tr>
+        </tr>   
         
-        <tr class="total">
-            <td>Change: Php {{number_format($data['change'], 2)}}</td>                     
-            <td>New Remaining Balance: Php {{number_format($data['rem_bal'], 2)}}</td>                     
-        </tr>
+    </table>
 
-       
-    </table>   
+
+    <table cellpadding="0" cellspacing="0">
+
+        <tr class="heading" style="text-align: center !important;">
+            <td>Subject Code</td>
+
+            <td>Description</td>
+            
+            <td>No. of Units</td>
+            
+        </tr> 
+
+        @foreach ($subjectsTaken as $subTaken )
+
+            <tr class="item" style="text-align: center !important">
+                <td >{{ $subTaken->subject->code}}</td>
+                <td >{{ $subTaken->subj_desc}}</td>
+                <td>{{ $subTaken->units}}</td>
+                
+            </tr>
+                
+        @endforeach
+
+    </table>
+
+
 
 </div>
-
-
-<script>
-     // Callback
-     window.onbeforeunload = function(e) {
-        // Turning off the event
-        e.preventDefault();
-    }
-</script>
-
+    
 @endsection

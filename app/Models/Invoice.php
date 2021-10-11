@@ -13,6 +13,14 @@ class Invoice extends Model
 
     protected $appends = ['stud_name'=> null, 'formatted_date'=>null];
 
+    public function student(){
+        return $this->hasOne(Student::class, 'id', 'student_id');
+    }    
+
+    public function admin(){
+        return $this->hasOne(Admin::class, 'id',  'admin_id');
+    }    
+
     public function setStudNameAttribute($stud_id){
         
         $student = Student::find($stud_id);

@@ -32,7 +32,7 @@ class LoginController extends Controller
 
     public function redirectTo() {
         $user = Auth::user();
-        
+    
         switch(true) {        
             case $user->isAdmin():
                 return '/admin';

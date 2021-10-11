@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Payment Receipt</title>
+    <title>@yield('pdf-title')</title>
 
     
     

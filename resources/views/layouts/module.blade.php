@@ -29,11 +29,11 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 
-
+ 
     @yield('charts')            
                 
 </head>
-<body>
+<body>  
   
 
     <script>      

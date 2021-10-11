@@ -1,9 +1,13 @@
 @extends('layouts.app')
 
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
+
+            @include('inc.messages')
+
             <div class="card">
                 <div class="card-header"><h5 class="text-center">LOGIN</h5></div>
 

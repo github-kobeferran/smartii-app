@@ -11,7 +11,7 @@
         @if ($archivedClasses->count() > 0)
 
             <div class="input-group mb-3">
-                <input value="{{ !is_null($searchText) ? $searchText : '' }}" id="search-text" type="text" class="form-control" placeholder="Type the query and then click the search icon" aria-label="Username" aria-describedby="basic-addon1">
+                <input value="{{ isset($searchText) ? $searchText : '' }}" id="search-text" type="text" class="form-control" placeholder="Type the query and then click the search icon" aria-label="Username" aria-describedby="basic-addon1">
                 <div class="input-group-prepend">
                     <button onclick="searchArchived()" class="input-group-text btn btn-lg btn-light" id="basic-addon1"><i class="fa fa-search"></i></button>
                 </div>
@@ -30,7 +30,7 @@
                     </thead>    
         
         
-                    <tbody id="archive-list">
+                    <tbody id="archive-list" style="max-height: 50vh; overflow:auto; -webkit-overflow-scrolling: touch;">
 
                         <?php
                             $archivedClasses->getCollection()->filter(function($value){
@@ -136,7 +136,7 @@
                     </tbody>
 
 
-                </table>   
+                </table>                   
 
                 {{$archivedClasses->links()}}
 

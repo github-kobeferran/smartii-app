@@ -67,7 +67,8 @@ Route::get('/createpost', [App\Http\Controllers\PostsController::class, 'create'
 Route::any('/uploadpost', [App\Http\Controllers\PostsController::class, 'store'])->middleware(['verified', 'adminAndFaculty']);
 Route::get('/editpost/{email}/{id}', [App\Http\Controllers\PostsController::class, 'edit'])->middleware(['verified', 'adminAndFaculty']);
 Route::any('/updatepost', [App\Http\Controllers\PostsController::class, 'update'])->middleware(['verified', 'adminAndFaculty']);
-
+Route::get('/invoice/{invoice_id}', [App\Http\Controllers\InvoicesController::class, 'show'])->middleware(['verified'])->name('invoice.show');    
+Route::get('/cor/{student_id}', [App\Http\Controllers\SubjectsTakenController::class, 'viewCOR'])->middleware(['verified'])->name('subjectstaken.viewCOR');    
 
 Auth::routes(['verify' => true]);
 
@@ -116,16 +117,18 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     
     Route::get('/admin/classes/', [App\Http\Controllers\StudentClassesController::class, 'view'])->name('adminClasses')->middleware(['admin.registrar']);
     Route::get('/admin/classes/archived', [App\Http\Controllers\StudentClassesController::class, 'viewArchived'])->name('viewArchived')->middleware(['admin.registrar']);
-    Route::get('/admin/searcharchived/{text?}', [App\Http\Controllers\StudentClassesController::class, 'searchArchived'])->name('view.class.archived.search')->middleware(['admin.registrar']);
+    Route::get('/admin/searcharchived/{text?}', [App\Http\Conupdatescheduletrollers\StudentClassesController::class, 'searchArchived'])->name('view.class.archived.search')->middleware(['admin.registrar']);
     Route::get('/admin/schedules/{prog}/{subj}', [App\Http\Controllers\SubjectsTakenController::class, 'showClassSchedules'])->name('showClassSchedules');
 
     Route::get('/admin/download/{type}/{filename}', [App\Http\Controllers\AdminsController::class, 'download'])->name('AdminDownload');
     Route::post('/admin/requestupload', [App\Http\Controllers\AdminsController::class, 'requestFileResubmission'])->name('requestFileResubmission');
     Route::post('/admin/approveapplicant', [App\Http\Controllers\AdminsController::class, 'approveApplicant'])->name('approveApplicant');
+    Route::any('/admin/rejectapplicant', [App\Http\Controllers\ApplicantsController::class, 'reject'])->name('applicant.reject');
+    Route::any('/admin/restoreapplicant', [App\Http\Controllers\ApplicantsController::class, 'restore'])->name('applicant.reject');
 
     Route::get('/admin/paymentrequests', [App\Http\Controllers\AdminsController::class, 'viewPaymentRequests'])->name('viewPaymentRequests')->middleware(['admin.accounting']);
     Route::post('/admin/approvepaymentrequest', [App\Http\Controllers\AdminsController::class, 'approvePaymentRequest'])->name('approvePaymentRequest');
-    Route::any('/updateschedule', [App\Http\Controllers\AdminsController::class, 'updateSchedule'])->name('updateschedule');
+    Route::any('/updateschedule', [App\Http\Controllers\StudentClassesController::class, 'updateSchedule'])->name('updateschedule');
     Route::any('/enrolltosubject', [App\Http\Controllers\AdminsController::class, 'enrollToSubject'])->name('enrolltosubject');
     Route::any('/updatesubject', [App\Http\Controllers\SubjectsController::class, 'update'])->name('updatesubject');
     Route::any('/updateprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'updatePreReq'])->name('updateprereq');
@@ -153,11 +156,13 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/featurepost/{id}', [App\Http\Controllers\PostsController::class, 'feature']);    
     Route::get('/viewprogramsfromdashboard', [App\Http\Controllers\ProgramsController::class, 'viewFromDashboard']);    
 
+    
+    
 });
 
 // APPLICANT protected routes 
 Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])->group(function () {    
-
+    
     Route::get('/admissionform', [App\Http\Controllers\ApplicantsController::class, 'form'])->name('admissionForm')->middleware(['verified', 'applicant.new']);
     Route::get('/appstatus', [App\Http\Controllers\ApplicantsController::class, 'status'])->name('appStatus')->middleware(['verified', 'applicant.submitted']);
     Route::get('/applicant/view/programs/{dept}', [App\Http\Controllers\ApplicantsController::class, 'showPrograms'])->name('applicantViewPrograms');    
@@ -169,7 +174,8 @@ Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])
 
 // STUDENT protected routes 
 Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->group(function () {
-
+    
+    
     Route::get('/student/classes/', [App\Http\Controllers\StudentsController::class, 'getClasses'])->name('studentClasses');    
     Route::get('/student/balance/', [App\Http\Controllers\StudentsController::class, 'getBalance'])->name('studentBalance');    
     Route::get('/student/createpayment/', [App\Http\Controllers\PaymentRequestsController::class, 'create'])->name('createPaymentRequest');

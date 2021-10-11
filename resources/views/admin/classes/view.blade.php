@@ -332,15 +332,18 @@ function subjectSelect(subjid, subjDescAndCode, programid){
 
             let classes = JSON.parse(this.responseText);
 
+            console.log(classes);
+
             let output = `<div class="text-center container ">
                             <div class=" row mt-2">
                                 <h5 class="mx-auto">${subjDescAndCode} Schedules</h5>                            
                             </div>`;
 
-            output += `<div id="view-panel" class="row mt-2 d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;
+            output += `<div id="view-panel" class="row mt-2 d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;            
 
-    
-            for(let i in classes){                
+            for(let i in classes){    
+
+                
 
                 let counter = 1;
                 

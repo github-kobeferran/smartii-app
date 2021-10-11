@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\WelcomeApplicant;
+use App\Mail\RejectApplicant;
+use App\Mail\RestoreApplicant;
 use App\Models\Applicant;
 use App\Models\Program;
 use App\Models\Member;
@@ -25,16 +27,31 @@ class ApplicantsController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
+
         return view('applicant.index');
     }
 
     public function form()
     {
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
+
         return view('applicant.admission');
     }
 
     public function status()
     {
+
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
         return view('applicant.status');
     }
 
@@ -712,6 +729,46 @@ class ApplicantsController extends Controller
 
         return redirect()->route('appStatus');
         
+    }
+
+    public function reject(Request $request){
+
+        if($request->method() != 'POST')
+            return redirect()->back();
+
+        $applicant = Applicant::find($request->input('applicant_id'));
+
+        $applicant->prog_desc = $applicant->id;
+        $applicant->dept_desc = $applicant->id;
+
+        Mail::to($applicant->member->user)->send(new RejectApplicant(ucfirst($applicant->first_name) . ' ' . ucfirst($applicant->last_name), $applicant->prog_desc, $applicant->dept_desc, $request->input('reason')));
+
+        $applicant->member->user->access_grant = 1;
+        $applicant->member->user->save();
+
+        $applicant->delete();
+
+        return redirect()->route('adminView')->with('info', 'Applicant Rejected.');
+
+    }
+
+    public function restore(Request $request){
+
+        if($request->method() != 'POST')
+            return redirect()->back();
+    
+
+        $applicant = Applicant::withTrashed()->find($request->input('id'));          
+
+        Mail::to($applicant->member->user)->send(new RestoreApplicant(ucfirst($applicant->first_name) . ' ' . ucfirst($applicant->last_name)));
+
+        $applicant->member->user->access_grant = 0;
+        $applicant->member->user->save();
+
+        $applicant->restore();
+
+        return redirect()->route('adminView')->with('info', 'Applicant Restored.');
+
     }
 
 }

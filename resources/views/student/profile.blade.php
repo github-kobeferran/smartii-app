@@ -41,11 +41,13 @@
 
     @else
 
-        <div class="mx-auto text-center">
+        @if ($show > 1)
+            <div class="mx-auto text-center">
 
-            <em >Students Created by Admin - Profile Upload upcoming soon</em>
+                <em >Students Created by Admin - Profile Upload upcoming soon</em>
 
-        </div>
+            </div>
+        @endif
 
     @endif
 
@@ -436,6 +438,18 @@
         </div>
 
     </div>
+
+    @if (auth()->user()->isAdmin())    
+        @if (\App\Models\SubjectTaken::enrolledSubjectsbyStudent($student->id)->count() > 0)
+
+            <div class="row my-1">
+                <div class="col text-right ">
+                    <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">View Certificate of Registration</a>
+                </div>
+            </div>
+            
+        @endif
+    @endif
 
 
     @if($show > 2)

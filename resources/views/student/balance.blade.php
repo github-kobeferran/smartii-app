@@ -49,6 +49,48 @@
 
         <div class="col-sm-3 mt-2 mb-4 ">
             <a href="{{url('/student/createpayment/')}}" class="btn btn-primary border">Make Payment Request</a>
+
+            <?php
+            $fees = \App\Models\Fee::where(function ($query) use($student) {
+                                            $query->where('dept', 2)
+                                                ->orWhere('dept', $student->department);                     
+                                            })
+                                    ->get();
+            ?>
+
+            <div class="mt-2">
+                <button type="button" data-toggle="modal" data-target="#fees" class="btn btn-sm btn-info text-white">See Fees for this semester</button>
+                
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="fees" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info ">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Fees</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            @if ($fees->count() > 0)
+                                <ul class="list-group">
+                                    @foreach ($fees as $fee)
+                                        <li class="list-group-item">{{ucfirst($fee->desc ). ' | Php '. number_format($fee->amount, 2)}}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                No fees for this semester
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                
+
         </div>
 
     </div>
@@ -124,50 +166,42 @@
             <div class="col-sm d-flex justify-content-left">        
 
 
-                <div class="table-responsive">
+                <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
                     <table class="table table-bordered ">
 
-                        <tr>
-                            <td>
-                                Invoice Number
-                            </td>
-                            <td>
-                                Payment Date
-                            </td>
-                            <td>
-                                Balance
-                            </td>
-                            <td>
-                                Payment Amount
-                            </td>
-                            <td>
-                                Remaining Balance
-                            </td>
-                        </tr>
-    
-                        @foreach ($invoices as $invoice)
-    
-                        <tr>
+                       <thead>
+                            <tr>
+                                <td>
+                                    Invoice Number
+                                </td>
+                                <td>
+                                    Payment Date
+                                </td>                      
+                                <td>
+                                    Payment Amount
+                                </td>                             
+                            </tr>
 
-                            <td>
-                                {{$invoice->invoice_id}}
-                            </td>
-                            <td>
-                                <a>{{\Carbon\Carbon::parse($invoice->created_at)->format('M d Y h:i A') }}</a>
-                            </td>
-                            <td>
-                                Php  {{ $invoice->balance }}
-                            </td>
-                            <td>
-                                Php  {{ $invoice->payment }}
-                            </td>
-                            <td>
-                                Php  {{ $invoice->remaining_bal }}
-                            </td>
-                         
-                        </tr>
+                       </thead>
+    
+                        <tbody >
+
+                            @foreach ($invoices as $invoice)
+                                <tr>
+        
+                                    <td>
+                                        <a href="{{url('/invoice/' . $invoice->invoice_id)}}" target="_blank">{{$invoice->invoice_id}}</a>
+                                    </td>
+                                    <td>
+                                        <a>{{\Carbon\Carbon::parse($invoice->created_at)->format('M d Y h:i A') }}</a>
+                                    </td>                                   
+                                    <td>
+                                        Php  {{number_format( $invoice->payment, 2) }}
+                                    </td>                                
+                                </tr>
                             
-                        @endforeach
+                            @endforeach
+                        </tbody>
                         
                     </table>
                 </div>

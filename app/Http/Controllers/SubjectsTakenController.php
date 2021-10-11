@@ -10,7 +10,9 @@ use App\Models\Program;
 use App\Models\StudentClass;
 use App\Models\Schedule;
 use App\Models\Faculty;
+use App\Models\Setting;
 use Carbon\Carbon;
+use PDF;
 
 class SubjectsTakenController extends Controller
 {
@@ -109,11 +111,10 @@ class SubjectsTakenController extends Controller
 
             $classes->push($class);
             
-        }        
-
-        // $classes = $classes->filter()->all();
-
-        return $classes;       
+        }
+        
+               
+        return $classes->unique();       
         
     }
 
@@ -138,6 +139,47 @@ class SubjectsTakenController extends Controller
         return redirect('/myclass/' . $request->input('class_id'))
                        ->with('success', 'Rating Updated');
         
+
+    }
+
+    public function viewCOR($student_id){
+
+        if(Student::where('student_id', $student_id)->doesntExist()){
+            return redirect()->back();
+        } 
+
+        $user_id = auth()->user()->id;
+
+        $student =  Student::where('student_id', $student_id)->first();
+        $student->dept = $student->department;    
+        $student->program_desc = $student->program_id;
+        $student->level_desc = $student->level;
+
+        $settings = Setting::first();
+
+        $subjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);
+
+        foreach($subjectsTaken as $subTaken){
+
+            $subTaken->units = $subTaken->subject_id;
+            $subTaken->subj_desc = $subTaken->subject_id;
+            $subTaken->subject;
+
+        }
+
+        $settings->sem_desc = $settings->sem;
+
+
+
+        if($user_id != $student->member->user->id){            
+            if(auth()->user()->isAdmin() == false )
+                return redirect()->back();
+        }
+
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
+
+        $pdf = PDF::loadView('pdf.cor', compact('student', 'subjectsTaken', 'settings'));
+        return $pdf->stream( 'COR_'. strtoupper($student->first_name) . '_' .  strtoupper($student->first_name) . '.pdf');  
 
     }
    

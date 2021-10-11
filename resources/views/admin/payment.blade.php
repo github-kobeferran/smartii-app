@@ -205,7 +205,7 @@ function studentsAjax() {
 
                     '<td class="border-right"><button type="button"  onclick="selectForPayment(' +students[i].id + ')" class="btn btn-info text-white ">Payment</button></td>' + 
                     '<td class="border-right"><button type="button"  onclick="showInvoicesTable(' +students[i].id + ')" class="btn btn-warning text-secondary">Invoices</button></td>' + 
-                    '<td class="border-right">' + students[i].student_id + '</td>' +
+                    '<td class="border-right"><a href="/studentprofile/'+ students[i].student_id + '">' + students[i].student_id + '</a></td>' +
                     '<td class="border-right">' + students[i].last_name + ', ' + students[i].first_name + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '.' + '</td>' +
                     '<td class="border-right">' + department + ' | ' + students[i].program_desc + ' | ' + level + '</td>' +                    
                     '<td class="border-left">&#8369;  <b>' + students[i].balance_amount + '</b></td>' +
@@ -278,6 +278,7 @@ function studentSearch(){
                 output += '<tr>' +
 
                     '<td class="border-right"><button type="button"  onclick="selectForPayment(' +students[i].id + ')" class="btn btn-info text-white border">Select</button></td>' + 
+                    '<td class="border-right"><button type="button"  onclick="showInvoicesTable(' +students[i].id + ')" class="btn btn-warning text-secondary">Invoices</button></td>' + 
                     '<td>' + students[i].student_id + '</td>' +
                     '<td>' + students[i].last_name + ', ' +students[i].first_name + ', ' + students[i].middle_name.charAt(0).toUpperCase() + '</td>' +
                     '<td>' + department + ' | ' + students[i].program_desc + ' | ' + level + '</td>' +                    
@@ -439,7 +440,7 @@ function showInvoicesTable(id){
                 for(let i in invoices){
 
                     output+='<tr>';
-                        output+='<td><a href="">#'+ invoices[i].invoice_id +'</a></td>';
+                        output+='<td><a href="' + APP_URL + '/invoice/' + invoices[i].invoice_id +'" target="_blank">#'+ invoices[i].invoice_id +'</a></td>';
                         output+='<td>'+ invoices[i].formatted_date +'</td>';
                         output+='<td>'+ invoices[i].payment +'</td>';
                     output+='<tr>';

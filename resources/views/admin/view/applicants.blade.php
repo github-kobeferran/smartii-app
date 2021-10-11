@@ -12,6 +12,9 @@
             <label class="btn btn-light">
                 <input type="radio" name="options" id="appCollegeOption" autocomplete="off"> College
             </label>
+            <label class="btn btn-light">
+                <input type="radio" name="options" id="rejectedOption" autocomplete="off"> Rejected
+            </label>
         </div>
 
         <div id="search-app" class="form-group has-search">
@@ -25,6 +28,8 @@
         </div>
         
     </div>
+
+    
 
     
 
@@ -73,6 +78,7 @@
 let allOption = document.getElementById('allOption');
 let appShsOption = document.getElementById('appShsOption');
 let appCollegeOption = document.getElementById('appCollegeOption'); 
+let rejectedOption = document.getElementById('rejectedOption'); 
 
 let selectedDept = null;
 
@@ -90,12 +96,14 @@ allOption.onclick = () => {
     selectedDept = null;
     fillApplicantList();
     document.getElementById('search-app').style.display = "block";
+    clearApplicantPanel();
 }
 
 appShsOption.onclick = () => {
     selectedDept = 0;
     document.getElementById('search-app').style.display = "none";
     fillApplicantList();
+    clearApplicantPanel();
     
 }
 
@@ -103,6 +111,36 @@ appCollegeOption.onclick = () => {
     selectedDept = 1;
     document.getElementById('search-app').style.display = "none";
     fillApplicantList();
+    clearApplicantPanel();
+}
+
+rejectedOption.onclick = () => {
+    selectedDept = 4;
+    document.getElementById('search-app').style.display = "none";
+    fillApplicantList();
+    clearApplicantPanel();
+}
+
+function clearApplicantPanel(){
+    appFilesPanel.innerHTML = `
+        <div id="appFilesPanel" class="row text-center no-gutters mw-25 mh-25">                                                               
+
+            @empty(\App\Models\Applicant::where('approved', 0)->first())
+                                    
+                <h5 class="mx-auto mt-5">No Pending Applicants <i class="fa fa-smile-o" aria-hidden="true"></i></h5>
+
+            @else
+
+                <h5 class="mx-auto mt-5"></h5>
+
+            @endempty
+
+            </div>`;
+
+    appDataPanel.innerHTML = `
+        <div id="appDataPanel" class="row no-gutters mt-3 ">
+
+        </div>`;
 }
 
 
@@ -114,8 +152,10 @@ function fillApplicantList(id = null){
         xhr.open('GET', APP_URL + '/admin/view/applicants/dept/' +  0, true);
     else if(selectedDept == 1)
         xhr.open('GET', APP_URL + '/admin/view/applicants/dept/' +  1, true);
-    else
+    else if(selectedDept == null)
         xhr.open('GET', APP_URL + '/admin/view/applicants/', true);
+    else if(selectedDept == 4)
+        xhr.open('GET', APP_URL + '/admin/view/rejectedapplicants/', true);
 
     xhr.onload = function() {
         if (this.status == 200) {
@@ -286,8 +326,7 @@ function applicantSelect(btnId, id, isdefault = false ){
                     <h5>ID Picture</h5>
                 
                 </div>
-
-                {{--  --}}
+                
 
                 <div class="bg-light text-white text-center p-2">
 
@@ -518,9 +557,11 @@ function applicantSelect(btnId, id, isdefault = false ){
                     <div class="card mx-auto w-75" >
                         <div class="card-header">
                             <h5 class="text-center">PERSONAL DATA </h5>                            
-                        </div>
-                        {!! Form::open(['url' => 'admin/approveapplicant/', 'id' => 'approveApplicantForm']) !!}
-                        <ul class="list-group list-group-flush ">
+                        </div>`;
+            if(selectedDept != 4)
+                output2 +=`{!! Form::open(['url' => 'admin/approveapplicant/', 'id' => 'approveApplicantForm']) !!}`;
+            
+            output2 +=`<ul class="list-group list-group-flush ">
                             <li class="list-group-item">Last Name: <strong>`+ ucfirst(applicant.last_name)  + `</strong></li>                            
                             <li class="list-group-item">First Name: <strong>`+ ucfirst(applicant.first_name)  + `</strong></li>                            
                             <li class="list-group-item">Middle Name: <strong>`+ ucfirst(applicant.middle_name)  + `</strong></li>                            
@@ -528,10 +569,49 @@ function applicantSelect(btnId, id, isdefault = false ){
                             <li class="list-group-item">Gender: <strong>`+ ucfirst(applicant.gender) + `</strong></li>                            
                             <li class="list-group-item">Living in: <strong>`+ applicant.present_address + `</strong></li>                            
                             <li class="list-group-item">Previous School: <strong>`+ applicant.last_school + `</strong></li>                                                        
-                            {{ Form::hidden('app_id','`+ applicant.id  + `') }}
-                            <li class="list-group-item"><button type="submit" class="btn btn-success btn-block">Approve</button> </li>
-                        {!! Form::close() !!}
-                        </ul>
+                            {{ Form::hidden('app_id','`+ applicant.id  + `') }}`;
+                if(selectedDept != 4){
+                    output2 +=`<li class="list-group-item"><button type="submit" class="btn btn-success btn-block mb-2">Approve</button></li>
+                            {!! Form::close() !!}
+                            
+                            <li class="list-group-item border-0"><button  data-toggle="modal" data-target="#reject-${applicant.id}" type="button" class="btn btn-warning text-dark btn-block"><b>Reject</b></button> </li>
+
+                            <div class="modal fade" id="reject-${applicant.id}" tabindex="-1" role="dialog" aria-labelledby="reportcard-modal-title" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="reportcard-modal-title">Reject ${ucfirst(applicant.first_name) + ' ' + ucfirst(applicant.last_name)}?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        {!! Form::open(['url' => 'admin/rejectapplicant/']) !!}
+                                        <div class="modal-body">
+                                                {{ Form::hidden('applicant_id','`+ applicant.id  + `') }}
+                                                <label for="reason"><h5>Reason of Applicant Rejection</h5></label>
+                                                {{Form::text('reason', '', ['class'=> 'form-control', 'id'=>'reason', 'placeholder'=>'Enter reason of applicant reject', 'required' => 'required', 'max' => '100', 'min' => '1'])}}
+                                        </div>
+
+                                        <div class="modal-footer">
+                                                <button type="submit" class="btn btn-warning text-dark">Yes</button>                                             
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>   
+                                        </div>
+                                        {!! Form::close() !!}
+                                    </div>
+                                </div>        
+                            </div>`;
+                    } else {
+                        output2+= ` 
+                            {!! Form::open(['url' => 'admin/restoreapplicant']) !!}
+                                {{Form::hidden('id', '${applicant.id}')}}
+                                <li class="list-group-item"><button type="submit" class="btn btn-info btn-block text-white mb-2">Restore this applicant <i class="fa fa-recycle" aria-hidden="true"></i></button></li>
+                            {!! Form::close() !!}
+                        `;
+                    }
+
+                        
+                output+=`</ul>
                     </div>
 
         

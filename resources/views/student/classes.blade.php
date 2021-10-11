@@ -170,6 +170,16 @@
         
     </div>    
 
+    @if (\App\Models\SubjectTaken::enrolledSubjectsbyStudent($student->id)->count() > 0)
+
+        <div class="row my-1">
+            <div class="col text-right ">
+                <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">View Certificate of Registration</a>
+            </div>
+        </div>
+        
+    @endif
+
     <div class="row">
 
         <div class="col-sm ">

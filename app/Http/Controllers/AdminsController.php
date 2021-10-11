@@ -295,6 +295,20 @@ class AdminsController extends Controller
                 return Subject::orderBy('created_at', 'desc')->get();
                 
             break;
+            case 'rejectedapplicants':
+
+                $applicants = Applicant::onlyTrashed()->get();
+
+                foreach($applicants as $applicant){
+                    $applicant->days_ago = 1;
+                    $applicant->prog_desc= 1;
+                    $applicant->dept_desc= 1;
+                }
+
+                return $applicants;
+
+                
+            break;
 
             default:
             redirect('/home');
@@ -320,7 +334,7 @@ class AdminsController extends Controller
             break; 
             case 'applicants':
 
-                $applicant = Applicant::find($id);  
+                $applicant = Applicant::withTrashed()->find($id);  
                 
                            
                 $applicant->prog_desc = $applicant->id;
@@ -1235,60 +1249,7 @@ class AdminsController extends Controller
 
        return  redirect()->route('viewPaymentRequests')->with('status', 'Payment Request Approved!');
 
-    }
-
-    public function updateSchedule(Request $request){
-
-        if($request->method() != 'POST'){
-            return redirect()->back();
-        }         
-        
-        $valid = true;
-
-        $sched = Schedule::find($request->input('sched_id'));
-        $class = StudentClass::find($request->input('class_id'));
-
-        $otherScheds = Schedule::where('id', '!=', $request->input('sched_id'))
-                               ->where('class_id', $request->input('class_id'))->get();
-                               
-        
-        
-        if(count($otherScheds) > 0){
-            foreach($otherScheds as $otherSched){
-                if($otherSched->day == $request->input('day')){
-                    $valid = false;                
-                    $status = 'error';
-                    $msg = 'Day must not duplicate in a class';                    
-                }
-                if(!$valid)
-                    break;
-            }
-        }        
-
-        $class->faculty_id = $request->input('instructor');
-        $class->class_name = $request->input('class_name');
-
-        $sched->day = $request->input('day');
-        $sched->start_time = $request->input('from');
-        $sched->until = $request->input('until');
-        $sched->room_id = $request->input('room');
-
-        if($valid){
-
-            $sched->save();
-            $class->save();
-
-            $status = 'success';
-            $msg = 'Schedule Updated';
-
-        }
-
-        return redirect()->route('adminClasses')
-                         ->with($status, $msg)
-                         ->with('active', 'view');
-
-
-    }
+    }    
 
     public function enrollToSubject(Request $request){
 
