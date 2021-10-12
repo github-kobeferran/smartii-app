@@ -282,7 +282,7 @@ function studentSearch(){
                     '<td>' + students[i].student_id + '</td>' +
                     '<td>' + students[i].last_name + ', ' +students[i].first_name + ', ' + students[i].middle_name.charAt(0).toUpperCase() + '</td>' +
                     '<td>' + department + ' | ' + students[i].program_desc + ' | ' + level + '</td>' +                    
-                    '<td class="border-left"><b>' + students[i].balance_amount + '</b></td>' +
+                    '<td class="border-left"><b>&#8369; ' + students[i].balance_amount + '</b></td>' +
 
                     '</tr>';
             }
@@ -442,7 +442,7 @@ function showInvoicesTable(id){
                     output+='<tr>';
                         output+='<td><a href="' + APP_URL + '/invoice/' + invoices[i].invoice_id +'" target="_blank">#'+ invoices[i].invoice_id +'</a></td>';
                         output+='<td>'+ invoices[i].formatted_date +'</td>';
-                        output+='<td>'+ invoices[i].payment +'</td>';
+                        output+='<td>&#8369; '+ invoices[i].payment.toFixed(2) +'</td>';
                     output+='<tr>';
                 }
                 
