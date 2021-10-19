@@ -220,12 +220,7 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
 <hr class="footer-line-1">
 
     <div class="row text-center mt-3 m-0 p-0">
-{{-- 
-        <div class="col border-right ">
 
-            
-            
-        </div> --}}
         <div class="col " style=" font-family: 'Cinzel', serif;">
 
             &copy;Capstone Project
@@ -240,13 +235,6 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
             
             
         </div>
-        
-        {{-- <div class="col border-left ">
-
-            
-            
-        </div> --}}
-      
 
     </div>    
 
