@@ -231,11 +231,11 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
             &copy;Capstone Project
             Myca Ponce, Kobe Ferran
             <br>
-            Junior BSIT Students
+            Senior BSIT Students
             <hr>
             Mindoro State University
             <br>
-            Calapan Campus
+            Calapan City Campus
             
             
             
