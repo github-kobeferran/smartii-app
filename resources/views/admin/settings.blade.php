@@ -464,7 +464,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -524,7 +524,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -583,7 +583,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -660,7 +660,7 @@
                                 <span>
                                     <?php semDesc($fee->sem); ?> 
                                     <br>
-                                    {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                    {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                     <br>
                                     <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                 </span>
@@ -721,7 +721,7 @@
                                         <span>
                                             <?php semDesc($fee->sem); ?> 
                                             <br>
-                                            {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                            {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                             <br>
                                             <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                         </span>
@@ -779,7 +779,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>

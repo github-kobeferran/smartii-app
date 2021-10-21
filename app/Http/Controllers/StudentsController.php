@@ -334,72 +334,12 @@ class StudentsController extends Controller
                       
         }
 
-         
-
-        $totalBalance = 0;        
-
-        $allStudentEverySemesterFee = null;
-        $allStudentFirstSemesterFee = null;
-        $allStudentSecondSemesterFee = null;
         
-        $shsAllEverySemFee = null;
-        $shsGrade11FirstSemFee = null;
-        $shsGrade12FirstSemFee = null;
-        $shsGrade11SecondSemFee = null;
-        $shsGrade12SecondSemFee = null;
+        $totalBalance = 0;                                     
 
-        $colAllEverySemFee = null;
-        $colFirstYearFirstSemFee = null;
-        $colSecondYearFirstSemFee = null;
-        $colFirstYearSecondSemFee = null;
-        $colSecondYearSecondSemFee = null;
-        
+        //student fees
+        $mergedFees = Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
 
-
-        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 5)->count() > 0)
-            $allStudentEverySemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 5)->get();
-
-        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 1)->count() > 0)
-            $allStudentFirstSemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 2)->count() > 0)
-            $allStudentSecondSemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 2)->get();
-
-
-
-        if(Fee::where('dept', 0)->where('level', 5)->where('sem', 5)->count() > 0)
-            $shsAllEverySemFee = Fee::where('dept', 0)->where('level', 5)->where('sem', 5)->get();
-
-        if(Fee::where('dept', 0)->where('level', 1)->where('sem', 1)->count() > 0)
-            $shsGrade11FirstSemFee = Fee::where('dept', 0)->where('level', 1)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 0)->where('level', 1)->where('sem', 2)->count() > 0)
-            $shsGrade11SecondSemFee = Fee::where('dept', 0)->where('level', 1)->where('sem', 2)->get();
-
-        if(Fee::where('dept', 0)->where('level', 2)->where('sem', 1)->count() > 0)
-            $shsGrade12FirstSemFee = Fee::where('dept', 0)->where('level', 2)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 0)->where('level', 2)->where('sem', 2)->count() > 0)
-            $shsGrade12SecondSemFee = Fee::where('dept', 0)->where('level', 2)->where('sem', 2)->get();
-
-
-
-        if(Fee::where('dept', 1)->where('level', 15)->where('sem', 5)->count() > 0)
-            $colAllEverySemFee = Fee::where('dept', 1)->where('level', 15)->where('sem', 5)->get();
-
-        if(Fee::where('dept', 1)->where('level', 11)->where('sem', 1)->count() > 0)
-            $colFirstYearFirstSemFee = Fee::where('dept', 1)->where('level', 11)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 1)->where('level', 11)->where('sem', 2)->count() > 0)
-            $colFirstYearSecondSemFee = Fee::where('dept', 1)->where('level', 11)->where('sem', 2)->get();
-
-        if(Fee::where('dept', 1)->where('level', 12)->where('sem', 1)->count() > 0)
-            $colSecondYearFirstSemFee = Fee::where('dept', 1)->where('level', 12)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 1)->where('level', 12)->where('sem', 2)->count() > 0)
-            $colSecondYearSecondSemFee = Fee::where('dept', 1)->where('level', 12)->where('sem', 2)->get();
-                                               
-      
         $studentBalance = Balance::find($balanceID);
 
         $subjectsToBeTakenLength = count($subjects);
@@ -444,161 +384,11 @@ class StudentsController extends Controller
     
                     if($i == $subjectsToBeTakenLength - 1 ) {    
                         
-                        if(!empty($allStudentEverySemesterFee)){
-
-                            foreach($allStudentEverySemesterFee as $fee){
-                                $totalBalance+= $fee->amount;
-                            }
-                            
+                        foreach($mergedFees as $fee){
+                            $studentBalance->amount+= $fee->amount;
                         }
 
-                        if($student->semester == 1){
-
-                            if(!empty($allStudentFirstSemesterFee)){
-
-                                foreach($allStudentFirstSemesterFee as $fee){
-                                    $totalBalance+= $fee->amount;
-                                }
-
-                            }
-
-                        } else if($student->semester == 2){
-
-                            if(!empty($allStudentSecondSemesterFee)){
-
-                                foreach($allStudentSecondSemesterFee as $fee){
-                                    $totalBalance+= $fee->amount;
-                                }
-
-                            }
-
-                        }                        
-                        
-                        if($student->department == 0){
-
-                            if(!empty($shsAllEverySemFee)){
-
-                                foreach($shsAllEverySemFee as $fee){
-                                    $totalBalance+= $fee->amount;
-                                }
-
-                            }
-
-                            if($student->level == 1){
-
-
-                                if($student->semester == 1){
-
-                                    if(!empty($shsGrade11FirstSemFee)){
-    
-                                        foreach($shsGrade11FirstSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }elseif($student->semester == 2){
-    
-                                    if(!empty($shsGrade11SecondSemFee)){
-    
-                                        foreach($shsGrade11SecondSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }
-
-                            }elseif($student->level == 2){
-
-                                if($student->semester == 1){
-
-                                    if(!empty($shsGrade12FirstSemFee)){
-    
-                                        foreach($shsGrade12FirstSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }elseif($student->semester == 2){
-    
-                                    if(!empty($shsGrade12SecondSemFee)){
-    
-                                        foreach($shsGrade12SecondSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }
-
-                            }                            
-
-                        } elseif($student->department == 1) {
-                            
-                            if(!empty($colAllEverySemFee)){
-
-                                foreach($colAllEverySemFee as $fee){
-                                    $totalBalance+= $fee->amount;
-                                }
-
-                            }
-                        
-
-                            if($student->level == 11){
-
-                                if($student->semester == 1){
-
-                                    if(!empty($colFirstYearFirstSemFee)){
-    
-                                        foreach($colFirstYearFirstSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }elseif($student->semester == 2){
-    
-                                    if(!empty($colFirstYearSecondSemFee)){
-    
-                                        foreach($shsGrade12SecondSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }
-
-                            }elseif($student->level == 12){
-
-                                if($student->semester == 1){
-
-                                    if(!empty($colSecondYearFirstSemFee)){
-    
-                                        foreach($colSecondYearFirstSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }elseif($student->semester == 2){
-    
-                                    if(!empty($colSecondYearSecondSemFee)){
-    
-                                        foreach($shsGrade12SecondSemFee as $fee){
-                                            $totalBalance+= $fee->amount;
-                                        }
-        
-                                    }
-    
-                                }
-
-                            }
-
-                        }
-
-                        $studentBalance->amount = $totalBalance;
+                        $studentBalance->amount+= $totalBalance;
                         $studentBalance->save();
                     }
                     
@@ -968,191 +758,13 @@ class StudentsController extends Controller
         $totalBalance = 0;
         $price = 0;
 
-        $allStudentEverySemesterFee = null;
-        $allStudentFirstSemesterFee = null;
-        $allStudentSecondSemesterFee = null;
+        //student fees
+        $mergedFees = Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
+
+        foreach($mergedFees as $fee){
+            $totalBalance+= $fee->amount;
+        }
         
-        $shsAllEverySemFee = null;
-        $shsGrade11FirstSemFee = null;
-        $shsGrade12FirstSemFee = null;
-        $shsGrade11SecondSemFee = null;
-        $shsGrade12SecondSemFee = null;
-
-        $colAllEverySemFee = null;
-        $colFirstYearFirstSemFee = null;
-        $colSecondYearFirstSemFee = null;
-        $colFirstYearSecondSemFee = null;
-        $colSecondYearSecondSemFee = null;
-        
-
-
-        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 5)->count() > 0)
-            $allStudentEverySemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 5)->get();
-
-        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 1)->count() > 0)
-            $allStudentFirstSemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 2)->where('level', 50)->where('sem', 2)->count() > 0)
-            $allStudentFirstSemesterFee = Fee::where('dept', 2)->where('level', 50)->where('sem', 2)->get();
-
-
-
-        if(Fee::where('dept', 0)->where('level', 5)->where('sem', 5)->count() > 0)
-            $shsAllEverySemFee = Fee::where('dept', 0)->where('level', 5)->where('sem', 5)->get();
-
-        if(Fee::where('dept', 0)->where('level', 1)->where('sem', 1)->count() > 0)
-            $shsGrade11FirstSemFee = Fee::where('dept', 0)->where('level', 1)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 0)->where('level', 1)->where('sem', 2)->count() > 0)
-            $shsGrade11SecondSemFee = Fee::where('dept', 0)->where('level', 1)->where('sem', 2)->get();
-
-        if(Fee::where('dept', 0)->where('level', 2)->where('sem', 1)->count() > 0)
-            $shsGrade12FirstSemFee = Fee::where('dept', 0)->where('level', 2)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 0)->where('level', 2)->where('sem', 2)->count() > 0)
-            $shsGrade12SecondSemFee = Fee::where('dept', 0)->where('level', 2)->where('sem', 2)->get();
-
-
-
-        if(Fee::where('dept', 1)->where('level', 15)->where('sem', 5)->count() > 0)
-            $colAllEverySemFee = Fee::where('dept', 1)->where('level', 15)->where('sem', 5)->get();
-
-        if(Fee::where('dept', 1)->where('level', 11)->where('sem', 1)->count() > 0)
-            $colFirstYearFirstSemFee = Fee::where('dept', 1)->where('level', 11)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 1)->where('level', 11)->where('sem', 2)->count() > 0)
-            $colFirstYearSecondSemFee = Fee::where('dept', 1)->where('level', 11)->where('sem', 2)->get();
-
-        if(Fee::where('dept', 1)->where('level', 12)->where('sem', 1)->count() > 0)
-            $colSecondYearFirstSemFee = Fee::where('dept', 1)->where('level', 12)->where('sem', 1)->get();
-
-        if(Fee::where('dept', 1)->where('level', 12)->where('sem', 2)->count() > 0)
-            $colSecondYearSecondSemFee = Fee::where('dept', 1)->where('level', 12)->where('sem', 2)->get();
-
-            if(!empty($allStudentEverySemesterFee)){
-
-                foreach($allStudentEverySemesterFee as $fee){
-                    $totalBalance+= $fee->amount;
-                }
-                
-            }
-
-            if($student->semester == 1){
-
-                if(!empty($allStudentFirstSemesterFee)){
-
-                    foreach($allStudentFirstSemesterFee as $fee){
-                        $totalBalance+= $fee->amount;
-                    }
-
-                }
-
-            } elseif($student->semester == 2){
-
-                if(!empty($allStudentSecondSemesterFee)){
-
-                    foreach($allStudentSecondSemesterFee as $fee){
-                        $totalBalance+= $fee->amount;
-                    }
-
-                }
-
-            }                        
-            
-            if($student->department == 0){
-
-                if(!empty($shsAllEverySemFee)){
-
-                    foreach($shsAllEverySemFee as $fee){
-                        $totalBalance+= $fee->amount;
-                    }
-
-                }
-
-                if($student->level == 1){
-
-
-                    if($student->semester == 1){
-
-                        if(!empty($shsGrade11SecondSemFee)){
-
-                            foreach($shsGrade11SecondSemFee as $fee){
-                                $totalBalance+= $fee->amount;
-                            }
-
-                        }
-
-                    }elseif($student->semester == 2){
-
-                        if(!empty($shsGrade12FirstSemFee)){
-
-                            foreach($shsGrade12FirstSemFee as $fee){
-                                $totalBalance+= $fee->amount;
-                            }
-
-                        }
-
-                    }
-
-                }elseif($student->level == 2){
-
-                    if($student->semester == 1){
-
-                        if(!empty($shsGrade12SecondSemFee)){
-
-                            foreach($shsGrade12SecondSemFee as $fee){
-                                $totalBalance+= $fee->amount;
-                            }
-
-                        }
-
-                    }
-
-                }                            
-
-            } elseif($student->department == 1) {
-
-                if($student->level == 11){
-
-                    if($student->semester == 1){
-
-                        if(!empty($colFirstYearSecondSemFee)){
-
-                            foreach($colFirstYearSecondSemFee as $fee){
-                                $totalBalance+= $fee->amount;
-                            }
-
-                        }
-
-                    }elseif($student->semester == 2){
-
-                        if(!empty($colSecondYearFirstSemFee)){
-
-                            foreach($colSecondYearFirstSemFee as $fee){
-                                $totalBalance+= $fee->amount;
-                            }
-
-                        }
-
-                    }
-
-                }elseif($student->level == 12){
-
-                    if($student->semester == 1){
-
-                        if(!empty($colSecondYearSecondSemFee)){
-
-                            foreach($colSecondYearSecondSemFee as $fee){
-                                $totalBalance+= $fee->amount;
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
 
         if($student->department == 0){
             $price = $settings->shs_price_per_unit;
@@ -1253,8 +865,6 @@ class StudentsController extends Controller
             $semester = "Second Semester";            
 
         return Excel::download(new ActiveStudentsExport, 'SMARTII Active Students as of A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
-    }
-
-   
+    }   
 
 }
