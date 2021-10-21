@@ -28,13 +28,13 @@
 
         switch ($sem) {
             case 1:
-                echo "Every First Semester, ";
+                echo "Every First Semester";
                 break;
             case 2:
-                echo "Every Second Semester, ";
+                echo "Every Second Semester";
                 break;
             case 5:
-                echo "Every Semester, ";
+                echo "Every Semester";
                 break;                    
         }
 
@@ -95,22 +95,14 @@
 
         {{ Form::label('bank', 'Bank Details', ['class' => 'm-2']) }}    
         
-        <div class="form-inline m-2">            
+        <div class="form-inline m-2 ">            
             
             {{ Form::textarea('bank_name', $currentSetting->bank_name, ['maxLength' => '191', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control w-25']) }}
             {{ Form::textarea('bank_number', $currentSetting->bank_number, ['maxLength' => '191', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control w-25']) }}
             
         </div>
-        <em>match the bank name and account number per line</em>
-
         
-        
-        <div class="form-inline m-2">            
-            
-            
-            
-        </div>
-      
+        <em> match the bank name and account number per line</em>
 
     </div>
         
@@ -208,11 +200,22 @@
                     For whom:
 
                     <div class="form-group mb-2">
-
                         {{Form::select('dept', ['2' => "All Students",
+
                                                 '0' => "SHS Students",
                                                 '1' => "College Students"], null,
-                                                ['id' => 'deptSelect', 'class' => 'form-control', 'placeholder' => 'select'])}}
+                                                ['id' => 'deptSelect', 'class' => 'form-control', 'placeholder' => 'Select an option'])}}
+
+                    </div>
+
+                    For what Program:
+
+                    <div class="form-group mb-2">
+
+                        {{Form::select('prog', [], null,[ 'id' => 'progSelect',
+                                                          'class' => 'form-control',
+                                                          'placeholder' => 'Select a Program'
+                                                        ])}}                        
 
                     </div>
 
@@ -220,8 +223,8 @@
 
                     <div class="form-group mb-2">
 
-                        {{Form::select('level', ['50' => "All Levels"], 50,
-                                                ['id' => 'levelSelect', 'class' => 'form-control'])}}
+                        {{Form::select('level', [], 50,
+                                                ['id' => 'levelSelect', 'placeholder' => 'Select Level', 'class' => 'form-control'])}}
 
                     </div>
 
@@ -229,17 +232,19 @@
 
                     <div class="form-group mb-2">
 
-                        {{Form::select('sem', ['5' => "Every Semester",
+                        {{Form::select('sem', ['' => "Every Semester",
                                                 '1' => "For First Semester",
-                                                '2' => "For Second Semester"], 5,
+                                                '2' => "For Second Semester"], null,
                                                 ['id' => 'semSelect', 'class' => 'form-control', 'placeholder' => 'select'])}}
 
                     </div>
     
                     
                 
-                    {{Form::submit('Add Fee', ['id' => 'feeFormSubmit', 'class' => 'btn btn-success'])}}
+                        {{Form::submit('Add Fee', ['id' => 'feeFormSubmit', 'class' => 'btn btn-success'])}}
+
                         <button type="button" onclick="cancelAdd()" class="btn btn-secondary">Cancel</button>
+
                     {!!Form::close()!!}                      
     
             </div>
@@ -261,16 +266,28 @@
             @if (\App\Models\Fee::where('dept', 2)->count() > 0)
 
                 Every semester: 
-                    @if (\App\Models\Fee::where('dept', 2)->where('sem', 5)->count() > 0)
+                    @if (\App\Models\Fee::where('dept', 2)->whereNull('sem')->count() > 0)
 
                     
                         <ul class="list-group">
-                            @foreach (\App\Models\Fee::where('dept', 2)->where('sem', 5)->get()  as $fee)
+                            @foreach (\App\Models\Fee::where('dept', 2)->whereNull('sem')->get()  as $fee)
                         
                             <li class="list-group-item border border-secondary mb-2">
-                                {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
-                                <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                                <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                <span>
+                                    <span>
+                                        <?php semDesc($fee->sem); ?> 
+                                        <br>
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        <br>
+                                        <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                    </span>
+
+                                    <span >
+                                        <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    </span>
+
+                                </span>
                             </li>   
 
                             <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -312,9 +329,21 @@
                             @foreach (\App\Models\Fee::where('dept', 2)->where('sem', 1)->get()  as $fee)
                         
                             <li class="list-group-item border border-secondary mb-2">
-                                {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
-                                <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                                <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                <span>
+                                    <span>
+                                        <?php semDesc($fee->sem); ?> 
+                                        <br>
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        <br>
+                                        <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                    </span>
+
+                                    <span >
+                                        <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    </span>
+
+                                </span>
                             </li>   
 
                             <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -357,9 +386,21 @@
                             @foreach (\App\Models\Fee::where('dept', 2)->where('sem', 2)->get()  as $fee)
                         
                             <li class="list-group-item border border-secondary mb-2">
-                                {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
-                                <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                                <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                <span>
+                                    <span>
+                                        <?php semDesc($fee->sem); ?> 
+                                        <br>
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        <br>
+                                        <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                    </span>
+
+                                    <span >
+                                        <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    </span>
+
+                                </span>
                             </li>   
 
                             <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -392,13 +433,6 @@
                         None
                     @endif
 
-            
-
-
-
-
-
-            
             @else 
 
             <li class="list-group-item border border-secondary mb-2">
@@ -413,7 +447,7 @@
 
             @if (\App\Models\Fee::where('dept', 0)->count() > 0)
 
-                @if (\App\Models\Fee::where('dept', 0)->where('level', 5)->count() > 0)
+                @if (\App\Models\Fee::where('dept', 0)->whereNull('level')->count() > 0)
 
                     <button onclick="toggleButton('allshs')" class="btn btn-outline-info btn-block mb-2">
                         ALL SHS
@@ -422,14 +456,26 @@
                 
                     
                     <ul class="list-group">
-                        @foreach (\App\Models\Fee::where('dept', 0)->where('level', 5)->orderBy('sem')->get()  as $fee)                            
+                        @foreach (\App\Models\Fee::where('dept', 0)->whereNull('level')->orderBy('sem')->get()  as $fee)                            
         
                             <li class="list-group-item border border-secondary mb-2 details allshs d-none">                              
                                 
-                                <?php semDesc($fee->sem); ?> {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
+                                <span>
+                                    <span>
+                                        <?php semDesc($fee->sem); ?> 
+                                        <br>
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        <br>
+                                        <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                    </span>
 
-                                <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                                <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    <span >
+                                        <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    </span>
+
+                                </span>
+
                             </li>   
         
                             <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -474,10 +520,23 @@
         
                             <li class="list-group-item border border-secondary mb-2 details grade11 d-none">                              
                                 
-                                <?php semDesc($fee->sem); ?> {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
+                                <span>
+                                    <span>
+                                        <?php semDesc($fee->sem); ?> 
+                                        <br>
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        <br>
+                                        <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                    </span>
 
-                                <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                                <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    <span >
+                                        <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    </span>
+
+                                </span>
+
+                                
                             </li>   
         
                             <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -520,9 +579,22 @@
                         @foreach (\App\Models\Fee::where('dept', 0)->where('level', 2)->orderBy('sem')->get()  as $fee)                            
         
                             <li class="list-group-item border border-secondary mb-2 details grade12 d-none">
-                                <?php semDesc($fee->sem); ?> {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
-                                <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                                <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                <span>
+                                    <span>
+                                        <?php semDesc($fee->sem); ?> 
+                                        <br>
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        <br>
+                                        <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                    </span>
+
+                                    <span >
+                                        <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    </span>
+
+                                </span>
+
                             </li>   
         
                             <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -584,10 +656,22 @@
 
                         <li class="list-group-item border border-secondary mb-2 details allcol d-none">                              
                             
-                            <?php semDesc($fee->sem); ?> {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
+                            <span>
+                                <span>
+                                    <?php semDesc($fee->sem); ?> 
+                                    <br>
+                                    {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                    <br>
+                                    <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                </span>
 
-                            <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                            <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                <span >
+                                    <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                    <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                </span>
+
+                            </span>
+
                         </li>   
 
                         <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -633,9 +717,21 @@
                             @foreach (\App\Models\Fee::where('dept', 1)->where('level', 11)->orderBy('sem')->get()  as $fee)                            
             
                                 <li class="list-group-item border border-secondary mb-2 details firstyear d-none">
-                                    <?php semDesc($fee->sem); ?> {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
-                                    <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                                    <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    <span>
+                                        <span>
+                                            <?php semDesc($fee->sem); ?> 
+                                            <br>
+                                            {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                            <br>
+                                            <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                        </span>
+    
+                                        <span >
+                                            <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                            <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                        </span>
+    
+                                    </span>
                                 </li>   
             
                                 <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -679,9 +775,21 @@
                     @foreach (\App\Models\Fee::where('dept', 1)->where('level', 12)->orderBy('sem')->get()  as $fee)                            
     
                         <li class="list-group-item border border-secondary mb-2 details secondyear d-none">
-                            <?php semDesc($fee->sem); ?> {{ucfirst($fee->desc)}}: &#8369;{{ number_format((float) $fee->amount, 2, '.', '')  }}
-                            <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
-                            <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                <span>
+                                    <span>
+                                        <?php semDesc($fee->sem); ?> 
+                                        <br>
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        <br>
+                                        <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
+                                    </span>
+
+                                    <span >
+                                        <span role="button" data-toggle="modal" data-target="#modal-{{$fee->id}}" class="float-right text-danger mr-2"><i data-toggle="tooltip" title="remove" class="fa fa-minus" aria-hidden="true"></i></span>
+                                        <span role="button" onclick="editFee({{$fee->id}})" type="button" class="float-right text-primary mr-2"><i data-toggle="tooltip" title="edit" class="fa fa-pencil-square" aria-hidden="true"></i></span>
+                                    </span>
+
+                                </span>
                         </li>   
     
                         <div class="modal fade" id="modal-{{$fee->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -811,35 +919,111 @@ if (window.performance && window.performance.navigation.type === window.performa
                 location.reload();
 }
 
+
 let deptSelect = document.getElementById('deptSelect');
 let levelSelect = document.getElementById('levelSelect');
+let progSelect = document.getElementById('progSelect');
 
+deptSelect.addEventListener('change', deptIsChanged);
 
-deptSelect.addEventListener('change', selectLevel);
+async function deptIsChanged(){
 
-function selectLevel(){
+     if(deptSelect.value != 2){
 
+        const res = await fetch(APP_URL + `/admin/view/programs/department/${deptSelect.value}/`)
+                        .catch((error) => {console.log(error)});
 
-    
+        const data = await res.json();
 
-    if(deptSelect.value == 2){
-        levelSelect.innerHTML = `  {{Form::select('level', ['50' => "All Levels"], 50,
-                                                ['id' => 'levelSelect', 'class' => 'form-control'])}}`;
+        let output = `<select name="prog" value="" id="progSelect" class="form-control"`;
+        output+=`<option selected="selected" value="">Select a Program</option>`;
 
-    } else if(deptSelect.value == 0){
+            data.forEach((prog, i) => {
+                if(i < 1)
+                    output+=`<option selected="selected" value=""> All ` + (deptSelect.value == 0 ? `SHS` : `College`) + ` Programs</option>`;
+
+                output+=`<option value="${prog.id}"> ${prog.desc} </option>`;
+            });
+
+        output+=`</select>`;
+
+        progSelect.innerHTML = output;
+
+        if(deptSelect.value == 0){
+            levelSelect.innerHTML = `  {{Form::select('level', ['' => "For all SHS levels",
+                                                '1' => " For Grade 11 only",
+                                                '2' => "For Grade 12 only"], null,
+                                                ['id' => 'levelSelect', 'class' => 'form-control d-none'])}}`;  
         
-        levelSelect.innerHTML = `  {{Form::select('level', ['5' => "All SHS Students",
-                                                '1' => "Grade 11",
-                                                '2' => "Grade 12"], 5,
-                                                ['id' => 'levelSelect', 'class' => 'form-control d-none'])}}`;    
-        
-    } else if(deptSelect.value == 1){
-        levelSelect.innerHTML = `  {{Form::select('level', ['15' => "All College Students",
-                                                '11' => "First Year",
-                                                '12' => "Second Year"], 15,
+        } else if(deptSelect.value == 1){
+            levelSelect.innerHTML = `  {{Form::select('level', ['' => "All College Levels",
+                                                '11' => "For First Year only",
+                                                '12' => "For Second Year only"], null,
                                                 ['id' => 'levelSelect', 'class' => 'form-control d-none'])}}`;
-    }
+        }
+
+    } else {
+        progSelect.innerHTML = `{{Form::select('prog', ['' => 'For All Programs'], 
+                                                          null,[ 'id' => 'progSelect',
+                                                          'class' => 'form-control',
+                                                          'placeholder' => 'Select a Program'
+                                                        ])}}`;
+
+        levelSelect.innerHTML = `  {{Form::select('level', ['' => "For all Student levels"], null,
+                                        ['id' => 'levelSelect', 'class' => 'form-control'])}}`; 
+    }     
+
 }
+
+progSelect.addEventListener('change', progIsChanged);
+
+async function progIsChanged(){
+
+      if(progSelect.value != null && progSelect.value != ''){
+
+        const res = await fetch(APP_URL + '/admin/view/programs/' + progSelect.value)
+                            .catch(error => console.log(error));
+        const data = await res.json();        
+
+        if(deptSelect.value == 0){
+            levelSelect.innerHTML = `<select name="level" id="levelSelect" class="form-control"> 
+                                        <option value="">For all ${data.abbrv} students</option>
+                                        <option value="1">For Grade 11-${data.abbrv} only</option>
+                                        <option value="2">For Grade 12-${data.abbrv} only</option>
+                                    </select>`;
+        }else{
+            levelSelect.innerHTML = `<select name="level" id="levelSelect" class="form-control"> 
+                                        <option value="">For all ${data.abbrv} students</option>
+                                        <option value="11">For First Year-${data.abbrv} only</option>
+                                        <option value="12">For Second-${data.abbrv} only</option>
+                                    </select>`;            
+        }
+
+
+    } else {        
+
+        if(deptSelect.value == 2){
+            levelSelect.innerHTML = `  {{Form::select('level', ['' => "For all Student levels"], null,
+                                        ['id' => 'levelSelect', 'class' => 'form-control'])}}`; 
+   
+        } else if(deptSelect.value == 0){
+            levelSelect.innerHTML = `  {{Form::select('level', ['' => "For all SHS levels",
+                                                '1' => " For Grade 11 only",
+                                                '2' => "For Grade 12 only"], null,
+                                                ['id' => 'levelSelect', 'class' => 'form-control d-none'])}}`;  
+        
+        } else if(deptSelect.value == 1){
+            levelSelect.innerHTML = `  {{Form::select('level', ['10' => "All College Levels",
+                                                '11' => "For First Year only",
+                                                '12' => "For Second Year only"], 15,
+                                                ['id' => 'levelSelect', 'class' => 'form-control d-none'])}}`;
+        }
+
+    }
+
+}
+
+
 
 function createFee(){
 
@@ -880,9 +1064,9 @@ function cancelAdd(){
     document.getElementById('levelSelect').innerHTML = `{{Form::select('level', ['50' => "All Levels"], 50,
                                                 ['id' => 'levelSelect', 'class' => 'form-control'])}}`;
 
-    document.getElementById('semSelect').innerHTML = `{{Form::select('sem', ['5' => "Every Semester",
+    document.getElementById('semSelect').innerHTML = `{{Form::select('sem', ['' => "Every Semester",
                                                         '1' => "For First Semester",
-                                                        '2' => "For Second Semester"], 5,
+                                                        '2' => "For Second Semester"], null,
                                                         ['id' => 'semSelect', 'class' => 'form-control', 'placeholder' => 'select'])}}`;
 
 
@@ -917,11 +1101,6 @@ function toggleButton(className){
         }
 
     }
-    
-
-    
-
-   
 
 }
 
@@ -941,9 +1120,9 @@ function editFee(id){
 
     xhr.open('GET', APP_URL + '/admin/view/fees/' + id, true);
 
-    xhr.onload = function() {    
+    xhr.onload = async function() {    
 
-        if (this.status == 200) {        
+        if (this.status == 200) {                                
 
             let fee = JSON.parse(this.responseText);   
 
@@ -962,19 +1141,18 @@ function editFee(id){
             olddesc.setAttribute("olddesc", "olddesc");
             olddesc.setAttribute("name", "olddesc");
             olddesc.setAttribute("value", fee.desc);
-
             
             feeForm.appendChild(feeid);
             feeForm.appendChild(olddesc);
 
-
             document.getElementById('descInput').value = fee.desc;
-
             document.getElementById('amountInput').value = fee.amount;                    
 
             let one = false;
             let two = false;
             let zero = false;
+
+            let programs = null;
 
             let grade11 = false;
             let grade12 = false;
@@ -986,20 +1164,30 @@ function editFee(id){
 
             let firstsem = false;
             let secondsem = false;
-            let everysem = false;
-            
+            let everysem = false;          
 
+            let res = null;
+            
             switch(fee.dept){
                 case 2: 
                     two = true;
                 break;
                 case 0: 
                     zero = true;
+                    res = await fetch(APP_URL + '/admin/view/programs/department/' + fee.dept)
+                                .catch(error => console.log(error));
+
+                    programs = await res.json();
                 break;
                 case 1: 
                     one = true;
+
+                    res = await fetch(APP_URL + '/admin/view/programs/department/' + fee.dept)
+                                .catch(error => console.log(error));
+
+                    programs = await res.json();
                 break;
-            }
+            }                     
 
             if(fee.level == 1 || fee.level == 2)
                 level = 'shs';
@@ -1048,18 +1236,39 @@ function editFee(id){
 
             let ouput = '';
 
-            output = `<select name="dept" class="form-control" id="exampleFormControlSelect1">
+            output = `<select name="dept" class="form-control" id="deptSelect">
                                 <option value="2" `; two ? output+='selected="selected"' : output+=''; output+=`>All Students</option>
                                 <option value="0" `; zero ? output+='selected="selected"' : output+=''; output+=`>SHS Students</option>
                                 <option value="1" `; one ? output+='selected="selected"' : output+=''; output+=`>College Students</option>                            
                             </select>`;
 
-            document.getElementById('deptSelect').innerHTML = output;
+            document.getElementById('deptSelect').innerHTML = output;     
+
+
+            if(fee.dept != 2){
+                output = `<select name="prog" class="form-control" id="progSelect">
+                            <option value="" >${(fee.dept == 0 ? 'For all SHS programs' :'For all College programs')}</option>`;
+                            
+                        programs.forEach(prog => {
+                            output+= `<option value="${prog.id}" ${(fee.program_id == prog.id ? `selected="selected"` : ``)}> ${prog.desc} </option>`;
+                        });                                                  
+
+                document.getElementById('progSelect').innerHTML = output;    
+
+            } else {
+                output = `<select name="dept" class="form-control" id="">
+                                <option value="" selected="selected" >For All Programs</option>
+                            </select>`;
+
+                document.getElementById('levelSelect').innerHTML = output;
+            }
+
+            
 
             if(level == 'shs'){ 
 
-                output = `<select name="dept" class="form-control" id="exampleFormControlSelect1">
-                                <option value="5" `; allSHS ? output+='selected="selected"' : output+=''; output+=`>All SHS</option>
+                output = `<select name="dept" class="form-control" id="">
+                                <option value="" `; allSHS ? output+='selected="selected"' : output+=''; output+=`>All Students</option>
                                 <option value="1" `; grade11 ? output+='selected="selected"' : output+=''; output+=`>Grade 11</option>
                                 <option value="2" `; grade12 ? output+='selected="selected"' : output+=''; output+=`>Grade 12</option>                            
                             </select>`;
@@ -1068,8 +1277,8 @@ function editFee(id){
 
             } else if(level == 'col'){
 
-                output =  ` <select name="dept" class="form-control" id="exampleFormControlSelect1">
-                                <option value="15" `; allCol ? output+='selected="selected"' : output+=''; output+=`>All College</option>
+                output =  ` <select name="dept" class="form-control" id="">
+                                <option value="" `; allCol ? output+='selected="selected"' : output+=''; output+=`>All College</option>
                                 <option value="11" `; firstyear ? output+='selected="selected"' : output+=''; output+=`>First Year</option>
                                 <option value="12" `; secondyear ? output+='selected="selected"' : output+=''; output+=`>Second Year</option>                            
                             </select>`;
@@ -1078,24 +1287,24 @@ function editFee(id){
 
 
             } else {
-                output = ` <select name="dept" class="form-control" id="exampleFormControlSelect1">
-                                <option value="50" `; allStudents ? output+='selected="selected"' : output+=''; output+=`>All Students</option>                                
+                output = ` <select name="level" class="form-control" id="">
+                                <option value="" `; allStudents ? output+='selected="selected"' : output+=''; output+=`>All Students</option>                                
                             </select>`;
 
                 document.getElementById('levelSelect').innerHTML = output;
             }
 
-            output = ` <select name="dept" class="form-control" id="exampleFormControlSelect1">
-                                <option value="5" `; everysem ? output+='selected="selected"' : output+=''; output+=`>Every Semester</option>
+            output = ` <select name="sem" class="form-control" id="">
+                                <option value="" `; everysem ? output+='selected="selected"' : output+=''; output+=`>Every Semester</option>
                                 <option value="1" `; firstsem ? output+='selected="selected"' : output+=''; output+=`>First Semester</option>
                                 <option value="2" `; secondsem ? output+='selected="selected"' : output+=''; output+=`>Second Semester</option>                            
                             </select>`;
 
             document.getElementById('semSelect').innerHTML = output;
-
-                            document.getElementById('feeFormSubmit').innerHTML = `{{Form::submit('Update Fee', ['id' => 'feeFormSubmit', 'class' => 'btn btn-success'])}}`;
                             
-            } 
+            console.log(document.getElementById('feeFormSubmit').innerHTML);
+                            
+        } 
     }
 
     xhr.send(); 

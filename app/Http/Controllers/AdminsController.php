@@ -418,7 +418,7 @@ class AdminsController extends Controller
 
         } else {
 
-            switch($table){
+            switch($table){                      
                 case 'programs':                                      
 
                     if($all){

@@ -9,7 +9,7 @@ use App\Models\Fee;
 
 class FeesController extends Controller
 {
-    public function store(Request  $request){        
+    public function store(Request  $request){             
 
         if($request->method() != 'POST')
             return redirect()->back();        
@@ -17,11 +17,10 @@ class FeesController extends Controller
         if(Fee::where('desc', $request->input("desc"))->exists() )
             return redirect()->route('adminSettings')->with('warning', "Fee Description already exists, you can be specific in naming for other departments like: \"SHS miscellaneous\"");
 
-
         $validator = Validator::make($request->all(), [
             'desc' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:25', 
             'amount' => 'required|lte:50000|gte:50,|numeric', 
-            'dept' => 'required',                   
+            'dept' => 'required',                               
         ]);
 
         if ($validator->fails()) {
@@ -30,12 +29,12 @@ class FeesController extends Controller
                          ->withInput();                         
         }
     
-
         $fee = new Fee;
 
         $fee->desc = $request->input("desc");
         $fee->amount = $request->input("amount");
         $fee->dept = $request->input("dept");
+        $fee->program_id = $request->input("prog");
         $fee->level = $request->input("level");
         $fee->sem = $request->input("sem");
 
@@ -69,6 +68,9 @@ class FeesController extends Controller
         $fee->desc = $request->input("desc");
         $fee->amount = $request->input("amount");
         $fee->dept = $request->input("dept");
+        $fee->program_id = $request->input("prog");
+        $fee->level = $request->input("level");
+        $fee->sem = $request->input("sem");
 
         $fee->save();
         return redirect()->route('adminSettings')->with('success', "Fee: ". $fee->desc ." Added");
