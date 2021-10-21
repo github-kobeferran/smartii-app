@@ -50,12 +50,8 @@
         <div class="col-sm-3 mt-2 mb-4 ">
             <a href="{{url('/student/createpayment/')}}" class="btn btn-primary border">Make Payment Request</a>
 
-            <?php
-            $fees = \App\Models\Fee::where(function ($query) use($student) {
-                                            $query->where('dept', 2)
-                                                ->orWhere('dept', $student->department);                     
-                                            })
-                                    ->get();
+            <?php                                    
+                $fees = \App\Models\Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
             ?>
 
             <div class="mt-2">
@@ -67,8 +63,8 @@
             <div class="modal fade" id="fees" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header bg-info ">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Fees</h5>
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Fees you are paying this semester</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -76,11 +72,13 @@
 
                         <div class="modal-body">
                             @if ($fees->count() > 0)
-                                <ul class="list-group">
+                                <ul class="list-group list-group-flush">
                                     @foreach ($fees as $fee)
-                                        <li class="list-group-item">{{ucfirst($fee->desc ). ' | Php '. number_format($fee->amount, 2)}}</li>
-                                    @endforeach
+                                        <li class="list-group-item">{{'Php '. number_format($fee->amount, 2) . ' |  ' . ucfirst($fee->desc )}}</li>
+                                    @endforeach                                    
                                 </ul>
+
+                                <span class="text-muted mt-2 float-right">for inquiries, contact the site administrator</span>
                             @else
                                 No fees for this semester
                             @endif

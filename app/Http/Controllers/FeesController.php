@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Fee;
+use App\Models\Student;
 
 
 class FeesController extends Controller
@@ -39,6 +40,16 @@ class FeesController extends Controller
         $fee->sem = $request->input("sem");
 
         $fee->save();
+        
+        $matchingStudents = $fee->getMatchingStudents();
+
+        if($matchingStudents->count() > 0){
+            foreach($matchingStudents as $student){
+                $student->balance->amount+= $fee->amount;
+                $student->balance->save();
+            }
+        }
+
         return redirect()->route('adminSettings')->with('success', "Fee: ". $fee->desc ." Added");
 
     }
@@ -66,6 +77,7 @@ class FeesController extends Controller
         $fee = Fee::find($request->input('id'));
 
         $fee->desc = $request->input("desc");
+        $old_amount = $fee->amount;
         $fee->amount = $request->input("amount");
         $fee->dept = $request->input("dept");
         $fee->program_id = $request->input("prog");
@@ -73,6 +85,21 @@ class FeesController extends Controller
         $fee->sem = $request->input("sem");
 
         $fee->save();
+
+        $matchingStudents = $fee->getMatchingStudents();
+
+        if($matchingStudents->count() > 0){
+            foreach($matchingStudents as $student){
+                
+                if($fee->amount > $old_amount)
+                    $student->balance->amount+= ($fee->amount - $old_amount);
+                else
+                    $student->balance->amount-= ($old_amount - $fee->amount);
+                
+                $student->balance->save();
+            }
+        }
+
         return redirect()->route('adminSettings')->with('success', "Fee: ". $fee->desc ." Added");
 
 
@@ -83,8 +110,17 @@ class FeesController extends Controller
         if($request->method() != 'POST')
             return redirect()->back();  
 
-        $fee = Fee::find($request->input('id'));
+        $fee = Fee::find($request->input('id'));        
         $desc = $fee->desc;
+
+        $matchingStudents = $fee->getMatchingStudents();
+
+        if($matchingStudents->count() > 0){
+            foreach($matchingStudents as $student){
+                $student->balance->amount-= $fee->amount;
+                $student->balance->save();
+            }
+        }
 
         $fee->delete();
 

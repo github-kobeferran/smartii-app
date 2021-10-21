@@ -38,6 +38,10 @@ class Student extends Model
 
     public function program(){
         return $this->belongsTo(Program::class);
+    }      
+
+    public function balance(){
+        return $this->hasOne(Balance::class, 'id', 'balance_id');
     }  
 
     public function setAgeAttribute($id)

@@ -171,7 +171,8 @@
             <button type="button" onclick="createFee()" data-toggle="tooltip" data-placement="top" title="Add a Fee" class="btn btn-outline-info py-1 mr-2">
                 <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
-                Add a Fee 
+
+            Add a Fee 
 
         </div>
 
@@ -185,7 +186,7 @@
                     Fee Description
                     <div class="form-group">
     
-                        {{Form::text('desc', '', ['id' => 'descInput', 'class' => 'form-control', 'placeholder' => 'ex. miscellaneous fee'])}}
+                        {{Form::text('desc', '', ['id' => 'descInput', 'class' => 'form-control', 'placeholder' => 'ex. miscellaneous fee', 'required' => 'required'])}}
     
                     </div>
     
@@ -193,7 +194,7 @@
     
                     <div class="form-group">
     
-                        {{Form::number('amount', '', ['id' => 'amountInput', 'class' => 'form-control mb-2', 'step' => '.01' , 'placeholder' => 'enter amount here'])}}
+                        {{Form::number('amount', '', ['id' => 'amountInput', 'class' => 'form-control mb-2', 'step' => '.01' , 'placeholder' => 'enter amount here', 'required' => 'required'])}}
     
                     </div>
 
@@ -204,7 +205,7 @@
 
                                                 '0' => "SHS Students",
                                                 '1' => "College Students"], null,
-                                                ['id' => 'deptSelect', 'class' => 'form-control', 'placeholder' => 'Select an option'])}}
+                                                ['id' => 'deptSelect', 'class' => 'form-control', 'placeholder' => 'Select an option', 'required' => 'required'])}}
 
                     </div>
 
@@ -212,9 +213,8 @@
 
                     <div class="form-group mb-2">
 
-                        {{Form::select('prog', [], null,[ 'id' => 'progSelect',
-                                                          'class' => 'form-control',
-                                                          'placeholder' => 'Select a Program'
+                        {{Form::select('prog', ["" => 'For All Programs'], null,[ 'id' => 'progSelect',
+                                                          'class' => 'form-control',                                                                                                                    
                                                         ])}}                        
 
                     </div>
@@ -238,12 +238,50 @@
                                                 ['id' => 'semSelect', 'class' => 'form-control', 'placeholder' => 'select'])}}
 
                     </div>
-    
+                        
+                    <button type="button" id="feeFormSubmit" data-toggle="modal" data-target="#addFeeModal" class="btn btn-success rounded-0">Save</button>
                     
-                
-                        {{Form::submit('Add Fee', ['id' => 'feeFormSubmit', 'class' => 'btn btn-success'])}}
+                    <div class="modal fade" id="addFeeModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmit" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header bg-success">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Confirm</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>                
+                            <div id="" class="modal-body">
+                                Adding this fee will add it's amount to matching students balance, continue?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" id="" class="btn btn-success ">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                          </div>
+                        </div>
+                    </div>        
+                    <div class="modal fade" id="updateFeeModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmit" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header bg-success">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Confirm Update</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>                
+                            <div id="" class="modal-body">
+                                Updating this fee will compute its difference to its old fee amount and also update it's matching students balance, continue?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" id="" class="btn btn-success ">Yes</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            </div>
+                          </div>
+                        </div>
+                    </div>        
+            
 
-                        <button type="button" onclick="cancelAdd()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" onclick="cancelAdd()" class="btn btn-secondary">Cancel</button>
 
                     {!!Form::close()!!}                      
     
@@ -301,7 +339,7 @@
                                     </div>
                                     {!!Form::open(['url' => '/deletefee'])!!}
                                     <div class="modal-body">
-                                        Delete {{$fee->desc}} ? 
+                                        Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                         {{Form::hidden('id', $fee->id)}}
                                     </div>
                                     <div class="modal-footer">
@@ -357,7 +395,7 @@
                                     </div>
                                     {!!Form::open(['url' => '/deletefee'])!!}
                                     <div class="modal-body">
-                                        Delete {{$fee->desc}} ? 
+                                        Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                         {{Form::hidden('id', $fee->id)}}
                                     </div>
                                     <div class="modal-footer">
@@ -414,7 +452,7 @@
                                     </div>
                                     {!!Form::open(['url' => '/deletefee'])!!}
                                     <div class="modal-body">
-                                        Delete {{$fee->desc}} ? 
+                                        Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                         {{Form::hidden('id', $fee->id)}}
                                     </div>
                                     <div class="modal-footer">
@@ -489,7 +527,7 @@
                                     </div>
                                     {!!Form::open(['url' => '/deletefee'])!!}
                                     <div class="modal-body">
-                                        Delete {{$fee->desc}} ? 
+                                        Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                         {{Form::hidden('id', $fee->id)}}
                                     </div>
                                     <div class="modal-footer">
@@ -550,7 +588,7 @@
                                     </div>
                                     {!!Form::open(['url' => '/deletefee'])!!}
                                     <div class="modal-body">
-                                        Delete {{$fee->desc}} ? 
+                                        Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                         {{Form::hidden('id', $fee->id)}}
                                     </div>
                                     <div class="modal-footer">
@@ -608,7 +646,7 @@
                                     </div>
                                     {!!Form::open(['url' => '/deletefee'])!!}
                                     <div class="modal-body">
-                                        Delete {{$fee->desc}} ? 
+                                        Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                         {{Form::hidden('id', $fee->id)}}
                                     </div>
                                     <div class="modal-footer">
@@ -685,7 +723,7 @@
                                 </div>
                                 {!!Form::open(['url' => '/deletefee'])!!}
                                 <div class="modal-body">
-                                    Delete {{$fee->desc}} ? 
+                                    Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                     {{Form::hidden('id', $fee->id)}}
                                 </div>
                                 <div class="modal-footer">
@@ -745,7 +783,7 @@
                                         </div>
                                         {!!Form::open(['url' => '/deletefee'])!!}
                                         <div class="modal-body">
-                                            Delete {{$fee->desc}} ? 
+                                            Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                             {{Form::hidden('id', $fee->id)}}
                                         </div>
                                         <div class="modal-footer">
@@ -803,7 +841,7 @@
                                 </div>
                                 {!!Form::open(['url' => '/deletefee'])!!}
                                 <div class="modal-body">
-                                    Delete {{$fee->desc}} ? 
+                                    Deleting {{$fee->desc}} will subtract the amount to matching students, continue?                                                                                
                                     {{Form::hidden('id', $fee->id)}}
                                 </div>
                                 <div class="modal-footer">
@@ -1070,7 +1108,7 @@ function cancelAdd(){
                                                         ['id' => 'semSelect', 'class' => 'form-control', 'placeholder' => 'select'])}}`;
 
 
-    document.getElementById('feeFormSubmit').innerHTML = `{{Form::submit('Add Fee', ['id' => 'feeFormSubmit', 'class' => 'btn btn-success'])}}`;
+    document.getElementById('feeFormSubmit').innerHTML = `<button type="button" id="feeFormSubmit" data-toggle="modal" data-target="#addFeeModal" class="btn btn-success rounded-0 p-0">Save</button>`;
 
    
 
@@ -1298,11 +1336,13 @@ function editFee(id){
                                 <option value="" `; everysem ? output+='selected="selected"' : output+=''; output+=`>Every Semester</option>
                                 <option value="1" `; firstsem ? output+='selected="selected"' : output+=''; output+=`>First Semester</option>
                                 <option value="2" `; secondsem ? output+='selected="selected"' : output+=''; output+=`>Second Semester</option>                            
-                            </select>`;
+                        </select>`;
 
             document.getElementById('semSelect').innerHTML = output;
-                            
-            console.log(document.getElementById('feeFormSubmit').innerHTML);
+            
+            document.getElementById('feeFormSubmit').setAttribute("data-target", "#updateFeeModal");
+            document.getElementById('feeFormSubmit').textContent = "Update Fee";
+            
                             
         } 
     }

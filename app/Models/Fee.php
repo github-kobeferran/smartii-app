@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Student;
 
 class Fee extends Model
 {
@@ -29,6 +30,42 @@ class Fee extends Model
         $mergedFees =  $mergedFees->merge(self::where('dept', $dept)->where('program_id', $prog)->where('level', $level)->where('sem', $sem)->get());
                 
         return $mergedFees;
+
+    }
+
+    public function getMatchingStudents(){                
+
+        if($this->dept != 2){
+
+            $mergedStudents = Student::where('department', $this->dept);
+
+            if($this->program_id != null)
+                $mergedStudents->where('program_id', $this->program_id);
+                
+            if($this->level != null)
+                $mergedStudents->where('level', $this->level);
+
+            if($this->sem != null)
+                $mergedStudents->where('level', $this->sem);
+
+            return $mergedStudents->get();
+            
+        } else {
+
+            if($this->level == null && $this->sem == null){
+                return Student::all();
+            } else if($this->level != null && $this->sem == null){
+                return Student::where('level', $this->level)->get();
+            }else if($this->level == null && $this->sem != null){
+                return Student::where('semester', $this->sem)->get();
+            }else{
+                return Student::where('level', $this->level)->where('semester', $this->sem)->get();
+            }
+           
+
+        }
+
+
 
     }
 

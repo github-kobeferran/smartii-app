@@ -208,7 +208,7 @@ function studentsAjax() {
                     '<td class="border-right"><a href="/studentprofile/'+ students[i].student_id + '">' + students[i].student_id + '</a></td>' +
                     '<td class="border-right">' + students[i].last_name + ', ' + students[i].first_name + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '.' + '</td>' +
                     '<td class="border-right">' + department + ' | ' + students[i].program_desc + ' | ' + level + '</td>' +                    
-                    '<td class="border-left">&#8369;  <b>' + students[i].balance_amount + '</b></td>' +
+                    '<td class="border-left">&#8369;  <b>' + students[i].balance_amount.toFixed(2) + '</b></td>' +
 
                     '</tr>';
             }

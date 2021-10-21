@@ -722,7 +722,7 @@ class StudentsController extends Controller
                 
         if($request->input('student_id') != auth()->user()->member->member_id){
             return redirect()->back();
-        }      
+        }
 
         $student = Student::find($request->input('student_id'));        
 
