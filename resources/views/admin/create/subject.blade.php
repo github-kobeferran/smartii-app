@@ -108,12 +108,7 @@
 
 {!! Form::close() !!}
 
-
-
-
-    {{-- {{{{{{{{{{                   VIEW SECTION                                  }}}} --}}   
-
-
+    {{----------------------------------------- VIEW SECTION --}}   
 
 <h5>VIEW SUBJECTS</h5>
 
@@ -130,7 +125,7 @@
             </label>
         </div>
      
-        <div class="form-group has-search mt-1">
+        <div class="form-group has-search mt-2 mb-2">
             <span class="fa fa-search form-control-feedback"></span>
             <input id="subject-search" type="text" class="form-control" placeholder="Search Subject">
         </div>

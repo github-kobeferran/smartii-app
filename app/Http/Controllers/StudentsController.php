@@ -371,10 +371,12 @@ class StudentsController extends Controller
 
                     if($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] == '' && $semesters[$i] == ''){
 
-                        if($department == 0)
-                            $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
-                        else 
-                            $totalBalance+= Setting::first()->college_price_per_unit * $subject->units; 
+                        if($student->program->is_tesda == 0){
+                            if($department == 0)
+                                $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
+                            else 
+                                $totalBalance+= Setting::first()->college_price_per_unit * $subject->units; 
+                        }
                                
                     } else {
     

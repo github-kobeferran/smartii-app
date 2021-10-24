@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class ProgramsController extends Controller
 {
 
-    public function store(Request $request){               
+    public function store(Request $request){                   
 
         $validator = Validator::make($request->all(), [            
             'desc' => 'required|max:100', 
@@ -45,12 +45,12 @@ class ProgramsController extends Controller
             $program->abbrv = $request->input('abbrv');
         }
         
-        
+        if($request->has('is_tesda'))
+            $program->is_tesda = 1;
 
         if($valid){
 
             if($program->save()){
-
                 $status = 'success';
                 $msg = 'Program ' . $request->input('abbrv') . '-' . $request->input('desc') . ' created successfully';
             }
@@ -75,6 +75,11 @@ class ProgramsController extends Controller
         $program->department = $request->input('dept');
         $program->desc = $request->input('desc');
         $program->abbrv = $request->input('abbrv');
+
+        if($request->has('is_tesda'))
+            $program->is_tesda = 1;
+        else
+            $program->is_tesda = 0;
 
         $program->save();
 
