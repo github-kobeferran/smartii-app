@@ -435,15 +435,15 @@ Define your own CSS3 animations in the CSS.
 </div>
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-3" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered border-0" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+      <div class="modal-header bg-success">
+        <h5 class="modal-title" id="exampleModalLongTitle">SMARTII.CC Terms and Conditions</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="font-family: 'Cinzel', serif !important;">
         Welcome to SMARTII.CC!
         <br>
         <br>

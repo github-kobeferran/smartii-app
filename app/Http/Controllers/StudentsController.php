@@ -365,8 +365,7 @@ class StudentsController extends Controller
                   ){
                     $valid = false;
                 }
-                                     
-                   
+                                                        
                 if($valid){
 
                     if($ratings[$i] == '' && $from_years[$i] == '' && $to_years[$i] == '' && $semesters[$i] == ''){
