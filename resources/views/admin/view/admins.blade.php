@@ -51,7 +51,8 @@ function viewAdmins(){
                     '<td>' + admins[i].name + '</td>' +
                     '<td>' + admins[i].email + '</td>' +
                     '<td>' + admins[i].position + '</td>' +
-                    '<td><a href=\"admin/delete/' + admins[i].id + ' \" class="btn btn-primary">delete</a></td>' +
+                    '<td><a href="#" class="btn btn-primary">delete</a></td>' +
+                    // '<td><a href=\"admin/delete/' + admins[i].id + ' \" class="btn btn-primary">delete</a></td>' +
                     '</tr>';
             }
 

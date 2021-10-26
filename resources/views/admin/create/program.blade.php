@@ -85,15 +85,15 @@
 
         <div id="showProgram" class="d-none">
 
-            <h5 id="dept">SENIOR HIGH SCHOOL</h5>
+            <h5 id="dept"></h5>
             <p>Department</p>
-            <h5 id="abbrv">TVL</h5>
+            <h5 id="abbrv"></h5>
             <p>Program Abbreviation</p>
-            <h5 id="desc">TECHINICAL VOCATIONAL LIVELIHOOD</h5>
+            <h5 id="desc"></h5>
             <p>Program Description</p>
 
             <button onclick="progEdit()" type="button" class="btn btn-info text-white">Edit</button>
-            <a href="" class="btn btn-danger text-white">Delete</a>
+            <button href="" class="btn btn-danger text-white" disabled>Delete</button>
 
         </div>
 
@@ -199,7 +199,7 @@ function programsSelect(id){
                         <p>Program Description</p>
 
                         <button onclick="progEdit(${program.id})" type="button" class="btn btn-info text-white">Edit</button>
-                        <a href="/deleteprogram/${program.id}" class="btn btn-danger text-white">Delete</a>
+                        <button href="" class="btn btn-danger text-white" disabled>Delete</button>
 
                     </div>`;
                     
