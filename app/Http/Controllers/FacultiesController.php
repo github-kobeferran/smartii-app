@@ -265,13 +265,21 @@ class FacultiesController extends Controller
 
                 }                
 
-                $invalids = collect();
+                $invalids = collect();               
+
+                $classes = $classes->filter(function ($value, $key) {
+                    return $value != null;
+                });
 
                 foreach($classes as $class){
 
                     $invalids->push(Faculty::find($class->faculty_id));
 
                 }
+
+                $invalids = $invalids->filter(function ($value, $key) {
+                    return $value != null;
+                });
 
                 $valid = collect();           
                 
@@ -297,6 +305,10 @@ class FacultiesController extends Controller
                         $valid->push($faculty);
 
                 }
+
+                $valid = $valid->filter(function ($value, $key) {
+                    return $value != null;
+                });
 
                 return $valid;
                 

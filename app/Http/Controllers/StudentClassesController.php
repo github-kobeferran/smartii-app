@@ -10,6 +10,7 @@ use App\Models\SubjectTaken;
 use App\Models\Faculty;
 use App\Models\Schedule;
 use App\Models\Subject;
+use App\Models\Program;
 use \Carbon\Carbon;
 
 
@@ -117,7 +118,7 @@ class StudentClassesController extends Controller
 
 
 
-    public function store(Request $request){ 
+    public function store(Request $request){                  
         
         $theSubject = Subject::find($request->input('subj'));
 
@@ -219,19 +220,20 @@ class StudentClassesController extends Controller
                 $totalDuration = 0;          
 
                 for($i = 0; $i<$noOfSched; $i++){
-    
-                 
+                     
                     $from_time = Carbon::parse($froms[$i]);
                     $until_time = Carbon::parse($untils[$i]);
     
                     $totalDuration+= $until_time->diffInHours($from_time);
     
-                }            
-    
-                if($totalDuration > $theSubject->units){
-                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
-                }elseif($totalDuration < $theSubject->units){
-                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+                } 
+                
+                if(!Program::find($request->input('prog'))->is_tesda){
+                    if($totalDuration > $theSubject->units){
+                        return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+                    }elseif($totalDuration < $theSubject->units){
+                        return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+                    }
                 }
     
                 $students = $request->input('student_ids');
@@ -327,10 +329,12 @@ class StudentClassesController extends Controller
 
             $totalDuration = $until_time->diffInHours($from_time);
 
-            if($totalDuration > $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is  above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
-            }elseif($totalDuration < $theSubject->units){
-                return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+            if(!Program::find($request->input('prog'))->is_tesda){
+                if($totalDuration > $theSubject->units){
+                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+                }elseif($totalDuration < $theSubject->units){
+                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+                }
             }
 
             $students = $request->input('student_ids');
@@ -388,7 +392,7 @@ class StudentClassesController extends Controller
 
     }
 
-    public function updateSchedule(Request $request){
+    public function updateSchedule(Request $request){        
 
         if($request->method() != 'POST'){
             return redirect()->back();
@@ -428,23 +432,26 @@ class StudentClassesController extends Controller
 
         $inputHours = Carbon::parse($request->input('until'))->diffInHours(Carbon::parse($request->input('from')));        
 
-        $subject = $class->subjectsTaken->first()->subject;
+        $subject = $class->subjectsTaken->first()->subject;         
+        $program = $class->subjectsTaken->first()->student->program;         
 
-        if(($inputHours + $otherSchedHours) > $subject->units ){
+        if(!$program->is_tesda){
+            if(($inputHours + $otherSchedHours) > $subject->units ){
 
-            $status = 'warning';
-            $msg = 'Update failed, schedule total hours is above the units of the subject. '. $subject->desc . ' has only ' . $subject->units . ' units.';
-
-            $valid = false;
+                $status = 'warning';
+                $msg = 'Updateasdffasd failed, schedule total hours is above the units of the subject. '. $subject->desc . ' has only ' . $subject->units . ' units.';
+    
+                $valid = false;
+                
+            }
             
-        }
-        
-        if(($inputHours + $otherSchedHours) < $subject->units ){
-            
-            $status = 'warning';
-            $msg = 'Update failed, schedule total hours is below the units of the subject. '. $subject->desc . ' has ' . $subject->units . ' units.';
-            
-            $valid = false;
+            if(($inputHours + $otherSchedHours) < $subject->units ){
+                
+                $status = 'warning';
+                $msg = 'Updateasdfasdf failed, schedule total hours is below the units of the subject. '. $subject->desc . ' has ' . $subject->units . ' units.';
+                
+                $valid = false;
+            }
         }
 
         $sched->start_time = $request->input('from');
