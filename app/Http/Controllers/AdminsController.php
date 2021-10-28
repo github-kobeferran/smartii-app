@@ -384,6 +384,7 @@ class AdminsController extends Controller
                 $subject->semester_desc = $subject->semester;
 
                 $subject->pre_reqs;
+                $subject->program;
 
                 return $subject;
 
@@ -808,52 +809,66 @@ class AdminsController extends Controller
         
     }
 
-    public function searchBy($table, $by, $value, $text = null){
-
-        if($text != null){
+    public function searchBy($table, $by, $value, $text = null){   
 
             switch($table){
 
                 case 'students':
 
-                    $students = Student::where($by, $value)
-                                ->where(function($query) use($text) {
-                                    $query->where('last_name', 'LIKE', '%' . $text . "%")
-                                    ->orWhere('first_name', 'LIKE', '%' . $text . "%")
-                                    ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
-                                    ->orWhere('student_id', 'LIKE', '%' . $text . "%");
+                    if(!is_null($text)){
+                        
+                        $students = Student::where($by, $value)
+                                    ->where(function($query) use($text) {
+                                        $query->where('last_name', 'LIKE', '%' . $text . "%")
+                                        ->orWhere('first_name', 'LIKE', '%' . $text . "%")
+                                        ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
+                                        ->orWhere('student_id', 'LIKE', '%' . $text . "%");
+    
+                                    })
+                                    ->get();
+    
+                        foreach($students as $student){
+    
+                            $student->age = $student->id;
+                            $student->level_desc = $student->level;
+    
+                        }
+    
+                        return $students;
 
-                                })
-                                ->get();
+                    } else {
 
-                    foreach($students as $student){
-
-                        $student->age = $student->id;
-                        $student->level_desc = $student->level;
+                        return $this->showTableBy($table, $by, $value, true);
 
                     }
 
-                    return $students;
+
+
 
                 break;
 
+                case 'programs':
 
+                    if(!is_null($text)){
+                        return Program::where($by, $value)
+                            ->where('id', '!=', ($value == 0 ? '3' : '4'))
+                            ->where(function($query) use($text) {
+                                $query->where('desc', 'LIKE', '%' . $text . "%")
+                                ->orWhere('abbrv', 'LIKE', '%' . $text . "%");
+                            })
+                            ->get();
+                    } else {
+                        return Program::where($by, $value)
+                            ->where('id', '!=', ($value == 0 ? '3' : '4'))                            
+                            ->get();
+                    }
+
+                   
+
+                break;
             }
 
-
-        } else{
-
-           return $this->showTableBy($table, $by, $value, true);
-
-        }
-
-
-
-
     }
-    
-
-
 
     public function download($type, $filename){
     

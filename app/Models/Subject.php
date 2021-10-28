@@ -339,7 +339,7 @@ class Subject extends Model
 
         return $subjects;
 
-    }
+    }    
 
 
 }

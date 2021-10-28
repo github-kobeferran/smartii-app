@@ -37,6 +37,7 @@ class SubjectsController extends Controller
      */
     public function store(Request $request)
     {
+
         $status = '';
         $msg = '';
         $subjectID = 0;
@@ -49,7 +50,8 @@ class SubjectsController extends Controller
             'level' => 'required', 
             'prog' => 'required',
             'sem' => 'required',
-            'units' => 'required|numeric|between:3,12',
+            'units' => 'exclude_if:is_tesda,1|required|numeric|between:3,12',
+            'units' => 'exclude_if:is_tesda,0|required|numeric|between:10,500',
         ]);
 
         if ($validator->fails()) {
@@ -170,7 +172,30 @@ class SubjectsController extends Controller
     {
         if($request->method() != 'POST'){
             return redirect()->back();
-        }           
+        }        
+        
+        if(Subject::where('desc', $request->input('desc'))
+            ->where('id', '!=', $request->input('subject_id'))
+            ->exists())
+            return redirect()->route('adminCreate')->withInput()->with('active','subject')->with('warning', 'That subject description is already taken by other subject');
+
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|max:12|regex:/^[\s\w-]*$/', 
+            'desc' => 'required|max:100|regex:/^[\s\w-]*$/', 
+            'dept' => 'required', 
+            'level' => 'required', 
+            'prog' => 'required',
+            'semester' => 'required',
+            'units' => 'exclude_if:is_tesda,1|required|numeric|between:3,12',
+            'units' => 'exclude_if:is_tesda,0|required|numeric|between:10,500',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('adminCreate')
+                         ->withErrors($validator)
+                         ->withInput()
+                         ->with('active','subject');
+        }                
 
         $subject = Subject::find($request->input('subject_id'));
 
@@ -180,6 +205,7 @@ class SubjectsController extends Controller
         $subject->program_id = $request->input('prog');
         $subject->level = $request->input('level');
         $subject->dept = $request->input('dept');
+        $subject->semester = $request->input('semester');
         $subject->units = $request->input('units');
 
         $subject->save();

@@ -58,11 +58,12 @@
                   ['class' => 'custom-select w-50 ml-2', 'id' => 'selectSubjSem'])}}                   
             </div>  
             
-            <div class="form-group">
-                {{Form::label('units', 'No. of Units', ['class' => 'mt'])}}
-                {{Form::number('units', 3, ['class' => 'form-control w-25', 'step' => '3', 'min' => '3', 'max' => '12', 'required' => 'required', 'placeholder' => 'Units'])}}                 
+            <div class="form-group" id="units-div">
+                {{Form::label('units', 'No. of Units', ['class' => '', 'id'=> 'units-label'])}}
+                {{Form::number('units', 3, ['id' => 'subject-units', 'class' => 'form-control w-25', 'step' => '3', 'min' => '3', 'max' => '12', 'required' => 'required', 'placeholder' => 'Units'])}}                 
             </div>
            
+            {{Form::hidden('is_tesda', 0, ['id' => 'is-tesda-hidden'])}}
 
         </div>
 
@@ -154,7 +155,7 @@
 
                 {!! Form::open(['url' => '/updatesubject', 'class' => 'p-2 m-2']) !!}
 
-                <h5>Edit: ITC 111 Introduction to Computing</h5>
+                <h5>Edit: <span id="edit-subj-title"> </span></h5>
                 {{Form::hidden('subject_id', null, ['id' => 'subj-id'])}}
                 Code
                 {{Form::text('code', '', ['id'=> 'edit-code', 'class' => 'form-control'])}}
@@ -174,13 +175,15 @@
                                         '12' => 'Second Year',                                      
                                        ], null, ['id'=> 'edit-level-col', 'class' => 'd-none form-control'])}}
                 Semester 
-                {{Form::select('level', [
+                {{Form::select('semester', [
                     '1' => 'First Semester',
                     '2' => 'Second Semester',                                      
-                   ], '', ['id'=> 'edit-level-sem', 'class' => 'd-none form-control'])}}
+                   ], '', ['id'=> 'edit-sem', 'class' => 'form-control'])}}
                
-                Units
-                {{Form::number('units', 3, ['min' => '3', 'id'=> 'edit-units', 'class' => 'form-control'])}}
+                Units/Hours
+                {{Form::number('units', 3, ['id'=> 'edit-units', 'class' => 'form-control'])}}
+
+                {{Form::hidden('is_tesda', 0, ['id'=> 'edit-is-tesda', 'class' => 'form-control'])}}
 
                 <div class="form-group mt-2">
 
@@ -210,11 +213,15 @@ let subjectList = document.getElementById('subject-list');
 let subjectPanel = document.getElementById('subject-panel');
 let editPanel = document.getElementById('edit-panel');
 
+let unitsDiv = document.getElementById('units-div');
+
+let editSubjectTitle = document.getElementById('edit-subj-title');
 let editCode = document.getElementById('edit-code');
 let editDesc = document.getElementById('edit-desc');
 let editProg = document.getElementById('edit-prog');
 let editLevelSHS = document.getElementById('edit-level-shs');
 let editLevelCOL = document.getElementById('edit-level-col');
+let editSem = document.getElementById('edit-sem');
 let editDept = document.getElementById('edit-dept');
 let editUnits = document.getElementById('edit-units');
 let subjid = document.getElementById('subj-id');
@@ -346,10 +353,10 @@ function subjectClicked(id){
 
                                 <tr>
                                     <td class="bg-info text-white">
-                                        Units
+                                        Units/Hours
                                     </td>
                                     <td>
-                                        `+ subject.units +`
+                                        `+ subject.units + (subject.program.is_tesda == 1 ? ` hrs` : ` units`) + `
                                     </td>
 
                                 </tr>
@@ -439,7 +446,6 @@ function showEdit(id, dept){
 
     }else {
         editLevelCOL.classList.remove('d-none');
-
     }
 
     fillProgramSelect(dept);
@@ -454,9 +460,11 @@ function showEdit(id, dept){
 
             let subject = JSON.parse(this.responseText);            
 
+            editSubjectTitle.textContent = subject.code + '-' + subject.desc;  
             subjid.value = subject.id;  
             editCode.value = subject.code;
             editDesc.value = subject.desc;            
+            editSem.value = subject.semester;
 
             console.log();
 
@@ -472,7 +480,6 @@ function showEdit(id, dept){
 
             }else{
                 
-                
                 for(let i=0; i<editLevelCOL.length; i++){
 
                     if(editLevelCOL.options[i].value == subject.level)
@@ -484,7 +491,45 @@ function showEdit(id, dept){
 
             editDept.value = subject.dept;
             editUnits.value = subject.units;   
-            editProg.value = subject.program_id;                    
+            editProg.value = subject.program_id;            
+
+            if(subject.program.is_tesda){
+                editUnits.setAttribute('min', 10);
+                editUnits.setAttribute('max', 500);               
+                editUnits.setAttribute('step', 1);    
+                document.getElementById('edit-is-tesda').value = 1;
+            } else {
+                editUnits.setAttribute('min', 3);
+                editUnits.setAttribute('max', 12);
+                editUnits.setAttribute('step', 3);
+                document.getElementById('edit-is-tesda').value = 0;
+            }                                        
+
+            editProg.addEventListener('change', async () => {
+                const res = await fetch(APP_URL + '/admin/view/programs/' + editProg.value);
+                const program = await res.json();                  
+
+                console.log(editProg.value);
+                console.log(program);
+
+                if(program.is_tesda == 1){     
+
+                    editUnits.setAttribute('min', 10);
+                    editUnits.setAttribute('max', 500);           
+                    editUnits.setAttribute('step', 1);            
+
+                    document.getElementById('edit-is-tesda').value = 1;
+
+                } else {        
+                    editUnits.setAttribute('min', 3);
+                    editUnits.setAttribute('max', 12);
+                    editUnits.setAttribute('step', 3);
+
+                    document.getElementById('edit-is-tesda').value = 0;
+                }
+
+            });
+
 
         }
 
@@ -529,12 +574,6 @@ function fillProgramSelect(dept){
 
 }
 
-
-
-
-
-
-
 window.onbeforeunload = function(event)
 {
     return '';
@@ -576,18 +615,19 @@ selectSubjDept.addEventListener('change', () => {
 });
 
 selectSubjLevel.addEventListener('change', () => {    
-    changePreReqList();        
     clearList();
+    changePreReqList();        
 });
 
 selectSubjProg.addEventListener('change', () => {    
-    changePreReqList();    
     clearList();
+    changePreReqList();    
+    changeToUnitsOrHours(selectSubjProg.value);
 });
 
 selectSubjSem.addEventListener('change', () => {    
-    changePreReqList();    
     clearList();
+    changePreReqList();    
 });
 
 selectPreReq.addEventListener('change', () => {    
@@ -790,10 +830,30 @@ function clearList(){
     }
 
     preReqListDiv.className = 'card mt-2 d-none';
-
-
 }
 
+async function changeToUnitsOrHours(id){
+    const res = await fetch(APP_URL + '/admin/view/programs/' + id);
+    const program = await res.json();    
+
+    if(program.is_tesda == 1){        
+        
+        unitsDiv.innerHTML = `<div class="form-group" id="units-div">        
+            {{Form::label('units', 'No. of Hours', ['class' => '', 'id'=> 'units-label'])}}
+            <input type="number" name="units" value="10" id="subject-units" class="form-control w-25 rounded-0" step="1" min="10" max="500" placeholder="Number of Hours" required>
+        </div>`;        
+                
+        document.getElementById('is-tesda-hidden').value = 1;
+
+    } else {        
+        unitsDiv.innerHTML = `<div class="form-group" id="units-div">
+            {{Form::label('units', 'No. of Units', ['class' => '', 'id'=> 'units-label'])}}
+            <input type="number" name="units" value="3" id="subject-units" class="form-control w-25 rounded-0" step="3" min="3" max="12" placeholder="Number of Units" required>
+        </div>`; 
+        document.getElementById('is-tesda-hidden').value = 0;
+    }
+
+}
 
 
 

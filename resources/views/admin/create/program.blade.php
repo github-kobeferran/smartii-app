@@ -70,7 +70,7 @@
      
         <div class="form-group has-search mt-2 mb-0">
             <span class="fa fa-search form-control-feedback"></span>
-            <input id="program-search" type="text" class="form-control" placeholder="Search (not functioning)">
+            <input id="program-search" type="text" class="form-control" placeholder="Search Program">
         </div>
 
         <div id="program-list" style="max-height: 75%; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group ">                               
@@ -138,6 +138,9 @@ let progid = document.getElementById('prog-id');
 let showProgram = document.getElementById('showProgram');
 let editProgram = document.getElementById('editProgram');
 let title = document.getElementById('title');
+let programSearch = document.getElementById('program-search');
+
+let currentDept = 0;
 
 selectDeptForProgram.addEventListener('change', () => {
     if(selectDeptForProgram.value != 0)
@@ -151,11 +154,29 @@ selectDeptForProgram.addEventListener('change', () => {
 
 shsOptionForProg.onclick = () => {
     fillProgramList(0);
+    currentDept = 0;
 }
 
 collegeOptionForProg.onclick = () => {
     fillProgramList(1);
+    currentDept = 1;
 }
+
+programSearch.addEventListener('keyup', async () => {
+    const res = await fetch(APP_URL + '/admin/searchby/programs/department/' + currentDept + '/' + programSearch.value);
+    const programs = await res.json();
+
+    output = `<div id="program-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">
+                <ul class="list-group mt-2">`;
+                    programs.forEach(program => {
+                        output+= `<li id="prog-${program.id}" onclick="programsSelect('${program.id}')" class="list-group-item program-button">${program.abbrv} - ${program.desc}`;
+                    });    
+      output +=`</ul>
+              </div>`; 
+
+    programList.innerHTML = output;
+
+});
 
 function cancelEdit(){
 
@@ -255,9 +276,6 @@ function progEdit(id){
     }
 
     xhr.send();
-
- 
-
 
 
 }
