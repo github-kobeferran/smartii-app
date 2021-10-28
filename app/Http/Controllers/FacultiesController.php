@@ -261,9 +261,7 @@ class FacultiesController extends Controller
                     $classes->push(StudentClass::where('id', $sched->class_id)
                                      ->where('archive', 0)
                                      ->first());  
-
-
-                }                
+                }
 
                 $invalids = collect();               
 

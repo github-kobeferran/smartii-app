@@ -201,7 +201,13 @@
                 <thead>
                     <tr>
                       <th scope="col">Subject</th>
-                      <th scope="col">Units</th>
+                      <th scope="col">
+                          @if ($student->program->is_tesda)
+                              Hours
+                          @else                            
+                              Units
+                          @endif
+                      </th>
                       <th scope="col">Rating</th>
                       
                     

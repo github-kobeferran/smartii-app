@@ -45,7 +45,7 @@
                 <table>
                     <tr>
                         <td>
-                            {{$student->dept}}<br />
+                            {{$student->dept}} {{$program->is_tesda ? ' | TESDA' : ''}}<br>
                             {{$student->program_desc}}<br />
                             {{$student->level_desc}}
                         </td>
@@ -70,7 +70,11 @@
 
             <td>Description</td>
             
-            <td>No. of Units</td>
+            @if ($program->is_tesda)
+                <td>No. of Hours</td>
+            @else
+                <td>No. of Units</td>
+            @endif
             
         </tr> 
 

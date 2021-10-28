@@ -97,8 +97,8 @@
         
         <div class="form-inline m-2 ">            
             
-            {{ Form::textarea('bank_name', $currentSetting->bank_name, ['maxLength' => '191', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control w-25']) }}
-            {{ Form::textarea('bank_number', $currentSetting->bank_number, ['maxLength' => '191', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control w-25']) }}
+            {{ Form::textarea('bank_name', $currentSetting->bank_name, ['maxLength' => '191', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control w-25', 'placeholder' => 'Bank Name here']) }}
+            {{ Form::textarea('bank_number', $currentSetting->bank_number, ['maxLength' => '191', 'placeholder' => $currentSetting->shs_price_per_unit, 'class' => 'form-control w-25', 'placeholder' => 'Account Number here']) }}
             
         </div>
         

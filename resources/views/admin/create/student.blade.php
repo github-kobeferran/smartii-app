@@ -245,8 +245,7 @@ selectProg.addEventListener('change', () => {
 });
 
 selectLevel.addEventListener('change', () => {                        
-    changeSelect(true);    
-    console.log(selectLevel.value);
+    changeSelect(true);        
 });
 
 selectSemester.addEventListener('change', () => {                        
@@ -307,19 +306,23 @@ function changeSelect(isSelectLevel = false){
 }
 
 // table change per select
-function changeTable(){
+async function changeTable(){
     
     let dept = selectDept.value;
     let program = selectProg.value;
     let level = selectLevel.value;
     let semester = selectSemester.value;
 
+    const res = await fetch(APP_URL + '/admin/view/programs/' + program);
+    const selected_prog = await res.json();    
+
     var xhr = new XMLHttpRequest();   
     xhr.open('GET', APP_URL + '/admin/view/subjects'
                     +'/department/' + dept 
                     + '/program/' + program 
                     + '/level/' + level 
-                    + '/semester/' + semester, true);
+                    + '/semester/' + semester 
+                    + '/' + (selected_prog.is_tesda ? '1' : ''), true);
 
     
 
@@ -372,10 +375,8 @@ function changeTable(){
             }                            
             output+=`</tbody>`;
             output+=`</table>`;
-
                                         
             document.getElementById('subjects-table').innerHTML = output;
-            
 
         } else {
         

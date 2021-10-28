@@ -169,7 +169,7 @@ class SubjectsTakenController extends Controller
 
         $settings->sem_desc = $settings->sem;
 
-
+        $program = $student->program;
 
         if($user_id != $student->member->user->id){            
             if(auth()->user()->isAdmin() == false )
@@ -178,7 +178,7 @@ class SubjectsTakenController extends Controller
 
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
 
-        $pdf = PDF::loadView('pdf.cor', compact('student', 'subjectsTaken', 'settings'));
+        $pdf = PDF::loadView('pdf.cor', compact('student', 'subjectsTaken', 'settings', 'program'));
         return $pdf->stream( 'COR_'. strtoupper($student->first_name) . '_' .  strtoupper($student->first_name) . '.pdf');  
 
     }

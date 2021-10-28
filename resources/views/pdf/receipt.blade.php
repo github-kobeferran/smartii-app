@@ -67,12 +67,13 @@
                    
         <tr class="total">
             <td>Remaining Balance: Php {{number_format($data['totalBalance'], 2)}}</td>         
-            <td>Payment: Php {{number_format($data['payment'], 2)}}</td>                     
-            
+            <td>Payment Amount: Php {{number_format($data['payment'], 2)}}</td>                                 
         </tr>
         
         <tr class="total">
-            <td>Change: Php {{number_format($data['change'], 2)}}</td>                     
+            <td>Payment Received: Php {{number_format($data['payment_received'], 2)}} 
+                <br>
+                Change: Php {{number_format($data['change'], 2)}}</td>                     
             <td>New Remaining Balance: Php {{number_format($data['rem_bal'], 2)}}</td>                     
         </tr>
 
@@ -83,10 +84,9 @@
 
 
 <script>
-     // Callback
+     
      window.onbeforeunload = function(e) {
-        // Turning off the event
-        e.preventDefault();
+        return "Refreshing this page will create another invoice with the same amount";
     }
 </script>
 

@@ -17,9 +17,11 @@ class InvoicesController extends Controller
 {
     
     public function store(Request $request){
-         
-        // ->format('g:i a l jS F Y');
 
+        if($request->method() != 'POST')
+        return redirect()->back();
+        
+        // ->format('g:i a l jS F Y');
         // inititalize Admin
         $admin = Admin::find(auth()->user()->member->member_id);                
                 
@@ -42,23 +44,26 @@ class InvoicesController extends Controller
         
         // get payment input details
         $totalBalance = $request->input('balance');
-        $payment = $request->input('amount');        
+        $payment = $request->input('amount_to_pay');        
+        $payment_received = $request->input('amount_received');        
+        $change = $request->input('change');
 
-        $change = 0;
-        $remainingBal = 0;
-
-        if($payment > $totalBalance){
-            $change = $payment - $totalBalance;
-        } else {
-            $remainingBal = $totalBalance - $payment;
+        if($payment > $balance->amount){
+            return redirect()->route('adminPayment')            
+            ->with('error', 'Payment must not be higher than the Student\'s Balance Amount');  
         }
         
+        
         $invoice = new Invoice;           
-
+        
         $invoice->student_id = $studID;
         $invoice->admin_id = $admin->id;
         $invoice->balance = $totalBalance;
         $invoice->payment = $payment;
+        $invoice->payment_received = $payment_received;
+
+        $remainingBal = $balance->amount - $payment;  
+
         $invoice->remaining_bal = $remainingBal;
 
         $balance->amount = $remainingBal;
@@ -76,7 +81,7 @@ class InvoicesController extends Controller
         if($request->input('print_receipt')){
 
             $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
-            $data = ['rem_bal' => $remainingBal, 'change' => $change, 'totalBalance' => $totalBalance, 'payment' => $payment];            
+            $data = ['rem_bal' => $remainingBal, 'change' => $change, 'totalBalance' => $totalBalance, 'payment' => $payment, 'payment_received' => $payment_received];            
             $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'settings', 'data'));
             return $pdf->stream( 'invoice.pdf');  
 
@@ -114,7 +119,7 @@ class InvoicesController extends Controller
 
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                        
 
-        $data = ['rem_bal' => $invoice->remaining_bal, 'change' => ($invoice->payment > $invoice->balance ? $invoice->balance - $invoice->payment : 0), 'totalBalance' => $invoice->balance, 'payment' => $invoice->payment];
+        $data = ['rem_bal' => $invoice->remaining_bal , 'change' => ($invoice->payment_received - $invoice->payment), 'totalBalance' => $invoice->balance, 'payment' => $invoice->payment, 'payment_received' => $invoice->payment_received];
 
         $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'settings', 'data'));
         return $pdf->stream( 'invoice.pdf');  

@@ -52,7 +52,7 @@
                 <input name="print_receipt" type="checkbox" class="custom-control-input" id="printSwitch" checked>
                 <label class="custom-control-label" for="printSwitch">
                     <strong>Generate Receipt</strong>
-                </label>
+                </label>                
             </div>
         </div>
     </div>
@@ -62,17 +62,21 @@
         <h4 id="stud-details" class="card-header"></h4>
 
         <div class="card-body">
-            <h4 id="stud-balance" class="card-title"></h4>
-            <hr class="">
+            <h4 id="stud-balance" class="card-title"></h4>            
 
             <input id="stud-hidden" name="stud_id" type="hidden" class="">
             <input id="stud-hidden-balance" name="balance" type="hidden" class="">
-            <input id="payment-input" name="amount" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Payment Amount" required>
             
-            <hr>
+            <div>
+                <label class="py-0 my-0" for="">Amount to Pay</label>
+                <input id="payment-input" name="amount_to_pay" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Payment Amount" required>    
+            </div>
+            <div>
+                <label class="py-0 my-0" for="">Amount Received</label>
+                <input id="payment-received-input" name="amount_received" style="font-family: 'Source Code Pro', monospace; font-size: 2em;" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Received Payment Amount" required>                            
+            </div>
 
             <div class="row no-gutters">
-
                 <div class="col-3">
                     <button type="submit" class="btn btn-success mr-2">Enter Payment <i class="fa fa-check text-white" aria-hidden="true"></i></button>
                 </div>
@@ -81,11 +85,13 @@
                     <button type="button" onclick="cancelPayment()" class="btn btn-warning">Cancel <i class="fa fa-times-circle text-danger" aria-hidden="true"></i></button>
                 </div>
 
-                <div class="col text-right">
-                    <h4 id="change-output" class="" >Change: </h4>
-                    
-                </div>                        
+                <div class="col text-right">                    
+                    <h4 id="change-output" class="" >Change: </h4>                                        
+                </div>                                        
             </div>
+
+            {{Form::hidden('change', 0, ['id' => 'change-hidden'])}}
+
         </div>
     </div>
 
@@ -125,6 +131,8 @@ if (window.performance && window.performance.navigation.type === window.performa
 
 let paymentForm;
 let paymentInput;
+let paymentReceivedInput;
+let changeHiddenInput;
 let balanceOutput;
 let balance_amount = 0;
 let changeOutput;
@@ -140,8 +148,23 @@ window.addEventListener('load', (event) => {
     paymentForm = document.getElementById('paymentForm');
     paymentForm.style.display = "none";
 
-    paymentInput = document.getElementById('payment-input');  
-    paymentInput.addEventListener('input', calculateChange);  
+    paymentInput = document.getElementById('payment-input');
+
+    paymentInput.addEventListener('input', () => {
+        paymentReceivedInput.setAttribute('min', paymentInput.value);
+        calculateChange();
+    });
+    paymentInput.addEventListener('keyup', () => {
+        paymentReceivedInput.setAttribute('min', paymentInput.value);
+        calculateChange();
+    });
+
+    paymentReceivedInput =  document.getElementById('payment-received-input');
+
+    paymentReceivedInput.addEventListener('input', calculateChange);  
+    paymentReceivedInput.addEventListener('keyup', calculateChange);  
+
+    changeHiddenInput =  document.getElementById('change-hidden');
 
     balanceOutput = document.getElementById('stud-balance');
     changeOutput = document.getElementById('change-output');
@@ -277,7 +300,7 @@ function studentSearch(){
                 }
                 output += '<tr>' +
 
-                    '<td class="border-right"><button type="button"  onclick="selectForPayment(' +students[i].id + ')" class="btn btn-info text-white border">Select</button></td>' + 
+                    '<td class="border-right"><button type="button"  onclick="selectForPayment(' +students[i].id + ')" class="btn btn-info text-white border">Payment</button></td>' + 
                     '<td class="border-right"><button type="button"  onclick="showInvoicesTable(' +students[i].id + ')" class="btn btn-warning text-secondary">Invoices</button></td>' + 
                     '<td>' + students[i].student_id + '</td>' +
                     '<td>' + students[i].last_name + ', ' +students[i].first_name + ', ' + students[i].middle_name.charAt(0).toUpperCase() + '</td>' +
@@ -334,8 +357,10 @@ function selectForPayment(id){
             studDetails.textContent = student.student_id + " - " + student.first_name +
             " " + student.middle_name.charAt(0).toUpperCase() + ". " + student.last_name +
             " [" + student.program_desc + "]";
-            studBalance.innerHTML = `<h4 id="stud-balance" class="card-title float-right "><strong>Total Balance : &#8369; ` +
-                student.balance_amount + `</strong></h4>`; 
+            studBalance.innerHTML = `<h4 id="stud-balance" class="card-title text-right py-2">
+                                        <strong class="border-bottom">Total Balance : &#8369; ` +
+                            student.balance_amount.toFixed(2) + `</strong>
+                </h4>`; 
 
             if(student.balance_amount < 1){
                 paymentInput.required = false;
@@ -345,8 +370,10 @@ function selectForPayment(id){
 
             studHidden.value = student.id;
             studHiddenBalance.value = student.balance_amount;
+            paymentInput.setAttribute('max', student.balance_amount);
+            paymentReceivedInput.setAttribute('max', student.balance_amount);
 
-            balance_amount = student.balance_amount;
+            balance_amount = student.balance_amount;            
                        
         } 
     }
@@ -367,35 +394,38 @@ function cancelPayment(){
 
 }
 
-function calculateChange(){    
+function calculateChange(){  
 
-    if(paymentInput.value > 0 ){
+    if(paymentReceivedInput.value > 0)  {
 
-        let payment_amount = paymentInput.value;
-        let remainingBal = 0;
+        if(paymentReceivedInput >= paymentInput){
 
-        if(balance_amount > 0 ){
-            change = payment_amount - balance_amount;
-            remainingBal = balance_amount - payment_amount;
+            let payment_amount = paymentInput.value;
+            let payment_received_amount = paymentReceivedInput.value;
+
+            let remainingBal = 0;
+
+            if(balance_amount > 0 ){
+                change = payment_received_amount - payment_amount;
+                remainingBal = balance_amount - payment_amount;
+            }            
+
+            if(change >= 0){
+                changeOutput.style.display = "block";        
+                changeOutput.innerHTML = `<h4 id="change-output" class="mr-2" >Change: &#8369; `+ change.toFixed(2) +` </h4>`;
+            }else{
+                changeOutput.style.display = "block";        
+                changeOutput.innerHTML = `<h4 id="change-output" class="mr-2" >Remaining Balance: &#8369; `+ remainingBal.toFixed(2) +` </h4>`;           
+            } 
+
+            changeHiddenInput.value = change;  
+
         }
 
-        if(change >= 0){
-            changeOutput.style.display = "block";        
-            changeOutput.innerHTML = `<h4 id="change-output" class="" >Change: &#8369; `+ change.toFixed(2) +` </h4>`;
-        }else{
-            changeOutput.style.display = "block";        
-            changeOutput.innerHTML = `<h4 id="change-output" class="" >Remaining Balance: &#8369; `+ remainingBal.toFixed(2) +` </h4>`;           
-        }            
-
     } else {
-
         changeOutput.style.display = "none";
 
     }
-
-    
-    
-    
 
 }
 

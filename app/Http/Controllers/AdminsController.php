@@ -498,7 +498,7 @@ class AdminsController extends Controller
     }    
 
     public function showTableByFour($table, $firstColumn, $firstValue, $secondColumn, $secondValue,
-                                    $thirdColumn, $thirdValue, $fourthColumn, $fourthValue){                                   
+                                    $thirdColumn, $thirdValue, $fourthColumn, $fourthValue, $all = null){                                   
                                
             switch($table){
                 case 'subjects':                    
@@ -507,12 +507,14 @@ class AdminsController extends Controller
                                $thirdColumn => $thirdValue,
                                $fourthColumn => $fourthValue];
 
-                    
-                    $subjects = Subject::allWhere($values, true);
+                    if(is_null($all))
+                        $subjects = Subject::allWhere($values, true);
+                    else
+                        $subjects = Subject::allWhere($values, false);
+
                     $subjects->toJson();                    
                     $programs = [];
-                    $pre_reqs = [];
-                                        
+                    $pre_reqs = [];                                        
                     
                     $count = 0;
                     foreach($subjects as $subject){                        
@@ -581,7 +583,7 @@ class AdminsController extends Controller
             case 'students':  
 
                 if($text == null){
-                    $students = Student::all();
+                    $students = Student::orderBy('created_at', 'desc')->get();
 
                     foreach($students as $student){                    
                         $student->program_desc = $student->program_id;
@@ -1119,8 +1121,12 @@ class AdminsController extends Controller
                     'level' => $student->level, 
                     'semester' => $student->semester, 
                   ];
-
-        $subjects = Subject::allWhere($values, true);
+        
+        if(!$student->program->is_tesda)
+            $subjects = Subject::allWhere($values, true);
+        else
+            $subjects = Subject::allWhere($values, false);
+        
         $totalBalance = 0;
         $studentBalance = Balance::find($student->balance_id);
 
