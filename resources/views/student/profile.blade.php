@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('studentprofile')
@@ -57,7 +58,10 @@
  
             <h5>{{ ucfirst($student->first_name) . ' ' .  ucfirst($student->last_name)}}</h5>
             <em>{{$student->student_id}} </em>
-            
+            <br>
+            @if ($show == 2)
+                <em>{{$student->member->user->email}}</em>
+            @endif
 
         </div>
 
@@ -340,6 +344,8 @@
 
                 
 
+                
+
                 <!-- Modal -->
                 <div class="modal fade" id="subjects" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -369,15 +375,20 @@
            
                 @endif
 
-                @if($show > 2)
+                @if ($show >= 2) 
+                    
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
+                    @include('inc.messages')
+
                 @endif
 
-                @include('inc.messages')
+                @if($show > 2)
+
 
                 <tr>
 
@@ -443,6 +454,95 @@
         @if (\App\Models\SubjectTaken::enrolledSubjectsbyStudent($student->id)->count() > 0)
 
             <div class="row my-1">
+                <div class="col text-left ">                    
+                    <h5>Discounts attached to {{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name)}} </h5>                        
+                    <ul class="list-group list-group-flush">
+                        @if ($student->discounts->count() > 0)                    
+                            @foreach ($student->discounts as $discount_rel)
+                                <?php $discount = \App\Models\Discount::find($discount_rel->discount_id); ?>
+                                <li class="list-group-item"> <button data-toggle="modal" data-target="#remove-{{$discount->id}}" class="btn btn-sm btn-danger mr-2">Remove</button> {{$discount->description}} - {{$discount->percentage}} %</li>                                
+                                <div class="modal fade" id="remove-{{$discount->id}}" tabindex="-1" role="dialog" aria-labelledby="remove-{{$discount->discount_id}}Title" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white" >
+                                        <h6 class="modal-title" id="exampleModalLongTitle">Remove {{$discount->description}} from {{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name)}} ?</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        Removing {{$discount->description}} from {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}} 
+                                        will add {{$discount->percentage}}% of {{$student->pronoun}} supposed total tuition this sem without discount (which is &#8369; {{number_format($student->tuition_without_discount, 2)}})
+                                        </div>
+                                        <div class="modal-footer">
+                                            {{Form::open(['url' => 'detachdiscount'])}}
+                                                {{Form::hidden('stud_id', $student->id)}}
+                                                {{Form::hidden('disc_id', $discount->id)}}
+                                                <button type="submit" class="btn btn-danger">Remove</button>
+                                            {{Form::close()}}
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                            @endforeach                                                        
+
+                        @else  
+
+                        @endif
+                        <li class="list-group-item text-right"><button data-toggle="modal" data-target="#add-discount-modal" type="button" class="btn btn-success">Attach a Discount <i class="fa fa-plus" aria-hidden="true"></i></button></li>
+
+                        <div class="modal fade" id="add-discount-modal" tabindex="-1" role="dialog" aria-labelledby="add-discount-modalTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-success text-white" >
+                                <h6 class="modal-title" id="exampleModalLongTitle">Attach a Discount to {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}}</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                {{Form::open(['url' => 'attachdiscount'])}}
+                                    <div class="modal-body">
+                                        <div class="text-center w-75 mx-auto">
+                                            Attaching Discounts will update {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}}'s balance amount (&#8369; {{number_format($student->balance->amount, 2)}})
+                                        </div>
+                                        {{Form::hidden('stud_id', $student->id)}}
+                                        <select name="discount[]" value="" id="select-discount" class="form-control " multiple required>                                            
+                                            <?php 
+                                                $total_percentage = 0;
+                                                $all_discounts = \App\Models\Discount::all();
+                                                
+                                                if($student->discounts->count() > 0){          
+                                                    
+                                                    $already_attached = collect(new \App\Models\Discount);
+                                                    
+                                                    foreach ($student->discounts as $discount_rel) {
+                                                        $already_attached->push(\App\Models\Discount::find($discount_rel->discount_id));                                                        
+                                                        $total_percentage += \App\Models\Discount::find($discount_rel->discount_id)->percentage;
+                                                    }
+                                                    
+                                                    $all_discounts = $all_discounts->diff($already_attached);
+                                                }                                              
+                                                ?>                                                                                              
+                                            @foreach ($all_discounts as $discount)
+                                                 <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
+                                            @endforeach
+                                        </select>
+                                        {{Form::hidden('total_percentage', $total_percentage)}}                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                            <button type="submit" class="btn btn-success">Attach</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                {{Form::close()}}
+                            </div>
+                            </div>
+                        </div>
+                    </ul>
+                        
+
+                </div>
                 <div class="col text-right ">
                     <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">View Certificate of Registration</a>
                 </div>

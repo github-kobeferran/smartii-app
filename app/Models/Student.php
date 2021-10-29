@@ -10,6 +10,10 @@ use App\Models\Member;
 use App\Models\User;
 use App\Models\SubjectTaken;
 use App\Models\Applicant;
+use App\Models\StudentDiscounts;
+use App\Models\Fee;
+use App\Models\Discount;
+use App\Models\Setting;
 use Carbon\Carbon;
 
 
@@ -18,15 +22,21 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $appends = ['age' => null, 'level_desc' => null, 'dept' => null, 'program_desc' => null, 'balance_amount' => null, 'rating' => null];
+    protected $appends = [
+                          'age' => null,
+                          'level_desc' => null, 
+                          'dept' => null, 
+                          'program_desc' => null, 
+                          'balance_amount' => null, 
+                          'rating' => null, 
+                          'pronoun' => null,
+                          'tuition_without_discount' => null,
+                          'tuition_with_discount' => null
+                        ];
 
     public function member(){
         return $this->hasOne(Member::class, 'member_id', 'id');
-    }
-
-    // public function user(){
-    //     return $this->hasOne(User::class, $this->member->user_id, 'id');
-    // }
+    }    
 
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class);
@@ -43,6 +53,10 @@ class Student extends Model
     public function balance(){
         return $this->hasOne(Balance::class, 'id', 'balance_id');
     }  
+
+    public function discounts(){
+        return $this->hasMany(StudentDiscounts::class, 'student_id', 'id');
+    }
 
     public function setAgeAttribute($id)
     {
@@ -138,8 +152,69 @@ class Student extends Model
     public function getLevelDescAttribute()
     {
         return $this->attributes['level_desc'];
+    }  
+
+    public function getPronounAttribute(){
+        if($this->gender == 'male')
+            $this->attributes['pronoun'] = 'his';
+        else if($this->gender == 'female')
+            $this->attributes['pronoun'] = 'her';
+        else 
+            $this->attributes['pronoun'] = 'they';
+
+        return $this->attributes['pronoun'];
     }
 
+    public function getTuitionWithoutDiscountAttribute(){
+        $merged_fees = Fee::getMergedFees($this->department, $this->program_id, $this->level, $this->semester);
+        $setting = Setting::first();
 
+        $total_unit_price_this_sem = 0;
+        $total_fee_amount = 0;
+        $tuition = 0;
+
+        if(!$this->program->is_tesda){
+            $subjects_set = SubjectTaken::enrolledSubjectsbyStudent($this->id);          
+            foreach($subjects_set as $subject){
+                $total_unit_price_this_sem+= $this->department == 0 ? $setting->shs_price_per_unit * $subject->units : $setting->college_price_per_unit * $subject->units;
+            } 
+
+            foreach($merged_fees as $fee){
+                $total_fee_amount+= $fee->amount;
+            }
+
+            $tuition = $total_unit_price_this_sem + $total_fee_amount;
+
+        } else {
+
+            foreach($merged_fees as $fee){
+                $total_fee_amount+= $fee->amount;
+            }
+
+            $tuition = $total_unit_price_this_sem + $total_fee_amount;
+
+        }
+
+        return $this->attributes['tuition_without_discount'] = $tuition;
+
+    }
+
+    public function getTuitionWithDiscountAttribute(){
+        $total_discount_percentage = 0;
+        $discounts = collect(new Discount);
+
+        foreach($this->discounts as $discount_rel){
+            $discounts->push(Discount::find($discount_rel->discount_id));
+        }
+
+        foreach($discounts as $discount){
+            $total_discount_percentage += $discount->percentage;
+        }        
+
+        $tuition = $this->tuition_without_discount * ($total_discount_percentage / 100);
+
+        return $this->attributes['tuition_with_discount'] = $tuition;
+
+    }
 
 }

@@ -16,7 +16,7 @@
                     <div class="p-2 d-none" id="is-tesda-div">
                         <label class="px-2 pb-4" for="">Is this a Tesda Program? Check if yes</label>
                         <input type="checkbox" name="is_tesda" style="width: 20px; height: 20px;">                        
-                        <i type="button" class="fa fa-info-circle text-info ml-2" data-toggle="tooltip" title="TESDA courses are not affected by unit pricing" aria-hidden="true"></i>                        
+                        <i type="button" class="fa fa-info-circle text-info ml-2" data-toggle="tooltip" title="TESDA courses are not affected by CHED rules like unit pricing, unit scheduling and general subjects" aria-hidden="true"></i>                        
                     </div>
                     
                 </div>

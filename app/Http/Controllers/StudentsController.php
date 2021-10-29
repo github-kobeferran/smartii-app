@@ -18,6 +18,8 @@ use App\Models\User;
 use App\Models\Invoice;
 use App\Models\PaymentRequest;
 use App\Models\Fee;
+use App\Models\Discount;
+use App\Models\StudentDiscounts;
 use App\Mail\WelcomeMember;
 use Carbon\Carbon;
 use App\Exports\StudentsExport;
@@ -51,7 +53,8 @@ class StudentsController extends Controller
                 $student->dept = $student->department;
                 $student->program_desc = $student->program_id;
                 $student->balance_amount = $student->balance_id;
-                $student->level_desc = $student->level;                
+                $student->level_desc = $student->level;                                
+                $student->pronoun;
 
                return view('student.profile')
                         ->with('student', $student)
@@ -125,8 +128,8 @@ class StudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
-
+    {                      
+        
         $before_date = Carbon::now()->subYears(15);       
         $after_date = new Carbon('1903-01-01');
 
@@ -149,8 +152,8 @@ class StudentsController extends Controller
         if ($validator->fails()) {
             return redirect()
                             ->route('adminCreate')
-                            ->withErrors($validator)
                             ->withInput()
+                            ->withErrors($validator)                            
                             ->with('active', 'student');
         }      
         
@@ -159,6 +162,7 @@ class StudentsController extends Controller
             if(Student::where('student_id', $request->input('student_id'))->exists()){
                 return redirect()
                             ->route('adminCreate')
+                            ->withInput()
                             ->with('error', 'Student ID Already Exist')
                             ->with('active', 'student');
             }
@@ -169,6 +173,7 @@ class StudentsController extends Controller
             if(Student::where('email', $request->input('email'))->exists()){
                 return redirect()
                             ->route('adminCreate')
+                            ->withInput()
                             ->with('error', 'Email Already Exist')
                             ->with('active', 'student');
             }
@@ -176,6 +181,7 @@ class StudentsController extends Controller
             if(User::where('email', $request->input('email'))->exists()){
                 return redirect()
                             ->route('adminCreate')
+                            ->withInput()
                             ->with('error', 'Email Already Exist')
                             ->with('active', 'student');
             }
@@ -203,6 +209,7 @@ class StudentsController extends Controller
                     $valid = false;
                     return redirect()
                                     ->route('adminCreate')
+                                    ->withInput()
                                     ->with('error', 'Subject Details incomplete')
                                     ->with('active', 'student');
 
@@ -212,7 +219,26 @@ class StudentsController extends Controller
 
             
         }
-        
+
+        $mergedDiscounts = collect(new Discount);
+        $total_percentage = 0;
+
+       if($request->filled('discount')){
+            foreach($request->input('discount') as $id){
+                if($id == 0)
+                    return redirect()->route('adminCreate')->with('error', 'You must unselect "No Discount" option')->with('active', 'student');                            
+                
+                $mergedDiscounts->push(Discount::find($id));  
+                
+                $new_total = $total_percentage + Discount::find($id)->percentage;
+
+                if($new_total >= 100)   
+                    return redirect()->route('adminCreate')->with('error', 'Discount Percentage exceeds 100%')->with('active', 'student');
+                else 
+                    $total_percentage += $new_total;
+            }
+       }
+
         $student = new Student;        
 
         $student->last_name = $request->input('last_name');
@@ -387,6 +413,26 @@ class StudentsController extends Controller
                         
                         foreach($mergedFees as $fee){
                             $studentBalance->amount+= $fee->amount;
+                        }
+
+                        if($studentBalance->amount > 0){
+                            if($mergedDiscounts->count() > 0){  
+                                $total_percentage = 0;     
+
+                                foreach($mergedDiscounts as $discount){
+                                    $total_percentage+= ($discount->percentage / 100);
+
+                                    $stud_discount = new StudentDiscounts;
+
+                                    $stud_discount->student_id = $student->id;
+                                    $stud_discount->discount_id = $discount->id;
+
+                                    $stud_discount->save();
+
+                                }
+
+                                $studentBalance->amount-= ($studentBalance->amount * $total_percentage);
+                            }                    
                         }
 
                         $studentBalance->amount+= $totalBalance;

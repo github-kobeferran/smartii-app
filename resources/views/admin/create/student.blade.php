@@ -152,7 +152,27 @@
       
 
     <hr class= "w-75 ml-0"/> 
-    
+
+    @if (\App\Models\Discount::count() > 0)
+
+        <div class="row mb-2">
+            <div class="col-2 ">
+                    <label class="align-middle" for="">Apply a Discount</label>
+            </div>
+            <div class="col">
+                <select name="discount[]" value="" id="select-discount" class="form-control w-50 " multiple>                    
+                    @foreach (\App\Models\Discount::all() as $discount)
+                        <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+                        
+
+    @else
+
+    @endif
+      
     <div class="row" >
 
         <div class="col-sm">

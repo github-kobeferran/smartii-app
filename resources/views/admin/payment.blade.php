@@ -47,52 +47,112 @@
 
     <div class="row no-gutters">
         <div class="col"><p class="h3">Payment for:</p></div>
-        <div class="col "> 
-            <div class="custom-control custom-switch text-right">
+        <div class="col d-flex d-flex justify-content-end "> 
+            <div class="custom-control custom-switch text-right mx-1">
                 <input name="print_receipt" type="checkbox" class="custom-control-input" id="printSwitch" checked>
                 <label class="custom-control-label" for="printSwitch">
                     <strong>Generate Receipt</strong>
                 </label>                
             </div>
+
+            <div class="text-right mx-1 mb-3 mr-0">
+                <button type="button" id="toggleDiscountButton" class="btn btn-light border">
+                    Show Discounts                     
+                </button>
+            </div>
+
         </div>
     </div>
 
-
-    <div class="card shadow border-primary">
-        <h4 id="stud-details" class="card-header"></h4>
-
-        <div class="card-body">
-            <h4 id="stud-balance" class="card-title"></h4>            
-
-            <input id="stud-hidden" name="stud_id" type="hidden" class="">
-            <input id="stud-hidden-balance" name="balance" type="hidden" class="">
+    <div class="row">
+        <div class="col">
             
-            <div>
-                <label class="py-0 my-0" for="">Amount to Pay</label>
-                <input id="payment-input" name="amount_to_pay" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Payment Amount" required>    
-            </div>
-            <div>
-                <label class="py-0 my-0" for="">Amount Received</label>
-                <input id="payment-received-input" name="amount_received" style="font-family: 'Source Code Pro', monospace; font-size: 2em;" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Received Payment Amount" required>                            
-            </div>
+            <div class="card shadow border-primary">
+                <h4 id="stud-details" class="card-header"></h4>
 
-            <div class="row no-gutters">
-                <div class="col-3">
-                    <button type="submit" class="btn btn-success mr-2">Enter Payment <i class="fa fa-check text-white" aria-hidden="true"></i></button>
+                <div class="card-body">
+                    <h4 id="stud-balance" class="card-title"></h4>            
+
+                    <input id="stud-hidden" name="stud_id" type="hidden" class="">
+                    <input id="stud-hidden-balance" name="balance" type="hidden" class="">
+                    
+                    <div>
+                        <label class="py-0 my-0" for="">Amount to Pay</label>
+                        <input id="payment-input" name="amount_to_pay" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Payment Amount" required>    
+                    </div>
+
+                    <div>
+                        <label class="py-0 my-0" for="">Amount Received</label>
+                        <input id="payment-received-input" name="amount_received" style="font-family: 'Source Code Pro', monospace; font-size: 2em;" min="50" type="number" step="any" class="form-control form-control-lg text-right mb-2" placeholder="Input Received Payment Amount" required>                            
+                    </div>
+                                     
+
+                    <div class="row no-gutters">
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-success mr-2">Enter Payment <i class="fa fa-check text-white" aria-hidden="true"></i></button>
+                        </div>
+                        
+                        <div class="col-3">
+                            <button type="button" onclick="cancelPayment()" class="btn btn-warning">Cancel <i class="fa fa-times-circle text-danger" aria-hidden="true"></i></button>
+                        </div>
+
+                        <div class="col text-right">                    
+                            <h4 id="change-output" class="" >Change: </h4>                                        
+                        </div>                                        
+                    </div>
+
+                    {{Form::hidden('change', 0, ['id' => 'change-hidden'])}}
+
                 </div>
-                
-                <div class="col-3">
-                    <button type="button" onclick="cancelPayment()" class="btn btn-warning">Cancel <i class="fa fa-times-circle text-danger" aria-hidden="true"></i></button>
-                </div>
-
-                <div class="col text-right">                    
-                    <h4 id="change-output" class="" >Change: </h4>                                        
-                </div>                                        
             </div>
-
-            {{Form::hidden('change', 0, ['id' => 'change-hidden'])}}
 
         </div>
+
+        <div class="col d-none" id="discounts-panel">
+
+            <div class="table-responsive">
+                <div class="text-right py-1">
+                    <button class="btn btn-outline-success rounded-0 text-dark">Add a Discount</button>
+                </div>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="bg-success">
+                            <td>Description</td>
+                            <td>Percent</td>
+                            <td>Student Count</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>                        
+                        @empty(\App\Models\Discount::all())
+
+                            <div class="text-center">
+                                <em>No Discounts yet. Add one</em>
+                            </div>
+
+                        @else
+
+                            @foreach (\App\Models\Discount::all() as $discount)
+                                
+                                <tr>
+                                    <td>{{$discount->description}}</td>
+                                    <td>{{number_format($discount->percent, 1)}} %</td>
+                                    <td></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary">Edit</button>
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        @endempty
+                    </tbody>                                        
+                </table>
+            </div>
+
+        </div>
+
     </div>
 
 {!! Form::close() !!}
@@ -138,6 +198,8 @@ let balance_amount = 0;
 let changeOutput;
 let change = 0;
 let printSwitch;
+let toggleDiscountButton;
+
 
 window.addEventListener('load', (event) => {         
         
@@ -181,7 +243,26 @@ window.addEventListener('load', (event) => {
 
     });
 
+    toggleDiscountButton = document.getElementById('toggleDiscountButton');
+    discountsPanel = document.getElementById('discounts-panel');
+
+
+    toggleDiscountButton.addEventListener('click', () => {
+
+        if(toggleDiscountButton.classList.contains('active')){        
+            toggleDiscountButton.classList.remove('active');
+            toggleDiscountButton.textContent = "Show Discounts";            
+            discountsPanel.classList.add('d-none');
+        } else {
+            toggleDiscountButton.classList.add('active');
+            toggleDiscountButton.textContent = "Hide Discounts";
+            discountsPanel.classList.remove('d-none');
+            
+        }      
+    });
+  
 }); 
+
 
 
 

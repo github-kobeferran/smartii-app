@@ -33,17 +33,17 @@ class SubjectTaken extends Model
         return $this->belongsTo(Subject::class, 'subject_id', 'id');
     }
 
-    public function setUnitsAttribute($id)
-    {
-        $subject = Subject::find($id);
+    // public function setUnitsAttribute($id)
+    // {
+    //     $subject = Subject::find($id);
 
-        $this->attributes['units'] = $subject->units;
-    }
+    //     $this->attributes['units'] = $subject->units;
+    // }
 
-    public function getUnitsAttribute()
-    {
-        return $this->attributes['units'];
-    }
+    // public function getUnitsAttribute()
+    // {
+    //     return $this->attributes['units'];
+    // }
     
     public function setSubjDescAttribute($id)
     {

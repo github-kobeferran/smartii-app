@@ -26,6 +26,7 @@ use App\Models\Schedule;
 use App\Models\Announcement;
 use App\Models\Fee;
 use App\Models\StudentClass;
+use App\Models\Discount;
 use App\Mail\WelcomeMember;
 use App\Mail\ApprovedApplicant;
 use Carbon\Carbon;
@@ -405,6 +406,11 @@ class AdminsController extends Controller
                 return $fee;
 
             break;        
+            case 'discounts':
+
+                return Discount::find($id);
+
+            break;
             default:
             redirect('/home');
         }
