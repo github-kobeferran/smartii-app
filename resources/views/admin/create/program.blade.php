@@ -219,8 +219,8 @@ function programsSelect(id){
                         <h5 id="desc">${program.desc.toUpperCase()}</h5>
                         <p>Program Description</p>
 
-                        <button onclick="progEdit(${program.id})" type="button" class="btn btn-info text-white">Edit</button>
-                        <button href="" class="btn btn-danger text-white" disabled>Delete</button>
+                        <button onclick="progEdit(${program.id})" type="button" class="btn btn-primary text-white" >Edit</button>
+                        <button class="btn btn-danger text-white" disabled>Delete</button>
 
                     </div>`;
                     

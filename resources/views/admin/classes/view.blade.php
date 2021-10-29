@@ -456,7 +456,6 @@ function editSched(schedID){
 
     editPanel.scrollIntoView({behavior: 'smooth'});
 
-
 }
 
 function availableFacultyExcept(facultyID){

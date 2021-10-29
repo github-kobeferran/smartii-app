@@ -108,13 +108,52 @@
 
         </div>
 
+{!! Form::close() !!}
+
         <div class="col d-none" id="discounts-panel">
 
             <div class="table-responsive">
-                <div class="text-right py-1">
-                    <button class="btn btn-outline-success rounded-0 text-dark">Add a Discount</button>
+
+                <div class="row">
+                    <div class="col text-left mb-0">
+                        <h5>Discounts Table</h5>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" data-toggle="modal" data-target="#create-discount" class="btn btn-outline-success rounded-0 text-dark mb-2">Add a Discount</button>
+                    </div>                    
                 </div>
-                <table class="table table-bordered table-striped">
+
+                <div class="modal fade" id="create-discount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                          <h6 class="modal-title" id="exampleModalLongTitle">Create a Discount</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        {{Form::open(['url' => '/storediscount'])}}
+                            <div class="modal-body">                                                                                                
+
+                                <div class="form-group">
+                                    <label for="">Discount Description</label>
+                                    {{Form::text('description', '', ['class' => 'form-control rounded-0', 'required' => 'required', 'maxlength' => '100'])}}
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Discount Percentage</label>
+                                    {{Form::number('percentage', 0.01, ['step' => 'any', 'min' => '0.01', 'max' => '100', 'class' => 'form-control rounded-0 w-25', 'required' => 'required'])}}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        {{Form::close()}}
+                      </div>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-striped text-center shadow">
                     <thead>
                         <tr class="bg-success">
                             <td>Description</td>
@@ -123,7 +162,7 @@
                             <td>Action</td>
                         </tr>
                     </thead>
-                    <tbody>                        
+                    <tbody >                        
                         @empty(\App\Models\Discount::all())
 
                             <div class="text-center">
@@ -136,12 +175,83 @@
                                 
                                 <tr>
                                     <td>{{$discount->description}}</td>
-                                    <td>{{number_format($discount->percent, 1)}} %</td>
-                                    <td></td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary">Edit</button>
-                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    <td>{{number_format($discount->percentage, 1)}} %</td>
+                                    <td>{{$discount->students->count()}}</td>
+                                    <td >
+                                        <button type="button" data-toggle="modal" data-target="#edit-discount-{{$discount->id}}" class="btn btn-primary my-1">Edit</button>
+                                        <button type="button" data-toggle="modal" data-target="#delete-discount-{{$discount->id}}" class="btn btn-danger my-1">Delete</button>                                        
+                                        
                                     </td>
+
+                                    <div class="modal fade" id="edit-discount-{{$discount->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header bg-primary text-white">
+                                              <h6 class="modal-title" id="exampleModalLongTitle">Edit {{$discount->description}}</h6>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            {{Form::open(['url' => '/updatediscount'])}}
+                                                <div class="modal-body">
+                                                    {{Form::hidden('id', $discount->id)}}
+
+                                                    <div class="bg-warning p-1 rounded">
+                                                        <h5>WARNING</h5>
+                                                        This will <b>NOT</b> update attached student's balances. <br>
+                                                        But will <b>UPDATE</b> future student who wil be applied to this discount
+                                                    </div>
+
+                                                    <hr>
+
+                                                    <div class="form-group">
+                                                        <label for="">Discount Description</label>
+                                                        {{Form::text('description', $discount->description, ['class' => 'form-control rounded-0', 'required' => 'required', 'maxlength' => '100'])}}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Discount Percentage</label>
+                                                        {{Form::number('percentage', $discount->percentage, ['step' => 'any', 'min' => '0.01', 'max' => '100', 'class' => 'form-control rounded-0 w-25', 'required' => 'required'])}}
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            {{Form::close()}}
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal fade" id="delete-discount-{{$discount->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                              <h6 class="modal-title" id="exampleModalLongTitle">Delete {{$discount->description}}</h6>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            {{Form::open(['url' => '/deletediscount'])}}
+                                                <div class="modal-body">
+                                                    {{Form::hidden('id', $discount->id)}}
+                                                    <div class="bg-warning p-1 rounded">
+                                                        <h5>WARNING</h5>
+                                                        This will <b>NOT</b> update student's balances. <br>
+                                                        But <b>WILL</b> delete any student-discount attatchments related to it. <br>
+                                                        <br>
+                                                        You have to remove it to each student one by one if you want to update student balance.
+                                                    </div>
+                                                    <b>Do you want to continue to delete this discount? </b>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-danger">Yes</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            {{Form::close()}}
+                                          </div>
+                                        </div>
+                                    </div>
+
                                 </tr>
 
                             @endforeach
@@ -155,7 +265,9 @@
 
     </div>
 
-{!! Form::close() !!}
+
+
+
 <div id="invoices-table" class="d-none">
     
     <h5>Kobe Ferran's Invoices</h5>

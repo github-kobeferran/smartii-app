@@ -296,7 +296,9 @@
         <div class="d-flex flex-wrap justify-content-center">
 
             <button data-toggle="modal" data-target="#applicantsCount" type="button" class="btn btn-primary btn-lg m-1">
-                Applicants <span class="badge badge-light">{{\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span>
+                <i class="fa fa-list text-dark" aria-hidden="true"></i>
+                Pending Applicants 
+                <span class="badge badge-light">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->count()}}</span>                 
               </button>
               <a href="#statistics" type="button" class="btn btn-primary btn-lg m-1">
                 Students <span class="badge badge-light">{{$studentCount}}</span>

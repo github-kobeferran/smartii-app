@@ -13,5 +13,5 @@ class Discount extends Model
     public function students(){
         return $this->hasMany(StudentDiscounts::class, 'discount_id', 'id');
     }
-    
+        
 }

@@ -87,7 +87,7 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
 
     <div class="d-flex justify-content-center flex-wrap">
 
-        <div class="text-center">
+        <div class="text-center px-2">
             
             @empty(!\App\Models\Announcement::all())
                                               

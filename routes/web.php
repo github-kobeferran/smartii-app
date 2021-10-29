@@ -158,6 +158,10 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::any('/attachdiscount', [App\Http\Controllers\StudentDiscountsController::class, 'attachToStudent'])->name('student_discounts.attach');    
     Route::any('/detachdiscount', [App\Http\Controllers\StudentDiscountsController::class, 'detachFromStudent'])->name('student_discounts.detach');    
+    Route::any('/updatediscount', [App\Http\Controllers\DiscountsController::class, 'update'])->name('discount.update');    
+    Route::any('/deletediscount', [App\Http\Controllers\DiscountsController::class, 'delete'])->name('discount.delete');    
+    Route::any('/storediscount', [App\Http\Controllers\DiscountsController::class, 'store'])->name('discount.store');    
+    
     
     
 });

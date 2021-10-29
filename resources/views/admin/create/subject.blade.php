@@ -113,7 +113,7 @@
 
 <h5>VIEW SUBJECTS</h5>
 
-<div class="row no-gutters vh-100">
+<div class="row no-gutters">
 
     <div class="col-5 border-right">
 
@@ -139,15 +139,11 @@
 
     </div>
 
-    <div class="col-7">
-
+    <div class="col-7">        
         
-        
-        <div class="align-middle">
+        <div class="align-middle" >
 
             <div id="subject-panel">
-
-            
 
             </div>
 
@@ -195,8 +191,6 @@
                 {!! Form::close() !!}
 
             </div>
-           
-            
 
         </div>
         
@@ -423,8 +417,8 @@ function subjectClicked(id){
 
                                 </tr>
 
-                            </table>     
-                            `;
+                            </table> 
+                        </div>`;
           
 
             subjectPanel.innerHTML = output;
@@ -537,6 +531,8 @@ function showEdit(id, dept){
 
     xhr.send();
 
+    editPanel.scrollIntoView({behavior: 'smooth'});
+
 }
 
 function cancelSubjEdit(){          
@@ -643,7 +639,9 @@ subjectSearch.addEventListener('keyup' , async () => {
     const subjects = await res.json();
 
 
-    let output = `<div id="subject-list" style="max-height: 75%; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
+    let output = `<div id="subject-list" style="max-height: 75%; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="">
+            <ul class="list-group>"
+    `;
     
     subjects.forEach((subject) => {
 
@@ -651,7 +649,8 @@ subjectSearch.addEventListener('keyup' , async () => {
 
     });
 
-    output+= `</div>`;
+    output+= `</ul>
+    </div>`;
 
     subjectList.innerHTML = output;
 
@@ -854,7 +853,5 @@ async function changeToUnitsOrHours(id){
     }
 
 }
-
-
 
 </script>

@@ -154,8 +154,8 @@
                         Balance
                     </td>
 
-                    <td class="w-50">
-                        {{  ucfirst($student->balance_amount)}}
+                    <td style="font-family: 'Source Code Pro', monospace;" class="w-50">
+                        &#8369; {{number_format($student->balance_amount, 2)}}
                     </td>
 
                 </tr>
