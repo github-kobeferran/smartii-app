@@ -151,7 +151,7 @@
 
                 {!! Form::open(['url' => '/updatesubject', 'class' => 'p-2 m-2']) !!}
 
-                <h5>Edit: <span id="edit-subj-title"> </span></h5>
+                <h5 class=""> Edit <i class="fa fa-caret-right"></i> <span id="edit-subj-title"> </span></h5>                
                 {{Form::hidden('subject_id', null, ['id' => 'subj-id'])}}
                 Code
                 {{Form::text('code', '', ['id'=> 'edit-code', 'class' => 'form-control'])}}
@@ -477,13 +477,27 @@ function showEdit(id, dept){
                 for(let i=0; i<editLevelCOL.length; i++){
 
                     if(editLevelCOL.options[i].value == subject.level)
-                    editLevelCOL.selectedIndex = i;
+                        editLevelCOL.selectedIndex = i;
 
                 }
                 
             }                
 
             editDept.value = subject.dept;
+
+            editDept.addEventListener('change', async () => {
+                const res = await fetch(APP_URL + '/admin/view/programs/department/' + editDept.value);
+                const programs = await res.json();
+
+                for(i = 0; i < editProg.length; i++){
+                    editProg.remove(i);
+                }
+
+                programs.forEach((program, i) => {
+                    editProg.options[i] = new Option(program.abbrv + ' - ' + program.desc, program.id); 
+                });          
+            });
+
             editUnits.value = subject.units;   
             editProg.value = subject.program_id;            
 
@@ -497,28 +511,23 @@ function showEdit(id, dept){
                 editUnits.setAttribute('max', 12);
                 editUnits.setAttribute('step', 3);
                 document.getElementById('edit-is-tesda').value = 0;
-            }                                        
+            }
 
             editProg.addEventListener('change', async () => {
                 const res = await fetch(APP_URL + '/admin/view/programs/' + editProg.value);
                 const program = await res.json();                  
 
-                console.log(editProg.value);
-                console.log(program);
-
                 if(program.is_tesda == 1){     
-
+                    editUnits.value = 10;
                     editUnits.setAttribute('min', 10);
                     editUnits.setAttribute('max', 500);           
                     editUnits.setAttribute('step', 1);            
-
                     document.getElementById('edit-is-tesda').value = 1;
-
-                } else {        
+                } else {                            
+                    editUnits.value = 3;
                     editUnits.setAttribute('min', 3);
                     editUnits.setAttribute('max', 12);
                     editUnits.setAttribute('step', 3);
-
                     document.getElementById('edit-is-tesda').value = 0;
                 }
 
@@ -636,17 +645,16 @@ subjectSearch.addEventListener('keyup' , async () => {
     const res = await fetch(APP_URL + '/admin/search/subjects/' + (subjectSearch.value == '' ? 'SearchInputIsEmpty' : subjectSearch.value )+ '/' + curDept)
                         .catch((error) => {console.log(error)});
 
-    const subjects = await res.json();
+    const subjects = await res.json();    
 
+    subjectList.innerHTML = '';
 
     let output = `<div id="subject-list" style="max-height: 75%; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="">
-            <ul class="list-group>"
-    `;
-    
-    subjects.forEach((subject) => {
+            <ul class="list-group">
+    `;        
 
+    subjects.forEach((subject) => {                
         output+= `<li role="button" id="subj-${subject.id}" onclick="subjectClicked(${subject.id})" class="btn-subject list-group-item">${subject.desc} </li>`;    
-
     });
 
     output+= `</ul>

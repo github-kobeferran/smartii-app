@@ -195,7 +195,23 @@ class SubjectsController extends Controller
                          ->withErrors($validator)
                          ->withInput()
                          ->with('active','subject');
-        }                
+        }      
+        
+        foreach(Subject::all() as $subject){
+
+            foreach($subject->pre_reqs as $pre_req){
+
+                if($pre_req->id == $request->input('subject_id')){
+
+                    return redirect()->route('adminCreate')
+                        ->with('active', 'subject')
+                        ->with('error', 'Can\'t update a Pre-Requisite Subject.');
+
+                }
+
+            }
+
+        }
 
         $subject = Subject::find($request->input('subject_id'));
 

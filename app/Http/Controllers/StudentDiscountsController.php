@@ -21,7 +21,7 @@ class StudentDiscountsController extends Controller
 
             $new_total = $total_percentage + $discount->percentage;
 
-            if($new_total >= 100)   
+            if($new_total > 100)   
                 return redirect('/studentprofile/' . $student->student_id)->with('error', 'Discount Percentage exceeds 100%')->with('active', 'student');
             else 
                 $total_percentage += $new_total; 

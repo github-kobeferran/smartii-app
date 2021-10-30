@@ -176,12 +176,66 @@
                                 <tr>
                                     <td>{{$discount->description}}</td>
                                     <td>{{number_format($discount->percentage, 1)}} %</td>
-                                    <td>{{$discount->students->count()}}</td>
+                                    <td><span class="badge badge-info text-white" type="button" data-toggle="modal" data-target="#student-list-{{$discount->id}}">{{$discount->students->count()}}</span></td>                                    
                                     <td >
                                         <button type="button" data-toggle="modal" data-target="#edit-discount-{{$discount->id}}" class="btn btn-primary my-1">Edit</button>
                                         <button type="button" data-toggle="modal" data-target="#delete-discount-{{$discount->id}}" class="btn btn-danger my-1">Delete</button>                                        
-                                        
                                     </td>
+
+                                    <div class="modal fade" id="student-list-{{$discount->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header bg-info text-white">
+                                              <h6 class="modal-title" id="exampleModalLongTitle">Students with {{$discount->description}} attachment</h6>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+
+                                            <div class="modal-body p-1">                                                
+                                                <ul class="list-group">
+                                                    @if ($discount->students->count() > 0)
+                                                        @foreach ($discount->students as $student_rel)                                                            
+                                                            <li class="list-group-item">
+
+                                                                <div class="row border my-2 mx-auto py-2 ">
+
+                                                                    <div class="col border-right">
+        
+                                                                        <span class="text-left " >
+                                                                            <a href="{{url('/studentprofile/' . $student_rel->student->student_id)}}">{{$student_rel->student->student_id}}</a>
+                                                                        </span>
+                                                                        
+                                                                    </div>
+                                                                    <div class="col text-left border-right">
+                                                                        
+                                                                        <span >
+                                                                            {{ucfirst($student_rel->student->first_name) . ' ' . ucfirst($student_rel->student->last_name)}}
+                                                                        </span>
+        
+                                                                    </div>
+                                                                    <div class="col text-center">
+                                                                        
+                                                                        <span >
+                                                                            {{$student_rel->student->program->abbrv}}
+                                                                        </span>
+        
+                                                                    </div>
+        
+                                                                    
+                                                                </div>  
+                                                                
+                                                            </li>
+                                                        @endforeach
+                                                    @else
+                                                        <p class="mx-auto">No students attached to this discount</p>
+                                                    @endif
+                                                </ul>
+                                            </div>
+                                           
+                                          </div>
+                                        </div>
+                                    </div>
 
                                     <div class="modal fade" id="edit-discount-{{$discount->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">

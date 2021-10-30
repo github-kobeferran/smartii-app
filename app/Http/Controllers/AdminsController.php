@@ -785,10 +785,25 @@ class AdminsController extends Controller
                        
                    } else {
 
-                        return Subject::query()                        
+                        $subjects = Subject::query()                        
                         ->where('desc', 'LIKE', '%' . $text . "%")
                         ->where('dept', 0)
                         ->orderBy('desc', 'asc')->get();
+
+                        $othersubjs = Subject::where('dept', 0)->get()->diff($subjects);
+                        
+                        foreach($othersubjs as $item){
+                            if($item->program()
+                                    ->where(function($query) use($text){
+                                        $query->where('desc', 'LIKE', '%' . $text . "%")
+                                        ->orWhere('abbrv', 'LIKE', '%' . $text . "%");
+                                    })  
+                                    ->where('id', 0)
+                                    ->exists())
+                                $subjects->push($item);
+                        }   
+
+                    return $subjects;
                    }
 
                 } else if ($dept == 1){
@@ -799,13 +814,29 @@ class AdminsController extends Controller
                             ->orderBy('desc', 'asc')->get();
                         
                     } else {
-                        return Subject::query()                        
+                        $subjects = Subject::query()                        
                         ->where('desc', 'LIKE', '%' . $text . "%")
                         ->where('dept', 1)
                         ->orderBy('desc', 'asc')->get();
+
+                        $othersubjs = Subject::where('dept', 1)->get()->diff($subjects);                        
+                        
+                        foreach($othersubjs as $item){
+                            if($item->program()                                    
+                                    ->where(function($query) use($text){
+                                        $query->where('desc', 'LIKE', '%' . $text . "%")
+                                              ->orWhere('abbrv', 'LIKE', '%' . $text . "%");
+                                    })                                                                       
+                                    ->exists())
+                                $subjects->push($item);
+                        }   
+
+                        return $subjects;
+
                     }
 
                 } else {
+                    
                     return Subject::where('dept', 0)
                     ->orderBy('desc', 'asc')->get();
                 }
