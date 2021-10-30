@@ -74,7 +74,7 @@
 
             <div class = "form-group">        
                 {{Form::label('theContact', 'Contact Number', ['class' => 'mt'])}}
-                {{Form::text('contact', '', ['maxlength' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..'])}}
+                {{Form::text('contact', '', ['minlength' => '11', 'maxlength' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..', 'id' => 'contactInput'])}}
             </div> 
 
         </div>
@@ -91,12 +91,12 @@
 
             <div class = "form-group">        
                 {{Form::label('lastName', 'Last Name', ['class' => 'mt'])}}
-                {{Form::text('last_name', '', ['class' => 'form-control', 'placeholder' => 'Last Name here..'])}}
+                {{Form::text('last_name', '', ['class' => 'form-control', 'placeholder' => 'Last Name here..', 'required' => 'required'])}}
             </div> 
 
             <div class = "form-group">        
                 {{Form::label('middleName', 'Middle Name')}}
-                {{Form::text('middle_name', '', ['class' => 'form-control', 'placeholder' => 'Middle Name here..'])}}
+                {{Form::text('middle_name', '', ['class' => 'form-control', 'placeholder' => 'Middle Name here..', 'required' => 'required'])}}
             </div> 
                    
         </div>
@@ -105,7 +105,7 @@
 
             <div class = "form-group">        
                 {{Form::label('firstName', 'First Name')}}
-                {{Form::text('first_name', '', ['class' => 'form-control', 'placeholder' => 'First Name here..'])}}
+                {{Form::text('first_name', '', ['class' => 'form-control', 'placeholder' => 'First Name here..' , 'required' => 'required'])}}
             </div>  
 
             {{Form::label('', 'Date of Birth')}}
@@ -232,8 +232,14 @@ let selectDept = document.querySelector('#selectDept');
 let selectProg = document.querySelector('#selectProg');   
 let selectLevel = document.querySelector('#selectLevel');   
 let selectSemester = document.querySelector('#selectSemester');   
+let contactInput = document.querySelector('#contactInput');   
 
-
+contactInput.addEventListener("keypress", function (evt) {
+    if (evt.which < 48 || evt.which > 57)
+    {
+        evt.preventDefault();
+    }
+}); 
 
 document.querySelector('#newStudSwitch').addEventListener('click', () => {        
     toggleStudentID();

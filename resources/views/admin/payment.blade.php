@@ -387,10 +387,24 @@ window.addEventListener('load', (event) => {
         calculateChange();
     });
 
+    paymentInput.addEventListener("keypress", function (evt) {
+        if (evt.which < 48 || evt.which > 57)
+        {
+            evt.preventDefault();
+        }
+    });
+
     paymentReceivedInput =  document.getElementById('payment-received-input');
 
     paymentReceivedInput.addEventListener('input', calculateChange);  
-    paymentReceivedInput.addEventListener('keyup', calculateChange);  
+    paymentReceivedInput.addEventListener('keyup', calculateChange); 
+
+    paymentReceivedInput.addEventListener("keypress", function (evt) {
+        if (evt.which < 48 || evt.which > 57)
+        {
+            evt.preventDefault();
+        }
+    }); 
 
     changeHiddenInput =  document.getElementById('change-hidden');
 
@@ -648,24 +662,34 @@ function calculateChange(){
         if(paymentReceivedInput >= paymentInput){
 
             let payment_amount = paymentInput.value;
-            let payment_received_amount = paymentReceivedInput.value;
+            let payment_received_amount = paymentReceivedInput.value;           
 
-            let remainingBal = 0;
-
-            if(balance_amount > 0 ){
-                change = payment_received_amount - payment_amount;
-                remainingBal = balance_amount - payment_amount;
-            }            
-
-            if(change >= 0){
+            if(payment_received_amount < payment_amount){
+                
                 changeOutput.style.display = "block";        
-                changeOutput.innerHTML = `<h4 id="change-output" class="mr-2" >Change: &#8369; `+ change.toFixed(2) +` </h4>`;
-            }else{
-                changeOutput.style.display = "block";        
-                changeOutput.innerHTML = `<h4 id="change-output" class="mr-2" >Remaining Balance: &#8369; `+ remainingBal.toFixed(2) +` </h4>`;           
-            } 
+                changeOutput.innerHTML = `<h4 id="change-output" class="mr-2 text-danger" >Amount Received must be greater than or equal to Amount to Pay</h4>`;
 
-            changeHiddenInput.value = change;  
+            } else {
+
+                let remainingBal = 0;
+
+                if(balance_amount > 0){
+                    change = payment_received_amount - payment_amount;
+                    remainingBal = balance_amount - payment_amount;
+                } 
+
+                if(change >= 0){
+                    changeOutput.style.display = "block";        
+                    changeOutput.innerHTML = `<h4 id="change-output" class="mr-2 border border-dark rounded-0 p-2" >Change: &#8369; `+ change.toFixed(2) +` </h4>`;
+                }else{
+                    changeOutput.style.display = "block";        
+                    changeOutput.innerHTML = `<h4 id="change-output" class="mr-2 border border-dark rounded-0 p-2" >Remaining Balance: &#8369; `+ remainingBal.toFixed(2) +` </h4>`;           
+                } 
+
+
+            }       
+
+                changeHiddenInput.value = change;  
 
         }
 
