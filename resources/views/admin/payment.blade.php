@@ -40,9 +40,9 @@
                             <td class="border-right"><button type="button"  onclick="selectForPayment('{{$student->id}}')" class="btn btn-info text-white ">Payment</button></td>
                             <td class="border-right"><button type="button"  onclick="showInvoicesTable('{{$student->id}}')" class="btn btn-warning text-secondary">Invoices</button></td>
                             <td class="border-right"><a href="{{url('/studentprofile/' . $student->student_id)}}"> {{$student->student_id}}</a></td>
-                            <td class="border-right">{{$student->last_name . ', ' . $student->first_name . ' ' . strtoupper(substr($student->middle_name, 0, 1))}}</td> 
+                            <td class="border-right">{{$student->last_name . ', ' . $student->first_name . ' ' . (!is_null($student->middle_name) ? strtoupper(substr($student->middle_name, 0, 1)) . '.' : '') }}</td> 
                             <?php $student->level_desc = $student->level; ?>
-                            <td class="border-right">{{($student->department? 'College' : ' SHS') . ' |' . $student->program->desc . ' | ' . $student->level_desc }}</td>
+                            <td class="border-right">{{($student->department? 'College' : ' SHS') . ' | ' . $student->program->desc . ' | ' . $student->level_desc }}</td>
                             <td class="border-left">&#8369; <b>{{number_format($student->balance->amount, 2)}}</b></td>
                         </tr>
                     @endforeach

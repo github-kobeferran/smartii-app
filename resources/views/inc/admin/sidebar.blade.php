@@ -132,17 +132,6 @@
               font-weight: 300;
               src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
             }
-
-
-            /* @media (max-width: 768px) {
-                .main-menu {
-                    display: none;
-                }
-                #toggle {
-                    display: block;
-                }
-             
-            } */
             
 </style>
 
