@@ -19,8 +19,9 @@ class StudentClassesController extends Controller
     
     public function view(){
 
-        $archivedClasses = StudentClass::where('archive', 1)->paginate(1);     
-        $archivedClasses->withPath('/admin/classes/archived');                        
+        $archivedClasses = StudentClass::where('archive', 1)
+                                        ->orderBy('id', 'desc')
+                                        ->get();                                  
         
 
         return view('admin.classes')
@@ -45,21 +46,16 @@ class StudentClassesController extends Controller
     
         if(!is_null($text)){
 
-            $archivedClasses = StudentClass::where('archive', 1)->paginate();
+            $archivedClasses = StudentClass::where('archive', 1)->get();            
 
-            $counter = 1;
-
-            $archivedClasses->getCollection()->transform(function($archived_class) use($text, $counter){
-
-
+            $archivedClasses = $archivedClasses->filter(function($archived_class) use($text){
                 $valid = false;
-
                 $text = strtolower($text);
-
+                
                 if(str_contains(strtolower($archived_class->subjectsTaken->first()->sy_and_sem), $text)){
                     $valid = true;
                 }
-
+                
                 if(str_contains(strtolower($archived_class->subjectsTaken->first()->student->program->desc), $text)){
                     $valid = true;
                 }
@@ -86,34 +82,38 @@ class StudentClassesController extends Controller
 
                 if(str_contains(strtolower($archived_class->faculty->last_name), $text)){
                     $valid = true;
-                }              
+                }   
 
-                if($valid) {
-            
-                    return $archived_class;
+                return $valid == true;
 
-                } else{
 
-                }
-
-                $counter++;
-
-            });             
+            });        
                         
-        }else{
+        } else {
 
-            $archivedClasses = StudentClass::where('archive', 1)->paginate(2);     
+            $archivedClasses = StudentClass::where('archive', 1)->get();     
             
-        }           
-        
-        $archivedClasses->getCollection()->filter(function($item){
-            return $item != null;
-        });        
+        }     
+                
+        $sorted = $archivedClasses->sortByDesc('id');        
 
-        return view('admin.classes')
-               ->with('active', 'archived')
-               ->with('searchText', $text)
-               ->with('archivedClasses', $archivedClasses);               
+        foreach($sorted as $class){
+            $class->subjectsTaken = $class->subjectsTaken->filter(function($value){
+                return !is_null($value);
+            });
+            $class->subjectsTaken->first()->student->program_desc = $class->subjectsTaken->first()->student->program_id;
+            $class->faculty_name = $class->faculty_id;
+            $class->schedules = $class->schedules->filter(function($value){      
+                $value->start_time = Carbon::parse($value->start_time)->format('g:i A');
+                $value->until = Carbon::parse($value->until)->format('g:i A');
+                
+                return !is_null($value);
+            });   
+            
+                     
+        }
+        
+        return $sorted;
     }
 
 

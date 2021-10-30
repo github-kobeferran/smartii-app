@@ -182,7 +182,6 @@
                 {{Form::hidden('is_tesda', 0, ['id'=> 'edit-is-tesda', 'class' => 'form-control'])}}
 
                 <div class="form-group mt-2">
-
                     <button type="submit" class="btn btn-primary">Update</button>
                 <button type="button" onclick="cancelSubjEdit()" class="btn btn-danger">Cancel</button>
 

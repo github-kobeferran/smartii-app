@@ -227,7 +227,6 @@
 {!! Form::close() !!}
 
 <script>
-    
 let selectDept = document.querySelector('#selectDept');
 let selectProg = document.querySelector('#selectProg');   
 let selectLevel = document.querySelector('#selectLevel');   
