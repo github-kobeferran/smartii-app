@@ -98,10 +98,19 @@ class StudentClassesController extends Controller
         $sorted = $archivedClasses->sortByDesc('id');        
 
         foreach($sorted as $class){
+            
             $class->subjectsTaken = $class->subjectsTaken->filter(function($value){
                 return !is_null($value);
-            });
-            $class->subjectsTaken->first()->student->program_desc = $class->subjectsTaken->first()->student->program_id;
+            });        
+
+            $class->subjectsTaken->first()->student->program_desc = $class->subjectsTaken->first()->student->program_id;                        
+          
+            foreach($class->subjectsTaken as $subject_taken){
+                $subject_taken->student;
+                $subject_taken->student->program;
+                $subject_taken->subject;
+            }
+
             $class->faculty_name = $class->faculty_id;
             $class->schedules = $class->schedules->filter(function($value){      
                 $value->start_time = Carbon::parse($value->start_time)->format('g:i A');
@@ -112,6 +121,14 @@ class StudentClassesController extends Controller
             
                      
         }
+
+        // foreach($sorted as $class){
+        //     foreach($class->$subjectsTaken as $subjectTaken){
+        //         $subjectTaken->student;
+        //         $subjectTaken->student->program;
+        //     }
+
+        // }
         
         return $sorted;
     }

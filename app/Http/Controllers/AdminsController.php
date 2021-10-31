@@ -495,7 +495,8 @@ class AdminsController extends Controller
 
     public function showTableByTwo($table, $firstColumn, $firstValue, $secondColumn, $secondValue){
         switch($table){
-            case 'subjects':                    
+            case 'subjects':                                                    
+
                 $values = [$firstColumn => $firstValue,
                            $secondColumn => $secondValue];                
                         

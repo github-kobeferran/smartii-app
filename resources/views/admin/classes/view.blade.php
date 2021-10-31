@@ -330,90 +330,90 @@ function subjectSelect(subjid, subjDescAndCode, programid){
     xhr.onload = function() {
         if (this.status == 200) {
 
+
             let classes = JSON.parse(this.responseText);
 
-            console.log(classes);
+            if(classes && Object.keys(classes).length !== 0){
 
-            let output = `<div class="text-center container ">
-                            <div class=" row mt-2">
-                                <h5 class="mx-auto">${subjDescAndCode} Schedules</h5>                            
-                            </div>`;
+                currentProgram = classes[0].subjects_taken[0].student.program_id
 
-            output += `<div id="view-panel" class="row mt-2 d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;            
+                let output = `<div class="text-center container ">
+                                <div class=" row mt-2">
+                                    <h5 class="mx-auto">${subjDescAndCode} Schedules</h5>                            
+                                </div>`;
 
-            for(let i in classes){    
+                output += `<div id="view-panel" class="row mt-2 d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;            
 
-                
+                for(let i in classes){                    
 
-                let counter = 1;
-                
-                if(i % 2 == 0){
+                    let counter = 1;
+                    
+                    if(i % 2 == 0){
 
-                    output+= `<div class="card text-white bg-success m-2" style="min-width: 18rem; max-width: 18rem;">
-                                <div class="card-header">`+ classes[i].class_name +`</div>
-                                <div class="card-body">
-                                <h5 class="card-title text-white">`+classes[i].faculty_name +`</h5>`;
+                        output+= `<div class="card text-white bg-success m-2" style="min-width: 18rem; max-width: 18rem;">
+                                    <div class="card-header">`+ classes[i].class_name +`</div>
+                                    <div class="card-body">
+                                    <h5 class="card-title text-white">`+classes[i].faculty_name +`</h5>`;
+                                        classes[i].schedules.forEach(sched => {
+
+                                            output+=`<ul class="list-group bg-success list-group-flush text-center">`;
+                                                output+=`<li class="list-group-item list-group-item-success">`+ sched.day_name +`</li>`;
+                                                output+=`<li class="list-group-item list-group-item-success">`+ sched.formatted_start +`</li>`;
+                                                output+=`<li class="list-group-item list-group-item-success">`+ sched.formatted_until +`</li>`;
+                                                output+=`<li class="list-group-item list-group-item-success">`+ sched.room_name +`</li>`;
+                                                output+=`<li class="list-group-item list-group-item-success"><button onclick="editSched(` +sched.id +`)" class="btn btn-light">Edit this Sched</button></li>`;
+
+                                            output+=`</ul> 
+                                                <hr>
+                                            `;
+                                            ++counter;
+                                        });
+                            output+=`</div>
+                                </div>`;
+
+                    }else{
+                        output+= `<div class="card text-secondary bg-warning m-2" style="min-width: 18rem; max-width: 18rem;">
+                                    <div class="card-header">`+ classes[i].class_name +`</div>
+                                    <div class="card-body">
+                                    <h5 class="card-title">`+classes[i].faculty_name +`</h5>`;
+
                                     classes[i].schedules.forEach(sched => {
 
-                                        output+=`<ul class="list-group bg-success list-group-flush text-center">`;
-                                            output+=`<li class="list-group-item list-group-item-success">`+ sched.day_name +`</li>`;
-                                            output+=`<li class="list-group-item list-group-item-success">`+ sched.formatted_start +`</li>`;
-                                            output+=`<li class="list-group-item list-group-item-success">`+ sched.formatted_until +`</li>`;
-                                            output+=`<li class="list-group-item list-group-item-success">`+ sched.room_name +`</li>`;
-                                            output+=`<li class="list-group-item list-group-item-success"><button onclick="editSched(` +sched.id +`)" class="btn btn-light">Edit this Sched</button></li>`;
-
+                                        output+=`<ul class="list-group bg-warning list-group-flush text-center">`;
+                                            output+=`<li class="list-group-item list-group-item-warning">`+ sched.day_name +`</li>`;
+                                            output+=`<li class="list-group-item list-group-item-warning">`+ sched.formatted_start +`</li>`;
+                                            output+=`<li class="list-group-item list-group-item-warning">`+ sched.formatted_until +`</li>`;
+                                            output+=`<li class="list-group-item list-group-item-warning">`+ sched.room_name +`</li>`;
+                                            output+=`<li class="list-group-item list-group-item-warning"><button onclick="editSched(`+ sched.id +`)" class="btn btn-light">Edit this Sched</button></li>`;
+                                            
                                         output+=`</ul> 
                                             <hr>
                                         `;
                                         ++counter;
-                                    });
-                        output+=`</div>
-                            </div>`;
-
-                }else{
-                    output+= `<div class="card text-secondary bg-warning m-2" style="min-width: 18rem; max-width: 18rem;">
-                                <div class="card-header">`+ classes[i].class_name +`</div>
-                                <div class="card-body">
-                                <h5 class="card-title">`+classes[i].faculty_name +`</h5>`;
-
-                                classes[i].schedules.forEach(sched => {
-
-                                    output+=`<ul class="list-group bg-warning list-group-flush text-center">`;
-                                        output+=`<li class="list-group-item list-group-item-warning">`+ sched.day_name +`</li>`;
-                                        output+=`<li class="list-group-item list-group-item-warning">`+ sched.formatted_start +`</li>`;
-                                        output+=`<li class="list-group-item list-group-item-warning">`+ sched.formatted_until +`</li>`;
-                                        output+=`<li class="list-group-item list-group-item-warning">`+ sched.room_name +`</li>`;
-                                        output+=`<li class="list-group-item list-group-item-warning"><button onclick="editSched(`+ sched.id +`)" class="btn btn-light">Edit this Sched</button></li>`;
+                                        });
                                         
-                                    output+=`</ul> 
-                                        <hr>
-                                    `;
-                                    ++counter;
-                                    });
-                                    
-                    output+=`</div>
-                            </div> `;
+                        output+=`</div>
+                                </div> `;
+
+                    }
 
                 }
 
-            }
+                
 
-            
-
-            output+=`</div>
-                </div>`;
+                output+=`</div>
+                    </div>`;
 
 
-            viewPanel.innerHTML = output;
+                viewPanel.innerHTML = output;
 
+
+                }            
 
         }
     }
 
     xhr.send();
-
-
-    currentProgram = programid;
 
 }
 

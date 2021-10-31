@@ -106,7 +106,7 @@
                      'fri'=> 'Friday',
                      'sat'=> 'Saturday',                
                     ], null,
-                    ['name' => 'day', 'placeholder' => 'Pick a Day', 'class' => 'custom-select bg-light text-dark border-secondary', 'id' => 'selectDay'])}}            
+                    ['name' => 'day', 'placeholder' => 'Pick a Day', 'class' => 'custom-select bg-light text-dark border-secondary', 'id' => 'selectDay', 'required' => 'required'])}}            
     
                 </div>    
     
@@ -145,7 +145,7 @@
                         
                     {{Form::select('room', 
                     [], null,
-                    [ 'name' => 'room_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom'])}}            
+                    [ 'name' => 'room_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom', 'required' => 'required'])}}            
                 </div>    
     
             </div>
@@ -158,7 +158,7 @@
                         
                     {{Form::select('level', 
                     [], null,
-                    ['name' => 'instructor_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectFaculty'])}}            
+                    ['name' => 'instructor_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectFaculty', 'required' => 'required'])}}            
                 </div>    
     
             </div>

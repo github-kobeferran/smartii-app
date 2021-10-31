@@ -309,18 +309,26 @@ class Subject extends Model
             return Subject::whereRaw($query,
                                     [$values['department'], $values['program'],$values['level'], $values['semester']])
                                     ->get();
-
+                                   
         }
         
     }
 
     public static function subjectsForClasses($values = []){
 
+        $program = Program::find($values['program']);
+
+        
         $query =  'dept = ? ';
-        if($values['department']  == 0 ){                            
-            $query.= ' and (program_id = ? or program_id = 3)';
+
+        if(!$program->is_tesda){
+            if($values['department']  == 0 ){                            
+                $query.= ' and (program_id = ? or program_id = 3)';
+            } else {
+                $query.= ' and (program_id = ? or program_id = 4)';             
+            }
         } else {
-            $query.= ' and (program_id = ? or program_id = 4)';             
+                $query.= ' and program_id = ?';             
         }
                                     
         $subjects = Subject::whereRaw($query, 

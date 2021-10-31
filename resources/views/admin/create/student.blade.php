@@ -109,8 +109,8 @@
             </div>  
 
             {{Form::label('', 'Date of Birth')}}
-            <div class = "form-group">                        
-                {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2', 'id' => 'dob'] )}}
+            <div class = "form-group">                         
+                {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2', 'id' => 'dob', 'max' => \Carbon\Carbon::now()->subYears(15)->toDateString() ] )}}
             </div> 
 
         </div>
@@ -143,7 +143,7 @@
             {{Form::label('program', 'Sex')}}
             <div class="form-inline">
             
-                {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select w-75 ml-2' , 'id' => 'selectProg'])}}                   
+                {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select w-75 ml-2' , 'id' => 'selectProg', 'required' => 'required'])}}                   
           </div>
 
         </div>

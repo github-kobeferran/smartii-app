@@ -106,8 +106,11 @@ class SubjectsTakenController extends Controller
                 $sched->formatted_start = $sched->start_time;
                 $sched->formatted_until = $sched->until;
                 $sched->day_name = $sched->day;                
-                $sched->room_name = $sched->id;
+                $sched->room_name = $sched->id;                
             }  
+
+            $class->subjectsTaken;
+            $class->subjectsTaken->first()->student->program_id;
 
             $classes->push($class);
             

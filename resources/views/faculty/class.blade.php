@@ -265,7 +265,7 @@ function selectRating(id, rating = null){
             <option value="5">5/Failed</option>
             </select>
             <div class="input-group-append">
-            <button class="btn btn-outline-success" type="submit">Input Rating</button>`;
+            <button class="btn btn-outline-success" type="submit"><i class="fa fa-check" aria-hidden="true"></i></button>`;
 
             if(rating == null)
     output+=`<button onclick="cancelRating(`+ studentID +`)" class="btn btn-outline-danger" type="button">Cancel</button>`;
