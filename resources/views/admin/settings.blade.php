@@ -124,7 +124,7 @@
 
         <div class="form-group m-2">
             
-            {{Form::select('mode', ['0' => 'Close', '1' => 'Open'], $currentSetting->enrollment_mode, ['class' => 'form-control w-25'])}}
+            {{Form::select('mode', ['0' => 'Close', '1' => 'Open'], $currentSetting->enrollment_mode, ['class' => 'form-control w-25', 'id' => 'enrollment-mode-input'])}}            
 
         </div>
 
@@ -149,8 +149,8 @@
                   
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                  <button type="submit" class="btn btn-primary">Yes</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                 </div>
               </div>
             </div>
@@ -883,7 +883,36 @@ let toYear = document.getElementById('toYear');
 let semester = document.getElementById('semester');
 let submitButton = document.getElementById('submitButton');
 let confirmSubmitBody = document.getElementById('confirmSubmitBody');
+let enrollmentModeInput = document.getElementById('enrollment-mode-input');
 let changes = {};
+let enrollment_mode = {!! json_encode($currentSetting->enrollment_mode) !!};
+
+enrollmentModeInput.addEventListener('change', () => {    
+
+    if(enrollment_mode != enrollmentModeInput.value){
+
+        changes.enrollment_mode = true;
+
+        submitButton.type = 'button';
+        submitButton.dataset.toggle = 'modal';
+        submitButton.dataset.target = '#confirmSubmit';
+
+        output = '';
+
+        if(changes.fromYear == true)
+            output += 'Starting Year, ';
+        if(changes.toYear == true)
+            output += 'Ending Year, ';
+        if(changes.semester == true)
+            output += 'Semester, ';
+        if(changes.enrollment_mode == true)
+            output += 'Enrollment Mode, ';
+
+        confirmSubmitBody.textContent = output + (Object.keys(changes).length > 1 ? ' value' : ' values' ) + ' has been changed wish to continue?';
+        
+    }
+
+});
 
 fromYear.addEventListener('change', () => {
 
@@ -901,6 +930,8 @@ fromYear.addEventListener('change', () => {
         output += 'Ending Year, ';
     if(changes.semester == true)
         output += 'Semester, ';
+    if(changes.enrollment_mode == true)
+        output += 'Enrollment Mode, ';
 
 
     confirmSubmitBody.textContent = output + (Object.keys(changes).length > 1 ? ' value' : ' values' ) + ' has been changed wish to continue?';
@@ -923,6 +954,8 @@ toYear.addEventListener('change', () => {
         output += 'Ending Year, ';
     if(changes.semester == true)
         output += 'Semester, ';
+    if(changes.enrollment_mode == true)
+        output += 'Enrollment Mode, ';
 
 
         confirmSubmitBody.textContent = output + (Object.keys(changes).length > 1 ? ' value' : ' values' ) + ' has been changed wish to continue?';
@@ -945,6 +978,8 @@ semester.addEventListener('change', () => {
         output += 'Ending Year, ';
     if(changes.semester == true)
         output += 'Semester, ';
+    if(changes.enrollment_mode == true)
+        output += 'Enrollment Mode, ';
 
 
         confirmSubmitBody.textContent = output + (Object.keys(changes).length > 1 ? ' value' : ' values' ) + ' has been changed wish to continue?';
