@@ -77,7 +77,7 @@
                                                     @foreach ($class->subjectsTaken as $subjectTaken)
                                                         
 
-                                                        <div class="row border my-2 mx-auto py-2 ">
+                                                        <div class="row border my-0 mx-auto py-2 ">
 
                                                             <div class="col border-right">
 
@@ -189,20 +189,20 @@
                                                     <h5>Students </h5>`;
 
                                                     for(let j in archives[i].subjectsTaken){
-                                            output += `<div class="row border my-2 mx-auto py-2 ">
+                                            output += `<div class="row border my-0 mx-auto py-2 ">
                                                             <div class="col border-right">
                                                                 <span class="text-left " >
                                                                     <a href="${APP_URL}/studentprofile/${archives[i].subjectsTaken[j].student.student_id}">${archives[i].subjectsTaken[j].student.student_id}</a>                                                                
                                                                 </span>
                                                             </div>
                                                             
-                                                            <div class="col border-right">
+                                                            <div class="col border-right ">
                                                                 <span class="text-left " >
                                                                     ${archives[i].subjectsTaken[j].student.last_name} , ${archives[i].subjectsTaken[j].student.first_name}  ${archives[i].subjectsTaken[j].student.middle_name}
                                                                 </span>
                                                             </div>
 
-                                                            <div class="col text-center">
+                                                            <div class="col text-center ">
                                                                     <span>
                                                                         ${archives[i].subjectsTaken[j].rating.toFixed(2)}
                                                                     </span>
