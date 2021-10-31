@@ -9,12 +9,12 @@
     <div class="row">        
 
         @if ($archivedClasses->count() > 0)
-
+`
             <div class="input-group mb-3">
-                <input value="" id="search-text" type="text" class="form-control" placeholder="Search an archived Class" aria-label="Username" aria-describedby="basic-addon1">
-                <div class="input-group-prepend">
-                    <button class="input-group-text btn btn-lg btn-light" id="basic-addon1"><i class="fa fa-search"></i></button>
+                <div class="input-group-prepend border">
+                    <button class="input-group-text btn btn-lg btn-light" id="basic-addon1" disabled><i class="fa fa-search"></i></button>
                 </div>
+                <input value="" id="search-text" type="text" class="form-control" placeholder="Search an archived Class" aria-label="Username" aria-describedby="basic-addon1">
             </div>              
 
             <div class="table-responsive border-top shadow" style="max-height: 500px; overflow: auto; display:inline-block;">
