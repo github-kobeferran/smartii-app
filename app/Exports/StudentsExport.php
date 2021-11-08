@@ -55,7 +55,7 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, WithM
             ucfirst($students->last_name),
             ucfirst($students->first_name),
             ucfirst($students->middle_name),   
-            ucfirst($students->member->user->email),              
+            $students->member->user->email,              
             Carbon::parse($students->dob)->isoFormat('MMMM Do, YYYY'),
             Carbon::parse($students->dob)->age . ' years old',
             Program::find($students->program_id)->desc,
