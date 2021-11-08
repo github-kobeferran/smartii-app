@@ -348,7 +348,7 @@ function subjectSelect(subjid, subjDescAndCode, programid){
 
                     let counter = 1;
                     
-                    if(i % 2 == 0){
+                    if(i != 0 && i % 2 == 0){
 
                         output+= `<div class="card text-white bg-success m-2" style="min-width: 18rem; max-width: 18rem;">
                                     <div class="card-header">`+ classes[i].class_name +`</div>
@@ -408,7 +408,13 @@ function subjectSelect(subjid, subjDescAndCode, programid){
                 viewPanel.innerHTML = output;
 
 
-                }            
+            } else {
+                viewPanel.innerHTML = `
+                    <div class="text-center mt-2">
+                        <h5>No Classes in this program and subject</h5>
+                    </div>
+                `;
+            }            
 
         }
     }

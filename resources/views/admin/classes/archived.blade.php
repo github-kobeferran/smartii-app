@@ -9,7 +9,7 @@
     <div class="row">        
 
         @if ($archivedClasses->count() > 0)
-`
+
             <div class="input-group mb-3">
                 <div class="input-group-prepend border">
                     <button class="input-group-text btn btn-lg btn-light" id="basic-addon1" disabled><i class="fa fa-search"></i></button>

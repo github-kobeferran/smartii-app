@@ -18,37 +18,35 @@
     @if($classesByProgram->count() < 1)
 
     <h5>No Classes yet.</h5>
-
-    
-        
+            
     @else
-
-
 
     <div class="row">
             
         <div class="col-sm mt-2">
 
-            <h5 class="mb-2">My Classes</h5>            
+            <h5 class="mb-2">My Classes</h5>                      
                               
             <ul class="list-group ">
 
                 @for ($i = 0; $i < $classesByProgram->count(); $i++)
 
                     <li role="button" id="btn-{{$programs[$i]->id}}" onclick="showClasses({{$programs[$i]->id}})" class="list-group-item d-flex justify-content-between align-items-center mb-2 btn-progs">
-                        {{$programs[$i]->desc}} 
+                        <span class="text-dark" style="font-family: 'Raleway', sans-serif; color: #363636 !important;">{{$programs[$i]->desc}} </span>
                         <span class="badge badge-primary badge-pill">{{count($classesByProgram[$programs[$i]->id])}}</span>
                     </li>    
                     
-                    <li id="classlist-{{$programs[$i]->id}}" class="list-group-item border border-primary class-list d-none pt-1 px-0 pb-0">
-                        
+                    <li id="classlist-{{$programs[$i]->id}}" class="list-group-item border border-primary class-list d-none pt-1 px-0 pb-0">                                                
+
                         <ul id="" class="list-group border border-info"> 
-                        
-                            @for ($j = 0; $j < count($classesByProgram[$programs[$i]->id]); $j++)
-                                
-                                <a href="{{ url('/myclass/' . $classesArray[$i][$j]->id) }}" class="list-group-item ">{{'[' .$classesArray[$i][$j]->class_name . '] ' .$classesArray[$i][$j]->topic}}</a>
+
+                            @for ($j = 0; $j < count($classesByProgram[$programs[$i]->id]); $j++)                            
+
+                                <li class="list-group-item">                                    
+                                    <a href="{{ url('/myclass/' . $classesArray[$i][$j]->id) }}" class="list-group-item "><b class="text-dark">{{$classesArray[$i][$j]->class_name}} - </b> <em>{{$classesArray[$i][$j]->topic}}</em></a>
+                                </li>
     
-                            @endfor                                              
+                            @endfor   
     
                         </ul>
 
@@ -57,7 +55,7 @@
                 @endfor 
 
                            
-              </ul>
+              </ul>              
                
         </div>
 

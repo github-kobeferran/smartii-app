@@ -318,11 +318,10 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body">                    
 
-                  @if (\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count() > 0)
+                    @if (\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count() > 0)
 
-                    <div class="container">
 
                         <div class="row text-left mx-auto">
 
@@ -343,14 +342,72 @@
 
                             <div id="applicantsChart" style="width: 100%; height: 100%;"></div>
 
+                        </div>                            
+                        
+                    @else
+                        <div class="row text-center border py-3">
+                            There are no Applicant Data this semester
                         </div>
+                    @endif
+                    
+                    <?php
+                        $applicantUsersThisSem = \App\Models\User::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->where('user_type', 'applicant')->get();                            
+                                                    
+                        $still_no_app_form = $applicantUsersThisSem->filter(function ($applicant_user, $key) {
+                            return is_null($applicant_user->member);
+                        });
 
-                    </div>
-                      
-                  @else
-                      There are no Applicant Data this semester
-                  @endif
+                        
+                    ?>                        
 
+                    @if ($still_no_app_form->count() > 0)
+                        
+                        <div class="row justify-content-end">
+
+                            <button role="button" data-toggle="modal" data-target="#noAppFormList" class="btn btn-info text-white float-right mr-2">
+                                Still waiting for Admission Form Submission <span class="badge badge-light">{{$still_no_app_form->count()}}</span>                                                                                                               
+                            </button>    
+                            
+                            <div class="modal fade" id="noAppFormList" tabindex="-1" role="dialog" aria-labelledby="noAppFormListTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" style="width: 100%;" role="document">
+                                  <div class="modal-content" >
+                                    <div class="modal-header bg-info text-dark">
+                                      <h5 class="modal-title" id="exampleModalLongTitle">Still Waiting to pass their Admission Form</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="bg-secondary text-white">
+                                              <tr>
+                                                  <th>Email</th>
+                                                  <th>Name</th>
+                                                  <th>Duration in the system</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                                  @foreach ($still_no_app_form as $user_applicant)
+                                                      <tr>
+                                                          <td>{{$user_applicant->email}}</td>
+                                                          <td>{{$user_applicant->name}}</td>
+                                                          <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
+                                                      </tr>
+                                                  @endforeach
+                                            </tbody>
+                                          </table>
+                                      </div>
+                                    </div>                                   
+                                  </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    @endif
+                    
+                            
                 </div>
               
               </div>
@@ -434,60 +491,61 @@
         
         <div class="modal fade" id="showGallery" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content"  style="min-height: 21rem;">
-                <div class="modal-header bg-info text-white">
-                  <div class="modal-title" id="exampleModalLabel">Images in Homepage</div>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                {!!Form::open(['url' => '/homepageimage/store', 'files' => true])!!}
-                <div class="modal-body">
-                    <div class="d-flex flex-wrap justify-content-center">
+                <div class="modal-content"  style="min-height: 21rem;">
 
-                        @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'))
-
-                        @else         
-                        
-                            @foreach (\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc') as $item)
-
-                                <a role="button"  data-toggle="modal" data-target="#showImage-{{$item->id}}">
-                                    
-                                    <img  src="{{url('/storage/images/system/homepage_images/' . $item->image)}}" alt="" class="border img-fluid my-2 w-50">
-
-                                </a>   
-                                
-                            @endforeach
-
-                             
-                            
-                        @endempty                        
-
-                                                                                     
-
+                    <div class="modal-header bg-info text-white">
+                        <div class="modal-title" id="exampleModalLabel">Images in Homepage</div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                        {!!Form::open(['url' => '/homepageimage/store', 'files' => true])!!}
+                    <div class="modal-body">
+                        <div class="d-flex flex-wrap justify-content-center">
 
-                    <div class="form-group border mt-3">
+                            @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'))
 
-                        <p class="">Add New Image</p>                        
-                        {{Form::file('image', ['class' => 'form-control-file', 'id' => 'file'])}}
+                            @else         
+                            
+                                @foreach (\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc') as $item)
 
-                        <div class="p-2">
+                                    <a role="button"  data-toggle="modal" data-target="#showImage-{{$item->id}}">
+                                        
+                                        <img  src="{{url('/storage/images/system/homepage_images/' . $item->image)}}" alt="" class="border img-fluid my-2 w-50">
 
-                            Note: The ideal height for <b>Homepage Images</b> is <b>350px</b>.
+                                    </a>   
+                                    
+                                @endforeach
+
+                                
+                                
+                            @endempty                        
+
+                                                                                        
 
                         </div>
 
+                        <div class="form-group border mt-3">
+
+                            <p class="">Add New Image</p>                        
+                            {{Form::file('image', ['class' => 'form-control-file', 'id' => 'file'])}}
+
+                            <div class="p-2">
+
+                                Note: The ideal height for <b>Homepage Images</b> is <b>350px</b>.
+
+                            </div>
+
+                        </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                     
+                        <button id="addNewButton" type="submit" class="btn btn-primary d-none">Add Image</button>                  
+                    </div>
+                        {!!Form::close()!!}                
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                     
-                  <button id="addNewButton" type="submit" class="btn btn-primary d-none">Add Image</button>                  
-                </div>
-                {!!Form::close()!!}                
-              </div>
             </div>
-          </div>
+        </div>
 
         @empty(\Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'))
         

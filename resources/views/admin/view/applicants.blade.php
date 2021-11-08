@@ -14,7 +14,8 @@
             </label>
             <label class="btn btn-light">
                 <input type="radio" name="options" id="rejectedOption" autocomplete="off"> Rejected
-            </label>
+            </label>            
+                       
         </div>
 
         <div id="search-app" class="form-group has-search">

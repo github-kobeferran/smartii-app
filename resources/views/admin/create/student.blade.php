@@ -21,16 +21,16 @@
         <div class="col-sm-5"> 
 
                 <div class="form-inline">
-                    {{Form::label('department', 'Department')}}
+                    <b>{{Form::label('department', 'Department')}}</b>
                     {{Form::select('department', 
                       ['0' => 'Senior High School',                              
                       '1' => 'College'], 0,
-                      ['class' => 'custom-select ml-2', 'id' => 'selectDept'])}}                   
+                      ['class' => 'custom-select w-50 ml-2', 'id' => 'selectDept'])}}                   
                 </div>
                 
                 <div class="form-inline">
-                    {{Form::label('level', 'Student Level',  ['class' => 'mt-2'])}}
-                    {{Form::select('level', [], null, ['class' => 'custom-select mt-2 ml-2', 'id' => 'selectLevel'])}}                   
+                    <b>{{Form::label('level', 'Student Level',  ['class' => 'mt-2'])}}</b>
+                    {{Form::select('level', [], null, ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectLevel'])}}                   
                 </div>
 
         </div>
@@ -38,15 +38,15 @@
         <div class="col-sm-7"> 
 
             <div class="form-inline">
-                  {{Form::label('program', 'Program')}}
+                  <b>{{Form::label('program', 'Program')}}</b>
                   {{Form::select('program_id', [], null, ['class' => 'custom-select ml-2' , 'id' => 'selectProg'])}}                   
             </div>
 
             <div class="form-inline">
-                  {{Form::label('semester', 'Semester',  ['class' => 'mt-2'])}}
+                  <b>{{Form::label('semester', 'Semester',  ['class' => 'mt-2'])}}</b>
                   {{Form::select('semester', ['1' => 'First Semester',
                                               '2' => 'Second Semester'], null,
-                                              ['class' => 'custom-select mt-2 ml-2', 'id' => 'selectSemester'])}}                   
+                                              ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectSemester'])}}                   
             </div>
 
         </div>
@@ -65,7 +65,7 @@
 
             <div class = "form-group">        
                 {{Form::label('', 'Email Address', ['class' => 'mt'])}}
-                {{Form::email('email', '', ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Email here..'])}}
+                {{Form::email('email', '', ['class' => 'form-control rounded-0', 'required' => 'required', 'placeholder' => 'Email here..'])}}
             </div> 
 
         </div>
@@ -74,7 +74,7 @@
 
             <div class = "form-group">        
                 {{Form::label('theContact', 'Contact Number', ['class' => 'mt'])}}
-                {{Form::text('contact', '', ['minlength' => '11', 'maxlength' => '11','class' => 'form-control', 'placeholder' => 'Contact Number here..', 'id' => 'contactInput'])}}
+                {{Form::text('contact', '', ['minlength' => '11', 'maxlength' => '11','class' => 'form-control rounded-0 w-50', 'placeholder' => 'Contact Number here..', 'id' => 'contactInput'])}}
             </div> 
 
         </div>
@@ -110,7 +110,7 @@
 
             {{Form::label('', 'Date of Birth')}}
             <div class = "form-group">                         
-                {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2', 'id' => 'dob', 'max' => \Carbon\Carbon::now()->subYears(15)->toDateString() ] )}}
+                {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'form-control w-50 rounded-0 ml-2', 'id' => 'dob', 'max' => \Carbon\Carbon::now()->subYears(15)->toDateString() ] )}}
             </div> 
 
         </div>
@@ -129,12 +129,12 @@
 
             <div class = "form-group">        
                 {{Form::label('permanent_address', 'Permanent Address')}}
-                {{Form::text('permanent_address', '', ['class' => 'form-control', 'placeholder' => 'Permanent Address'])}}
+                {{Form::text('permanent_address', '', ['class' => 'form-control rounded-0', 'placeholder' => 'Permanent Address'])}}
             </div>
 
             <div class = "form-group">        
                 {{Form::label('present_address', 'Present Address')}}
-                {{Form::text('present_address', '', ['class' => 'form-control', 'placeholder' => 'Present Address'])}}
+                {{Form::text('present_address', '', ['class' => 'form-control rounded-0 w-50', 'placeholder' => 'Present Address'])}}
             </div> 
             
         </div>
@@ -143,7 +143,7 @@
             {{Form::label('program', 'Sex')}}
             <div class="form-inline">
             
-                {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select w-75 ml-2' , 'id' => 'selectProg', 'required' => 'required'])}}                   
+                {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select rounded-0 w-50 ml-2' , 'id' => 'selectProg', 'required' => 'required'])}}                   
           </div>
 
         </div>
@@ -160,7 +160,7 @@
                     <label class="align-middle" for="">Apply a Discount</label>
             </div>
             <div class="col">
-                <select name="discount[]" value="" id="select-discount" class="form-control w-50 " multiple>                    
+                <select name="discount[]" value="" id="select-discount" class="form-control w-50 rounded-0" multiple>                    
                     @foreach (\App\Models\Discount::all() as $discount)
                         <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
                     @endforeach
