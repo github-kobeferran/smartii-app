@@ -109,7 +109,7 @@ class StudentClass extends Model
 
     /**
      *  will return a 2-dimensional array which have the program id as the key
-     *  and the classes that is in that program
+     *  and the class id that is in that program
      * 
      *  ex. [5 => [1, 2], 6 => [1]]
      */

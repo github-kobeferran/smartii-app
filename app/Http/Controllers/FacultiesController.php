@@ -325,10 +325,14 @@ class FacultiesController extends Controller
  
      }
 
+     /**
+      * will return a collection of classes grouped by class name 
+      * wich is then collected by their program
+      */
 
      public function getClasses(){
 
-        $id = auth()->user()->member->member_id;                
+        $id = auth()->user()->member->member_id;                                   
 
         $classesByProgram = StudentClass::getFacultyClassesByProgram($id); //base the loop here
         
@@ -364,23 +368,23 @@ class FacultiesController extends Controller
                 $filtered = $classesToPush->filter(function ($value, $key) {
                     return $value != null;
                 });
+
+                $grouped = $filtered->groupBy(function ($value, $key) {
+                    return $value->class_name;
+                });
                 
-                $classes->push($filtered);
+                $classes->push($grouped);
 
             }
 
         }  
 
-        $classesArray = $classes->filter(function ($value, $key) {
+        $classesThisSemester = $classes->filter(function ($value, $key) {
             return $value != null;
-        });    
-                
-                
+        });                                    
     
-        return view('faculty.classes')
-                ->with('classesByProgram', collect($classesByProgram))
-                ->with('programs', $programs)
-                ->with('classesArray', $classesArray);
+        return view('faculty.classes')            
+                ->with('classesThisSemester', $classesThisSemester);
 
      }
 
@@ -454,7 +458,7 @@ class FacultiesController extends Controller
      public function update(Request $request){
 
         $before_date = Carbon::now()->subYears(18);       
-        $after_date = new Carbon('1903-01-01');
+        $after_date = new Carbon('1903-01-01');        
 
         if($request->method() != 'POST'){
             return redirect()->back();
@@ -465,7 +469,11 @@ class FacultiesController extends Controller
             case 'dob': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
+                    'detail' => 'nullable|date|before:'. $before_date->toDateString() . '|after:' . $after_date->toDateString(),            
+                ],[
+                    'detail.date' => 'Date Format invalid, please enter a date in a yyyy-mm-dd format',
+                    'detail.before' => 'Date of Birth must be before ' . $before_date->isoFormat('MMM DD YYYY'),
+                    'detail.after' => 'Date of Birth must be before ' . $after_date->isoFormat('MMM DD YYYY'),
                 ]);
 
             break;
@@ -507,7 +515,9 @@ class FacultiesController extends Controller
             case 'civil_status': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',                       
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50|in:married,single,divorced,widowed,annuled',                       
+                ],[
+                    'detail.in' => 'Invalid detail value. Civil Status value must either be: Single, Married, Divorced, Annuled or Widowed.'
                 ]);
 
             break;
@@ -527,18 +537,7 @@ class FacultiesController extends Controller
             break;
 
 
-        }       
-
-        $validator = Validator::make($request->all(), [
-            'nationality' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',
-            'civil_status' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50', 
-            'religion' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',
-            'contact' => 'nullable|digits:11',             
-            'father_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
-            'mother_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
-            'guardian_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
-            'emergency_person_contact' => 'nullable|digits:11',                      
-        ]);
+        }         
        
         if ($validator->fails()) {
             return redirect()

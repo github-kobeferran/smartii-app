@@ -100,6 +100,9 @@
                   <button class="dropdown-item" onclick="selectTable('rating')">Rating</button>              
                 </div>
 
+                <span id="cur-sort" class="ml-2">                    
+                </span>
+
             </div>            
             
             <div class="row no-gutters float-right mb-2">
@@ -119,21 +122,16 @@
             </div>           
             
             <table class="table">
-                <tr>
-
-                    <thead>
+                <thead>
+                    <tr>
                         <th>Student ID</th>
                         <th>Student Name</th>
                         <th class="border-left">Final Rating</th>
-                    </thead>
-
-                </tr>
-
+                    </tr>
+                </thead>
                 <tbody id="students-table">
                 
                 </tbody>
-
-
             </table>
                               
        
@@ -158,11 +156,25 @@ window.onload = function() {
 
 }
 
+let current_sort = document.getElementById('cur-sort')
+
 function selectTable(mode){    
 
     let btnArchive = document.getElementById('btn-archive');
     let availForArchive = true;
     let studentList = document.getElementById('students-table');
+
+    switch(mode){
+        case 'alpha':
+            current_sort.textContent = 'Alphabetical';
+        break;
+        case 'id':
+            current_sort.textContent = 'Student ID';
+        break;
+        case 'rating':
+            current_sort.textContent = 'Rating';
+        break;
+    }
 
     let xhr = new XMLHttpRequest();
         xhr.open('GET', APP_URL + '/sortclass/'+ CLASS_ID +'/' +  FACULTY_ID + '/' + mode, true);

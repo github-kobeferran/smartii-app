@@ -12,6 +12,13 @@
             
             <tr>
 
+                <td  id="" class="faculty-col" > MEMBER ID </td>
+                <td id=""> {{$faculty->faculty_id }}</td>
+                <td > this can't be edited</td>
+
+            </tr>
+            <tr>
+
                 <td  id="last_name_name" class="faculty-col" > Last Name </td>
                 <td id="last_name"> {{$faculty->last_name }}</td>
                 <td class="faculty-col-action"><button onclick="edit({{$faculty->id}} , 'last_name')" class="btn-light border">Edit this</button></td>
@@ -133,7 +140,7 @@
             <div class="form-group">
                             
             {{Form::hidden('detail_name', null, ['id' => 'detail-name'])}}
-            {{Form::text('detail', null, ['id' => 'detail', 'class'=> 'form-control text-center'])}}
+            {{Form::text('detail', null, ['id' => 'detail', 'class'=> 'form-control text-center rounded-0'])}}
             {{Form::submit('Update', ['class' => 'btn btn-primary btn-block mt-1'])}}
             </div>
 
@@ -159,9 +166,7 @@ function edit(id, detail){
 
         if (this.status == 200) {
 
-            let result = JSON.parse(this.responseText);              
-
-            console.log(result);
+            let result = JSON.parse(this.responseText);                          
 
             let label = document.getElementById('label');
             let detailName = document.getElementById(detail + '_name');            

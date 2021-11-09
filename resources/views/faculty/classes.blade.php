@@ -15,7 +15,7 @@
 
     <hr>
 
-    @if($classesByProgram->count() < 1)
+    @if($classesThisSemester->count() < 1)
 
     <h5>No Classes yet.</h5>
             
@@ -25,37 +25,41 @@
             
         <div class="col-sm mt-2">
 
-            <h5 class="mb-2">My Classes</h5>                      
-                              
-            <ul class="list-group ">
+            <h5 class="mb-2">My Classes</h5>                          
 
-                @for ($i = 0; $i < $classesByProgram->count(); $i++)
+            <ul class="list-group">
+                @foreach ($classesThisSemester as $classes_by_program)
+                    <li role="button" id="btn-prog-{{$classes_by_program->first()->first()->subjectsTaken->first()->student->program->id}}" onclick="showProgramClasses({{$classes_by_program->first()->first()->subjectsTaken->first()->student->program->id}})"  class="list-group-item d-flex justify-content-between align-items-center mb-2 btn-progs">
+                        <span class="text-dark" style="font-family: 'Raleway', sans-serif;">{{$classes_by_program->first()->first()->subjectsTaken->first()->student->program->desc}} </span>
+                        <span class="badge badge-primary badge-pill">section count: {{$classes_by_program->count()}}</span>                        
+                    </li>
 
-                    <li role="button" id="btn-{{$programs[$i]->id}}" onclick="showClasses({{$programs[$i]->id}})" class="list-group-item d-flex justify-content-between align-items-center mb-2 btn-progs">
-                        <span class="text-dark" style="font-family: 'Raleway', sans-serif; color: #363636 !important;">{{$programs[$i]->desc}} </span>
-                        <span class="badge badge-primary badge-pill">{{count($classesByProgram[$programs[$i]->id])}}</span>
-                    </li>    
-                    
-                    <li id="classlist-{{$programs[$i]->id}}" class="list-group-item border border-primary class-list d-none pt-1 px-0 pb-0">                                                
+                    <li id="section-list-{{$classes_by_program->first()->first()->subjectsTaken->first()->student->program->id}}" class="list-group-item section-list d-none ">
 
-                        <ul id="" class="list-group border border-info"> 
+                        <ul id="" class="list-group list-group-flush"> 
 
-                            @for ($j = 0; $j < count($classesByProgram[$programs[$i]->id]); $j++)                            
-
-                                <li class="list-group-item">                                    
-                                    <a href="{{ url('/myclass/' . $classesArray[$i][$j]->id) }}" class="list-group-item "><b class="text-dark">{{$classesArray[$i][$j]->class_name}} - </b> <em>{{$classesArray[$i][$j]->topic}}</em></a>
+                            @foreach ($classes_by_program as $classes)                                
+                                <li role="button" id="btn-section-{{$classes->first()->id}}" onclick="showSectionClasses({{$classes->first()->id}})"  class="list-group-item d-flex justify-content-between align-items-center mb-2 btn-sections">
+                                    <span class="text-dark" style="font-family: 'Raleway', sans-serif; color: #363636 !important;"><i class="fa fa-caret-right" aria-hidden="true"></i> {{$classes->first()->class_name}} </span>
+                                    <span class="badge badge-success badge-pill">classes: {{$classes->count()}}</span>                        
                                 </li>
-    
-                            @endfor   
-    
+
+                                <li id="class-list-{{$classes->first()->id}}" class="list-group-item border border-success class-list d-none py-0 px-0">
+                                    <ul class="list-group rounded-0"> 
+                                        @foreach ($classes as $class)
+                                            <li class="list-group">
+                                                <a href="{{ url('/myclass/' . $class->id) }}" class="list-group-item "><i class="fa fa-caret-right" aria-hidden="true"></i> <em>{{$class->topic}}</em></a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>   
+                                    
+                            @endforeach    
                         </ul>
 
-                    </li>                                  
-                
-                @endfor 
-
-                           
-              </ul>              
+                    </li>
+                @endforeach
+            </ul>
                
         </div>
 
@@ -75,37 +79,78 @@ if (window.performance && window.performance.navigation.type === window.performa
 }
 
 
-function showClasses(id){
-    btns = document.getElementsByClassName('btn-progs');
-    classlists = document.getElementsByClassName('class-list');
+function showProgramClasses(id){
 
-    btn = document.getElementById('btn-'+ id);
-    classlist = document.getElementById('classlist-'+ id);
+    let programButtons = document.getElementsByClassName('btn-progs');
+    let sectionLists = document.getElementsByClassName('section-list');
 
-    for(let i = 0; i<btns.length; i++){
-        btns[i].classList.remove('active');
-        btns[i].classList.add('mb-2');        
+    let programButtonClicked = document.getElementById('btn-prog-'+ id);
+    let sectionListToShow = document.getElementById('section-list-'+ id);    
+
+    if(!sectionListToShow.classList.contains('d-none')){
+        sectionListToShow.classList.add('d-none');
+
+        programButtonClicked.classList.add('mb-2');
+        programButtonClicked.classList.remove('active');
+        programButtonClicked.childNodes[1].className = 'text-dark';
+    } else {
+
+        for(let i = 0; i<programButtons.length; i++){
+            programButtons[i].classList.remove('active');
+            programButtons[i].childNodes[1].className = 'text-dark';
+            programButtons[i].classList.add('mb-2');        
+        }
+
+        for(let i = 0; i<sectionLists.length; i++){        
+            sectionLists[i].classList.add('d-none');        
+        }
+
+        programButtonClicked.classList.remove('mb-2');
+        programButtonClicked.classList.add('active');            
+        programButtonClicked.childNodes[1].className = 'text-white';
+        
+        sectionListToShow.classList.remove('d-none');
+
     }
-
-    console.log(classlists);
-    console.log(classlist);
-
-    for(let i = 0; i<classlists.length; i++){        
-        classlists[i].classList.add('d-none');        
-    }
-
-    
-    btn.classList.remove('mb-2');
-    btn.classList.add('active');
-    
-    classlist.classList.remove('d-none');
-
 
 }
 
+function showSectionClasses(id){
+    let sectionButtons = document.getElementsByClassName('btn-sections');
+    let classLists = document.getElementsByClassName('class-list');
 
+    let sectionButtonClicked = document.getElementById('btn-section-'+ id);
+    let classListToShow = document.getElementById('class-list-'+ id);    
 
+    if(!classListToShow.classList.contains('d-none')){
+        classListToShow.classList.add('d-none');
 
+        sectionButtonClicked.classList.add('mb-2');
+        sectionButtonClicked.classList.remove('active');
+        sectionButtonClicked.classList.remove('bg-success');
+        sectionButtonClicked.childNodes[1].className = 'text-dark';        
+    } else {
+
+        for(let i = 0; i<sectionButtons.length; i++){
+            sectionButtons[i].classList.remove('active');
+            sectionButtons[i].classList.remove('bg-success');
+            sectionButtons[i].childNodes[1].className = 'text-dark';
+            sectionButtons[i].classList.add('mb-2');        
+        }
+
+        for(let i = 0; i<classLists.length; i++){        
+            classLists[i].classList.add('d-none');        
+        }
+
+        sectionButtonClicked.classList.remove('mb-2');
+        sectionButtonClicked.classList.add('active');   
+        sectionButtonClicked.classList.add('bg-success');                   
+        
+        classListToShow.classList.remove('d-none');
+
+    }
+
+}
 
 
 </script>
