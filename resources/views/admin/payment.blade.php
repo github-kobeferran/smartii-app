@@ -586,12 +586,10 @@ function calculateChange(){
 
     if(paymentReceivedInput.value > 0)  {
 
-        let payment_amount = paymentInput.value;
-        let payment_received_amount = paymentReceivedInput.value;           
+        let payment_amount = Number(paymentInput.value);
+        let payment_received_amount = Number(paymentReceivedInput.value);           
 
         if(payment_received_amount >= payment_amount){
-
-            console.log('ok');
 
             let remainingBal = 0;
             let change = 0;
@@ -609,7 +607,7 @@ function calculateChange(){
 
             changeHiddenInput.value = change;  
 
-        } else {
+        } else {       
             changeOutput.classList.remove('d-none');     
             changeOutput.innerHTML = `<h6 id="change-output" class="mr-2 text-danger" >Amount Received must be greater than or equal to Amount to Pay</h6>`;
         }
