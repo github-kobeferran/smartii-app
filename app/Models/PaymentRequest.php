@@ -26,6 +26,10 @@ class PaymentRequest extends Model
                 
     }
 
+    public function admin(){
+        return $this->belongsTo(Admin::class, 'admin_id', 'id');
+    }
+
     public function setStudIdAttribute($id){
 
         $this->attributes['stud_id'] = Student::find($id)->student_id;

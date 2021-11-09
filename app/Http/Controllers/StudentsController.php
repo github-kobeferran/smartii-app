@@ -684,7 +684,9 @@ class StudentsController extends Controller
                            ->orderBy('created_at', 'desc')
                            ->get();
 
-        $requests = PaymentRequest::where('student_id', $student->id)->get();        
+        $requests = PaymentRequest::where('student_id', $student->id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->get();        
 
         return view('student.balance')                                           
                         ->with('invoices' , $invoices)  

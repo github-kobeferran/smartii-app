@@ -126,8 +126,11 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/admin/rejectapplicant', [App\Http\Controllers\ApplicantsController::class, 'reject'])->name('applicant.reject');
     Route::any('/admin/restoreapplicant', [App\Http\Controllers\ApplicantsController::class, 'restore'])->name('applicant.reject');
 
-    Route::get('/admin/paymentrequests', [App\Http\Controllers\AdminsController::class, 'viewPaymentRequests'])->name('viewPaymentRequests')->middleware(['admin.accounting']);
-    Route::post('/admin/approvepaymentrequest', [App\Http\Controllers\AdminsController::class, 'approvePaymentRequest'])->name('approvePaymentRequest');
+    //payment request
+    Route::get('/admin/paymentrequests', [App\Http\Controllers\PaymentRequestsController::class, 'view'])->name('payment_request.view')->middleware(['admin.accounting']);
+    Route::any('/admin/approvepaymentrequest', [App\Http\Controllers\PaymentRequestsController::class, 'approve'])->name('payment_request.approve');
+    Route::any('/admin/rejectpaymentrequest', [App\Http\Controllers\PaymentRequestsController::class, 'reject'])->name('payment_request.reject');\
+    
     Route::any('/updateschedule', [App\Http\Controllers\StudentClassesController::class, 'updateSchedule'])->name('updateschedule');
     Route::any('/enrolltosubject', [App\Http\Controllers\AdminsController::class, 'enrollToSubject'])->name('enrolltosubject');
     Route::any('/updatesubject', [App\Http\Controllers\SubjectsController::class, 'update'])->name('updatesubject');
@@ -184,7 +187,7 @@ Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->
     
     Route::get('/student/classes/', [App\Http\Controllers\StudentsController::class, 'getClasses'])->name('studentClasses');    
     Route::get('/student/balance/', [App\Http\Controllers\StudentsController::class, 'getBalance'])->name('studentBalance');    
-    Route::get('/student/createpayment/', [App\Http\Controllers\PaymentRequestsController::class, 'create'])->name('createPaymentRequest');
+    Route::get('/student/createpayment/', [App\Http\Controllers\PaymentRequestsController::class, 'create'])->name('payment_request.create');
     Route::get('/enroll/{id}/', [App\Http\Controllers\StudentsController::class, 'getSubjectsForNextSemester'])->name('getSubjectsForNextSem');
     Route::any('/student/request/payment', [App\Http\Controllers\PaymentRequestsController::class, 'store'])->name('storePaymentRequest');    
     Route::any('/studentenroll', [App\Http\Controllers\StudentsController::class, 'enroll'])->name('studentenroll');    
@@ -193,7 +196,7 @@ Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->
 });
 
 // about student but can be accessed by all
-Route::get('/studentprofile/{id?}/', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentProfile')->middleware('member');
+Route::get('/studentprofile/{id?}/', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentProfile')->middleware(['verified', 'member']);
 
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->group(function () {

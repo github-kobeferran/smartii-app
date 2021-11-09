@@ -271,26 +271,7 @@ class AdminsController extends Controller
                 }
 
                 return $paymentrequests->toJson();
-            break;    
-            case 'paymentrequests':
-
-                $paymentrequests = PaymentRequest::whereNull('admin_id')
-                                        ->orderBy('created_at', 'asc')
-                                        ->get();  
-                
-                foreach($paymentrequests as $paymentrequest){                    
-                    
-                    $paymentrequest->stud_id = $paymentrequest->student_id;
-                    $paymentrequest->stud_name = $paymentrequest->student_id;
-                    $paymentrequest->stud_dept = $paymentrequest->student_id;
-                    $paymentrequest->stud_prog = $paymentrequest->student_id;
-                    $paymentrequest->stud_address = $paymentrequest->student_id;
-                    $paymentrequest->time_ago = $paymentrequest->created_at;
-
-                }
-
-                return $paymentrequests->toJson();
-            break;  
+            break;                
             case 'allsubjects':
 
                 return Subject::orderBy('created_at', 'desc')->get();
@@ -1287,28 +1268,7 @@ class AdminsController extends Controller
         
         return redirect()->route('adminView')->with('active', 'applicants');
 
-    }
-
-
-    public function viewPaymentRequests(){
-
-        $admin = Admin::find(auth()->user()->member->member_id);
-
-        return view('admin.payment_requests')->with('admin', $admin);
-
-    }
-
-    public function approvePaymentRequest(Request $request){    
-
-       $paymentrequest = PaymentRequest::find($request->input('payment_id'));
-
-       $paymentrequest->admin_id = auth()->user()->member->member_id;
-
-       $paymentrequest->save();
-
-       return  redirect()->route('viewPaymentRequests')->with('status', 'Payment Request Approved!');
-
-    }    
+    }      
 
     public function enrollToSubject(Request $request){
 

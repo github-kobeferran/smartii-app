@@ -21,7 +21,7 @@
         <input  id="student-search" type="text" class="form-control" placeholder="Search by Student ID or Name">
     </div>    
     
-    <div class ="table-responsive border shadow mb-5" style="max-height: 500px; overflow: auto; display:inline-block;">
+    <div class="table-responsive border shadow mb-5" style="max-height: 500px; overflow: auto; display:inline-block;">
         <table class="table table-striped border" >
             <thead style="">
                 <tr>

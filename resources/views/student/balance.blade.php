@@ -2,8 +2,11 @@
 
 @section('content')
 <div class="container mt-2">
-
-    <a class="btn-back" href="{{route('studentProfile')}}"><i class="fa fa-angle-left" aria-hidden="true"></i>  Profile</a>
+    <div class="row text-left ml-2 mb-1">
+        <a class="btn-back" href="{{route('studentProfile')}}"><i class="fa fa-angle-left" aria-hidden="true"></i>  Profile</a>            
+    </div>
+    
+    @include('inc.messages')
     
     <div class="row">                    
         
@@ -26,7 +29,6 @@
                 <tr>
                     <td class="border bg-warning">
                         Last Payment
-
                     </td>
 
                     <td class="border text-center">
@@ -48,7 +50,19 @@
         </div>
 
         <div class="col-sm-3 mt-2 mb-4 ">
-            <a href="{{url('/student/createpayment/')}}" class="btn btn-primary border">Make Payment Request</a>
+            @if (\App\Models\PaymentRequest::where('student_id', $student->id)->whereNull('admin_id')->exists())
+                <button class="btn btn-primary disabled">
+                    Make a Payment Request <br>
+                    <em>(disabled still have a pending request)</em>
+                </button>
+            @elseif($student->balance->amount < 1)
+                <button class="btn btn-primary disabled">
+                    Make a Payment Request <br>
+                    <em>(disabled, Balance is empty)</em>
+                </button>
+            @else
+                <a  href="{{url('/student/createpayment/')}}" class="btn btn-primary border" >Make a Payment Request</a>                
+            @endif
 
             <?php                                    
                 $fees = \App\Models\Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
@@ -95,126 +109,124 @@
 
     @if(count($requests) > 0 )
     <hr>
-    <h5>Payment Requests</h5>
 
     <div class="row">
+        <div class="col-sm ">        
 
-        <div class="col-sm d-flex justify-content-left">        
+            <h5>Payment Requests</h5>
 
+            <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
+                <table class="table table-bordered table-striped">
+                    <thead class="text-white" >
+                        <tr>
+                            <th style="background-color: rgb(0, 110, 255);">Payment Request ID</th>
+                            <th style="background-color: rgb(0, 110, 255);">Sent at</th>                        
+                            <th style="background-color: rgb(0, 110, 255);">Payment Mode</th>
+                            <th style="background-color: rgb(0, 110, 255);">Status</th>
+                            <th style="background-color: rgb(0, 110, 255);">Marked by</th>                            
+                        </tr>
+                    </thead>
 
-            <div class="table-responsive">
-                <table class="table table-bordered ">
-
-
-                    <tr>
-                        <td>
-                            Payment Request ID
-                        </td>
-                        <td>
-                            Payment Date
-                        </td>                        
-                        <td>
-                            Payment Mode
-                        </td>
-                        <td>
-                            Status
-                        </td>
-                    </tr>
-
-                    @foreach ($requests as $request)
-
-                    <tr>
-                        <td>
-                          #{{$request->request_id}}
-                        </td>
-                        <td>
-                            {{\Carbon\Carbon::parse($request->created_at)->format('M d Y h:i A') }}                        </td>                        
-                        <td>
-                            {{$request->payment_mode}}
-                        </td>
-                        <td>
-                            @if($request->admin_id != null)
-                                Approved
-                            @else
-                                Pending
-                            @endif
-                        </td>
-                    </tr>
-
-                        
-                    @endforeach
-                
-                    
-                <table>
+                    <tbody >
+                        @foreach ($requests as $request)
+                            <tr>
+                                <td>
+                                  #{{$request->request_id}}
+                                </td>
+                                <td>
+                                    {{\Carbon\Carbon::parse($request->created_at)->format('M d Y h:i A') }}                        </td>                        
+                                <td>
+                                    {{$request->payment_mode}}
+                                </td>
+                                <td>
+                                    @if(!is_null($request->status))
+                                        @if ($request->status)
+                                            <span class="text-success">Approved</span>
+                                        @else
+                                            <span class="bg-dark text-white">Rejected</span>
+                                        @endif
+                                    @else
+                                        <span class="text-info">Pending</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(!is_null($request->status))
+                                        @if ($request->status)
+                                            {{$request->admin->admin_id}} - {{$request->admin->name}}
+                                            ({{\Carbon\Carbon::parse($request->updated_at)->format('M d Y h:i A')}})
+                                        @else
+                                            {{$request->admin->admin_id}} - {{$request->admin->name}}
+                                            ({{\Carbon\Carbon::parse($request->updated_at)->format('M d Y h:i A')}})
+                                            <br>
+                                            <em>cause: {{!is_null($request->reject_cause) ? $request->reject_cause : 'not specified'}}</em>
+                                        @endif
+                                    @else
+                                        <span class="text-info"> -- </span>
+                                    @endif                                    
+                                </td>
+                            </tr>                            
+                        @endforeach                
+                    </tbody>
+                </table>
             </div>
-            
+           
         </div>
+       
     </div>
 
     @endif
 
-    @if(count($invoices) > 0)    
+    @if(count($invoices) > 0)   
+
     <hr>
-    <h5>Payment History  <i class="fa fa-history" aria-hidden="true"></i></h5>
-                              
-        <div class="row">
+    
+    <div class="row">
+        
+        <div class="col-sm">        
 
-            
+            <h5>Payment History  <i class="fa fa-history" aria-hidden="true"></i></h5>
 
-            <div class="col-sm d-flex justify-content-left">        
+            <div class="table-responsive"  style="max-height: 500px; overflow: auto; display:inline-block;">
+                <table class="table table-bordered ">
 
+                    <thead class="text-white">
+                        <tr>
+                            <th style="background-color: rgb(1, 42, 95);">Invoice Number</th>
+                            <th style="background-color: rgb(1, 42, 95);">Payment Date</th>
+                            <th style="background-color: rgb(1, 42, 95);">Payment Amount</th>                                                     
+                        </tr>
 
-                <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
-                    <table class="table table-bordered ">
+                    </thead>
 
-                       <thead>
+                    <tbody>
+
+                        @foreach ($invoices as $invoice)
                             <tr>
+    
                                 <td>
-                                    Invoice Number
+                                    <a href="{{url('/invoice/' . $invoice->invoice_id)}}" target="_blank">{{$invoice->invoice_id}}</a>
                                 </td>
                                 <td>
-                                    Payment Date
-                                </td>                      
+                                    <a>{{\Carbon\Carbon::parse($invoice->created_at)->format('M d Y h:i A') }}</a>
+                                </td>                                   
                                 <td>
-                                    Payment Amount
-                                </td>                             
+                                    Php  {{number_format( $invoice->payment, 2) }}
+                                </td>                                
                             </tr>
-
-                       </thead>
-    
-                        <tbody >
-
-                            @foreach ($invoices as $invoice)
-                                <tr>
-        
-                                    <td>
-                                        <a href="{{url('/invoice/' . $invoice->invoice_id)}}" target="_blank">{{$invoice->invoice_id}}</a>
-                                    </td>
-                                    <td>
-                                        <a>{{\Carbon\Carbon::parse($invoice->created_at)->format('M d Y h:i A') }}</a>
-                                    </td>                                   
-                                    <td>
-                                        Php  {{number_format( $invoice->payment, 2) }}
-                                    </td>                                
-                                </tr>
-                            
-                            @endforeach
-                        </tbody>
                         
-                    </table>
-                </div>
-
+                        @endforeach
+                    </tbody>
+                    
+                </table>
             </div>
 
         </div>
 
+    </div>
+
     @else 
 
-        
-
     @endif
-
-   
 
 </div>
 @endsection
