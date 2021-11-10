@@ -122,9 +122,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
 
     Route::get('/admin/download/{type}/{filename}', [App\Http\Controllers\AdminsController::class, 'download'])->name('AdminDownload');
     Route::post('/admin/requestupload', [App\Http\Controllers\AdminsController::class, 'requestFileResubmission'])->name('requestFileResubmission');
-    Route::post('/admin/approveapplicant', [App\Http\Controllers\AdminsController::class, 'approveApplicant'])->name('approveApplicant');
+    Route::post('/admin/approveapplicant', [App\Http\Controllers\ApplicantsController::class, 'approve'])->name('applicant.approve');
     Route::any('/admin/rejectapplicant', [App\Http\Controllers\ApplicantsController::class, 'reject'])->name('applicant.reject');
-    Route::any('/admin/restoreapplicant', [App\Http\Controllers\ApplicantsController::class, 'restore'])->name('applicant.reject');
+    Route::any('/admin/restoreapplicant', [App\Http\Controllers\ApplicantsController::class, 'restore'])->name('applicant.restore');
 
     //payment request
     Route::get('/admin/paymentrequests', [App\Http\Controllers\PaymentRequestsController::class, 'view'])->name('payment_request.view')->middleware(['admin.accounting']);

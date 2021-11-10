@@ -8,12 +8,19 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\WelcomeApplicant;
+use App\Mail\ApprovedApplicant;
 use App\Mail\RejectApplicant;
 use App\Mail\RestoreApplicant;
-use App\Models\Applicant;
-use App\Models\Program;
-use App\Models\Member;
 use App\Models\User;
+use App\Models\Applicant;
+use App\Models\Member;
+use App\Models\Student;
+use App\Models\Program;
+use App\Models\Subject;
+use App\Models\SubjectTaken;
+use App\Models\Fee;
+use App\Models\Balance;
+use App\Models\Setting;
 use Carbon\Carbon;
 
 
@@ -383,7 +390,6 @@ class ApplicantsController extends Controller
 
                 ],
                 [
-        
                     'id_pic.required' => 'The 1x1 ID Picture is required.',
                     'id_pic.max' => 'The 1x1 ID Picture must not be more than 300KB in size.',
                     'id_pic.mimes' => 'The 1x1 ID Picture File must be in JPEG file format.',   
@@ -391,7 +397,6 @@ class ApplicantsController extends Controller
                     'birth_cert.required' => 'The Birth Certificate File is required.',
                     'birth_cert.max' => 'The Birth Certificate must not be more than 300KB in size.',
                     'birth_cert.mimes' => 'The Birth Certificate File must be in JPEG file format.',  
-
                 ]);
 
             break;
@@ -730,6 +735,150 @@ class ApplicantsController extends Controller
         return redirect()->route('appStatus');
         
     }
+
+    public function approve(Request $request){
+
+        //delete member link        
+        
+        $app_id = $request->input('app_id');    
+
+        $applicant = Applicant::find($app_id);
+
+        /**
+         * STUDENT CREATE
+         */
+        
+        $student = new Student;      //studid
+
+        $student->department = $applicant->dept;
+        $student->program_id = $applicant->program;
+        $student->semester = 1;
+
+        $student->student_type = 0;
+        $student->transferee = 0;
+        $student->created_by_admin = 0;
+
+        if($applicant->dept == 0)
+            $student->level = 1;
+        else
+            $student->level = 11;
+
+        $student->email = $applicant->email;
+
+        $student->last_name = $applicant->last_name;
+        $student->first_name = $applicant->first_name;
+        $student->middle_name = $applicant->middle_name;
+
+        $student->dob = $applicant->dob;
+        $student->gender = $applicant->gender;
+        
+        $student->present_address = $applicant->present_address;
+        $student->last_school = $applicant->last_school;
+
+        $student->save();
+    
+            $balance = new Balance;             
+            $balanceID = $balance->init();                
+
+            $student->balance_id = $balanceID;
+                    
+            $year =  date("y");
+            $prefix = "C";
+            $prefixID = $prefix . $year . '-' . sprintf('%04d', $student->id);
+        
+            $student->student_id = $prefixID;
+
+        $student->save();
+        $student_id = $student->id;
+
+        $applicant->approved = 1;
+        $applicant->student_id = $student->id;
+        $applicant->save();
+        
+
+        $member_old = Member::query()->where('member_type', 'applicant')->where('member_id', $app_id)->first();
+        $user_id = $member_old->user_id;
+
+        $user = User::find($member_old->user_id);
+        $user->user_type = 'student';
+        $user->save();
+
+        $student->dept = $student->department;
+        $student->program_desc = $student->program_id;
+
+        Mail::to($user)->send(new ApprovedApplicant($student->first_name . ' ' . $student->last_name,
+                                                    $student->student_id,
+                                                    $student->dept,
+                                                    $student->program_desc,
+                                                    ));
+
+        Member::where('member_type', $member_old->member_type)
+              ->where('member_id', $member_old->member_id)
+              ->where('user_id', $member_old->user_id)->delete();              
+
+        $member_new = new Member;
+        $member_new->user_id = $user_id;
+        $member_new->member_type = 'student';
+        $member_new->member_id = $student_id;
+                
+        $member_new->save();
+                   
+        $values = ['department' => $student->department, 
+                    'program' => $student->program_id, 
+                    'level' => $student->level, 
+                    'semester' => $student->semester, 
+                  ];
+        
+        if(!$student->program->is_tesda)
+            $subjects = Subject::allWhere($values, true);
+        else
+            $subjects = Subject::allWhere($values, false);
+        
+        $totalBalance = 0;
+        
+
+        $mergedFees = Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
+        
+
+        $subjectsToBeTakenLength = count($subjects);                  
+
+        for($i=0; $i < $subjectsToBeTakenLength; $i++){
+
+            $subjectToTake = new SubjectTaken;
+
+            $subject = Subject::find($subjects[$i]->id);   
+    
+            $subjectToTake->student_id = $student_id;
+            $subjectToTake->subject_id = $subject->id;
+            
+            if($student->department == 0)
+                $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
+            else 
+                $totalBalance+= Setting::first()->college_price_per_unit * $subject->units; 
+
+            if($i == $subjectsToBeTakenLength - 1 ) {  
+                
+                foreach($mergedFees as $fee){
+                    $student->balance->amount+= $fee->amount;
+                }
+            
+                $student->balance->amount+= $totalBalance;
+                $student->balance->save();
+            }
+
+            $subjectToTake->rating = 4.5;    
+            $subjectToTake->from_year = Setting::first()->from_year;  
+            $subjectToTake->to_year = Setting::first()->to_year; 
+            $subjectToTake->semester = Setting::first()->semester;  
+            
+            $subjectToTake->save();
+
+        }
+
+        
+        return redirect()->route('adminView')->with('active', 'applicants');
+
+    }      
 
     public function reject(Request $request){
 
