@@ -23,8 +23,8 @@
     
     <div class="table-responsive border shadow mb-5" style="max-height: 500px; overflow: auto; display:inline-block;">
         <table class="table table-striped border" >
-            <thead style="">
-                <tr>
+            <thead class="">
+                <tr class="">
                     <th scope="col" colspan="2" class="border-right bg-light text-center align-middle">Action</th>
                     <th scope="col" class="border-right bg-light" >Student ID</th>
                     <th scope="col" class="border-right bg-light">Name</th>
@@ -35,7 +35,7 @@
             <tbody id="students-table">                
                 @if (!is_null(\App\Models\Student::first()))
 
-                    @foreach (\App\Models\Student::orderBy('created_at', 'desc')->get() as $student)
+                    @foreach (\App\Models\Student::orderBy('created_at', 'desc')->limit(100)->get() as $student)
                         <tr>
                             <td class="border-right"><button type="button"  onclick="selectForPayment('{{$student->id}}')" class="btn btn-info text-white ">Payment</button></td>
                             <td class="border-right"><button type="button"  onclick="showInvoicesTable('{{$student->id}}')" class="btn btn-warning text-secondary">Invoices</button></td>

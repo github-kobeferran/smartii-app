@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Student;
+use App\Models\Program;
 use App\Models\Subject;
 use App\Models\Schedule;
 use App\Models\StudentClass;
@@ -24,6 +25,7 @@ use App\Mail\WelcomeMember;
 use Carbon\Carbon;
 use App\Exports\StudentsExport;
 use App\Exports\ActiveStudentsExport;
+use App\Exports\AdvancedStudentExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class StudentsController extends Controller
@@ -144,8 +146,8 @@ class StudentsController extends Controller
             'first_name' => 'required|regex:/^[\pL\s\-]+$/u|max:100',
             'middle_name' => 'regex:/^[\pL\s\-]+$/u|max:100',
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
-            'permanent_address' => 'max:191',
-            'present_address' => 'max:191',      
+            'permanent_address' => 'required|max:191',
+            'present_address' => 'required|max:191',      
         ]);
     
         if ($validator->fails()) {
@@ -913,6 +915,52 @@ class StudentsController extends Controller
             $semester = "Second Semester";            
 
         return Excel::download(new ActiveStudentsExport, 'SMARTII Active Students as of A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
+    }   
+
+    public function advancedStudentsExport($dept, $prog = 0, $level = 0) 
+    {        
+
+        $semester = "";
+        $department = "";
+        $program = "";
+        $the_level = "";
+
+        
+        if(Setting::first()->semester == 1)
+            $semester = "First Semester";
+        else 
+            $semester = "Second Semester"; 
+
+        if($dept == 0)      
+            $department = 'SHS';
+        else 
+            $department  = 'College';
+
+        if($prog)
+            $program = Program::find($prog)->abbrv . ' - ' . Program::find($prog)->desc;
+        else
+            $program = 'All Programs';
+        
+        if($level){
+            switch($level){
+                case 1: 
+                    $the_level = "Grade 11";
+                    break;
+                case 2: 
+                    $the_level = "Grade 12";
+                    break;
+                case 11: 
+                    $the_level = "First Year";
+                    break;
+                case 12: 
+                    $the_level = "Second Year";
+                default:
+                    $the_level = "All";
+                    break;
+            }
+        }
+
+        return Excel::download(new AdvancedStudentExport($dept, $prog, $level), 'SMARTII '.  $the_level . ' ' . $department . ' Students of ' . $program . ' A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
     }   
 
 }

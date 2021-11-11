@@ -422,7 +422,7 @@ class AdminsController extends Controller
                 break; 
                 case 'students':
                     
-                    $students = Student::where($by, $value)->get();
+                    $students = Student::where($by, $value)->limit(100)->orderBy('created_at', 'desc')->get();
 
                     foreach($students as $student){
                         $student->age = $student->id;
@@ -436,6 +436,7 @@ class AdminsController extends Controller
                     
                     $applicants = Applicant::where($by, $value)
                                            ->where('approved', 0)
+                                           ->orderBy('created_at', 'desc')
                                            ->get();
 
                     foreach($applicants as $applicant){
@@ -449,8 +450,7 @@ class AdminsController extends Controller
                 break;
                 case 'invoices':
                     
-                    $invoices = Invoice::where($by, $value)                                           
-                                           ->get();
+                    $invoices = Invoice::where($by, $value)->orderBy('created_at', 'desc')->get();
 
                     foreach($invoices as $invoice){
                         $invoice->stud_name = $invoice->student_id;
@@ -461,10 +461,7 @@ class AdminsController extends Controller
 
                 break;
                 case 'subjects':
-
-                    return Subject::where($by,$value)
-                                ->orderBy('desc', 'asc')->get();
-
+                    return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
                 break;                
 
                 default:

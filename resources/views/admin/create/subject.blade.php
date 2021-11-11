@@ -128,7 +128,7 @@
      
         <div class="form-group has-search mt-2 mb-2">
             <span class="fa fa-search form-control-feedback"></span>
-            <input id="subject-search" type="text" class="form-control" placeholder="Search Subject">
+            <input id="subject-search" type="text" class="form-control" placeholder="Search Subject by Description or Program">
         </div>
 
         <div id="subject-list" style="max-height: 75%; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">                               

@@ -143,8 +143,10 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/deletefee', [App\Http\Controllers\FeesController::class, 'delete'])->name('editfee');
     Route::any('/editfee', [App\Http\Controllers\FeesController::class, 'update'])->name('update');
 
+    //students export
     Route::get('allstudents/export/', [App\Http\Controllers\StudentsController::class, 'allStudentsExport']);
     Route::get('allactivestudents/export/', [App\Http\Controllers\StudentsController::class, 'allActiveStudentsExport']);
+    Route::get('advancedstudent/export/{dept}/{prog?}/{level?}', [App\Http\Controllers\StudentsController::class, 'advancedStudentsExport']);
 
     Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);

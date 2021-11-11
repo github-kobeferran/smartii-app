@@ -48,7 +48,7 @@
     <div class="col-sm-8">                                
 {!! Form::open(['url' => 'admin/update/setting', 'id' => 'settingsForm']) !!}
 
-    <div class="container border border-info m-2">
+    <div class="container border m-2">
 
         <p class="mt-2"> <b> Academic Year  </b></p> 
 
@@ -72,7 +72,7 @@
 
     </div>
 
-    <div class="container border border-info m-2">
+    <div class="container border  m-2">
 
         <p class="mt-2"> <b>Prices per Unit</b></p>     
 
@@ -106,7 +106,7 @@
 
     </div>
         
-    <div class="container border border-info m-2">
+    <div class="container border m-2">
 
         <p class="mt-2"> <b>Number of Student per Class</b></p>  
 
@@ -118,7 +118,7 @@
 
     </div>
 
-    <div class="container border border-info m-2">
+    <div class="container border  m-2">
 
         <p class="mt-2"> <b>Enrollment Mode</b></p>  
 
@@ -295,7 +295,7 @@
         @if(\App\Models\Fee::count() > 0)
 
 
-        <div class=" border border-info container">
+        <div class=" border container">
 
             <h5 class="mt-3 text-center">FEES</h5>
 
@@ -310,12 +310,12 @@
                         <ul class="list-group">
                             @foreach (\App\Models\Fee::where('dept', 2)->whereNull('sem')->get()  as $fee)
                         
-                            <li class="list-group-item border border-secondary mb-2">
+                            <li class="list-group-item border rounded-0 mb-2">
                                 <span>
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-dark bg-info px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -355,7 +355,7 @@
                         </ul>
                         
                     @else
-                        None
+                        <span class="text-muted">None</span>
                     @endif
 
 
@@ -366,12 +366,12 @@
                         <ul class="list-group">
                             @foreach (\App\Models\Fee::where('dept', 2)->where('sem', 1)->get()  as $fee)
                         
-                            <li class="list-group-item border border-secondary mb-2">
+                            <li class="list-group-item border rounded-0 mb-2">
                                 <span>
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-dark bg-info px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -411,7 +411,7 @@
                         </ul>
                         
                     @else
-                        None
+                        <span class="text-muted">None</span>
                     @endif
 
                 <br>
@@ -423,12 +423,12 @@
                         <ul class="list-group">
                             @foreach (\App\Models\Fee::where('dept', 2)->where('sem', 2)->get()  as $fee)
                         
-                            <li class="list-group-item border border-secondary mb-2">
+                            <li class="list-group-item border rounded-0 mb-2">
                                 <span>
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all students' : '<span class="text-dark bg-info px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -468,12 +468,12 @@
                         </ul>
                         
                     @else
-                        None
+                        <span class="text-muted">None</span>
                     @endif
 
             @else 
 
-            <li class="list-group-item border border-secondary mb-2">
+            <li class="list-group-item border rounded-0 mb-2">
                 None
             </li>
                 
@@ -487,8 +487,8 @@
 
                 @if (\App\Models\Fee::where('dept', 0)->whereNull('level')->count() > 0)
 
-                    <button onclick="toggleButton('allshs')" class="btn btn-outline-info btn-block mb-2">
-                        ALL SHS
+                    <button onclick="toggleButton('allshs')" class="btn btn-warning text-dark rounded-0 btn-block mb-2">
+                        ALL SHS Fees
                     </button>
 
                 
@@ -502,7 +502,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-dark bg-warning px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -547,8 +547,8 @@
 
                 @if (\App\Models\Fee::where('dept', 0)->where('level', 1)->count() > 0)
 
-                    <button onclick="toggleButton('grade11')" class="btn btn-outline-info btn-block mb-2">
-                        Grade 11
+                    <button onclick="toggleButton('grade11')" class="btn btn-warning text-dark rounded-0 btn-block mb-2">
+                        Grade 11 Fees
                     </button>
 
                 
@@ -562,7 +562,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-dark bg-warning px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -608,8 +608,8 @@
 
                 @if(\App\Models\Fee::where('dept', 0)->where('level', 2)->count() > 0)
 
-                    <button onclick="toggleButton('grade12')" class="btn btn-outline-info btn-block mb-2">
-                        Grade 12
+                    <button onclick="toggleButton('grade12')" class="btn btn-warning text-dark rounded-0 btn-block mb-2">
+                        Grade 12 Fees
                     </button>
 
 
@@ -621,7 +621,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all SHS students' : '<span class="text-dark bg-warning px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -669,7 +669,7 @@
                                
             @else 
 
-            <li class="list-group-item border border-secondary mb-2">
+            <li class="list-group-item border rounded-0 mb-2">
                 None
             </li>
             
@@ -681,9 +681,9 @@
 
             @if (\App\Models\Fee::where('dept', 1)->count() > 0)
 
-                @if (\App\Models\Fee::where('dept', 1)->where('level', 15)->count() > 0)
+                @if (\App\Models\Fee::where('dept', 1)->whereNull('level')->count() > 0)
 
-                    <button onclick="toggleButton('allcol')" class="btn btn-outline-info btn-block mb-2">
+                    <button onclick="toggleButton('allcol')" class="btn btn-success text-white rounded-0 btn-block mb-2">
                         ALL College
                     </button>
 
@@ -698,7 +698,7 @@
                                 <span>
                                     <?php semDesc($fee->sem); ?> 
                                     <br>
-                                    {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                    {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-dark bg-success px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                     <br>
                                     <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                 </span>
@@ -745,7 +745,7 @@
 
                 @if (\App\Models\Fee::where('dept', 1)->where('level', 11)->count() > 0)
 
-                        <button onclick="toggleButton('firstyear')" class="btn btn-outline-info btn-block mb-2">
+                        <button onclick="toggleButton('firstyear')" class="btn btn-success text-white rounded-0  btn-block mb-2">
                             First Year
                         </button>
 
@@ -759,7 +759,7 @@
                                         <span>
                                             <?php semDesc($fee->sem); ?> 
                                             <br>
-                                            {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                            {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-dark bg-success px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                             <br>
                                             <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                         </span>
@@ -803,7 +803,7 @@
 
                 @if (\App\Models\Fee::where('dept', 1)->where('level', 12)->count() > 0)
 
-                <button onclick="toggleButton('secondyear')" class="btn btn-outline-info btn-block mb-2">
+                <button onclick="toggleButton('secondyear')" class="btn btn-success text-white rounded-0  btn-block mb-2">
                     Second Year
                 </button>
 
@@ -817,7 +817,7 @@
                                     <span>
                                         <?php semDesc($fee->sem); ?> 
                                         <br>
-                                        {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-white bg-dark px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
+                                        {!!is_null($fee->program_id) ? 'For all College students' : '<span class="text-dark bg-success px-2">For '. \App\Models\Program::find($fee->program_id)->abbrv .' students</span>'!!}
                                         <br>
                                         <u>{{ucfirst($fee->desc)}}</u>: <b>&#8369; {{ number_format((float) $fee->amount, 2, '.', '')  }}</b>
                                     </span>
@@ -861,7 +861,7 @@
 
             @else 
 
-                <li class="list-group-item border border-secondary mb-2">
+                <li class="list-group-item border rounded-0 mb-2">
                     None
                 </li>
             @endif              
@@ -1377,6 +1377,8 @@ function editFee(id){
             
             document.getElementById('feeFormSubmit').setAttribute("data-target", "#updateFeeModal");
             document.getElementById('feeFormSubmit').textContent = "Update Fee";
+
+            panel.scrollIntoView({behavior: 'smooth'});
             
                             
         } 

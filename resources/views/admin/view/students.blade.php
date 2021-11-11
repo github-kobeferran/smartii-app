@@ -18,47 +18,62 @@
         <div class="modal fade" id="exportStudent" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">SELECT REPORT</h5>
+                <div class="modal-header bg-success">
+                  <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">EXPORT STUDENT DATA TO EXCEL</span></h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-
                   <div class="container">
-
                     <div class="row">
-
                         <div class="col text-center border-right">
-
                             <a href="/allstudents/export" class="d-block btn-primary mb-2">
-
                                 All-Time Students
-
                             </a>                            
-                            
-                            
                         </div>
-
                         <div class="col text-center">
-                            
                             <a href="/allactivestudents/export" class="d-block btn-primary mb-2">
-
                                 All Active Students
-
                             </a>                           
-
-                        </div>
-
+                        </div>                        
                     </div>                    
 
-                  </div>
+                    <div class="row border-top">
+                        <div class="col">
+                            <h4 class="mt-2">Advanced</h4>
+                            <div class="form-group text-center">
+                                <label for="select-dept-export">Department</label>
+                                {{Form::select('department', [0 => 'SHS', 1 => 'COLLEGE'], 0,
+                                [
+                                    'id' => 'select-dept-export',
+                                    'class' => 'form-control-md mr-2 rounded-0 border border-secondary',
+                                ])}}
+                            </div>
+                            <div class="form-group text-center">
+                  
 
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                  
-                </div>
+                            <select name="prog" value="" id="select-prog-export" class="form-control-md mr-2 rounded-0 border border-secondary">
+                                <option selected="selected" value="0">All Programs</option>
+                                @foreach (\App\Models\Program::where('department', 0)->where('id','!=', 3)->get() as $prog)
+                                    <option value="{{$prog->id}}"> {{$prog->desc}} </option>    
+                                @endforeach
+                            </select>
+
+                            </div>
+                            <div class="form-group text-center">
+                                <label for="select-level-export">Level</label>
+                                {{Form::select('level', [0 => 'All SHS', 1 => 'Grade 11', 2 => 'Grade 12'], 0,
+                                [
+                                    'id' => 'select-level-export',
+                                    'class' => 'form-control-md rounded-0 border border-secondary',
+                                ])}}
+                            </div>
+                            <button type="button" onclick="generateReport()" class="btn btn-primary rounded-0 btn-block px-2">Generate Report</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>                
               </div>
             </div>
           </div>
@@ -97,6 +112,9 @@ let collegeOption = document.getElementById('collegeOption');
 let programList = document.getElementById('program-list');
 let studentList = document.getElementById('student-list');
 let studentSearch = document.getElementById('student-search');
+let selectDeptExport = document.getElementById('select-dept-export');
+let selectProgExport = document.getElementById('select-prog-export');
+let selectLevelExport = document.getElementById('select-level-export');
 
 shsOption.onclick = () => {
     fillProgramList(0);
@@ -269,10 +287,48 @@ function searchStudent(){
 
 }
 
+selectDeptExport.addEventListener('change', deptIsChanged)
 
+async function deptIsChanged(){
 
+    const res = await fetch(APP_URL + `/admin/view/programs/department/${selectDeptExport.value}/`)
+                    .catch((error) => {console.log(error)});
 
+    const data = await res.json();
 
+    let output = `<select name="prog" value="" id="select-prog-export" class="form-control-md mr-2 rounded-0 border border-secondary"`;
+    output+=`<option selected="selected" value="0">Select a Program</option>`;
+
+        data.forEach((prog, i) => {
+            if(i < 1)
+                output+=`<option selected="selected" value="0"> All ` + (selectDeptExport.value == 0 ? `SHS` : `College`) + ` Programs</option>`;
+
+            output+=`<option value="${prog.id}"> ${prog.desc} </option>`;
+        });
+
+    output+=`</select>`;
+
+    selectProgExport.innerHTML = output;
+
+    if(selectDeptExport.value == 0){
+        selectLevelExport.innerHTML = `  {{Form::select('level', ['0' => "All SHS",
+                                            '1' => " For Grade 11 only",
+                                            '2' => "For Grade 12 only"], 0,
+                                            ['id' => 'select-level-export', 'class' => 'form-control d-none'])}}`;  
+    
+    } else if(selectDeptExport.value == 1){
+        selectLevelExport.innerHTML = `  {{Form::select('level', ['0' => "All College",
+                                            '11' => "For First Year only",
+                                            '12' => "For Second Year only"], 0,
+                                            ['id' => 'select-level-export', 'class' => 'form-control d-none'])}}`;
+    }
+
+}
+
+function generateReport(){    
+    console.log(selectDeptExport.value + " " + selectProgExport.value + " " + selectLevelExport.value)
+    window.location.href = APP_URL + '/advancedstudent/export/' + `${selectDeptExport.value}/${selectProgExport.value}/${selectLevelExport.value}`;
+}
 </script>
 
 

@@ -114,9 +114,9 @@
         
         let data = google.visualization.arrayToDataTable([
         ["Type", "Count", { role: "style" } ],
-        ['SHS All',     {!! json_encode(\App\Models\Student::where('department', 0)->count()) !!}, "#ebedaf" ],           
-        ['SHS Grade 11',     {!! json_encode(\App\Models\Student::where('department', 0)->where('level', 1)->count()) !!}, "#ecf086" ],           
-        ['SHS Grade 12',     {!! json_encode(\App\Models\Student::where('department', 0)->where('level', 2)->count()) !!}, "#e1e835" ],           
+        ['SHS All',     {!! json_encode(\App\Models\Student::where('department', 0)->count()) !!}, "#f7ff00" ],           
+        ['SHS Grade 11',     {!! json_encode(\App\Models\Student::where('department', 0)->where('level', 1)->count()) !!}, "#fdffbd" ],           
+        ['SHS Grade 12',     {!! json_encode(\App\Models\Student::where('department', 0)->where('level', 2)->count()) !!}, "#ecf073" ],           
         
         ]);
 
@@ -167,7 +167,7 @@
 
         let options = {
         title: 'SHS Programs and number of Students',  
-        colors: ['#fff305', '#f7f288', '#fffcc4', '#f5f3d0', '#f2f1df']      
+        colors: ['#ed9200', '#edbe00', '#e9ed00', '#92ed00', '#4fed00']      
         };
 
         let chart = new google.visualization.PieChart(document.getElementById('shsPrograms'));

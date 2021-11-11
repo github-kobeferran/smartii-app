@@ -71,8 +71,6 @@
 
 
     @include('inc.navbar')
-
-    
     
                 {{-- ******************************* IF USER IS ADMIN --}}
                 @if (!Auth::guest() && Auth::user()->isAdmin())
@@ -80,17 +78,17 @@
                 <div class="container-fluid mx-0 p-0" >
                     <div class="row vh-100 no-gutters">    
                 
-                        <div class="col-sm-1 mx-auto">
+                        <div class="col-1">
                             @include('inc.admin.sidebar')
-
                         </div>
-
                     
-                        <div class="col-11 mt-3 mx-auto" >
+                        <div class="col-10 mt-3 ml-1 mr-auto">
                                             
                             @yield('content')
                         
                         </div> 
+                        <div>
+                        </div>
                     </div> 
                 </div> 
 
