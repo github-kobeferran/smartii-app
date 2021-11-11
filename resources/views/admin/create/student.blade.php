@@ -227,6 +227,7 @@
 {!! Form::close() !!}
 
 <script>
+
 let selectDept = document.querySelector('#selectDept');
 let selectProg = document.querySelector('#selectProg');   
 let selectLevel = document.querySelector('#selectLevel');   
@@ -261,8 +262,7 @@ let idDiv = document.getElementById('new-stud-div');
 
 selectDept.addEventListener('change', () => {                    
     changeSelect();
-    
-    
+    changeTable();
 });
 
 selectProg.addEventListener('change', () => {                        
@@ -347,60 +347,52 @@ async function changeTable(){
                     + '/program/' + program 
                     + '/level/' + level 
                     + '/semester/' + semester 
-                    + '/' + (selected_prog.is_tesda ? '1' : ''), true);
-
+                    + (selected_prog.is_tesda ? '/1' : ''), true);
     
-
     xhr.onload = function() {
-    if (this.status == 200) {
-        
-        let results = JSON.parse(this.responseText);
+        if (this.status == 200) {
+            let results = JSON.parse(this.responseText);
 
-        let year =  new Date();
-        year = year.getFullYear();        
+            let year =  new Date();
+            year = year.getFullYear();        
 
-        let output = `<table class="table table-striped h-50" id="subjects-table">`;
-            output+= `<thead class="bg-warning ">`;
-            output+=`<tr>`;
-            output+=`<th scope="col">Action</th>`;
-            output+=`<th scope="col" >Rating</th>`;
-            output+=`<th scope="col" >Academic Year</th>`;
-            output+=`<th scope="col" >Sem</th>`;
-            output+=`<th scope="col">Code</th>`;
-            output+=`<th scope="col">Description</th>`;
-            output+=`<th scope="col">Program</th>`;
-            
-            output+=`</tr>`;
-            output+=`</thead>`;
-            output+=`<tbody>`;
-        for (let i=0; i<results['subjects'].length; i++) { 
-                // console.log(results['subjects'][i]);        
-            output+=`<tr id="tr-` + results['subjects'][i].id + `">`;
+            let output = `<table class="table table-striped h-50" id="subjects-table">
+                            <thead class="bg-warning ">
+                                <tr>
+                                <th scope="col">Action</th>
+                                <th scope="col" class="text-center bg-info border-left">Rating</th>
+                                <th scope="col" class="text-center bg-info border-left">Academic Year</th>
+                                <th scope="col" class="text-center bg-info border-left border-right">Sem</th>
+                                <th scope="col">Code</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Program</th>
+                                
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                            
+                            for(let i in results.subjects){
+                                output+=`<tr id="tr-${results.subjects[i].id}"
+                                            <td><input name="subjects[]" type="hidden" value="${results.subjects[i].id}"></td>                                            
+                                            <td><button data-toggle="tooltip" data-placement="top" title="Toggle Subject" type="button" onclick="subjectToggle(this, document.getElementById('tr-${results.subjects[i].id}'))" class="btn btn-light border">Enabled</button></td>
+                                            <td class="pl-1 pt-3 border-left border-light"><input name="ratings[]" class="form-control border-light text-center" type="number" min="1" max="5"  step="0.25" placeholder="grade" ></td>
+                                            <td class="pl-1 pt-3 border-left border-light">                        
+                                               <div class="input-group"> 
+                                                    <input name="from_years[]" class="form-control border-light text-center" type="number" min="2010" max="${year}" placeholder="from" >
+                                                    <span> - </span>
+                                                    <input name="to_years[]" class="form-control border-light text-center" type="number" min="2010" max="${year + 1}" placeholder="to" >
+                                               </div>
+                                            </td>
+                                            <td class="pl-1 pt-3 border-left border-right border-light"><input type="number" class="form-control border-light" min="1" max="2" name="semesters[]" placeholder="sem"></td>
+                                            <th scope="row">${results.subjects[i].code}</th>
+                                            <td>${results.subjects[i].desc}</td>
+                                            <td>${results.subjects[i].program.abbrv}</td>
+                                        </tr>`;
+                            }                       
 
-            output+=`<input name="subjects[]" type="hidden" value="`+ results['subjects'][i].id +`">`
-
-                output+=`<td><button data-toggle="tooltip" data-placement="top" title="Toggle Subject" type="button" onclick="subjectToggle(this, document.getElementById('tr-`+results['subjects'][i].id  +`'))" class="btn btn-light border">Enabled</button></td>`;
-
-                output+=`<td class="pl-1 pt-3"><input name="ratings[]" type="number" min="1" max="5"  step="0.25" placeholder="grade" ></td>`;
-
-                output+=`<td class="pl-1 pt-3">                        
-                        <input name="from_years[]" type="number" min="2010" max="`+ year +`" placeholder="from" > -
-                        <input name="to_years[]" type="number" min="2010" max="`+ (year + 1) +`" placeholder="to" >
-                        </td>`;
-
-                output+=`<td class="pl-1 pt-3 "><input type="number" min="1" max="2" name="semesters[]" placeholder="sem"></td>`;
-
-                output+=`<th scope="row">` + results['subjects'][i].code + `</th>`;
-
-                output+=`<td>` + results['subjects'][i].desc + `</td>`;
-
-                output+=`<td>` +results['programs'][i].abbrv + `</td>`;                                
-                
-                output+=`</tr>`;
-            }                            
-            output+=`</tbody>`;
-            output+=`</table>`;
-                                        
+            output+=`</tbody>
+            </table>`;
+                                            
             document.getElementById('subjects-table').innerHTML = output;
 
         } else {
@@ -432,25 +424,31 @@ function subjectToggle(el, row){
        
         let rowElements =row.attributes[0].ownerElement.children;
 
-        for(let i=0; i<rowElements.length; i++){
-            if(rowElements[i].children.length > 0){
-                
+        for(let i=0; i<rowElements.length; i++){            
+            if(rowElements[i].children.length > 0){                                            
+
                 let children = rowElements[i].children;
                 for(let j=0; j<children.length; j++){
                 
                     children[j].value = '';
                     
-                    if(children[j].type == 'number'){
-                        children[j].disabled = true;                        
+                    if(children[j].type == 'number')
+                        children[j].disabled = true;   
+
+                    if(children[j].children.length > 0){
+                        
+                        for(let i in children[j].children){
+                            children[j].children[i].disabled = true;
+                        }
                     }
                 }
-
                 
             } else {
                 rowElements[i].style.color = '#c2c2c2';
                 if(i == 0){
                     rowElements[i].name = '';
                 }
+                children[j].value = '';
             }
                 
                 
@@ -467,10 +465,16 @@ function subjectToggle(el, row){
                 
                 let children = rowElements[i].children;
                 for(let j=0; j<children.length; j++){
-                    // console.log();
+                    
                     if(children[j].type == 'number'){
                         children[j].disabled = false;
                         
+                    }
+
+                    if(children[j].children.length > 0){
+                        for(let i in children[j].children){
+                            children[j].children[i].disabled = false;
+                        }
                     }
                 }
             } else {

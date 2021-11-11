@@ -135,39 +135,56 @@ class Subject extends Model
      *  level and semester
      * 
      */
-    public static function allWhere($values = [], $joinGenSubjs = false){
-       
-        if($joinGenSubjs == true){
-            $query =  'dept = ? ';
-            if($values['department']  == 0 ){                
-                $query.= ' and (level >= 1 and level <= ?)';
-                $query.= ' and (program_id = ? or program_id = 3)';                                  
+    public static function allWhere($values = [], $joinGenSubjs = false){        
+        $department = $values['department'];
+        $program = $values['program'];
+        $level = $values['level'];
+        $semester = $values['semester'];
+        
+        if($joinGenSubjs == true){            
+            
+            $subjects = Subject::where('dept', $department)->get();
+
+            if($department == 0){
+                $subjects = $subjects->filter(function($subject) use($program) {
+                    if($subject->program_id == $program || $subject->program_id == 3)
+                        return $subject;
+                });                              
             } else {
-                $query.= ' and (program_id = ? or program_id = 4)'; 
-                $query.= ' and (level >= 11 and level <= ?)';
-            }
+                $subjects = $subjects->filter(function($subject) use($program) {
+                    if($subject->program_id == $program || $subject->program_id == 4)
+                        return $subject;
+                });                                              
+            }                 
             
-            if($values['level'] == 1 || $values['level'] == 11 )
-                $query.= ' and semester <= ?';           
-            
-                
-            return Subject::whereRaw($query, 
-                                    [$values['department'], $values['program'],$values['level'], $values['semester']])
-                                    ->get();
-            
+           
         } else {
-            $query =  'dept = ? ';
-            $query.= ' and program_id = ?';
-                if($values['department']  == 0 )
-                    $query.= ' and (level >= 1 and level <= ?)';
-                else 
-                    $query.= ' and (level >= 11 and level <= ?)';
-            $query.= ' and semester <= ?';
             
-            return Subject::whereRaw($query, 
-                                    [$values['department'], $values['program'],$values['level'], $values['semester']])
-                                    ->get();
+            $subjects = Subject::where('dept', $department)->where('program_id', $program)->get();          
+                     
         }
+
+        $subjects = $subjects->filter(function($subject) use($level) {                    
+            return $subject->level <= $level;
+        });                                                
+        $subjects = $subjects->filter(function($subject) use($level, $semester) { 
+            $valid = true;
+            if($subject->level == $level){
+                if($semester > 1)
+                    return $subject;
+                else
+                    return $subject->semester == 1;
+            } else {
+                return $subject;
+            }                                                                
+        });  
+        
+        foreach($subjects as $subject){
+            $subject->program;
+        }
+        
+        return $subjects;            
+        
                     
     }
    

@@ -131,15 +131,12 @@ if (window.performance && window.performance.navigation.type === window.performa
 }
 
 window.addEventListener('load', (event) => {
-
     changeSubjectSelect();
-    changeSelect();
-
+    changeSelect();    
     document.getElementById("preReqSwitch").checked = false;
     document.getElementById("newStudSwitch").checked = false;
     fillSubjectsList(0);
-    fillProgramList(0);
-
+    fillProgramList(0);     
 }); 
 
 

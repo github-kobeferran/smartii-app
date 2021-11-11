@@ -128,8 +128,7 @@ class StudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {                      
-        
+    {                                    
         $before_date = Carbon::now()->subYears(15);       
         $after_date = new Carbon('1903-01-01');
 

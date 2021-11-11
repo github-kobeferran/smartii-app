@@ -829,52 +829,52 @@ class ApplicantsController extends Controller
                     'semester' => $student->semester, 
                   ];
         
-        if(!$student->program->is_tesda)
-            $subjects = Subject::allWhere($values, true);
-        else
-            $subjects = Subject::allWhere($values, false);
+        $subjects = collect();
         
-        $totalBalance = 0;
+        if($student->program->is_tesda)
+            $subjects = Subject::allWhere($values, false);
+        else
+            $subjects = Subject::allWhere($values, true);
+        
+        $total_balance = 0;
         
 
         $mergedFees = Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
-        
 
-        $subjectsToBeTakenLength = count($subjects);                  
+        $counter = 0; 
+        foreach ($subjects as $subject) {
 
-        for($i=0; $i < $subjectsToBeTakenLength; $i++){
+            $subject_to_take = new SubjectTaken;
 
-            $subjectToTake = new SubjectTaken;
+            $subject = Subject::find($subject->id);  
 
-            $subject = Subject::find($subjects[$i]->id);   
-    
-            $subjectToTake->student_id = $student_id;
-            $subjectToTake->subject_id = $subject->id;
-            
+            $subject_to_take->student_id = $student_id;
+            $subject_to_take->subject_id = $subject->id;
+
             if($student->department == 0)
-                $totalBalance+= Setting::first()->shs_price_per_unit * $subject->units;
+                $total_balance += Setting::first()->shs_price_per_unit * $subject->units;
             else 
-                $totalBalance+= Setting::first()->college_price_per_unit * $subject->units; 
+                $total_balance += Setting::first()->college_price_per_unit * $subject->units; 
 
-            if($i == $subjectsToBeTakenLength - 1 ) {  
-                
+            if($counter == ($subjects->count() - 1)) {  
+            
                 foreach($mergedFees as $fee){
                     $student->balance->amount+= $fee->amount;
                 }
             
-                $student->balance->amount+= $totalBalance;
+                $student->balance->amount+= $total_balance;
                 $student->balance->save();
             }
 
-            $subjectToTake->rating = 4.5;    
-            $subjectToTake->from_year = Setting::first()->from_year;  
-            $subjectToTake->to_year = Setting::first()->to_year; 
-            $subjectToTake->semester = Setting::first()->semester;  
+            $subject_to_take->rating = 4.5;    
+            $subject_to_take->from_year = Setting::first()->from_year;  
+            $subject_to_take->to_year = Setting::first()->to_year; 
+            $subject_to_take->semester = Setting::first()->semester;  
             
-            $subjectToTake->save();
+            $subject_to_take->save();
 
+            $counter++;
         }
-
         
         return redirect()->route('adminView')->with('active', 'applicants');
 

@@ -498,8 +498,7 @@ class AdminsController extends Controller
                         $subjects = Subject::allWhere($values, true);
                     else
                         $subjects = Subject::allWhere($values, false);
-
-                    $subjects->toJson();                    
+                    
                     $programs = [];
                     $pre_reqs = [];                                        
                     
