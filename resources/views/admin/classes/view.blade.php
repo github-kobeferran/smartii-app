@@ -168,6 +168,8 @@ let subjectsList = document.getElementById('subjects-list');
 let shsOption = document.getElementById('shsOption');
 let collegeOption = document.getElementById('collegeOption');
 
+let viewPanel = document.getElementById('view-panel');
+
 let cur_sched_id = null;
 let cur_faculty_id = null;;
 let cur_school_id = null;;
@@ -193,11 +195,25 @@ let currentProgram = null;
 shsOption.onclick = () => {
     fillProgramList(0);
     dept = 0;
+    viewPanel.innerHTML = `<div id="view-panel" ></div>`;
+    subjectsList.innerHTML = ` <div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group border">                               
+            <div id="subject-spinner" class="spinner-border text-success d-none" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+
+        </div>`;
 }
 
 collegeOption.onclick = () => {
     fillProgramList(1);
     dept = 1;
+    viewPanel.innerHTML = `<div id="view-panel" ></div>`;
+    subjectsList.innerHTML = ` <div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group border">                               
+            <div id="subject-spinner" class="spinner-border text-success d-none" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+
+        </div>`;
 }
 
 function fillProgramList(dept){
@@ -263,8 +279,8 @@ function programSelect(id){
             <div id="subject-spinner" class="spinner-border text-success d-none" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-
         </div>`;
+    
     document.getElementById('subject-spinner').classList.remove('d-none');
 
     xhr.onload = async function() {
@@ -329,7 +345,6 @@ function programSelect(id){
 function subjectSelect(subjid, subjDescAndCode, programid){  
     cancelEditSched();      
 
-    let viewPanel = document.getElementById('view-panel');
 
     let subjectbuttons = document.getElementsByClassName('subject-button');
 
