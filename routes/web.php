@@ -172,6 +172,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     
     //counts
     Route::get('/countclass/{prog}/{subj}', [App\Http\Controllers\StudentClassesController::class, 'countClasses']);
+    //no forms
+    Route::get('/remindapplicationform', [App\Http\Controllers\UsersController::class, 'remindToSubmit']);
+    Route::any('/deletenoform', [App\Http\Controllers\UsersController::class, 'deleteNoAdmissionForms']);
 
 });
 

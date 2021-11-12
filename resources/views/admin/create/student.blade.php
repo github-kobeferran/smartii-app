@@ -447,8 +447,7 @@ function subjectToggle(el, row){
                 rowElements[i].style.color = '#c2c2c2';
                 if(i == 0){
                     rowElements[i].name = '';
-                }
-                children[j].value = '';
+                }                
             }
                 
                 

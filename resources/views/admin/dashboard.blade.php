@@ -312,8 +312,8 @@
         <div class="modal fade bd-example-modal-lg" id="applicantsCount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
               <div class="modal-content">
-                <div class="modal-header bg-info">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Applicant Data S.Y. {{\App\Models\Setting::first()->from_year . '-' . \App\Models\Setting::first()->to_year . (\App\Models\Setting::first()->semester == 1 ? ' First' : ' Second')}} SEMESTER</h5>
+                <div class="modal-header bg-primary">
+                  <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Applicant Data S.Y. {{\App\Models\Setting::first()->from_year . '-' . \App\Models\Setting::first()->to_year . (\App\Models\Setting::first()->semester == 1 ? ' First' : ' Second')}} SEMESTER</span></h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -366,42 +366,7 @@
 
                             <button role="button" data-toggle="modal" data-target="#noAppFormList" class="btn btn-info text-white float-right mr-2">
                                 Still waiting for Admission Form Submission <span class="badge badge-light">{{$still_no_app_form->count()}}</span>                                                                                                               
-                            </button>    
-                            
-                            <div class="modal fade" id="noAppFormList" tabindex="-1" role="dialog" aria-labelledby="noAppFormListTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-lg" style="width: 100%;" role="document">
-                                  <div class="modal-content" >
-                                    <div class="modal-header bg-info text-dark">
-                                      <h5 class="modal-title" id="exampleModalLongTitle">Still Waiting to pass their Admission Form</h5>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                      </button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead class="bg-secondary text-white">
-                                              <tr>
-                                                  <th>Email</th>
-                                                  <th>Name</th>
-                                                  <th>Duration in the system</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-                                                  @foreach ($still_no_app_form as $user_applicant)
-                                                      <tr>
-                                                          <td>{{$user_applicant->email}}</td>
-                                                          <td>{{$user_applicant->name}}</td>
-                                                          <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
-                                                      </tr>
-                                                  @endforeach
-                                            </tbody>
-                                          </table>
-                                      </div>
-                                    </div>                                   
-                                  </div>
-                                </div>
-                            </div>                            
+                            </button>                                                                             
                         </div>
                     @endif
                     
@@ -410,8 +375,58 @@
               
               </div>
             </div>
-          </div>
-        
+        </div>
+
+        @if ($still_no_app_form->count() > 0)
+
+            <div class="modal fade" id="noAppFormList" tabindex="-1" role="dialog" aria-labelledby="noAppFormListTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" style="width: 100%;" role="document">
+                <div class="modal-content" >
+                    <div class="modal-header bg-info">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Still Waiting to pass their Admission Form</span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="row">
+                        <div class="col text-center">
+                            <a href="{{url('/remindapplicationform')}}" class="btn btn-warning text-dark">Remind All via Email</a>                        
+                        </div>
+                        <div class="col text-center">
+                            {!!Form::open(['url' => '/deletenoform'])!!}
+                                <button type="submit" class="btn btn-danger">Delete All</button>
+                            {!!Form::close()!!}
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
+                        <table class="table table-bordered">
+                            <thead class="bg-secondary text-white">
+                            <tr>
+                                <th class="bg-secondary">Email</th>
+                                <th class="bg-secondary">Name</th>
+                                <th class="bg-secondary">Duration in the system</th>
+                            </tr>
+                            </thead>
+                            <tbody>                              
+                                @foreach ($still_no_app_form as $user_applicant)
+                                    <tr>
+                                        <td>{{$user_applicant->email}}</td>
+                                        <td>{{$user_applicant->name}}</td>
+                                        <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>                                   
+                </div>
+                </div>
+            </div>           
+                
+        @endif
+
+    
         {{--######################### END OF BADGES #########################--}}
 
         <div class="container border" style="min-height: 100px;">
