@@ -280,6 +280,7 @@ function programSelect(id){
                 <span class="sr-only">Loading...</span>
             </div>
         </div>`;
+    viewPanel.innerHTML = `<div id="view-panel" ></div>`;    
     
     document.getElementById('subject-spinner').classList.remove('d-none');
 
