@@ -241,8 +241,7 @@ function fillProgramList(dept){
 function programSelect(id){
     cancelEditSched();
 
-    currentProgram = id;
-    console.log(currentProgram);
+    currentProgram = id;    
 
     let programbuttons = document.getElementsByClassName('program-button');
 
@@ -411,7 +410,7 @@ function subjectSelect(subjid, subjDescAndCode, programid){
                                                         </tr>                                                        
                                                     </thead>
                                                     <tbody>`;
-                                                        console.log(classes[i].subjects_taken);
+                                                        
                                                     classes[i].subjects_taken.forEach(subject_taken => {
                                                         if(typeof subject_taken.student != 'undefined' && typeof subject_taken.student != null){
                                                             output+=`
@@ -477,7 +476,7 @@ function subjectSelect(subjid, subjDescAndCode, programid){
                                                     </thead>
                                                     <tbody>`;
                                                     
-                                                    console.log(classes[i].subjects_taken);
+                                                    
 
                                                     classes[i].subjects_taken.forEach(subject_taken => {                                                        
                                                         if(typeof subject_taken.student != 'undefined' && typeof subject_taken.student != null){
