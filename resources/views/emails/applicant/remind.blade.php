@@ -7,10 +7,14 @@ Please submit it, take this as a notice before we delete your account in the sys
 
 <?php 
     $url = url('/admissionform');
+    $help = url('/admissionhelp');
 ?>
 
 @component('mail::button', ['url' => $url])
 Admission Form
+@endcomponent
+@component('mail::button', ['url' => $help])
+Read Guidelines
 @endcomponent
 
 Thanks,<br>
