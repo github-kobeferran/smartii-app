@@ -12,6 +12,9 @@ use App\Models\Setting;
 use App\Mail\WelcomeMember;
 use PDF;
 use Carbon\Carbon;
+use App\Exports\InvoicesExport;
+use App\Exports\AdvancedInvoicesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InvoicesController extends Controller
 {
@@ -124,6 +127,69 @@ class InvoicesController extends Controller
         $pdf = PDF::loadView('pdf.receipt', compact('invoice', 'student', 'admin', 'settings', 'data'));
         return $pdf->stream( 'invoice.pdf');  
 
+    }
+
+    public function dailyMontlyYearlyExport(){        
+        if(Setting::first()->semester == 1)
+            $semester = "First Semester";
+        else 
+            $semester = "Second Semester"; 
+
+        return Excel::download(new InvoicesExport, 'SMARTII Invoice Daily, Monthly and Year as of A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
+    }
+
+    public function advancedExport($month, $year){
+
+        $the_month = "";
+
+        switch($month){
+            case 0:
+                $the_month = "All Months";
+                break;
+            case 1:
+                $the_month = "January";
+                break;
+            case 2:
+                $the_month = "February";
+                break;
+            case 3:
+                $the_month = "March";
+                break;
+            case 4:
+                $the_month = "April";
+                break;
+            case 5:
+                $the_month = "May";
+                break;
+            case 6:
+                $the_month = "June";
+                break;
+            case 7:
+                $he_month = "July";
+                break;
+            case 8:
+                $the_month = "August";
+                break;
+            case 9:
+                $the_month = "September";
+                break;
+            case 10:
+                $the_month = "October";
+                break;
+            case 11:
+                $the_month = "November";
+                break;
+            case 12:
+                $the_month = "December";
+                break; 
+        }
+
+        if(Setting::first()->semester == 1)
+            $semester = "First Semester";
+        else 
+            $semester = "Second Semester"; 
+
+    return Excel::download(new AdvancedInvoicesExport($month,$year), 'SMARTII Invoice ' . $the_month . '-'. $year.  ' as of A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
     }
 
 }

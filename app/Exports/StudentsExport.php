@@ -21,21 +21,12 @@ class StudentsExport implements FromCollection, WithMapping, WithHeadings, WithM
      */
     public function sheets(): array
     {
-        $sheets = [];
-
-        $student = Student::orderBy('created_at' , 'asc')->first();
-        $start_year = Carbon::parse($student->created_at)->year;
-
-        $student = Student::orderBy('created_at' , 'desc')->first();
-        $end_year = Carbon::parse($student->created_at)->year;
+        $sheets = [
+            new TransactionsReportPerSheet('day', Carbon::now()->isoFormat('DD') . ' of ' .  Carbon::now()->isoFormat('MMMM')),
+            new TransactionsReportPerSheet('month', 'All of ' .  Carbon::now()->isoFormat('MMMM')),
+            new TransactionsReportPerSheet('year', 'All of ' .  Carbon::now()->isoFormat('OY')),
+        ];                        
         
-
-        for ($year = $start_year; $year <= $end_year; $year++) {
-            
-            $sheets[] = new StudentsPerYearSheet($year);            
-
-        }       
-
         return $sheets;
     }
 

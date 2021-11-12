@@ -333,8 +333,7 @@ class Subject extends Model
 
     public static function subjectsForClasses($values = []){
 
-        $program = Program::find($values['program']);
-
+        $program = Program::find($values['program']); 
         
         $query =  'dept = ? ';
 

@@ -325,8 +325,7 @@ async function deptIsChanged(){
 
 }
 
-function generateReport(){    
-    console.log(selectDeptExport.value + " " + selectProgExport.value + " " + selectLevelExport.value)
+function generateReport(){        
     window.location.href = APP_URL + '/advancedstudent/export/' + `${selectDeptExport.value}/${selectProgExport.value}/${selectLevelExport.value}`;
 }
 </script>

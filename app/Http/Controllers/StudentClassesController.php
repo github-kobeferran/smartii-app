@@ -139,6 +139,15 @@ class StudentClassesController extends Controller
         
         $theSubject = Subject::find($request->input('subj'));
 
+        foreach (StudentClass::all() as $class) {
+            if($class->subjectsTaken()->first()->student->program->id == $request->input('prog')){
+                if($class->subjectsTaken()->first()->subject_id == $theSubject->id){
+                    if(str_replace(' ', '', $class->class_name) == str_replace(' ', '', $request->input('class_name')))
+                        return redirect()->back()->with('error', 'There is already a class named "' . $request->input('class_name') . '" in this program and subject');
+                }
+            }                
+        }
+
         $status = '';
         $msg = '';
 
@@ -561,6 +570,21 @@ class StudentClassesController extends Controller
         DB::table('schedules')->delete(['class_id' => $class->id]);
         
         return redirect()->route('facultyClasses');
+
+    }
+
+    public function countClasses($prog, $subj){        
+        $classes = StudentClass::where('archive', 0)->get();
+
+        $classes = $classes->filter(function($class)use($subj){
+            return $class->subjectsTaken()->first()->subject_id == $subj;
+        });
+
+        $classes = $classes->filter(function($class)use($prog){
+            return $class->subjectsTaken()->first()->student->program->id == $prog;
+        });
+
+        return $classes->count();
 
     }
 

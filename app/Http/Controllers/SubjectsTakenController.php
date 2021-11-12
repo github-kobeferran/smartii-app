@@ -37,30 +37,42 @@ class SubjectsTakenController extends Controller
 
     }
 
-    public function pendingStudentClass($dept, $prog, $subj){             
+    public function pendingStudentClass($dept, $prog, $subj, $sortby = 'id_asc'){             
     
-        $students = new Student;        
-        $programs = new Program;
+        $students = collect(new Student);                
 
-        $pendingClasses = SubjectTaken::pendingClasses();
+        $pending_classes = SubjectTaken::pendingClasses();
 
-        for($i=0; $i<count($pendingClasses); $i++){
-            $student = new Student;
+        foreach ($pending_classes as $class) {
+            if($class->subject_id == $subj){
+                $student = Student::find($class->student_id);
 
-            if($pendingClasses[$i]->subject_id == $subj) {
+                if($student->program->id == $prog)
+                    $students->push($student);
+            }
+        }
 
-                if(Student::where('id', $pendingClasses[$i]->student_id)->doesntExist())
-                    return;
-
-                $student = Student::find($pendingClasses[$i]->student_id);
-                if($student->program_id == $prog)
-                    $students[$i] = $student;
-                
+        if($students->count() > 0){
+            switch($sortby){
+                case 'id_asc':
+                    $students = $students->sort();    
+                    break;
+                case 'id_desc':
+                    $students = $students->sortDesc();    
+                    break;
+                case 'last_name_asc':
+                    $students = $students->sortBy('last_name');    
+                    break;
+                case 'last_name_desc':
+                    $students = $students->sortByDesc('last_name');    
+                    break;
             }
 
         }
+
+                 
                         
-        return $students->toJson();        
+        return $students->values();        
         
     }
 
@@ -75,23 +87,15 @@ class SubjectsTakenController extends Controller
         $counter = 0;                   
 
         foreach($enrolledTakenSubjects as $enrolledTakenSubject){
-                                    
             if($enrolledTakenSubject->subject_id == $subj){  
-
                 if(Student::find($enrolledTakenSubject->student_id)->program_id == $prog){   
-
                     $subjectsTakenThatMatchesProgram->push($enrolledTakenSubject);
-                  
                 }
-
             }             
-
             ++$counter;
-
         }     
                         
         $classes = collect();
-
         $counter = 0;        
 
         for($i=0; $i<count($subjectsTakenThatMatchesProgram); $i++){ 
@@ -109,14 +113,16 @@ class SubjectsTakenController extends Controller
                 $sched->room_name = $sched->id;                
             }  
 
-            $class->subjectsTaken;
-            $class->subjectsTaken->first()->student->program_id;
+            $class->subjectsTaken;     
+            
+            foreach ($class->subjectsTaken as $subject_taken) {
+                $subject_taken->student;
+            }
 
             $classes->push($class);
             
         }
-        
-               
+
         return $classes->unique();       
         
     }
@@ -185,8 +191,5 @@ class SubjectsTakenController extends Controller
         return $pdf->stream( 'COR_'. strtoupper($student->first_name) . '_' .  strtoupper($student->first_name) . '.pdf');  
 
     }
-   
-
-
 
 }

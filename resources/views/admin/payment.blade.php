@@ -5,7 +5,76 @@
 @endsection
 
 @section('content')
-    <h5 class="mb-3">Payment</h5>
+    <div class="row">
+        <div class="col-1 mr-3">
+            <h5 class="mb-3">Payment </h5>
+        </div>
+        <div class="col ">
+            <button type="button" data-toggle="modal" data-target="#invoices-export-modal" class="btn btn-sm btn-success">Export Invoices to Excel</button>
+        </div>
+
+        <div class="modal fade" id="invoices-export-modal" tabindex="-1" role="dialog" aria-labelledby="invoices-export-title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="invoices-export-modal-title">INVOICES EXPORT </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>                            
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <a href="{{url('invoices/export')}}" class="btn btn-sm btn-success rounded-0">Current Day, Month and Year Invoices <i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+                            </div>
+                            <div class="col">
+                                <h6><i class="fa fa-caret-right"></i> Advanced</h6>
+
+                                <div class="form-group">
+                                    <label for="select-month-export">Month</label>
+                                    {{Form::select('month', [
+                                        0 => 'All Months',
+                                        1 => 'January',
+                                        2 => 'February',
+                                        3 => 'March',
+                                        4 => 'April',
+                                        5 => 'May',
+                                        6 => 'June',
+                                        7 => 'July',
+                                        8 => 'August',
+                                        9 => 'September',
+                                        10 => 'October',
+                                        11 => 'November',
+                                        12 => 'December',
+                                    ], 0, [
+                                        'id' => 'select-month-export',
+                                        'class' => 'form-control-sm'
+                                        ]
+                                    )}}  
+                                </div> 
+                                <div class="form-group">
+                                <?php 
+                                    $invoices = \App\Models\Invoice::all();
+                                    $invoices = $invoices->map(function ($invoice) {
+                                        return \Carbon\Carbon::parse($invoice->created_at)->isoFormat('YYYY');
+                                    });
+                                    $years = $invoices->unique();
+                                ?>
+                                <label for="select-year-export">Year</label>
+                                <select name="year" id="select-year-export">
+                                    @foreach ($years as $year)
+                                        <option value="{{$year}}">{{$year}}</option>
+                                    @endforeach
+                                </select>
+                                </div>                     
+                                <button type="button" onclick="generateInvoicesExport()" class="btn btn-sm btn-block btn-primary">Generate <i class="fa fa-file-excel-o" aria-hidden="true"></i></button>                                
+                            </div>
+                        </div>
+                    </div>                        
+                </div>
+            </div>                
+        </div>
+    </div>
 
     
     @if (session('status'))
@@ -684,7 +753,9 @@ xhr.send();
 
 }
 
-
+function generateInvoicesExport(){
+    window.location.href = APP_URL + `/advancedinvoices/export/${document.getElementById('select-month-export').value}/${document.getElementById('select-year-export').value}`
+}
 
 </script>
 

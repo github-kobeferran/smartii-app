@@ -28,20 +28,16 @@ class RoomsController extends Controller
 
         $room = new Room;
 
-        if(!Room::where('name', $request->input('room_name'))->exists()){
+        foreach (Room::all() as $room) {
+            if(str_replace(' ', '', strtolower($room->name)) == str_replace(' ', '', strtolower($request->input('room_name'))))
+                return redirect()->route('adminClasses')->with('error', 'There is already a room with the same name')->with('active', 'rooms');            
+        }
 
-            $room->name = $request->input('room_name');        
-            $room->save();
 
-            return redirect()->route('adminClasses')
-            ->with('success', 'Room Saved!')
-            ->with('active', 'rooms');
+        $room->name = $request->input('room_name');        
+        $room->save();
 
-        } else {
-            return redirect()->route('adminClasses')
-            ->with('error', 'There is already a room with the same name')
-            ->with('active', 'rooms');
-        }        
+        return redirect()->route('adminClasses')->with('success', 'Room Saved!')->with('active', 'rooms');
 
     }
 

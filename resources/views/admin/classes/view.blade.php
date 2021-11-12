@@ -34,7 +34,9 @@
         <p><strong>Subjects</strong></p>
 
         <div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group border">                               
-            
+            <div id="subject-spinner" class="spinner-border text-success d-none" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
 
         </div>
 
@@ -240,6 +242,7 @@ function programSelect(id){
     cancelEditSched();
 
     currentProgram = id;
+    console.log(currentProgram);
 
     let programbuttons = document.getElementsByClassName('program-button');
 
@@ -255,26 +258,43 @@ function programSelect(id){
 
     let xhr = new XMLHttpRequest();
 
-    xhr.open('GET', APP_URL + '/admin/view/subjects/department/' + dept + '/program/' + id , true);
+    xhr.open('GET', APP_URL + '/admin/view/subjects/department/' + dept + '/program/' + currentProgram , true);
 
-    xhr.onload = function() {
+    subjectsList.innerHTML = ` <div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group border">                               
+            <div id="subject-spinner" class="spinner-border text-success d-none" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+
+        </div>`;
+    document.getElementById('subject-spinner').classList.remove('d-none');
+
+    xhr.onload = async function() {
         if (this.status == 200) {
 
             let subjects = JSON.parse(this.responseText);
 
             if(typeof subjects !== 'undefined'){            
     
-                output = `<div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">`;
-                output +=`<ul class="list-group mt-2">`;
+                output = `<div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group">                    
+                    <ul class="list-group mt-2">`;
 
                     for(let i in subjects){
+                        const res = await fetch(APP_URL + `/countclass/${currentProgram}/${subjects[i].id}`);
+                        const count = await res.json();                                                
 
-                        output+='<li role="button" id="subj-'+ subjects[i].id +'" onclick="subjectSelect('+ subjects[i].id + ', \' ' + subjects[i].code +' - ' + subjects[i].desc + '\', '+ subjects[i].program_id +')" class="subject-button list-group-item list-group-item-action">'+ subjects[i].desc +'</li>';
+                        output+=`<li role="button" id="subj-${subjects[i].id}" onclick="subjectSelect(${subjects[i].id},'${subjects[i].code} - ${subjects[i].desc}', ${subjects[i].program_id})" class="subject-button list-group-item list-group-item-action"> 
+                            <span >${subjects[i].desc} </span> `;
+                            if(Number(count) > 0)
+                                output+=`<span class="badge badge-success">classes count: ${count}</span>`;
+                        output+=`</li>`;
 
                     }    
 
-                output +=`</ul>`;       
-                output +=`</div>`;   
+                output +=`</ul>
+                <div id="subject-spinner" class="spinner-border text-success d-none" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>`;   
                 
 
                 subjectsList.innerHTML = output;
@@ -285,6 +305,7 @@ function programSelect(id){
                 output +=`<h5>No Classes</h5>`;   
                 output +=`</div>`;   
 
+                document.getElementById('subject-spinner').classList.add('d-none');
                 subjectsList.innerHTML = output;
 
             }
@@ -344,14 +365,15 @@ function subjectSelect(subjid, subjDescAndCode, programid){
 
                 output += `<div id="view-panel" class="row mt-2 d-flex d-flex justify-content-between align-items-start align-content-start flex-wrap">`;            
 
-                for(let i in classes){                    
-
-                    let counter = 1;
+                for(let i in classes){                                        
                     
                     if(i != 0 && i % 2 == 0){
 
                         output+= `<div class="card text-white bg-success m-2" style="min-width: 18rem; max-width: 18rem;">
-                                    <div class="card-header">`+ classes[i].class_name +`</div>
+                                    <div class="card-header">
+                                        ${classes[i].class_name}
+                                        <a  type="button" data-toggle="modal" data-target="#class-${classes[i].id}" class="text-secondary">View Students</a>
+                                    </div>
                                     <div class="card-body">
                                     <h5 class="card-title text-white">`+classes[i].faculty_name +`</h5>`;
                                         classes[i].schedules.forEach(sched => {
@@ -365,15 +387,56 @@ function subjectSelect(subjid, subjDescAndCode, programid){
 
                                             output+=`</ul> 
                                                 <hr>
-                                            `;
-                                            ++counter;
+                                            `;                                            
                                         });
                             output+=`</div>
-                                </div>`;
+                                </div>
+                                
+                                <div class="modal fade" id="class-${classes[i].id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header bg-success">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">STUDENTS in ${classes[i].class_name}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="table-responsive"> 
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Student ID</th>
+                                                            <th>Name</th>
+                                                        </tr>                                                        
+                                                    </thead>
+                                                    <tbody>`;
+                                                        console.log(classes[i].subjects_taken);
+                                                    classes[i].subjects_taken.forEach(subject_taken => {
+                                                        if(typeof subject_taken.student != 'undefined' && typeof subject_taken.student != null){
+                                                            output+=`
+                                                                <tr>
+                                                                    <td><a href="${APP_URL}/studentprofile/${subject_taken.student.student_id}">${subject_taken.student.student_id}</a></td>
+                                                                    <td>${subject_taken.student.first_name} ${subject_taken.student.last_name}</td>
+                                                                </tr>
+                                                            `;
+                                                        }
+                                                    });                                                     
+                                            output+=`</tbody>
+                                                </table>
+                                            </div>
+                                        </div>               
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
 
                     }else{
                         output+= `<div class="card text-secondary bg-warning m-2" style="min-width: 18rem; max-width: 18rem;">
-                                    <div class="card-header">`+ classes[i].class_name +`</div>
+                                    <div class="card-header">
+                                        ${classes[i].class_name}
+                                        <a  type="button" data-toggle="modal" data-target="#class-${classes[i].id}" class="text-info">View Students</a>
+                                    </div>
                                     <div class="card-body">
                                     <h5 class="card-title">`+classes[i].faculty_name +`</h5>`;
 
@@ -388,12 +451,51 @@ function subjectSelect(subjid, subjDescAndCode, programid){
                                             
                                         output+=`</ul> 
                                             <hr>
-                                        `;
-                                        ++counter;
+                                        `;                                        
                                         });
                                         
                         output+=`</div>
-                                </div> `;
+                                </div> 
+                                
+                                <div class="modal fade" id="class-${classes[i].id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="modal-header bg-warning">
+                                            <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-dark">STUDENTS in ${classes[i].class_name}</span></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="table-responsive"> 
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Student ID</th>
+                                                            <th>Name</th>
+                                                        </tr>                                                        
+                                                    </thead>
+                                                    <tbody>`;
+                                                    
+                                                    console.log(classes[i].subjects_taken);
+
+                                                    classes[i].subjects_taken.forEach(subject_taken => {                                                        
+                                                        if(typeof subject_taken.student != 'undefined' && typeof subject_taken.student != null){
+                                                            output+=`
+                                                                <tr>
+                                                                    <td><a href="${APP_URL}/studentprofile/${subject_taken.student.student_id}">${subject_taken.student.student_id}</a></td>
+                                                                    <td>${subject_taken.student.first_name} ${subject_taken.student.last_name}</td>
+                                                                </tr>
+                                                            `;
+                                                        }
+                                                    });                                                     
+                                            output+=`</tbody>
+                                                </table>
+                                            </div>
+                                        </div>               
+                                        </div>
+                                    </div>
+                                </div>`;
 
                     }
 

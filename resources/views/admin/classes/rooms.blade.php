@@ -30,7 +30,7 @@
         <thead class="thead bg-light">
             <tr>                        
                 <th class="bg-light" scope="col">Room Name</th>
-                <th class="bg-light" scope="col">Status</th>
+                {{-- <th class="bg-light" scope="col">Status</th> --}}
                 <th class="bg-light" scope="col" colspan="2">Action</th>
             </tr>
         </thead> 
@@ -72,10 +72,10 @@ function fillRoomTable(){
                 output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
                 output+= '<td id="room-name" >' + rooms[i].name + '</td>';
 
-                if(rooms[i].enable == 1)
-                    output+= '<td>Enabled</td>';
-                else
-                    output+= '<td>Disabled</td>';
+                // if(rooms[i].enable == 1)
+                //     output+= '<td>Enabled</td>';
+                // else
+                //     output+= '<td>Disabled</td>';
 
                 output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
                 output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;

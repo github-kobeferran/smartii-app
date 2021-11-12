@@ -88,7 +88,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/admin/create/invoice', [App\Http\Controllers\InvoicesController::class, 'store'])->name('createInvoice');    
 
     Route::get('/admin/view', [App\Http\Controllers\AdminsController::class, 'adminView'])->name('adminView');
-    Route::get('/admin/pendingstudentclass/{dept}/{prog}/{subj}', [App\Http\Controllers\SubjectsTakenController::class, 'pendingStudentClass'])->name('adminPendingStudentClass');
+    Route::get('/admin/pendingstudentclass/{dept}/{prog}/{subj}/{sortby?}', [App\Http\Controllers\SubjectsTakenController::class, 'pendingStudentClass'])->name('adminPendingStudentClass');
     Route::get('/admin/view/{table}', [App\Http\Controllers\AdminsController::class, 'showTable'])->name('adminViewTable');    
     Route::get('/admin/view/{table}/{id}', [App\Http\Controllers\AdminsController::class, 'showData'])->name('adminViewData');    
     Route::get('/admin/view/{table}/{by}/{value}/{all?}', [App\Http\Controllers\AdminsController::class, 'showTableBy'])->name('adminViewTableBy');    
@@ -147,6 +147,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('allstudents/export/', [App\Http\Controllers\StudentsController::class, 'allStudentsExport']);
     Route::get('allactivestudents/export/', [App\Http\Controllers\StudentsController::class, 'allActiveStudentsExport']);
     Route::get('advancedstudent/export/{dept}/{prog?}/{level?}', [App\Http\Controllers\StudentsController::class, 'advancedStudentsExport']);
+    //invoices export
+    Route::get('invoices/export', [App\Http\Controllers\InvoicesController::class, 'dailyMontlyYearlyExport']);
+    Route::get('advancedinvoices/export/{month}/{year}', [App\Http\Controllers\InvoicesController::class, 'advancedExport']);
 
     Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);
@@ -160,15 +163,16 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/togglepoststatus/{id}', [App\Http\Controllers\PostsController::class, 'togglestatus']);    
     Route::get('/featurepost/{id}', [App\Http\Controllers\PostsController::class, 'feature']);    
     Route::get('/viewprogramsfromdashboard', [App\Http\Controllers\ProgramsController::class, 'viewFromDashboard']);    
-
+    
     Route::any('/attachdiscount', [App\Http\Controllers\StudentDiscountsController::class, 'attachToStudent'])->name('student_discounts.attach');    
     Route::any('/detachdiscount', [App\Http\Controllers\StudentDiscountsController::class, 'detachFromStudent'])->name('student_discounts.detach');    
     Route::any('/updatediscount', [App\Http\Controllers\DiscountsController::class, 'update'])->name('discount.update');    
     Route::any('/deletediscount', [App\Http\Controllers\DiscountsController::class, 'delete'])->name('discount.delete');    
     Route::any('/storediscount', [App\Http\Controllers\DiscountsController::class, 'store'])->name('discount.store');    
     
-    
-    
+    //counts
+    Route::get('/countclass/{prog}/{subj}', [App\Http\Controllers\StudentClassesController::class, 'countClasses']);
+
 });
 
 // APPLICANT protected routes 
