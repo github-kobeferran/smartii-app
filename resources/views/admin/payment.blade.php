@@ -57,8 +57,7 @@
                                     $invoices = \App\Models\Invoice::all();
                                     $invoices = $invoices->map(function ($invoice) {
                                         return \Carbon\Carbon::parse($invoice->created_at)->isoFormat('YYYY');
-                                    });
-                                    $years = $invoices->unique();
+                                    });                                  
                                 ?>
                                 <label for="select-year-export">Year</label>
                                 <select name="year" id="select-year-export">

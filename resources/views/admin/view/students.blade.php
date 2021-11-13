@@ -213,7 +213,7 @@ function programSelect(id){
 
  output+= `<button class="list-group-item list-group-item-action flex-column align-items-start">
               <div class="d-flex w-100 justify-content-left">`;
-        output+= `<h5 class="mb-1 mr-0">`+ ucfirst(students[i].last_name) +`, `+ ucfirst(students[i].first_name) +`, `+ ucfirst(students[i].middle_name) +`</h5> 
+        output+= `<h5 class="mb-1 mr-0">`+ ucfirst(students[i].last_name) +`, `+ ucfirst(students[i].first_name) +`, ${students[i].middle_name != null ? ucfirst(students[i].middle_name) : ``}</h5> 
         <a data-toggle="tooltip" data-placement="top" title="Visit Student Profile" class="ml-1 color-primary" href="/studentprofile/` + students[i].student_id+`">` + students[i].student_id.toUpperCase() +`</a>
         
         </div>`;
@@ -262,7 +262,7 @@ function searchStudent(){
             for(let i in students){
                 output+= `<button class="list-group-item list-group-item-action flex-column align-items-start">
               <div class="d-flex w-100 justify-content-left">`;
-        output+= `<h5 class="mb-1 mr-0">`+ ucfirst(students[i].last_name) +`, `+ ucfirst(students[i].first_name) +`, `+ ucfirst(students[i].middle_name) +`</h5> 
+        output+= `<h5 class="mb-1 mr-0">`+ ucfirst(students[i].last_name) +`, `+ ucfirst(students[i].first_name) +`, ${students[i].middle_name != null ? ucfirst(students[i].middle_name) : ``}</h5> 
         <a data-toggle="tooltip" data-placement="top" title="Visit Student Profile" class="ml-1 color-primary" href="/studentprofile/` + students[i].student_id+`">` + students[i].student_id.toUpperCase() +`</a>
         
         </div>`;

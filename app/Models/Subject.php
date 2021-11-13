@@ -8,6 +8,7 @@ use App\Models\SubjectTaken;
 use App\Models\Subject;
 use App\Models\Student;
 use App\Models\Program;
+use App\Models\Setting;
 
 
 class Subject extends Model
@@ -84,8 +85,12 @@ class Subject extends Model
     }
 
     public function setStudentCountAttribute($values = []){
+        $setting = Setting::first();
 
-        $subjectTakens = SubjectTaken::where('subject_id', $values['subject_id'])
+        $subjectTakens = SubjectTaken::where('from_year', $setting->from_year)
+                                     ->where('to_year', $setting->to_year)
+                                     ->where('semester', $setting->semester)
+                                     ->where('subject_id', $values['subject_id'])
                                      ->where('rating', 4.5)
                                      ->get();
         $count = 0;
@@ -119,8 +124,8 @@ class Subject extends Model
      *  returns subjects to be taken based on a students
      *      program, level and semester
      * 
+     
      */
-    
     public static function findSubjectSet($program, $level, $semester){
         return Subject::whereRaw('(program_id = ? or program_id is null) ' .
                                  ' and level = ?'.

@@ -61,6 +61,9 @@ class SettingsController extends Controller
 
         if($setting->isDirty('semester'))
             $setting->semester_updated_at = Carbon::now();
+
+        if($setting->isDirty('enrollment_mode'))
+            $setting->enrollment_mode_updated_at = Carbon::now();
                 
         if($setting->save()){
             return redirect()->route('adminSettings')

@@ -73,14 +73,32 @@
 
             @if ($show == 3)                
 
-                @if (\App\Models\Setting::first()->enrollment_mode == 1 && auth()->user()->access_grant == 0)
-                    <div class="">
-                        <h5>Enrollment is now Open! </h5>   
-                    </div> 
-                    <a href="/enroll/{{$student->id}}" class="btn btn-outline-success m-2">Proceed to Enrollment</a>                                        
-                @endif
+                @if (\App\Models\Setting::first()->enrollment_mode)
+                    @if ($student->subjectsTakenThisSemester()->count() == 0)                                     
+                        <?php $valid = true;?>                        
+                        @foreach ($student->subject_taken as $subject_taken)
+                            @if ($subject_taken->from_year == \App\Models\Setting::first()->from_year &&
+                                $subject_taken->to_year == \App\Models\Setting::first()->to_year &&
+                                $subject_taken->semester == \App\Models\Setting::first()->semester)
+                                <?php $valid = false;?>                        
+                            @endif
+                        @endforeach
 
-                
+                        @if ($valid)
+                            <div class="row">
+                                <div class="col my-auto text-right mr-1">
+                                    <h5 class="">ENROLLMENT IS NOW OPEN !</h5> 
+                                </div>
+                                <div class="col text-left ml-1">
+                                    <a href="/enroll" class="btn btn-outline-success m-2 neon neon-div"> <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>Proceed to Enrollment</a>                         
+                                </div>
+                            </div>  
+                        @endif
+                    @endif  
+                @endif
             @endif
 
             
@@ -622,3 +640,23 @@ function toggleDetails(){
 
 
 @endsection
+
+{{-- //     $subjects_taken = $student->subject_taken;    
+
+//     $sorted_by_from_year = $subjects_taken->sortBy('from_year');
+//     $from_years = $sorted_by_from_year->pluck('from_year');
+//     $semesters = $sorted_by_from_year->pluck('semester');
+//     $last_from_year = $from_years->last();
+//     $last_semester = $semesters->last();
+
+//     $sorted_by_to_year = $subjects_taken->sortBy('to_year');
+//     $to_years = $sorted_by_to_year->pluck('to_year');
+//     $last_to_year = $to_years->last();        
+//     @if (
+//         $last_from_year >= \App\Models\Setting::first()->from_year &&
+//         $last_to_year >= \App\Models\Setting::first()->to_year &&
+//         $last_semester !=  \App\Models\Setting::first()->semester
+//     )
+
+
+// @endif      --}}

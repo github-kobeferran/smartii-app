@@ -44,11 +44,11 @@
             <table class="table table-bordered">
                 <caption>Subjects to be taken in {{$level}} - {{$semester}}</caption>
                 <caption>For failed subjects, you make take them in the following semesters by submitting a request in registrar</caption>
-                <thead class="bg-light ">
-                    <tr  class="bg-light ">
-                        <th  class="bg-light">Subject</th>
-                        <th  class="bg-light">Pre Requisite Subject(s) Taken</th>
-                        <th  class="bg-light">Eligible</th>                    
+                <thead>
+                    <tr>
+                        <th  class="bg-info">Subject</th>
+                        <th  class="bg-info">Pre Requisite Subject(s) Taken</th>
+                        <th  class="bg-info">Eligible</th>                    
                     </tr>                    
                 </thead>
                 <tbody>

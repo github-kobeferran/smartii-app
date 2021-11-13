@@ -48,15 +48,18 @@
    
         <div id="appFilesPanel" class="row no-gutters mw-25 mh-25">                                                               
 
-            @empty(\App\Models\Applicant::where('approved', 0)->first())
-                
-                <h5 class="mx-auto mt-5">No Pending Applicants <i class="fa fa-smile-o" aria-hidden="true"></i></h5>
-
-            @else
-
-                <h5 class="mx-auto mt-5">Select an Applicant</h5>
-
-            @endempty
+            <div class="col">
+                @empty(\App\Models\Applicant::where('approved', 0)->first())
+                    <div class="text-center">
+                        
+                        <h5 class="mx-auto mt-5">No Pending Applicants <i class="fa fa-smile-o" aria-hidden="true"></i></h5>
+                    </div>
+                @else
+                    <div class="text-center">
+                        <h5 class=" mt-5">Select an Applicant</h5>
+                    </div>
+                @endempty
+             </div>
 
         </div>
         
@@ -171,7 +174,7 @@ function fillApplicantList(id = null){
                 if(id != null && id == applicants[i].id){
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start active">';
                     output +='<div class="d-flex w-100 jusstify-content-between">';
-                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + `${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
 
                         if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
                             
@@ -196,7 +199,7 @@ function fillApplicantList(id = null){
 
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
                     output +='<div class="d-flex w-100 jusstify-content-between">';
-                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + `${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
 
                         if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
                             
@@ -565,7 +568,7 @@ function applicantSelect(btnId, id, isdefault = false ){
             output2 +=`<ul class="list-group list-group-flush ">
                             <li class="list-group-item">Last Name: <strong>`+ ucfirst(applicant.last_name)  + `</strong></li>                            
                             <li class="list-group-item">First Name: <strong>`+ ucfirst(applicant.first_name)  + `</strong></li>                            
-                            <li class="list-group-item">Middle Name: <strong>`+ ucfirst(applicant.middle_name)  + `</strong></li>                            
+                            <li class="list-group-item">Middle Name: <strong>${applicant.middle_name != null ? ucfirst(applicant.middle_name) : ''}</strong></li>                            
                             <li class="list-group-item">Age: <strong>`+ applicant.age + ' years ' + `</strong></li>                            
                             <li class="list-group-item">Gender: <strong>`+ ucfirst(applicant.gender) + `</strong></li>                            
                             <li class="list-group-item">Living in: <strong>`+ applicant.present_address + `</strong></li>                            
@@ -660,7 +663,7 @@ applicantSearch.addEventListener('keyup', () => {
 
             output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
             output +='<div class="d-flex w-100 jusstify-content-between">';
-                output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + ucfirst(applicants[i].middle_name) + '</h6>';
+                output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ` ${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
 
                 if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
                     

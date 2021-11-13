@@ -162,11 +162,11 @@
                 Program
                 {{Form::select('prog', [], null, ['id'=> 'edit-prog', 'class' => 'form-control'])}}                
                 Level
-                {{Form::select('level', [
+                {{Form::select('', [
                                         '1' => 'Grade 11',
                                         '2' => 'Grade 12',                                      
                                        ], null, ['id'=> 'edit-level-shs', 'class' => 'd-none form-control'])}}
-                {{Form::select('level', [
+                {{Form::select('', [
                                         '11' => 'First Year',
                                         '12' => 'Second Year',                                      
                                        ], null, ['id'=> 'edit-level-col', 'class' => 'd-none form-control'])}}
@@ -436,9 +436,10 @@ function showEdit(id, dept){
     
     if(dept == 0){
         editLevelSHS.classList.remove('d-none');
-
+        editLevelSHS.name = 'level';
     }else {
         editLevelCOL.classList.remove('d-none');
+        editLevelCOL.name = 'level';
     }
 
     fillProgramSelect(dept);
@@ -457,30 +458,24 @@ function showEdit(id, dept){
             subjid.value = subject.id;  
             editCode.value = subject.code;
             editDesc.value = subject.desc;            
-            editSem.value = subject.semester;
+            editSem.value = subject.semester;            
 
-            console.log();
-
-            if(dept == 0){                                
-
+            if(subject.dept == 0){                                
                 for(let i=0; i<editLevelSHS.length; i++){
-
-                    if(editLevelSHS.options[i].value == subject.level)
+                    if(editLevelSHS.options[i].value == subject.level){
                         editLevelSHS.selectedIndex = i;
-
+                        editLevelSHS.value = subject.level;
+                    }
                 }
-                
-
             }else{
-                
                 for(let i=0; i<editLevelCOL.length; i++){
-
-                    if(editLevelCOL.options[i].value == subject.level)
+                    if(editLevelCOL.options[i].value == subject.level){
                         editLevelCOL.selectedIndex = i;
-
+                        editLevelCOL.value = subject.level;
+                    }
                 }
-                
             }                
+
 
             editDept.value = subject.dept;
 

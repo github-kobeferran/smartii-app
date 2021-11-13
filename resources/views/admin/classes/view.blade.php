@@ -13,10 +13,10 @@
 
     <div class="col-sm">
         <div class="btn-group btn-group-toggle border mb-3" data-toggle="buttons">
-            <label class="btn btn-light active">
+            <label id="shsOptionLabel" class="btn btn-light active">
                 <input type="radio" name="options" id="shsOption" autocomplete="off" checked> SHS
             </label>
-            <label class="btn btn-light">
+            <label id="collegeOptionLabel" class="btn btn-light">
                 <input type="radio" name="options" id="collegeOption" autocomplete="off"> College
             </label>
         </div>
@@ -265,8 +265,13 @@ function programSelect(id){
 
     for(i=0; i<programbuttons.length; i++){
         programbuttons[i].classList.remove('active');           
-        programbuttons[i].classList.remove('text-white');           
-    }  
+        programbuttons[i].classList.remove('text-white');  
+        programbuttons[i].style.pointerEvents = "none";           
+        programbuttons[i].style.opacity = "0.6";                   
+    }      
+    
+    document.getElementById('shsOptionLabel').classList.add('disabled');           
+    document.getElementById('collegeOptionLabel').classList.add('disabled');           
 
     btn.classList.add('active');
     btn.classList.add('text-white');    
@@ -314,6 +319,14 @@ function programSelect(id){
                 
 
                 subjectsList.innerHTML = output;
+                for(i=0; i<programbuttons.length; i++){               
+                    programbuttons[i].style.pointerEvents = "";           
+                    programbuttons[i].style.opacity = "";    
+                }  
+
+                document.getElementById('shsOptionLabel').classList.remove('disabled');           
+                document.getElementById('collegeOptionLabel').classList.remove('disabled'); 
+                        
 
             } else {
 
@@ -323,6 +336,13 @@ function programSelect(id){
 
                 document.getElementById('subject-spinner').classList.add('d-none');
                 subjectsList.innerHTML = output;
+                for(i=0; i<programbuttons.length; i++){               
+                    programbuttons[i].style.pointerEvents = "";           
+                    programbuttons[i].style.opacity = "";             
+                }  
+
+                document.getElementById('shsOptionLabel').classList.remove('disabled');           
+                document.getElementById('collegeOptionLabel').classList.remove('disabled'); 
 
             }
 
@@ -432,7 +452,7 @@ function subjectSelect(subjid, subjDescAndCode, programid){
                                                             output+=`
                                                                 <tr>
                                                                     <td><a href="${APP_URL}/studentprofile/${subject_taken.student.student_id}">${subject_taken.student.student_id}</a></td>
-                                                                    <td>${subject_taken.student.first_name} ${subject_taken.student.last_name}</td>
+                                                                    <td class="text-left ml-2">${subject_taken.student.first_name} ${subject_taken.student.last_name}</td>
                                                                 </tr>
                                                             `;
                                                         }
@@ -499,7 +519,7 @@ function subjectSelect(subjid, subjDescAndCode, programid){
                                                             output+=`
                                                                 <tr>
                                                                     <td><a href="${APP_URL}/studentprofile/${subject_taken.student.student_id}">${subject_taken.student.student_id}</a></td>
-                                                                    <td>${subject_taken.student.first_name} ${subject_taken.student.last_name}</td>
+                                                                    <td class="text-left ml-2">${subject_taken.student.first_name} ${subject_taken.student.last_name}</td>
                                                                 </tr>
                                                             `;
                                                         }

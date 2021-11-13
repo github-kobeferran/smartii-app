@@ -7,8 +7,6 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
 @section('content')
 
   @include('inc.homenav')
-        
-    
 
     <div  style="" id="carouselExampleIndicators" data-interval="7000" class="carousel slide carousel-fade" style="width=100%;" data-ride="carousel">
 

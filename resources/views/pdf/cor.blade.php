@@ -78,12 +78,12 @@
             
         </tr> 
 
-        @foreach ($subjectsTaken as $subTaken )
+        @foreach ($subjectsTaken as $subTaken)
 
             <tr class="item" style="text-align: center !important">
                 <td >{{ $subTaken->subject->code}}</td>
-                <td >{{ $subTaken->subj_desc}}</td>
-                <td>{{ $subTaken->units}}</td>
+                <td >{{ $subTaken->subject->desc}}</td>
+                <td>{{ $subTaken->subject->units}}</td>
                 
             </tr>
                 

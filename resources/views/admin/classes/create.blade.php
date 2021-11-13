@@ -620,7 +620,7 @@ else
     output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." ></th>';
 
 output +='<td>' + students[i].student_id + '</td>' +
-    '<td>' + capitalizeFirstLetter(students[i].last_name) + ',  ' + capitalizeFirstLetter(students[i].first_name) + ' ' + students[i].middle_name.charAt(0).toUpperCase() + '. ' + '</td>' +
+    '<td>' + capitalizeFirstLetter(students[i].last_name) + ',  ' + capitalizeFirstLetter(students[i].first_name) + ' ' + (students[i].middle_name != null ? students[i].middle_name.charAt(0).toUpperCase() : '' ) + '. ' + '</td>' +
     '</tr>';
 
                 }
@@ -697,7 +697,7 @@ async function currentProgramAndSubject(progid, subjid){
 
 
     const res2 = await fetch(APP_URL + `/admin/view/subjects/${subjid}`);
-    const subject = await res2.json();
+    const subject = await res2.json();    
 
     let level = '';
 

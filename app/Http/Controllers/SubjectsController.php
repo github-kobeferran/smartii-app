@@ -172,7 +172,7 @@ class SubjectsController extends Controller
     {
         if($request->method() != 'POST'){
             return redirect()->back();
-        }        
+        }                
         
         if(Subject::where('desc', $request->input('desc'))
             ->where('id', '!=', $request->input('subject_id'))

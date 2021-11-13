@@ -215,6 +215,53 @@ class Student extends Model
 
         return $this->attributes['tuition_with_discount'] = $tuition;
 
+    }    
+
+    public function subjectsTakenThisSemester(){
+        $subjects_taken = SubjectTaken::enrolledSubjectsbyStudent($this->id);
+
+        if($subjects_taken->count() > 0){
+            foreach ($subjects_taken as $subject_taken) {
+                if(!is_null($subject_taken->class)){
+                    $subject_taken->class;            
+                    $subject_taken->class->faculty;            
+        
+                    $schedules = $subject_taken->class->schedules->sortBy('created_at');
+                    $subject_taken->class->schedules = $schedules->values();
+        
+                    foreach ($subject_taken->class->schedules as $sched) {
+                        $sched->formatted_start = $sched->start_time;
+                        $sched->formatted_until = $sched->until;
+                        $sched->day_name = $sched->day;
+                        $sched->room_name = $sched->id;
+                    }
+                }
+
+            }
+        }
+
+        return $subjects_taken;
+    }
+
+    public function subjectsTakenThisSemesterWithRatings(){
+        $subjects_taken = SubjectTaken::subjectsTakenThisSemester($this->id);
+        
+        foreach ($subjects_taken as $subject_taken) {
+            $subject_taken->class;            
+            $subject_taken->class->faculty;            
+
+            // $schedules = $subject_taken->class->schedules->sortBy('created_at');
+            // $subject_taken->class->schedules = $schedules->values();
+
+            // foreach ($subject_taken->class->schedules as $sched) {
+            //     $sched->formatted_start = $sched->start_time;
+            //     $sched->formatted_until = $sched->until;
+            //     $sched->day_name = $sched->day;
+            //     $sched->room_name = $sched->id;
+            // }
+        }
+
+        return $subjects_taken;
     }
 
 }

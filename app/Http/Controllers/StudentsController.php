@@ -57,6 +57,7 @@ class StudentsController extends Controller
                 $student->balance_amount = $student->balance_id;
                 $student->level_desc = $student->level;                                
                 $student->pronoun;
+                $student->subjects_taken;
 
                return view('student.profile')
                         ->with('student', $student)
@@ -562,111 +563,12 @@ class StudentsController extends Controller
 
     public function getClasses(){
               
-        $stud_id = auth()->user()->member->member_id;                                                        
-
-        $student = Student::where('id',$stud_id)->first();
-
+        $id = auth()->user()->member->member_id;                                                        
+        $student = Student::find($id);
         $settings = Setting::first();
-        
-        $currentSubjectsTaken = SubjectTaken::enrolledSubjectsbyStudent($student->id);        
-
-        $currentSubjects = collect(new Subject);
-        $currentSubjectsSchedule = collect([]);
-
-        foreach($currentSubjectsTaken as $currentSubjectTaken){
-            
-            $subject = Subject::find($currentSubjectTaken->subject_id);
-
-            if($currentSubjectTaken->class_id != null){
-                if(Schedule::where('class_id', $currentSubjectTaken->class_id)->count() > 1){
-                    
-
-                    for($i=0; $i<Schedule::where('class_id', $currentSubjectTaken->class_id)->count(); $i++){
-
-                        $sched[$i] = Schedule::where('class_id', $currentSubjectTaken->class_id)->get()[$i];                    
-
-                    }
-                                      
-                }else{
-                    $sched = Schedule::where('class_id', $currentSubjectTaken->class_id)->first();
-                }
-            }else{
-                $sched = null;
-            }         
-            
-            $currentSubjects->push($subject);
-            $currentSubjectsSchedule->push($sched);
-
-        }
-                        
-
-        foreach($currentSubjectsSchedule as $sched){
-            
-            if(!empty($sched)){
-
-                if(is_array($sched)){
-
-                    for($i=0; $i<count($sched); $i++){
-    
-                        if(!empty($sched)){      
-                                                            
-                            $sched[$i]->faculty_name = $sched[$i]->id;
-                            $sched[$i]->room_name = $sched[$i]->id;
-                            $sched[$i]->day_name = $sched[$i]->day;
-                            $sched[$i]->formatted_start = $sched[$i]->start_time;
-                            $sched[$i]->formatted_until = $sched[$i]->until;
-    
-                        }
-                    }
-    
-
-                }else{
-                    $sched->faculty_name = $sched->id;
-                    $sched->room_name = $sched->id;
-                    $sched->day_name = $sched->day;
-                    $sched->formatted_start = $sched->start_time;
-                    $sched->formatted_until = $sched->until;
-                }
-            }            
-    
-                
-                                
-            
-        }
-
-        $allSubjectsTaken = SubjectTaken::getAllSubjectsTakenByStudent($student->id);
-        $allSubjects = collect(new Subject);
-
-        foreach($allSubjectsTaken as $subjectTaken){
-
-            $subject = Subject::find($subjectTaken->subject_id);
-
-            $allSubjects->push($subject);
-        }
-        
-        
-        
-        $settings = Setting::first();
-
         $settings->sem_desc = $settings->sem;
         
-        $currentSubjects = $currentSubjects->filter(function ($value, $key) {
-            return $value != null;
-        });
-        $currentSubjectsSchedule = $currentSubjectsSchedule->filter(function ($value, $key) {
-            return $value != null;
-        });
-
-        
-                
-
-        return view('student.classes')
-                        ->with('student' , $student)       
-                        ->with('currentSubjects' , $currentSubjects)          
-                        ->with('settings' , $settings)          
-                        ->with('currentSubjectsSchedule' , $currentSubjectsSchedule)                                  
-                        ->with('allSubjectsTaken' , $allSubjectsTaken)                                  
-                        ->with('allSubjects' , $allSubjects);                                   
+        return view('student.classes')->with('student' , $student)->with('settings' , $settings);          
 
     }
 
@@ -696,14 +598,10 @@ class StudentsController extends Controller
                         ->with('student' , $student);    
     }
 
-    public function getSubjectsForNextSemester($id){
+    public function getSubjectsForNextSemester(){
 
-        if($id != auth()->user()->member->member_id)
-            return redirect()->back();
-
-        $student = Student::find($id);
-
-       
+        $student = Student::find(auth()->user()->member->member_id);
+        
 
         $subjects = SubjectTaken::subjectsToBeTaken($student);
 
@@ -776,9 +674,9 @@ class StudentsController extends Controller
 
         $student = Student::find($request->input('student_id'));        
 
-        if($student->access_grant == 1){
-            return redirect()->back();
-        }
+        // if($student->access_grant == 1){
+        //     return redirect()->back();
+        // }
 
         $subject_ids = $request->input('subjects');        
 

@@ -11,9 +11,7 @@ use App\Models\StudentClass;
 
 class SubjectTaken extends Model
 {
-    use HasFactory;
-
-    public $timestamps = false;
+    use HasFactory;    
 
     protected $table = 'subjects_taken';
 
@@ -103,6 +101,16 @@ class SubjectTaken extends Model
         
     }
 
+    public static function subjectsTakenThisSemester($id){
+
+        return static::where('from_year', Setting::first()->from_year)
+                     ->where('to_year', Setting::first()->to_year)
+                     ->where('semester', Setting::first()->semester)                                      
+                     ->where('student_id',$id)                     
+                     ->get();
+        
+    }
+
     public static function getAllSubjectsTakenByStudent($id){
 
         return static::where('student_id', $id)
@@ -126,10 +134,8 @@ class SubjectTaken extends Model
             $level = 12;
             $semester = 1;
         } elseif($student->level == 12 && $student->semester == 1){
-
             $level = 12;
             $semester = 2;
-
         } elseif($student->level == 1 && $student->semester == 1){
             $level = 1;
             $semester = 2;

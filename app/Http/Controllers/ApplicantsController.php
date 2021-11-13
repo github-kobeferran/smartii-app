@@ -121,7 +121,7 @@ class ApplicantsController extends Controller
             'f_name' => 'required|max:100|regex:/^[\w Ññ-]*$/', 
             'm_name' => 'nullable|max:100|regex:/^[\w Ññ-]*$/', 
             'present_address' => 'required|max:191', 
-            'last_school' => 'required|max:191|regex:/^[a-z ,.\w-]*$/',
+            'last_school' => 'required|max:191|regex:/^[\w Ññ-]*$/',
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
 
         ],

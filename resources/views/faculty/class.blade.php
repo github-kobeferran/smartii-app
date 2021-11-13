@@ -109,15 +109,9 @@
 
                 <div class="col">
                     <a href="/myclass/{{$class->id}}/export" class="btn btn-success rounded-0" type="button" data-toggle="tooltip" title="Export to Excel" aria-haspopup="true" aria-expanded="false">
-                       Export
+                       Export List to Excel
                     </a> 
-                </div>
-
-                {{-- <div class="col">
-                    <button class="btn btn-primary rounded-0" type="button" data-toggle="tooltip" title="Import Excel File" aria-haspopup="true" aria-expanded="false">
-                       Import
-                    </button> 
-                </div> --}}
+                </div>          
                 
             </div>           
             
@@ -261,8 +255,8 @@ function selectRating(id, rating = null){
 
         <input type="hidden" name="stud_id" value = "`+ studentID +`"/>
         <input type="hidden" name="class_id" value = "`+ CLASS_ID +`"/>
-        <div class="input-group ">
-            <select name = "rating" class="custom-select " id="inputGroupSelect04">
+        <div class="input-group">
+            <select name = "rating" class="custom-select" required>
             <option  value="" selected>Choose...</option>
             <option value="1">1</option>
             <option value="1.25">1.25</option>
