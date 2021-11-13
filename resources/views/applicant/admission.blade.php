@@ -188,7 +188,9 @@ Define your own CSS3 animations in the CSS.
           @endif      
           
          
-        
+          <div class="text-center mt-2 ">
+            <h5 ><span style="font-family: 'Cinzel', serif !important; ">SMARTII ADMISSION FORM</span></h5>  
+          </div>     
 
             {!! Form::open(['url' => 'applicant/create/', 'files' => true, 'id' => 'applicantForm']) !!}
 
@@ -214,23 +216,21 @@ Define your own CSS3 animations in the CSS.
                     </div>
                 @endif
             
-                @include('inc.messages')
-
+                @include('inc.messages')                
 
                 <!-------------------------------------Monitor Inputs-->
-                <p id="monitorInputs" class="d-none text-center"></p>
-
+                <h5 id="monitorInputs" style=" font-family: 'Cinzel', serif !important; " class="d-none text-center"></h5>
+                <input type="hidden" id="monitor_input_hidden" value="">
                 
                 <!--form panels-->
 
                 <div class="row">
                   <div class="col-12 col-lg-8 m-auto">
-                      
+
                     <form class="multisteps-form__form">
-
-
                       <!--------------------------------------- Department Selection --> 
-                      <div class="multisteps-form__panel  p-4 rounded bg-white {{ $dept ? 'js-active' : '' }}" data-animation="scaleIn">
+                      
+                      <div class="multisteps-form__panel  p-4 rounded bg-white {{ $dept ? 'js-active' : '' }}" data-animation="scaleIn">                         
                         <h3 style="font-family: 'Raleway', sans-serif; font-weight: 900px; color: #044716;" id="selected-dept" class="multisteps-form__title text-center">Select Department</h3>
                         <div class="multisteps-form__content">
 
@@ -416,7 +416,9 @@ Define your own CSS3 animations in the CSS.
                               </div>
                             </div>
 
-                            *Note: to reset from the start just refresh the page
+                            <div class="text-center">
+                              <em><b class="">*Note: to reset from the start just press reload/refresh in your browser*</b></em>
+                            </div>
 
                         </div>
                       </div>
@@ -443,7 +445,7 @@ Define your own CSS3 animations in the CSS.
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" style="font-family: 'Cinzel', serif !important;">
+      <div class="modal-body" style="font-family: 'Cinzel', serif !important; font-size: small; height: 250px; overflow-y: scroll;">
         Welcome to SMARTII.CC!
         <br>
         <br>

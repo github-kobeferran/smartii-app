@@ -78,8 +78,7 @@ class ApplicantsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)    
-    {                 
+    public function store(Request $request){                 
         if($request->method() != 'POST'){
             return redirect()->back();
         }
@@ -97,6 +96,7 @@ class ApplicantsController extends Controller
         [
 
             'dept.required' => 'Select a Department and Program First.',            
+            'prog.required' => 'Select a Department and Program First.',            
                         
         ]);
 
@@ -117,11 +117,11 @@ class ApplicantsController extends Controller
 
         $validator = Validator::make($request->all(), [
             
-            'l_name' => 'required|max:100|regex:/^[a-z ,.\w\'-]*$/', 
-            'f_name' => 'required|max:100|regex:/^[a-z ,.\w\'-]*$/', 
-            'm_name' => 'required|max:100|regex:/^[a-z ,.\w\'-]*$/', 
+            'l_name' => 'required|max:100|regex:/^[\w Ññ-]*$/', 
+            'f_name' => 'required|max:100|regex:/^[\w Ññ-]*$/', 
+            'm_name' => 'nullable|max:100|regex:/^[\w Ññ-]*$/', 
             'present_address' => 'required|max:191', 
-            'last_school' => 'required|max:191|regex:/^[a-z ,.\w\'-]*$/',
+            'last_school' => 'required|max:191|regex:/^[a-z ,.\w-]*$/',
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
 
         ],
@@ -129,15 +129,14 @@ class ApplicantsController extends Controller
 
             'l_name.required' => 'Last Name is required.',
             'l_name.max' => 'Last Name must be less than a hundred characters.',
-            'l_name.regex' => 'some Last Name characters are invalid.',
+            'l_name.regex' => 'Some Last Name characters are invalid.',
 
             'f_name.required' => 'First Name is required.',
             'f_name.max' => 'First Name must be less than a hundred characters.',
-            'f_name.regex' => 'some First Name characters are invalid.',
-
-            'm_name.required' => 'Middle Name is required.',
+            'f_name.regex' => 'Some First Name characters are invalid.',
+            
             'm_name.max' => 'Middle Name must be less than a hundred characters.',
-            'm_name.regex' => 'some Middle Name characters are invalid.',
+            'm_name.regex' => 'Some Middle Name characters are invalid.',
 
             'present_address.required' => 'Present Address is required.',
 
@@ -148,7 +147,7 @@ class ApplicantsController extends Controller
 
         ]);        
 
-        if ($validator->fails()) {
+        if ($validator->fails()) {         
             return redirect()->route('admissionForm')
                          ->withErrors($validator)                             
                          ->with('active', 'resubmit_personal')
@@ -193,7 +192,7 @@ class ApplicantsController extends Controller
 
         ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails()) {   
             return redirect()->route('admissionForm')
                          ->withErrors($validator)
                          ->with('active', 'resubmit_files')
