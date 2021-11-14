@@ -301,8 +301,8 @@ tbody td {
 }
 
 .dashboard-card{
-
-    background-color: rgb(233, 222, 185) !important;
+    background-color: rgba(114, 167, 128, 0.24) !important;
+    border: .1em solid #093114a4 !important;
 
 }
 
@@ -584,4 +584,8 @@ tbody td {
 @keyframes animateBg {
 0% { background-position: 0% 0%; }
 100% { background-position: 0% 100%; }
+}
+
+.raleway-font {
+    font-family: 'Raleway', sans-serif;
 }

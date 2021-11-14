@@ -313,7 +313,8 @@ tbody td {
 }
 
 .dashboard-card {
-  background-color: #e9deb9 !important;
+  background-color: rgba(114, 167, 128, 0.24) !important;
+  border: 0.1em solid #093114a4 !important;
 }
 
 .announcement-body {
@@ -629,6 +630,10 @@ tbody td {
     background-position: 0% 100%;
   }
 }
+.raleway-font {
+  font-family: "Raleway", sans-serif;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

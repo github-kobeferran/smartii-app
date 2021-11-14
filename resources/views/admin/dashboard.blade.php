@@ -219,11 +219,16 @@
 
         {{-- ##########################  OVERVIEW  #########################--}}
 
-        <div class="card dashboard-card">
+        <div class="card dashboard-card rounded-0 ">
             
-            <div class="card-header "><div><h5>Overview</h5> <a href="/admin/settings">change settings here</a></div></div>
+            <div class="card-header ">
+                <div>
+                    <h5>Overview</h5> 
+                    <a href="/admin/settings">change settings here <i class="fa fa-cogs text-dark" aria-hidden="true"></i></a>
+                </div>
+            </div>
 
-            <div class="card-body">
+            <div class="card-body m-0 p-0">
                
                 <table class="table table-bordered bg-light text-center">
 
@@ -271,15 +276,13 @@
         <div class="d-flex flex-wrap justify-content-center">
 
             <button data-toggle="modal" data-target="#applicantsCount" type="button" class="btn btn-primary btn-lg m-1">
-                <i class="fa fa-list text-dark" aria-hidden="true"></i>
-                Pending Applicants 
-                <span class="badge badge-light">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->count()}}</span>                 
+                <span class="raleway-font">PENDING APLICANTS</span> <span class="badge badge-danger rounded-circle">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->count()}}</span>                 
               </button>
               <a href="#statistics" type="button" class="btn btn-primary btn-lg m-1">
-                Students <span class="badge badge-light">{{$studentCount}}</span>
+                <span class="raleway-font">STUDENTS</span> <span class="badge badge-danger rounded-circle">{{$studentCount}}</span>
               </a>
               <a href={{url('/viewprogramsfromdashboard')}} class="btn btn-primary btn-lg m-1">
-                Programs offerred <span class="badge badge-light">{{$programsOffered}}</span>
+                <span class="raleway-font">PROGRAMS OFFERED</span> <span class="badge badge-danger rounded-circle">{{$programsOffered}}</span>
               </a>
 
         </div>
@@ -404,13 +407,13 @@
     
         {{--######################### END OF BADGES #########################--}}
 
-        <div class="container border" style="min-height: 100px;">
+        <div class="container border" style="min-height: 100px; background: #faf89d46;">
 
-            <h5 class="mt-2 text-center">ANNOUNCEMENTS</h5> <span data-toggle="modal" data-target="#announcementForm" class="float-right"><i class="fa fa-plus" aria-hidden="true"></i></span>
+            <h5 class="mt-2 text-center">ANNOUNCEMENTS</h5> <span role="button" data-toggle="modal" data-target="#announcementForm" class="float-right" style="font-size: 2em;"><i class="fa fa-plus" aria-hidden="true"></i></span>
 
             <div class="modal fade" id="announcementForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
+                  <div class="modal-content" style="background: #faf89d;" >
                     <div class="modal-header">
                       <h5 class="modal-title" id="exampleModalLongTitle">Add Announcement</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -433,15 +436,15 @@
                       
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save changes</button>                        
+                      <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-light">Save changes</button>                        
                     </div>
                     {!!Form::close() !!}
                   </div>
                 </div>
               </div>
 
-            <div class="d-flex justify-content-center  flex-wrap">
+            <div class="d-flex justify-content-center  flex-wrap" >
 
                 @foreach ($announcements as $announcement)
 
