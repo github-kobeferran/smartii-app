@@ -7,33 +7,29 @@ Contacts page of St Mark Institute Integrated Information System, platform for h
 @section('content')
 
 @include('inc.homenav')
+    <div class="container">
+        <div style="background-color: #fcf5de; border: .2rem solid #05551B;" class="row p-5 mx-auto mt-2">
 
-    <div class="row border border-success rounded p-5 mt-5 mx-auto">
-
-        <div class="">
-
-            <h5 class="">
-
-                CONTACT US
-    
-            </h5>
-
-            <p>
-
-                <strong>Email: </strong>stmarkinstitute@yahoo.com
-
-                
-
-            </p>
-
-            <p>
-
-                <strong>Call us:</strong> (043) 4410054
-
-            </p>
+            <div class="col">
+                <div class="row">
+                    <h1 class="formal-font">CONTACT US</h1>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <p class=" text-justify mt-2" style="font-size:1.2em ;">
+                                Email <i class="fa fa-envelope-o" aria-hidden="true"></i> : stmarkinstitute@yahoo.com
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class=" text-justify mt-2" style="font-size:1.2em ;">
+                                Phone <i class="fa fa-phone" aria-hidden="true"></i> : (043) 4410054
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>            
 
         </div>
-
     </div>
-    
 @endsection

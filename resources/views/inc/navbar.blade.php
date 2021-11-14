@@ -1,7 +1,7 @@
- <nav style="background-image: linear-gradient(90deg, #c6f5d3 , rgb(253, 253, 253), rgb(233, 222, 185));" id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm ">    
+ <nav style="background-image: linear-gradient(90deg, #41ff77 , rgb(253, 253, 253), rgb(255, 208, 55));" id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm ">    
     <div class="container pl-0">
         <a style="font-family: 'Raleway', sans-serif; font-weight: 900px; color:#044716 !important;" class="navbar-brand mr-0 pl-0" href="{{ url('/') }}">
-            <img style="height: 40px; width: 40px; " src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" srcset="">
+            <img style="filter: drop-shadow(0 0 0.75rem #FFD13A); height: 40px; width: 40px; " src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" srcset="">
             {{ config('app.name', 'Laravel') }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

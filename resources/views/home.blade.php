@@ -5,10 +5,12 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
 @endsection
 
 @section('content')
+    <div class="container">
 
-  @include('inc.homenav')
+        @include('inc.homenav')
 
-    <div  style="" id="carouselExampleIndicators" data-interval="7000" class="carousel slide carousel-fade" style="width=100%;" data-ride="carousel">
+    </div>
+    <div  style="" id="carouselExampleIndicators" data-interval="7000" class="carousel slide carousel-fade border" style="width=100%;" data-ride="carousel">
 
         <?php $images = \Illuminate\Support\Facades\DB::select('select * from homepage_images order by created_at asc'); ?>
 
@@ -45,7 +47,7 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
                                                                                      
         @endempty                            
 
-        <div class="carousel-inner">
+        <div class="carousel-inner ">
 
 
             @for ($i = 0; $i < count($images); $i++)
@@ -54,7 +56,7 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
 
                     <div class="carousel-item active">
 
-                        <img  src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" style="max-height: 350px; min-height: 350px; object-fit: cover;width: 50px;" class="img-fluid w-100" alt="" >
+                        <img src="{{url('/storage/images/system/homepage_images/' . $images[$i]->image)}}" style="max-height: 350px; min-height: 350px; object-fit: cover;width: 50px;" class="img-fluid w-100" alt="" >
                     
                     </div>
 
@@ -92,7 +94,7 @@ Homepage of St Mark Institute Integrated Information System, platform for handli
                 @foreach ( \App\Models\Announcement::all() as $announcement)
         
                   
-                        <div id="announce-{{$announcement->id}}" class="shadow bg-warning w-100 text-left mt-2 mb-2" style="min-width: 21rem;">
+                        <div id="announce-{{$announcement->id}}" class="shadow w-100 text-left mt-2 mb-2" style="min-width: 21rem; background-color: #faf89d ;">
                             <u><h4 class="card-header " style="text-shadow: 1px 1px 2px #fdfdba; font-family: 'Roboto Condensed', sans-serif; color: #044716;"> {{ strtoupper("Announcement")  }} <span class="float-right ml-2" role="button" onclick="closeAnnounceMent({{$announcement->id}})"> <i class="fa fa-window-close text-danger" aria-hidden="true"></i></span> </h4></u>
                             <div class="card-body ">
                             <h3 class="card-title" style="font-family: 'Roboto Condensed', sans-serif; text-shadow: 1px 1px 2px #fdfdba;">{{$announcement->title}}</h3>

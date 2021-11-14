@@ -36,6 +36,9 @@ Route::get('/institute', function () {
 Route::get('/visionandmission', function () {
     return view('vission_mission');
 });
+Route::get('/coreandquality', function () {
+    return view('core_and_quality');
+});
 Route::get('/history', function () {
     return view('history');
 });

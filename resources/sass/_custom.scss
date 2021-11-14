@@ -317,7 +317,8 @@ tbody td {
     font-family: 'Cinzel', serif;
     color: #05551b;
     text-decoration: underline;
-    font-size: x-large;
+    font-size: 2.5em;
+    text-shadow: #ffffff 1px 0 10px;
     
 
 }
@@ -340,7 +341,6 @@ tbody td {
 
 
 .homepage-dropdown{
-
     font-family: 'Cinzel', serif;
     font-size: small;
     color: #034e18;
@@ -574,4 +574,14 @@ tbody td {
 
 .formal-font{
     font-family: 'Cinzel', serif;
+}
+
+.gradient {
+    animation: animateBg 10s linear infinite;
+    background-image: linear-gradient(0deg,#e6c694,#e7bd78,#e6b567,#e2a33e,#dd941e,#d68400,#8effac,#47c268,#239642,#0d6324,#084b1a,#044716);
+    background-size: 100% 1100%;        
+}
+@keyframes animateBg {
+0% { background-position: 0% 0%; }
+100% { background-position: 0% 100%; }
 }

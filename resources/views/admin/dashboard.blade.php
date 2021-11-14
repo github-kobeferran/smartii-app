@@ -225,59 +225,34 @@
 
             <div class="card-body">
                
-                <table class="table table-bordered bg-light">
+                <table class="table table-bordered bg-light text-center">
 
                     <tr>
-                        <td>
-                            Enrollment Mode 
-                        </td>
-                        <td
-                        style="{{$setting->enrollment_mode == 0 ? 'color: red' : 'color: green'}}"
-                        >
+                        <td>Enrollment Mode </td>
+                        <td class="{{$setting->enrollment_mode? 'gradient' : ''}}">
                             @if ($setting->enrollment_mode == 0)
-                    
-                                Closed
-                                
+                                <h5><span class="text-dark">CLOSED</span></h5>
                             @else
-                                
-                                Open
-
+                            <h5><span class="text-white">OPEN</span></h5>
                             @endif
                         </td>
-
                     </tr>
                     <tr>
-                        <td>
-                            Current A. Y.
-                        </td>
-                        <td>
-                            {{$setting->from_year . '-' . $setting->to_year}}
-                        </td>
-
+                        <td>Current A. Y.</td>
+                        <td><h5>{{$setting->from_year . '-' . $setting->to_year}}</h5></td>
                     </tr>
                     <tr>
-                        <td>
-                            Current Semester
-                        </td>
+                        <td>Current Semester</td>
                         <td>
                             @if ($setting->semester == 1)
-                    
-                                First Semester
-                                
+                                <h5>FIRST SEMESTER</h5>
                             @else
-                                
-                                Second Semester
-
+                                <h5>SECOND SEMESTER</h5>
                             @endif
                         </td>
-
                     </tr>
-
-
                 </table>
-                
             </div>
-
         </div>
 
          {{--######################### OVERVIEW END #########################--}}

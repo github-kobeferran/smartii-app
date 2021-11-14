@@ -10,34 +10,22 @@ Vission and Mission page of St Mark Institute Integrated Information System, pla
 
 <div class="container">
 
-    <div class="row border border-success rounded p-5 mt-5 mx-auto">
+    <div style="background-color: #fcf5de; border: .2rem solid #05551B;" class="row p-5 mx-auto ">
 
-        <h5 class="text-center">
+        <h5>MISSION</h5>
 
-            VISSION
-
-        </h5>
-
-        <p class="text-left mt-2">
-
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero fugiat sit incidunt laborum repellat nisi, expedita atque qui illum dolor beatae explicabo unde fugit impedit eos voluptatem. Illum corrupti reiciendis odio nesciunt facilis voluptas eveniet eos praesentium, aperiam cum, explicabo sed animi laudantium, vitae consequatur fugit omnis ipsum eligendi tenetur odit error. Minus quo vitae optio! Minima, dolore? Facilis natus officiis minima voluptas praesentium iure dolores consequatur veritatis ullam dolorum aliquam voluptatibus repellendus ipsa possimus aperiam quisquam voluptates, voluptatum optio totam ea eligendi quibusdam aut similique cumque? Officia maiores sit esse similique eos. Quod distinctio aperiam laboriosam molestiae dolorum dolor.
-
+        <p class="formal-font text-justify mt-2" style="font-size:1em ;">
+            We, the St. Mark Arts and Training Institute Inc. commit ourselves in creating a vibrant institution for learning that provide functional curriculum that support students to their maximum potential and independence. Develop knowledge and employable graduates that promote socially responsible work practices with positive impact on organization and society throughout th world.
         </p>
 
     </div>
 
-    <div class="row border border-success rounded p-5 mt-5 mx-auto">
+    <div style="background-color: #fcf5de; border: .2rem solid #05551B;" class="row p-5 mx-auto mt-2">
 
-        <h5 class="text-center">
+        <h5>VISSION</h5>
 
-            MISSION
-
-        </h5>
-
-        <p class="text-left mt-2">
-
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero fugiat sit incidunt laborum repellat nisi, expedita atque qui illum dolor beatae explicabo unde fugit impedit eos voluptatem. Illum corrupti reiciendis odio nesciunt facilis voluptas eveniet eos praesentium, aperiam cum, explicabo sed animi laudantium, vitae consequatur fugit omnis ipsum eligendi tenetur odit error. Minus quo vitae optio! Minima, dolore? Facilis natus officiis minima voluptas praesentium iure dolores consequatur veritatis ullam dolorum aliquam voluptatibus repellendus ipsa possimus aperiam quisquam voluptates, voluptatum optio totam ea eligendi quibusdam aut similique cumque? Officia maiores sit esse similique eos. Quod distinctio aperiam laboriosam molestiae dolorum dolor.
-
+        <p class="formal-font text-justify mt-2" style="font-size:1em ;">
+            We envision to be recognized as a leading institution known for delivering a future-focused curriculum and committed to continual advancement of evidence-based teaching and learning practices. To educate young minds and foster ethical, social and moral values through delivering an outstanding student experience and impactful social responsibility through learning to bloom into responsible global citizen.
         </p>
 
     </div>
