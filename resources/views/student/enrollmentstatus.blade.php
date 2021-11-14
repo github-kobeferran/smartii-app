@@ -5,9 +5,10 @@
 
 <div class="container">
 
-    <div class="row">
-        <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-angle-left" aria-hidden="true"></i>   </a>
-
+    <div class="row my-2">
+        <div class="col mt-2">
+            <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-angle-left" aria-hidden="true"></i> Back</a>
+        </div>
     </div>    
     
     @if($graduated != null && $graduated == true )
@@ -46,9 +47,9 @@
                 <caption>For failed subjects, you make take them in the following semesters by submitting a request in registrar</caption>
                 <thead>
                     <tr>
-                        <th  class="bg-info">Subject</th>
-                        <th  class="bg-info">Pre Requisite Subject(s) Taken</th>
-                        <th  class="bg-info">Eligible</th>                    
+                        <th  class="bg-info formal-font">Subject</th>
+                        <th  class="bg-info formal-font">Pre Requisite Subject(s) Taken</th>
+                        <th  class="bg-info text-center formal-font">Eligible</th>                    
                     </tr>                    
                 </thead>
                 <tbody>
@@ -87,22 +88,22 @@
                                                     
                                                     @switch($lastSemStatus[$counter][$i][$j])
                                                         @case(0)
-                                                            <span class="float-right ">{{'Failed'}}</span> 
+                                                            <span class="float-right text-danger">{{'Failed'}}</span> 
                                                             <?php $eligibility = false; ?>
                                                             @break
                                                         @case(1)
-                                                            <span class="float-right ">{{'Passed'}}</span> 
+                                                            <span class="float-right text-success">{{'Passed'}}</span> 
                                                             @break
                                                         @case(2)
-                                                            <span class="float-right ">{{'INC'}}</span> 
+                                                            <span class="float-right text-info">{{'INC'}}</span> 
                                                             <?php $eligibility = false; ?>
                                                             @break                                               
                                                         @case(3)
-                                                            <span class="float-right ">{{'Pending'}}</span>                                                             
+                                                            <span class="float-right text-info">{{'Pending'}}</span>                                                             
                                                             <?php $eligibility = false; ?>
                                                             @break                                               
                                                         @case(4)
-                                                            <span class="float-right ">{{'Not Taken'}}</span>                                                             
+                                                            <span class="float-right text-secondary">{{'Not Taken'}}</span>                                                             
                                                             <?php $eligibility = false; ?>
                                                             @break                                               
                                                             
@@ -138,13 +139,13 @@
             
                             @endif    
                             
-                            <td>
+                            <td class="text-center">
                                 @if ($eligibility)
                                 <?php array_push($eligbleSubjs, 1); ?>
-                                    Yes
+                                    <i class="fa fa-check text-success" style="font-size: 2em; text-shadow: rgb(164, 255, 164) 1px 0 10px;" aria-hidden="true"></i>
                                 @else
                                 <?php array_push($eligbleSubjs, 0); ?>
-                                    No
+                                    <i class="fa fa-times text-danger" style="font-size: 2em; text-shadow: rgb(170, 170, 170)  1px 0 10px;" aria-hidden="true"></i>
                                 @endif
 
                             </td>
@@ -170,7 +171,46 @@
                     
                 @endfor
 
-                <button type="submit" class="btn btn-success shadow btn-block">ENROLL</button>
+                <button type="button" data-toggle="modal" data-target="#confirm-enroll" class="btn btn-success btn-block shadow">ENROLL</button>
+
+                <div class="modal fade" id="confirm-enroll" tabindex="-1" role="dialog"  aria-labelledby="confirm-enroll-title" aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        
+                        <div class="modal-content">
+                            <div class="modal-header bg-success">
+                                <h5 class="modal-title"><span class="text-white">CONFIRM ENROLLMENT?</span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close">
+                                    <span class="text-white" aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-left" style="font-size: 1.2em;">
+                                    <p>Proceed to Process Your <b>Enrollment</b> to A.Y. {{\App\Models\Setting::first()->from_year}} - {{\App\Models\Setting::first()->to_year}} | {{\App\Models\Setting::first()->semester == 1 ? 'First Semester' : 'Second Semester'}} ?</p>                                                                        
+                                </div>
+                                <div class="text-left">
+                                    <p class="mb-0">By clicking <u><b class="text-success" style="font-size: 1.2em;">yes</b></u>:</p> 
+                                    <p class="ml-2 my-0"> <i class="fa fa-caret-right"></i> you will be enrolled to your elligble subjects of <b>{{$student->program->desc}}</b> <em>intented for</em> <b>{{$level}} - {{$semester}}</b> </p>
+                                    <p class="ml-2 mt-0"> <i class="fa fa-caret-right"></i> your <b>balance</b> will be updated depending on {{($student->program->is_tesda ? '' : $student->program->department) ? 'College price per unit which is Php ' . number_format(\App\Models\Setting::first()->col_price_per_unit,2) . ' and ' : 'SHS price per unit which is Php ' . number_format(\App\Models\Setting::first()->shs_price_per_unit, 2) . ' and '}} 
+                                    ORGANIZATIONAL, {{$student->department ? " COL, " : " SHS, "}} and {{$student->program->desc}}'s <b>fees</b>.
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <p>This action can't be <b>undone</b>.</p>
+                                </div>
+                            </div>    
+                            <div class="modal-footer text-left">
+                                <button class="btn btn btn-success">YES</button>
+                                <button class="btn btn btn-secondary" data-dismiss="modal">NO</button>
+                            </div>                        
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {{-- <button type="submit" class="btn btn-success shadow btn-block">ENROLL</button> --}}
 
             {!! Form::close() !!}
             

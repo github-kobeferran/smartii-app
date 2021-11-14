@@ -455,6 +455,11 @@ tbody td {
     background-color: #b2fcc7;  
     color: black;      
 }
+
+.student-view-row:hover{
+    background-color: #3E96DE !important;        
+    color: white !important;
+}
  
 .neon-div{
     background: #e9deb9;
@@ -565,4 +570,8 @@ tbody td {
     50%,100%{
         bottom: 100%;
     }
+}
+
+.formal-font{
+    font-family: 'Cinzel', serif;
 }

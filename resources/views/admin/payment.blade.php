@@ -57,7 +57,8 @@
                                     $invoices = \App\Models\Invoice::all();
                                     $invoices = $invoices->map(function ($invoice) {
                                         return \Carbon\Carbon::parse($invoice->created_at)->isoFormat('YYYY');
-                                    });                                  
+                                    });               
+                                    $years = $invoices->unique();                   
                                 ?>
                                 <label for="select-year-export">Year</label>
                                 <select name="year" id="select-year-export">
@@ -107,7 +108,7 @@
                         <tr>
                             <td class="border-right"><button type="button"  onclick="selectForPayment('{{$student->id}}')" class="btn btn-info text-white ">Payment</button></td>
                             <td class="border-right"><button type="button"  onclick="showInvoicesTable('{{$student->id}}')" class="btn btn-warning text-secondary">Invoices</button></td>
-                            <td class="border-right"><a href="{{url('/studentprofile/' . $student->student_id)}}"> {{$student->student_id}}</a></td>
+                            <td class="border-right"><a target="_blank" href="{{url('/studentprofile/' . $student->student_id)}}"> {{$student->student_id}}</a></td>
                             <td class="border-right">{{$student->last_name . ', ' . $student->first_name . ' ' . (!is_null($student->middle_name) ? strtoupper(substr($student->middle_name, 0, 1)) . '.' : '') }}</td> 
                             <?php $student->level_desc = $student->level; ?>
                             <td class="border-right">{{($student->department? 'College' : ' SHS') . ' | ' . $student->program->desc . ' | ' . $student->level_desc }}</td>
@@ -289,7 +290,7 @@
                                                                     <div class="col border-right">
         
                                                                         <span class="text-left " >
-                                                                            <a href="{{url('/studentprofile/' . $student_rel->student->student_id)}}">{{$student_rel->student->student_id}}</a>
+                                                                            <a target="_blank" href="{{url('/studentprofile/' . $student_rel->student->student_id)}}">{{$student_rel->student->student_id}}</a>
                                                                         </span>
                                                                         
                                                                     </div>

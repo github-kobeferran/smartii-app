@@ -455,21 +455,17 @@
                     </div>
                   </div>
 
-
                 @endif
-                
-                
-
-              
 
             </table>
 
         </div>
 
     </div>
-
+  
     @if (auth()->user()->isAdmin())    
-        @if (\App\Models\SubjectTaken::enrolledSubjectsbyStudent($student->id)->count() > 0)
+
+        @if ($student->subjectsTakenThisSemester()->count() > 0)
 
             <div class="row my-1">
                 <div class="col text-left ">                    

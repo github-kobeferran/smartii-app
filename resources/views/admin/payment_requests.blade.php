@@ -95,7 +95,7 @@
                                     <?php 
                                         $student = \App\Models\Student::find($request->student_id);
                                     ?>
-                                    <td><a href="{{url('/studentprofile/' . $student->student_id)}}">{{$student->first_name}} {{$student->last_name}}</a></td>
+                                    <td><a target="_blank" href="{{url('/studentprofile/' . $student->student_id)}}">{{$student->first_name}} {{$student->last_name}}</a></td>
                                     <td>{{$request->trans_id}}</td>
                                     <td>{{strtoupper($request->payment_mode)}}</td>
                                     <td>&#8369; {{number_format($request->amount, 2)}}</td>

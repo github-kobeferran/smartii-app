@@ -441,6 +441,11 @@ tbody td {
   color: black;
 }
 
+.student-view-row:hover {
+  background-color: #3E96DE !important;
+  color: white !important;
+}
+
 .neon-div {
   background: #e9deb9;
   font-family: "Raleway", sans-serif;
@@ -595,6 +600,10 @@ tbody td {
     bottom: 100%;
   }
 }
+.formal-font {
+  font-family: "Cinzel", serif;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors
