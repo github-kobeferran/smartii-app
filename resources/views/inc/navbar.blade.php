@@ -1,11 +1,11 @@
- <nav style="background-image: linear-gradient(90deg, #41ff77 , rgb(253, 253, 253), rgb(255, 208, 55));" id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm ">    
+  <nav style="background-image: linear-gradient(145deg, rgb(101, 202, 128)  , rgb(253, 253, 253), #E6C694);" id="navbar" class="navbar navbar-expand-md navbar-light bg-white shadow-sm ">    
     <div class="container pl-0">
         <a style="font-family: 'Raleway', sans-serif; font-weight: 900px; color:#044716 !important;" class="navbar-brand mr-0 pl-0" href="{{ url('/') }}">
-            <img style="filter: drop-shadow(0 0 0.75rem #FFD13A); height: 40px; width: 40px; " src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" srcset="">
-            {{ config('app.name', 'Laravel') }}
+            <img style="filter: drop-shadow(0 0 .2em #FFD13A); height: 40px; width: 40px; " src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" srcset="">
+            <span class="ml-2">{{ config('app.name', 'SMARTII.CC') }}</span>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler "type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+            <span style="font-size: 1em;" class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
