@@ -267,73 +267,67 @@ class Subject extends Model
     }
 
     //for choosing pre req in subject creation
-    public static function getPossiblePreReq($values){
+    public static function getPossiblePreReq($values, $all = true){
+        $department = $values['department'];
+        $program = $values['program'];
+        $level = $values['level'];
+        $semester = $values['semester'];        
 
-        if( ($values['level'] == 1 || $values['level'] == 11) && $values['semester'] == 1  ){
-            return new Subject;
+        if( ($level== 1 || $level == 11) && $semester == 1  ){
+            return collect();
         } else {
 
-            $query = 'dept = ?';
-            
+            $subjects = Subject::where('dept', $values['department'])->get();
 
-            if($values['department']  == 0 ){
-
-                $query.= ' and (program_id = ? or program_id = 3)';                                  
-
+            if($department == 0){
                 
-                if($values['level'] > 1){
-                    
+                $subjects = $subjects->filter(function($subject) use($program) {                    
+                    if($subject->program_id == $program || $subject->program_id == 3)
+                        return $subject;
+                });  
 
-                    if($values['semester'] > 1){
-
-                        $query.= ' and level <= ?';    
-
+                $subjects = $subjects->filter(function($subject) use($level, $semester) {                    
+                    if($level > 1){
+                        if($semester > 1)
+                            return $subject->level <= $level;
+                        else
+                            return $subject->level == 1;
                     } else {
-
-                        $query.= ' and level = 1';                        
-
+                        return $subject->level == 1 && $subject->semester == 1;
                     }
-                                    
-                    
-                }else {
+                });  
 
-                    $query.= ' and level = 1';
-                    $query.= ' and semester = 1';
+            } else {
 
-                }
-
-            }else{
-
-                $query.= ' and (program_id = ? or program_id = 4)';                      
-
-                if($values['level'] > 11){
-
-                    if($values['semester'] > 1){
-
-                        $query.= ' and level <= ?';    
-
+                $subjects = $subjects->filter(function($subject) use($program) {
+                    if(!Program::find($program)->is_tesda){
+                        if($subject->program_id == $program || $subject->program_id == 4)
+                            return $subject;
+                    }else{
+                        if($subject->program_id == $program)
+                            return $subject;
+                    }
+                });      
+                
+                $subjects = $subjects->filter(function($subject) use($level, $semester) {                    
+                    if($level > 11){
+                        if($semester > 1)
+                            return $subject->level <= $level;
+                        else
+                            return $subject->level == 11;
                     } else {
-
-                        $query.= ' and level = 11';                        
-
+                        return $subject->level == 11 && $subject->semester == 1;
                     }
-                                       
-                    
-                }else {
+                });  
 
-                    $query.= ' and level = 11';
-                    $query.= ' and semester = 1';
+            }        
+            
+            $subjects = $subjects->filter(function($subject) {
+                return !is_null($subject);
+            });  
 
-                }
-                    
-            }                                                      
-
-            return Subject::whereRaw($query,
-                                    [$values['department'], $values['program'],$values['level'], $values['semester']])
-                                    ->get();
-                                   
+            return $subjects;          
         }
-        
     }
 
     public static function subjectsForClasses($values = []){

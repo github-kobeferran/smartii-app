@@ -84,9 +84,9 @@
                   ['class' => 'custom-select w-50 ml-2', 'id' => 'selectPreReq', 'placeholder' => 'Select a Pre-Req Subject'])}}  
                 <button type="button" onclick="clearList()" id="clear-pre-req" class="btn btn-danger" >Clear List</button>
 
-                <div id="pre-req-list" class="card mt-2 w-75 d-none" >
+                <div id="pre-req-list" class="card rounded-0 mt-2 ml-3 w-75 d-none" >
                     <h5 class="card-header bg-info text-white">Added Subjects</h5>
-                    <ul id="preReqList" class="list-group list-group-flush">
+                    <ul id="preReqList" class="list-group list-group-flush ">
                         
                     </ul>
                 </div>
@@ -147,11 +147,20 @@
 
             </div>
 
-            <div id="edit-panel" class="d-none">
+            <div id="edit-panel" class="d-none" style="background: #6db1e96b;">
 
                 {!! Form::open(['url' => '/updatesubject', 'class' => 'p-2 m-2']) !!}
 
-                <h5 class=""> Edit <i class="fa fa-caret-right"></i> <span id="edit-subj-title"> </span></h5>                
+                <div class="row">
+                    <div class="col-10">
+                        <h5>
+                            Edit <i class="fa fa-caret-right"></i> <span id="edit-subj-title"> </span>
+                        </h5>                      
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" onclick="cancelSubjEdit()" class="btn btn-sm btn-light text-danger">&times;</button>
+                    </div>
+                </div>
                 {{Form::hidden('subject_id', null, ['id' => 'subj-id'])}}
                 Code
                 {{Form::text('code', '', ['id'=> 'edit-code', 'class' => 'form-control'])}}
@@ -182,7 +191,7 @@
                 {{Form::hidden('is_tesda', 0, ['id'=> 'edit-is-tesda', 'class' => 'form-control'])}}
 
                 <div class="form-group mt-2">
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 <button type="button" onclick="cancelSubjEdit()" class="btn btn-danger">Cancel</button>
 
                 </div>
@@ -202,6 +211,21 @@
 
 <script>
 
+    
+window.onbeforeunload = function(event)
+{
+    return '';
+};
+
+document.getElementById("subjectForm").onsubmit = function(e) {
+    window.onbeforeunload = null;
+    return true;
+};
+
+document.querySelector('#preReqSwitch').addEventListener('click', () => {        
+    togglePreReq();
+});
+
 let subjectList = document.getElementById('subject-list');
 let subjectPanel = document.getElementById('subject-panel');
 let editPanel = document.getElementById('edit-panel');
@@ -220,6 +244,14 @@ let editUnits = document.getElementById('edit-units');
 let subjid = document.getElementById('subj-id');
 let curDept = 0;
 
+let selectSubjDept = document.getElementById('selectSubjDept');
+let selectSubjLevel = document.getElementById('selectSubjLevel');
+let selectSubjProg = document.getElementById('selectSubjProg');
+let selectSubjSem = document.getElementById('selectSubjSem');
+let selectPreReq = document.getElementById('selectPreReq');
+let subjectSearch = document.getElementById('subject-search');
+
+let is_tesda = false;
 
 shsOption.onclick = () => {
     fillSubjectsList(0);
@@ -232,6 +264,59 @@ collegeOption.onclick = () => {
     cancelSubjEdit();
     curDept = 1;
 }
+
+selectSubjDept.addEventListener('change', () => {    
+    changeSubjectSelect();    
+    changePreReqList();
+    clearList();
+});
+
+selectSubjLevel.addEventListener('change', () => {    
+    clearList();
+    changePreReqList();        
+});
+
+selectSubjProg.addEventListener('change', () => {    
+    clearList();
+    changePreReqList();    
+    changeToUnitsOrHours(selectSubjProg.value);
+});
+
+selectSubjSem.addEventListener('change', () => {    
+    clearList();
+    changePreReqList();    
+});
+
+selectPreReq.addEventListener('change', () => {    
+    preReqToAddList();
+    
+});
+
+
+subjectSearch.addEventListener('keyup' , async () => {
+
+    const res = await fetch(APP_URL + '/admin/search/subjects/' + (subjectSearch.value == '' ? 'SearchInputIsEmpty' : subjectSearch.value )+ '/' + curDept)
+                        .catch((error) => {console.log(error)});
+
+    const subjects = await res.json();    
+
+    subjectList.innerHTML = '';
+
+    let output = `<div id="subject-list" style="max-height: 75%; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="">
+            <ul class="list-group">
+    `;        
+
+    subjects.forEach((subject) => {                
+        output+= `<li role="button" id="subj-${subject.id}" onclick="subjectClicked(${subject.id})" class="btn-subject list-group-item">${subject.desc} </li>`;    
+    });
+
+    output+= `</ul>
+    </div>`;
+
+    subjectList.innerHTML = output;
+
+});
+
 
 function fillSubjectsList(dept){
 
@@ -286,7 +371,7 @@ function subjectClicked(id){
 
     xhr.open('GET', APP_URL + '/admin/view/subjects/'+ id, true)
 
-    xhr.onload = function() {
+    xhr.onload = async function() {
 
         if(this.status == 200){
 
@@ -361,48 +446,45 @@ function subjectClicked(id){
                                     </td>
                                     <td classs='d-block'>
 
-                                        `;
-
+                                        `;                                        
                                         subject.pre_reqs.forEach(pre_req => {
-                                            output+=`<button class="text-info border-0" data-toggle="modal" data-target="#prereq-`+ pre_req.id +`">`+ pre_req.code +`</button>
+                                    output+=`<button class="text-info border-0 danger-on-hover" data-toggle="modal" data-target="#prereq-`+ pre_req.id +`">`+ pre_req.code +`</button>                                            
                                             
                                             <div class="modal fade" id="prereq-`+ pre_req.id +`" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLongTitle">Change `+ pre_req.desc +` [`+ pre_req.code +`]</h5>
+                                                    <div class="modal-header bg-danger">
+                                                        <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">DETACH - ${pre_req.code} - ${pre_req.desc}?</span></h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    {!! Form::open(['url' => '/updateprereq']) !!}
+                                                    {!! Form::open(['url' => '/detachprereq']) !!}
                                                     <div class="modal-body">
-                                                        
-
-                                                            Input the Subject Code of the Subject you want to replace
-                                                            {{Form::text('subj_code', '`+ pre_req.code +`', ['class' => 'form-control'])}}
+                                                        <p class="text-justify px-3 py-1">
+                                                            Are you sure you want to detach <b>${pre_req.code} - ${pre_req.desc}</b> from the pre-requisites of <b>${subject.desc}</b>? 
+                                                        </p>
                                                             {{Form::hidden('pre_req_id', '`+ pre_req.id +`', ['class' => 'form-control'])}}
                                                             {{Form::hidden('subj_id', '`+ subject.id +`', ['class' => 'form-control'])}}
-                                                            
-                                                        
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Update</button>
-                                                            {!! Form::close() !!}
-                                                      
+                                                    <div class="modal-footer my-0 py-0">
+                                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
                                                     </div>
+                                                    {!! Form::close() !!}
                                                     </div>
                                                 </div>
-                                                </div>
-                                            
-                                            `;
+                                                </div>`;
                                         });
-                                        
-                                output+=`
-                                        
-                                    </td>                                    
+                                    
+                        const data = await fetch(`${APP_URL}/admin/view/prereqs/department/${subject.dept}/program/${subject.program_id}/level/${subject.level}/semester/${subject.semester}`);
+                        const possible_prereqs = await data.json();                          
+                        
+                                if(typeof possible_prereqs[0] != 'undefined')
+                                        output+= `<button class="btn btn-sm btn-light border-0 " data-toggle="modal" data-target="#add-prereq-form-${subject.id}"><i class="fa fa-plus-square-o" style="color: #044716; font-size: 2em;" aria-hidden="true"></i></button>`;
 
+                                output+=`                                          
+                                    </td>      
                                 </tr>
 
                                 <tr>
@@ -410,13 +492,55 @@ function subjectClicked(id){
                                     <td role="button" class="bg-danger">
                                         <a href="/deletesubject/`+ subject.id +`" class="btn btn-danger btn-block text-white" > DELETE THIS SUBJECT</a>
                                     </td>
-                                    <td onclick="showEdit(`+ subject.id +`,`+ subject.dept+`)" role="button" class="bg-info text-center">
+                                    <td onclick="showEdit(`+ subject.id +`,`+ subject.dept+`)" role="button" class="bg-info text-center" style="text-align: center; vertical-align: middle;">
                                        <div class="my-auto text-white"> EDIT THIS SUBJECT</div>
                                     </td>
 
                                 </tr>
 
                             </table> 
+                            
+                            <div class="modal fade" id="add-prereq-form-`+ subject.id +`" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header bg-success">
+                                        <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Add a Pre-Requisite to ${subject.desc}</span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {!! Form::open(['url' => '/attachprereq']) !!}
+                                    <div class="modal-body">`;
+                                        
+                                        if(Object.keys(possible_prereqs).length > 0){
+                                            output+=`<label>Add a Pre-Requisite for ${subject.desc}</label>
+                                            <select name="pre_req_id" class="form-control"> `;
+                                            for(let i in possible_prereqs){
+                                                let valid = true;     
+
+                                                if(subject.pre_reqs.length > 0){
+                                                    subject.pre_reqs.forEach(prereq => {
+                                                        if(prereq.id == possible_prereqs[i].id)    
+                                                            valid = false;
+                                                    });
+                                                } 
+
+                                                if(valid)
+                                                    output+=`<option value="${possible_prereqs[i].id}"> ${possible_prereqs[i].desc} - ${possible_prereqs[i].code} </option>`;
+                                            }
+                                            output+=`</select>`;
+
+                                        }                                                         
+                         output += `    <input type="hidden" name="subj_id" value="${subject.id}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                    </div>
+                                    {!! Form::close() !!}                                        
+                                    </div>
+                                </div>
+                            </div>
                         </div>`;
           
 
@@ -573,23 +697,8 @@ function fillProgramSelect(dept){
 
 }
 
-window.onbeforeunload = function(event)
-{
-    return '';
-};
-
-document.getElementById("subjectForm").onsubmit = function(e) {
-    window.onbeforeunload = null;
-    return true;
-};
-
-document.querySelector('#preReqSwitch').addEventListener('click', () => {        
-    togglePreReq();
-});
-
-
 function togglePreReq(){
-let preReqDiv = document.getElementById('addPreReq');
+    let preReqDiv = document.getElementById('addPreReq');
     if(preReqDiv.style.display == 'none') {
         preReqDiv.style.display = 'block';
         
@@ -599,66 +708,6 @@ let preReqDiv = document.getElementById('addPreReq');
     }
 }
 
-let selectSubjDept = document.getElementById('selectSubjDept');
-let selectSubjLevel = document.getElementById('selectSubjLevel');
-let selectSubjProg = document.getElementById('selectSubjProg');
-let selectSubjSem = document.getElementById('selectSubjSem');
-let selectPreReq = document.getElementById('selectPreReq');
-let subjectSearch = document.getElementById('subject-search');
-
-
-selectSubjDept.addEventListener('change', () => {    
-    changeSubjectSelect();    
-    changePreReqList();
-    clearList();
-});
-
-selectSubjLevel.addEventListener('change', () => {    
-    clearList();
-    changePreReqList();        
-});
-
-selectSubjProg.addEventListener('change', () => {    
-    clearList();
-    changePreReqList();    
-    changeToUnitsOrHours(selectSubjProg.value);
-});
-
-selectSubjSem.addEventListener('change', () => {    
-    clearList();
-    changePreReqList();    
-});
-
-selectPreReq.addEventListener('change', () => {    
-    preReqToAddList();
-    
-});
-
-subjectSearch.addEventListener('keyup' , async () => {
-
-    const res = await fetch(APP_URL + '/admin/search/subjects/' + (subjectSearch.value == '' ? 'SearchInputIsEmpty' : subjectSearch.value )+ '/' + curDept)
-                        .catch((error) => {console.log(error)});
-
-    const subjects = await res.json();    
-
-    subjectList.innerHTML = '';
-
-    let output = `<div id="subject-list" style="max-height: 75%; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="">
-            <ul class="list-group">
-    `;        
-
-    subjects.forEach((subject) => {                
-        output+= `<li role="button" id="subj-${subject.id}" onclick="subjectClicked(${subject.id})" class="btn-subject list-group-item">${subject.desc} </li>`;    
-    });
-
-    output+= `</ul>
-    </div>`;
-
-    subjectList.innerHTML = output;
-
-});
-
-
 function changeSubjectSelect(){
     
     removeAllOptions(selectPreReq);
@@ -666,8 +715,6 @@ function changeSubjectSelect(){
     dept = selectSubjDept.value;
     level = selectSubjLevel.value;
     prog = selectSubjProg.value;
-
-    // console.log(dept);
 
     if(dept == 0){     
         selectSubjLevel.options[0] = new Option('Grade 11', '1');
@@ -705,15 +752,13 @@ function changeSubjectSelect(){
 }
 
 function changePreReqList(){
-
-    removeAllOptions(selectPreReq);
     
     let dept = selectSubjDept.value;
     let program = selectSubjProg.value;
     let level = selectSubjLevel.value;
-    let semester = selectSubjSem.value;
+    let semester = selectSubjSem.value;   
 
-   
+    removeAllOptions(selectPreReq); 
 
     var xhr = new XMLHttpRequest();   
     xhr.open('GET', APP_URL
@@ -725,28 +770,29 @@ function changePreReqList(){
 
     xhr.onload = function() {
         if (this.status == 200) {
-        let subjects = JSON.parse(this.responseText); 
+
+            let subjects = JSON.parse(this.responseText); 
                                                             
-           if( (level == 1 || level == 11) &&  (semester == 1) ){
+            if( (level == 1 || level == 11) &&  (semester == 1) ){
+                
+            } else {                           
 
-           } else {
+                let output = `<select id="selectPreReq" name="prereqList" class="form-control ml-2">
+                <option value="" selected> Select a Pre-Req Subject </option>`;
 
-               for(let i in subjects){                                                         
-                    selectPreReq.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc, subjects[i].id); 
-               }
+                for(let i in subjects){  
+                    output += `<option value="${subjects[i].id}"> ${subjects[i].code} - ${subjects[i].desc}</option>`;                    
+                }
 
-               let option = new Option('Select a Pre-Req Subject', '', true, true);
-               selectPreReq.insertBefore(option, selectPreReq.options[0]);                             
+                output += `</select>`;
+                   
+                selectPreReq.innerHTML = output;
 
-           }
+            }
 
-        } else {
-        
-        }
+        } 
 
     }
-
-    
 
     xhr.send(); 
 
@@ -763,14 +809,14 @@ function removeAllOptions(select){
     
 }
 
-function preReqToAddList(){
+function preReqToAddList(){    
     
     let valid = true;
 
     let preReqListDiv = document.getElementById('pre-req-list');
     let preReqListUl = document.getElementById('preReqList');
 
-    preReqListDiv.className = 'card mt-2 w-75';
+    preReqListDiv.classList.remove('d-none');
 
     var li = document.createElement("li");
     var input = document.createElement("input");
@@ -830,7 +876,7 @@ function clearList(){
         
     }
 
-    preReqListDiv.className = 'card mt-2 d-none';
+    preReqListDiv.classList.add('d-none');
 }
 
 async function changeToUnitsOrHours(id){

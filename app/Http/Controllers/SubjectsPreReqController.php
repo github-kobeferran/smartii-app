@@ -8,31 +8,40 @@ use App\Models\Subject;
 
 class SubjectsPreReqController extends Controller
 {
- 
-    public function updatePreReq(Request $request){
 
-        
+    public function attach(Request $request){
         if($request->method() != 'POST'){
             return redirect()->back();
-        }                
-        
+        }     
 
-        if(!Subject::where('code', $request->input('subj_code'))->exists() ){
-            return redirect()->back()->with('error', 'Subject with ' . $request->input('subj_code') . ' code does\'nt exist');
+        $subject = Subject::find($request->input('subj_id'));   
+        $subject->pre_reqs()->attach($request->input('pre_req_id'));
+
+        if($subject->pre_req = 0){
+            $subject->pre_req = 1;
+            $subject->save();
         }
 
-        $new_pre_req = Subject::where('code', $request->input('subj_code'))->first();    
+        return redirect()->route('adminCreate')->with('active', 'subject')
+                                                ->with('success', $subject->pre_reqs()->where('id', $request->input('pre_req_id'))->first()->desc .' was added to Pre-Requisites of '. $subject->desc);
 
-        $subject_pre_req = SubjectsPreReq::where('subject_id', $request->input('subj_id'))
-                                        ->where('subject_pre_req_id',  $request->input('pre_req_id'));
+    }
+ 
+    public function detach(Request $request){
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }                 
+        
+        $subject = Subject::find($request->input('subj_id'));        
+        $desc = $subject->pre_reqs->where('id', $request->input('pre_req_id'))->first()->desc;                        
+        $subject->pre_reqs()->where('id', $request->input('pre_req_id'))->detach();  
+        
+        if($subject->pre_reqs->count() < 1){
+            $subject->pre_req = 0;
+            $subject->save();
+        }
 
-        $subject_pre_req->subject_pre_req_id = $new_pre_req->id;
-
-        $subject_pre_req->save();
-
-        return redirect()->route('adminCreate')->with('active', 'subject')->with('success','Pre-Requisite Successfully Updated');
-
-
+        return redirect()->route('adminCreate')->with('active', 'subject')->with('info', $desc .' was removed from Pre-Requisites of '. $subject->desc);
 
     }
     

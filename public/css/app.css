@@ -634,6 +634,11 @@ tbody td {
   font-family: "Raleway", sans-serif;
 }
 
+.danger-on-hover:hover {
+  background-color: #E3342F !important;
+  color: white !important;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

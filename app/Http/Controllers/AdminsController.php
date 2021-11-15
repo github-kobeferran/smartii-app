@@ -530,7 +530,13 @@ class AdminsController extends Controller
                                $thirdColumn => $thirdValue,
                                $fourthColumn => $fourthValue];
 
-                    $subjects = Subject::getPossiblePreReq($values);
+                    if(Program::find($secondValue)->is_tesda){
+                        $subjects = Subject::getPossiblePreReq($values, false);                        
+                    } elseif($thirdValue == 1 || $thirdValue == 11 && $fourthValue == 1){
+                        $subjects = Subject::getPossiblePreReq($values, false);
+                    } else {
+                        $subjects = Subject::getPossiblePreReq($values, true);
+                    }                    
                     
                     return $subjects->toJson();
                     

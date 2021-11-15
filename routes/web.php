@@ -136,10 +136,13 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     
     Route::any('/updateschedule', [App\Http\Controllers\StudentClassesController::class, 'updateSchedule'])->name('updateschedule');
     Route::any('/enrolltosubject', [App\Http\Controllers\AdminsController::class, 'enrollToSubject'])->name('enrolltosubject');
+
     Route::any('/updatesubject', [App\Http\Controllers\SubjectsController::class, 'update'])->name('updatesubject');
-    Route::any('/updateprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'updatePreReq'])->name('updateprereq');
-    Route::any('/updateprogram', [App\Http\Controllers\ProgramsController::class, 'update'])->name('updateProgram');
+    Route::any('/attachprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'attach'])->name('pre_req.attach');
+    Route::any('/detachprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'detach'])->name('pre_req.detach');
     Route::any('/deletesubject/{id}', [App\Http\Controllers\SubjectsController::class, 'destroy'])->name('destroySubject');
+
+    Route::any('/updateprogram', [App\Http\Controllers\ProgramsController::class, 'update'])->name('updateProgram');
     Route::any('/createannouncement', [App\Http\Controllers\AnnouncementsController::class, 'store'])->name('storeAnnouncement');
     Route::any('/deleteannouncement/{id}', [App\Http\Controllers\AnnouncementsController::class, 'delete'])->name('storeAnnouncement');
     Route::any('/addfee', [App\Http\Controllers\FeesController::class, 'store'])->name('addfee');
