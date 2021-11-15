@@ -135,11 +135,9 @@
     <u><h1 class="heading" text-align: center !important;>{{$program->desc}} - {{$program->abbrv}}</h1></u>
     <h2>
         @if ($program->department)
-            COLLEGE DEPARTMENT
-        @elseif($program->deparment == 0)
-            SENIOR HIGH SCHOOL DEPARTMENT
-        @elseif($program->is_tesda)
-            COLLEGE DEPARTMENT - TESDA PROGRAM
+            COLLEGE DEPARTMENT {{$program->is_tesda ? 'TESDA PROGRAM': ''}}
+        @else($program->deparment == 0)
+            SENIOR HIGH SCHOOL DEPARTMENT        
         @endif
     </h2>    
     <h3>Total {{$unit_desc}}: {{$total_units_hours}}</h3>
