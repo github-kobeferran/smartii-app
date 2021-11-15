@@ -174,10 +174,10 @@ class SubjectsController extends Controller
             return redirect()->back();
         }                
         
-        if(Subject::where('desc', $request->input('desc'))
-            ->where('id', '!=', $request->input('subject_id'))
-            ->exists())
-            return redirect()->route('adminCreate')->withInput()->with('active','subject')->with('warning', 'That subject description is already taken by other subject');
+        // if(Subject::where('desc', $request->input('desc'))
+        //     ->where('id', '!=', $request->input('subject_id'))
+        //     ->exists())
+        //     return redirect()->route('adminCreate')->withInput()->with('active','subject')->with('warning', 'That subject description is already taken by other subject');
 
         $validator = Validator::make($request->all(), [
             'code' => 'required|max:12|regex:/^[\s\w-]*$/', 
