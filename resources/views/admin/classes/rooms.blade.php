@@ -168,7 +168,7 @@ function cancelEdit(id){
     row.children[0].name = '';    
       
     row.children[1].innerHTML = '<td id="room-name" >' + row.children[1].children[0].value + '</td>';
-    row.children[3].innerHTML = '<td id="'+ row.children[3].id + '"><button onclick="changeToEdit('+ id +')" type="button" class="btn btn-info text-white">Edit</button></td>';   
+    row.children[2].innerHTML = '<td id="'+ row.children[2].id + '"><button onclick="changeToEdit('+ id +')" type="button" class="btn btn-info text-white">Edit</button></td>';   
 
 }
 
