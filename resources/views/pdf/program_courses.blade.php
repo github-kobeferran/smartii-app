@@ -135,7 +135,7 @@
     <u><h1 class="heading" text-align: center !important;>{{$program->desc}} - {{$program->abbrv}}</h1></u>
     <h2>
         @if ($program->department)
-            COLLEGE DEPARTMENT {{$program->is_tesda ? 'TESDA PROGRAM': ''}}
+            COLLEGE DEPARTMENT - {{$program->is_tesda ? 'TESDA PROGRAM': ''}}
         @else($program->deparment == 0)
             SENIOR HIGH SCHOOL DEPARTMENT        
         @endif
