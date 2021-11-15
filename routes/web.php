@@ -72,6 +72,8 @@ Route::get('/editpost/{email}/{id}', [App\Http\Controllers\PostsController::clas
 Route::any('/updatepost', [App\Http\Controllers\PostsController::class, 'update'])->middleware(['verified', 'adminAndFaculty']);
 Route::get('/invoice/{invoice_id}', [App\Http\Controllers\InvoicesController::class, 'show'])->middleware(['verified'])->name('invoice.show');    
 Route::get('/cor/{student_id}', [App\Http\Controllers\SubjectsTakenController::class, 'viewCOR'])->middleware(['verified'])->name('subjectstaken.viewCOR');    
+//program outline export
+Route::get('viewprogramcourses/export/{id}/', [App\Http\Controllers\ProgramsController::class, 'programCoursesExport'])->middleware(['verified']);
 
 Auth::routes(['verify' => true]);
 
@@ -156,6 +158,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     //invoices export
     Route::get('invoices/export', [App\Http\Controllers\InvoicesController::class, 'dailyMontlyYearlyExport']);
     Route::get('advancedinvoices/export/{month}/{year}', [App\Http\Controllers\InvoicesController::class, 'advancedExport']);
+    
 
     Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);

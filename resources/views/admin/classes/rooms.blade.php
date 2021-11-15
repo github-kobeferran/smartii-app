@@ -132,7 +132,7 @@ function searchRoom(){
         } 
 
     }
-
+    
     xhr.send();
 
 }

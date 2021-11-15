@@ -145,6 +145,13 @@ class Subject extends Model
         $program = $values['program'];
         $level = $values['level'];
         $semester = $values['semester'];
+
+        $is_tesda = Program::find($program)->is_tesda;
+
+        if($is_tesda)
+            $joinGenSubjs = false;
+        else
+            $joinGenSubjs = true;
         
         if($joinGenSubjs == true){            
             

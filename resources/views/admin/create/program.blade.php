@@ -93,7 +93,7 @@
             <p>Program Description</p>
 
             <button onclick="progEdit()" type="button" class="btn btn-info text-white">Edit</button>
-            <button href="" class="btn btn-danger text-white" disabled>Delete</button>
+            <button href="" class="btn btn-danger text-white" disabled>Delete</button>          
 
         </div>
 
@@ -221,6 +221,10 @@ function programsSelect(id){
 
                         <button onclick="progEdit(${program.id})" type="button" class="btn btn-primary text-white" >Edit</button>
                         <button class="btn btn-danger text-white" disabled>Delete</button>
+
+                        <div class="text-right">
+                            <a target="_blank" href="${APP_URL}/viewprogramcourses/export/${program.abbrv}">view course outline</a>
+                        </div>
 
                     </div>`;
                     

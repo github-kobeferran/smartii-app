@@ -123,7 +123,7 @@
                     </td>
 
                     <td class="w-50">
-                        {{ucfirst($student->program_desc)}}
+                        <a target="_blank" class="text-dark" href="{{url('viewprogramcourses/export/' . $student->program->abbrv)}}">{{ucfirst($student->program_desc)}}</a>          
                     </td>
 
                 </tr>

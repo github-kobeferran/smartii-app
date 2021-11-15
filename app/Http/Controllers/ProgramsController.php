@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Program;
+use App\Models\Subject;
+use PDF;
 use Illuminate\Support\Facades\Validator;
 
 class ProgramsController extends Controller
 {
-
+    
+    public function viewFromDashboard(){
+        return redirect()->route('adminCreate')->with('active', 'program'); 
+    }
+    
     public function store(Request $request){                   
 
         $validator = Validator::make($request->all(), [            
@@ -87,10 +93,23 @@ class ProgramsController extends Controller
 
     }
 
-    public function viewFromDashboard(){
 
-        return redirect()->route('adminCreate')->with('active', 'program'); 
+    public function programCoursesExport($abbrv){
 
+        $program = Program::where('abbrv', $abbrv)->first();
+        $subjects = Subject::allWhere([
+                                      'department' => $program->department,
+                                      'program' => $program->id,
+                                      'level' => $program->department ? 12 : 2,
+                                      'semester' => 2,
+                                    ]); 
+        foreach($subjects as $subject){
+            $subject->pre_reqs;
+        }
+
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                                    
+        $pdf = PDF::loadView('pdf.program_courses', compact('program', 'subjects'));
+        return $pdf->stream(  $program->abbrv . '.pdf');  
     }
 
     
