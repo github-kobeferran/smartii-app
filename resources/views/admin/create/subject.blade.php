@@ -407,11 +407,11 @@ function subjectClicked(id){
 
                                 <tr>
 
-                                    <td class="bg-danger">
+                                    <td role="button" class="bg-danger">
                                         <a href="/deletesubject/`+ subject.id +`" class="btn btn-danger btn-block text-white" > DELETE THIS SUBJECT</a>
                                     </td>
-                                    <td role="button" class="btn btn-info btn-block">
-                                        <button type="button" onclick="showEdit(`+ subject.id +`,`+ subject.dept+`)" class="btn btn-info btn-block text-white" > EDIT THIS SUBJECT</a>
+                                    <td onclick="showEdit(`+ subject.id +`,`+ subject.dept+`)" role="button" class="bg-info text-center">
+                                       <div class="my-auto text-white"> EDIT THIS SUBJECT</div>
                                     </td>
 
                                 </tr>

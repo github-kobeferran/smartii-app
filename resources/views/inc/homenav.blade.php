@@ -1,6 +1,6 @@
 <div class="row mt-2">
     <div class="col text-center">
-        <h1 class="homepage-title">St. Mark Institute Integrated System  </h1>                                        
+        <h1 class="homepage-title">St. Mark Arts And Training Institute Inc. </h1>                                        
     </div> 
 </div> 
 

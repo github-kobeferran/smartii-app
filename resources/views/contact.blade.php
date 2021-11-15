@@ -26,6 +26,11 @@ Contacts page of St Mark Institute Integrated Information System, platform for h
                                 Phone <i class="fa fa-phone" aria-hidden="true"></i> : (043) 4410054
                             </p>
                         </div>
+                        <div class="row">
+                            <p class=" text-justify mt-2" style="font-size:1.2em ;">
+                                Facebook Page <i class="fa fa-facebook-official" aria-hidden="true"></i> : <a href="https://bit.ly/3CimGS6" class="text-dark">SMARTII FB Page</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>            
