@@ -174,10 +174,10 @@ class SubjectsController extends Controller
             return redirect()->back();
         }                
         
-        // if(Subject::where('desc', $request->input('desc'))
-        //     ->where('id', '!=', $request->input('subject_id'))
-        //     ->exists())
-        //     return redirect()->route('adminCreate')->withInput()->with('active','subject')->with('warning', 'That subject description is already taken by other subject');
+        if(Subject::where('desc', $request->input('desc'))
+            ->where('id', '!=', $request->input('subject_id'))
+            ->exists())
+            return redirect()->route('adminCreate')->withInput()->with('active','subject')->with('warning', 'That subject description is already taken by other subject');
 
         $validator = Validator::make($request->all(), [
             'code' => 'required|max:12|regex:/^[\s\w-]*$/', 
@@ -197,21 +197,21 @@ class SubjectsController extends Controller
                          ->with('active','subject');
         }      
         
-        foreach(Subject::all() as $subject){
+        // foreach(Subject::all() as $subject){
 
-            foreach($subject->pre_reqs as $pre_req){
+        //     foreach($subject->pre_reqs as $pre_req){
 
-                if($pre_req->id == $request->input('subject_id')){
+        //         if($pre_req->id == $request->input('subject_id')){
 
-                    return redirect()->route('adminCreate')
-                        ->with('active', 'subject')
-                        ->with('error', 'Can\'t update a Pre-Requisite Subject.');
+        //             return redirect()->route('adminCreate')
+        //                 ->with('active', 'subject')
+        //                 ->with('error', 'Can\'t update a Pre-Requisite Subject.');
 
-                }
+        //         }
 
-            }
+        //     }
 
-        }
+        // }
 
         $subject = Subject::find($request->input('subject_id'));
 
