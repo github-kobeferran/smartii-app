@@ -2,7 +2,7 @@
     <div class="container pl-0">
         <a style="font-family: 'Raleway', sans-serif; font-weight: 900px; color:#044716 !important;" class="navbar-brand mr-0 pl-0" href="{{ url('/') }}">
             <img style="filter: drop-shadow(0 0 .2em #FFD13A); height: 40px; width: 40px; " src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" srcset="">
-            <span class="ml-2" style="">SMARTII</span>
+            <span class="ml-2">SMARTII</span>
         </a>
         <button class="navbar-toggler "type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span style="font-size: 1em;" class="navbar-toggler-icon"></span>

@@ -478,9 +478,9 @@ function subjectClicked(id){
                                         });
                                     
                         const data = await fetch(`${APP_URL}/admin/view/prereqs/department/${subject.dept}/program/${subject.program_id}/level/${subject.level}/semester/${subject.semester}`);
-                        const possible_prereqs = await data.json();                          
-                        
-                                if(typeof possible_prereqs[0] != 'undefined')
+                        const possible_prereqs = await data.json();
+                                                                                                  
+                                if(Object.keys(possible_prereqs).length > 0)
                                         output+= `<button class="btn btn-sm btn-light border-0 " data-toggle="modal" data-target="#add-prereq-form-${subject.id}"><i class="fa fa-plus-square-o" style="color: #044716; font-size: 2em;" aria-hidden="true"></i></button>`;
 
                                 output+=`                                          
