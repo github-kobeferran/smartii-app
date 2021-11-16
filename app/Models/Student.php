@@ -31,7 +31,8 @@ class Student extends Model
                           'rating' => null, 
                           'pronoun' => null,
                           'tuition_without_discount' => null,
-                          'tuition_with_discount' => null
+                          'tuition_with_discount' => null,
+                          'level_desc_better' => null
                         ];
 
     public function member(){
@@ -149,10 +150,25 @@ class Student extends Model
         $this->attributes['level_desc'] = $level;
     }
 
-    public function getLevelDescAttribute()
+    public function get_level_description()
     {
-        return $this->attributes['level_desc'];
-    }  
+        
+        switch($this->level){
+            case 1:
+                return "Grade 11";
+            break;
+            case 2:
+                return "Grade 12";
+            break;
+            case 11:
+                return "Freshman";
+            break;
+            case 12:
+                return "Sophomore";
+            break;
+
+        }        
+    }
 
     public function getPronounAttribute(){
         if($this->gender == 'male')

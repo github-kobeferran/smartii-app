@@ -96,9 +96,9 @@ class StudentClassAdvancedExport implements  FromCollection, WithMapping, WithHe
     {          
         return [     
             $classes->class_name,
-            $classes->subjectsTaken->first()->from_year . '-' . $classes->subjectsTaken->first()->from_year . '/' . $classes->subjectsTaken->first()->semester > 1 ? '2nd Sem' : '1st Sem',
-            $classes->subjectsTaken->first()->student->department ? 'SHS ':'COLLEGE ' . $classes->subjectsTaken->first()->student->program->abbrv . ' - ' . $classes->subjectsTaken->first()->student->program->desc,
-            $classes->subjectsTaken->first()->student->level,
+            $classes->subjectsTaken->first()->from_year . '-' . $classes->subjectsTaken->first()->from_year . '/' . ($classes->subjectsTaken->first()->semester > 1 ? '2nd Sem' : '1st Sem'),
+            $classes->subjectsTaken->first()->student->department ? 'COLLEGE, ':'SHS, ' . $classes->subjectsTaken->first()->student->program->abbrv . ' - ' . $classes->subjectsTaken->first()->student->program->desc,
+            $classes->subjectsTaken->first()->student->get_level_description(),            
             'Intr ' . $classes->faculty->first_name . ' ' . $classes->faculty->last_name,
             $classes->subjectsTaken->first()->subject->code . ' - '. $classes->subjectsTaken->first()->subject->desc,
             $classes->students_list_string(),
