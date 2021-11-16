@@ -559,7 +559,7 @@ function studentSearch(){
 
                     '<td class="border-right"><button type="button"  onclick="selectForPayment(' +students[i].id + ')" class="btn btn-info text-white border">Payment</button></td>' + 
                     '<td class="border-right"><button type="button"  onclick="showInvoicesTable(' +students[i].id + ')" class="btn btn-warning text-secondary">Invoices</button></td>' + 
-                    '<td>' + students[i].student_id + '</td>' +
+                    `<td><a href="${APP_URL}/studentprofile/${students[i].student_id}">${students[i].student_id} </a></td>` +
                     '<td>' + students[i].last_name + ', ' +students[i].first_name + ', ' + students[i].middle_name.charAt(0).toUpperCase() + '</td>' +
                     '<td>' + department + ' | ' + students[i].program_desc + ' | ' + level + '</td>' +                    
                     '<td class="border-left"><b>&#8369; ' + students[i].balance_amount + '</b></td>' +

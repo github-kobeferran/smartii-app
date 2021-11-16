@@ -64,7 +64,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <div class="text-right">
+                                                <div class="text-center">
                                                     <label  for=""><b>Academic Year</b></label>
                                                 </div>
                                                 <div class="input-group">                                                
@@ -83,7 +83,7 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="text-right">
+                                                        <div class="text-center">
                                                             <label for=""><b>Department</b></label>
                                                         </div>
                                                         <select id="select-export-dept" name="dept" id="" class="form-control text-center">
@@ -92,7 +92,7 @@
                                                         </select> 
                                                     </div>
                                                     <div class="col">
-                                                        <div class="text-right">
+                                                        <div class="text-center">
                                                             <label for=""><b>Program</b></label>
                                                         </div>
                                                         <select id="select-export-prog" name="prog" id="" class="form-control text-center">
@@ -104,7 +104,7 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="text-right">
+                                                        <div class="text-center">
                                                             <label for=""><b>Level</b></label>
                                                         </div>
                                                         <select id="select-export-level" name="level" id="" class="form-control text-center">
@@ -114,7 +114,7 @@
                                                         </select> 
                                                     </div>
                                                     <div class="col">
-                                                        <div class="text-right">
+                                                        <div class="text-center">
                                                             <label for=""><b>Semester</b></label>
                                                         </div>
                                                         <select name="sem" id="select-export-semester" class="form-control text-center">
@@ -128,7 +128,7 @@
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="text-right">
+                                                        <div class="text-center">
                                                             <label for=""><b>Faculty</b></label>
                                                         </div>
                                                         <select id="select-export-faculty" name="faculty" id="" class="form-control text-center">
@@ -136,7 +136,7 @@
                                                         </select> 
                                                     </div>
                                                     <div class="col">
-                                                        <div class="text-right">
+                                                        <div class="text-center">
                                                             <label for=""><b>Subject</b></label>
                                                         </div>
                                                         <select name="sem" id="select-export-subject" class="form-control text-center">
@@ -145,7 +145,7 @@
                                                     </div>
                                                 </div>
                                             </div>                                     
-                                            <div class="text-right">
+                                            <div class="text-center">
                                                 <input id="check-export-active" type="checkbox" class="border border-secondary">
                                                 <label><b>Active Classes Only</b></label>
                                             </div>
