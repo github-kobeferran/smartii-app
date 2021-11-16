@@ -376,7 +376,11 @@ class AdminsController extends Controller
 
                 $program->dept_desc = $program->department;
 
-                return $program;
+                if($program->count() > 0)
+                    return $program;
+                else 
+                    return 0;
+
 
             break;        
             case 'fees':
@@ -461,8 +465,35 @@ class AdminsController extends Controller
 
                 break;
                 case 'subjects':
-                    return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
-                break;                
+                    if(!is_null($all)){
+                        
+                    } else {
+                        return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
+                    }
+                break;    
+                case 'faculty':
+                    
+                    if($by == 'department'){
+                        
+                        $faculties = Faculty::all();
+
+                        $faculties = $faculties->filter(function($faculty) use($value) {
+                            return is_null($faculty->program) || $faculty->program->department == $value;
+                        });
+
+                        return $faculties;
+                    } else {
+                         
+                        $faculties = Faculty::all();
+
+                        $faculties = $faculties->filter(function($faculty) use($value) {
+                            return is_null($faculty->program) || $faculty->program->id == $value;
+                        });
+
+                        return $faculties;
+                    }
+                        
+                break;
 
                 default:
                 redirect('/home');

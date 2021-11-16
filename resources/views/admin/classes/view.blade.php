@@ -29,8 +29,141 @@
     </div>
     
     <div class="col-sm">
+        <div class="row">
+            <div class="col text-right">
+                <?php
+                    $setting = \App\Models\Setting::first(); 
+                    $subjects_taken = \App\Models\SubjectTaken::all();
+                ?>    
+                @if ($subjects_taken->count() > 0)
+                    <?php 
+                        $from_years = $subjects_taken->pluck('from_year');
+                        $to_years = $subjects_taken->pluck('to_year');
+                        $from_years = $from_years->unique();                        
+                        $to_years = $to_years->unique();                        
 
-        <div class="mb-5"></div>
+                    ?>
+
+                    <button type="button" data-toggle="modal" data-target="#export-to-excel" class="btn btn-sm btn-success">Export to Excel</button>
+
+                    <div class="modal fade" id="export-to-excel" tabindex="-1" role="dialog" aria-labelledby="exportToExcelTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-success">
+                                    <h5 class="modal-title"><span class="text-white">Export Classes to Excel</span></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">                                                          
+                                    <div class="row">
+                                        <div class="col text-left">                                            
+                                            <div class="row">
+                                                <div class="col text-center text-danger" id="export-title">
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="text-right">
+                                                    <label  for=""><b>Academic Year</b></label>
+                                                </div>
+                                                <div class="input-group">                                                
+                                                    <select name="from_year" max="{{$setting->from_year}}" id="select-export-from-year" class="form-control text-center">
+                                                        @foreach ($from_years as $year)
+                                                            <option value="{{$year}}">{{$year}}</option>
+                                                        @endforeach
+                                                    </select>                                                
+                                                    <select  name="to_year" min="" max="{{$setting->to_year}}" id="select-export-to-year" class="form-control text-center">
+                                                        @foreach ($to_years as $year)
+                                                            <option value="{{$year}}">{{$year}}</option>
+                                                        @endforeach
+                                                    </select>                                                
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="text-right">
+                                                            <label for=""><b>Department</b></label>
+                                                        </div>
+                                                        <select id="select-export-dept" name="dept" id="" class="form-control text-center">
+                                                            <option value="0">SHS</option>
+                                                            <option value="1">COLLEGE</option>
+                                                        </select> 
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="text-right">
+                                                            <label for=""><b>Program</b></label>
+                                                        </div>
+                                                        <select id="select-export-prog" name="prog" id="" class="form-control text-center">
+                                                            <option value="0">All in SHS</option>
+                                                        </select> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="text-right">
+                                                            <label for=""><b>Level</b></label>
+                                                        </div>
+                                                        <select id="select-export-level" name="level" id="" class="form-control text-center">
+                                                            <option value="0">All SHS</option>
+                                                            <option value="1">Grade 11</option>
+                                                            <option value="2">Grade 12</option>
+                                                        </select> 
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="text-right">
+                                                            <label for=""><b>Semester</b></label>
+                                                        </div>
+                                                        <select name="sem" id="select-export-semester" class="form-control text-center">
+                                                            <option value="0">All Semesters</option>
+                                                            <option value="1">First Semester</option>
+                                                            <option value="2">Second Semester</option>
+                                                        </select>  
+                                                    </div>
+                                                </div>
+                                            </div>                                     
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="text-right">
+                                                            <label for=""><b>Faculty</b></label>
+                                                        </div>
+                                                        <select id="select-export-faculty" name="faculty" id="" class="form-control text-center">
+                                                            <option value="0">All SHS FACULTIES</option>
+                                                        </select> 
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="text-right">
+                                                            <label for=""><b>Subject</b></label>
+                                                        </div>
+                                                        <select name="sem" id="select-export-subject" class="form-control text-center">
+                                                            <option value="0">All Subjects</option>
+                                                        </select>  
+                                                    </div>
+                                                </div>
+                                            </div>                                     
+                                            <div class="text-right">
+                                                <input id="check-export-active" type="checkbox" class="border border-secondary">
+                                                <label><b>Active Classes Only</b></label>
+                                            </div>
+                                            <button type="button" onclick="advanceExport()" class="btn btn-block btn-success">GENERATE REPORT</button>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                @endif
+      
+            </div>
+        </div>
+
+        <div class="mb-4"></div>
         <p><strong>Subjects</strong></p>
 
         <div id="subjects-list" style="max-height: 25vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;" class="list-group border">                               
@@ -152,6 +285,9 @@
 
 
 <script>
+window.onload = () => {
+    deptIsChanged();
+};
 
 let editPanel = document.getElementById('edit-panel');
 let editDay = document.getElementById('editDay');
@@ -170,9 +306,25 @@ let collegeOption = document.getElementById('collegeOption');
 
 let viewPanel = document.getElementById('view-panel');
 
+let selectFromYearExport = document.getElementById('select-export-from-year');
+let selectToYearExport = document.getElementById('select-export-to-year');
+let selectDeptExport = document.getElementById('select-export-dept');
+let selectProgExport = document.getElementById('select-export-prog');
+let selectLevelExport = document.getElementById('select-export-level');
+let selectSemesterExport = document.getElementById('select-export-semester');
+let selectFacultyExport = document.getElementById('select-export-faculty');
+let selectSubjectExport = document.getElementById('select-export-subject');
+let checkActiveExport = document.getElementById('check-export-active');
+
 let cur_sched_id = null;
 let cur_faculty_id = null;;
 let cur_school_id = null;;
+
+selectDeptExport.addEventListener('change', deptIsChanged)
+selectProgExport.addEventListener('change', progExportIsChanged)
+selectFromYearExport.addEventListener('change', () => {
+    selectToYearExport.setAttribute('min', Number(selectFromYearExport.value) + 1);
+});
 
 editDay.addEventListener('change', () => {   
     availableFacultyExcept(cur_faculty_id);
@@ -191,6 +343,7 @@ edit_until_time.addEventListener('input', () => {
 
 let dept = 0;
 let currentProgram = null;
+let another_current_program = 0;
 
 shsOption.onclick = () => {
     fillProgramList(0);
@@ -637,8 +790,6 @@ function availableFacultyExcept(facultyID){
 
     xhr.send(); 
 
-
-
 }
 
 
@@ -682,11 +833,161 @@ function availableRoomsExcept(roomId){
 }
 
 function cancelEditSched(){
-
     editPanel.classList.add('d-none');
+}
 
+async function deptIsChanged(){
+
+    const res = await fetch(APP_URL + `/admin/view/programs/department/${selectDeptExport.value}/`)
+                    .catch((error) => {console.log(error)});
+
+    const data = await res.json();
+
+    let output = `<select name="prog" value="" id="select-export-prog" class="form-control-md mr-2 rounded-0 border border-secondary">
+                    <option value="0" selected> All ` + (selectDeptExport.value == 0 ? `SHS` : `College`) + ` Programs</option>`;
+                    for(i in data){
+                        output+=`<option value="${data[i].id}"> ${data[i].abbrv} </option>`;
+                    }
+    output+=`</select>`;
+
+    selectProgExport.innerHTML = output;
+
+    if(selectProgExport.value != 0){
+        if(selectDeptExport.value == 0){
+            selectLevelExport.innerHTML = ` <select name="level" id="select-level-level" class="form-control text-center">
+                                                <option value="0">All SHS</option>
+                                                <option value="1">Grade 11</option>
+                                                <option value="2">Grade 12</option>
+                                            </select>`; 
+        
+        } else if(selectDeptExport.value == 1){
+            selectLevelExport.innerHTML = `  <select name="level" id="select-level-level" class="form-control text-center">
+                                                <option value="0">All COLLEGE</option>
+                                                <option value="1">First Year</option>
+                                                <option value="2">Second Year</option>
+                                            </select>`;
+        }
+    } else {
+        if(selectDeptExport.value == 0){
+
+            selectLevelExport.innerHTML = ` <select name="level" id="select-level-level" class="form-control text-center">
+                                                <option value="0">All in SHS</option>
+                                                <option value="1">First Year</option>
+                                                <option value="2">Second Year</option>
+                                            </select>`;
+        }else {
+            selectLevelExport.innerHTML = ` <select name="level" id="select-level-level" class="form-control text-center">
+                                                <option value="0">All in COLLEGE</option>
+                                                <option value="1">First Year</option>
+                                                <option value="2">Second Year</option>
+                                            </select>`;
+        }
+    }
     
 
+    const res2 = await fetch(APP_URL + `/admin/view/faculty/department/${selectDeptExport.value}/`)
+                    .catch((error) => {console.log(error)});
+
+    const faculties = await res2.json();
+    
+
+    output = `<select id="select-export-faculty" name="faculty" id="" class="form-control text-center">
+                <option value="0">All ${(selectDeptExport.value ? "COLLEGE" : "SHS")} FACULTIES</option>`;
+                for(i in faculties){
+                    output+=`<option value="${faculties[i].id}"> ${faculties[i].first_name} ${faculties[i].middle_name} ${faculties[i].last_name}</option>`;
+                }
+    output += `</select>`;
+
+    selectFacultyExport.innerHTML = output;
+    
+    const res3 = await fetch(APP_URL + `/admin/view/subjects/dept/${selectDeptExport.value}/`)
+                    .catch((error) => {console.log(error)});
+
+    const subjects = await res3.json();
+
+    output = `<select id="select-export-subject" name="subject" id="" class="form-control text-center">
+                <option value="0">All ${(selectDeptExport.value ? "COLLEGE" : "SHS")} SUBJECTS</option>`;
+                for(i in subjects){
+                    output+=`<option value="${subjects[i].id}"> ${subjects[i].code} - ${subjects[i].desc}</option>`;
+                }
+    output += `</select>`;
+
+    selectSubjectExport.innerHTML = output;
+
+
+}
+
+async function progExportIsChanged(){
+
+    another_current_program = selectProgExport.value;
+
+    if(selectProgExport.value > 0){
+        const res = await fetch(APP_URL + `/admin/view/programs/${selectProgExport.value}/`)
+                        .catch((error) => {console.log(error)});
+
+        const program = await res.json();
+
+
+        if(program.department == 0){
+            selectLevelExport.innerHTML = ` <select name="level" id="select-level-level" class="form-control text-center">
+                                                <option value="0">All in ${program.abbrv}</option>
+                                                <option value="1">Grade 11</option>
+                                                <option value="2">Grade 12</option>
+                                            </select>`;
+        
+        } else if(selectDeptExport.value == 1){
+            selectLevelExport.innerHTML = `  <select name="level" id="select-level-level" class="form-control text-center">
+                                                <option value="0">All in  ${program.abbrv}</option>
+                                                <option value="1">First Year</option>
+                                                <option value="2">Second Year</option>
+                                            </select>`;
+        }
+
+        const res2 = await fetch(APP_URL + `/admin/view/faculty/program/${program.id}/`)
+                    .catch((error) => {console.log(error)});
+
+        const faculties = await res2.json();
+
+        console.log(faculties);
+
+        output = `<select id="select-export-faculty" name="faculty" id="" class="form-control text-center">
+                    <option value="0">All ${(selectDeptExport.value ? "COLLEGE" : "SHS")}/${program.abbrv} FACULTIES</option>`;
+                    for(i in faculties){
+                        output+=`<option value="${faculties[i].id}"> ${faculties[i].first_name} ${faculties[i].middle_name} ${faculties[i].last_name}</option>`;
+                    }
+        output += `</select>`;
+
+        selectFacultyExport.innerHTML = output;
+
+        const res3 = await fetch(APP_URL + `/admin/view/subjects/department/${selectDeptExport.value}/program/${selectProgExport.value}/`)
+                    .catch((error) => {console.log(error)});
+
+        const subjects = await res3.json();
+
+        output = `<select id="select-export-subject" name="subject" id="" class="form-control text-center">
+                    <option value="0">All ${(selectDeptExport.value ? "COLLEGE" : "SHS")} SUBJECTS</option>`;
+                    for(i in subjects){
+                        output+=`<option value="${subjects[i].id}"> ${subjects[i].code} - ${subjects[i].desc}</option>`;
+                    }
+        output += `</select>`;
+
+        selectSubjectExport.innerHTML = output;
+  
+    } else {
+
+    }
+}
+
+function advanceExport(){
+    error_div = document.getElementById('export-title')
+
+    if(Number(selectFromYearExport.value) >= Number(selectToYearExport.value)){
+        error_div.textContent = "Academic Start Year must be less than Academic End Year"
+        return;
+    }     
+
+    params = `${selectFromYearExport.value}/${selectToYearExport.value}/${selectDeptExport.value}/${selectProgExport.value}/${selectLevelExport.value}/${selectSemesterExport.value}/${selectFacultyExport.value}/${selectSubjectExport.value}/${checkActiveExport.checked? 1: 0}`;
+    window.location.href = `${APP_URL}/advancedclasses/export/${params}`;
 }
 
 </script>

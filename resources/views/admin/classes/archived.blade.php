@@ -22,7 +22,7 @@
                     <thead class="border border-success">
                         <tr >
                             <th class="bg-light">S.Y. & Sem</th>
-                            <th class="bg-light">Department</th>
+                            <th class="bg-light">Department & Program</th>
                             <th style="background-color: #EAE0BD !important">Class Name/Section</th>
                             <th class="bg-light">Subject</th>
                             <th class="bg-light">Instructor</th>
@@ -41,7 +41,7 @@
                             <tr>
                                 <td>{{$class->subjectsTaken->first()->sy_and_sem}}</td>
                                 
-                                <td>{{ $class->subjectsTaken->first()->student->program->abbrv . ' | ' . $class->subjectsTaken->first()->student->program_desc }}</td>
+                                <td>{{($class->subjectsTaken->first()->subject->dept ? 'COLLEGE' : 'SHS') . ' | ' . $class->subjectsTaken->first()->student->program_desc }}</td>
                                 <td style="background-color: #EAE0BD !important" >
                                     {{ $class->class_name }}
                                     <br>

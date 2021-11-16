@@ -18,7 +18,7 @@ class Setting extends Model
 
     public function setSemDescAttribute($value)
     {
-        if($value == 1)
+        if($value)
             $this->attributes['sem_desc'] = '1st';
         else 
             $this->attributes['sem_desc'] = '2nd';

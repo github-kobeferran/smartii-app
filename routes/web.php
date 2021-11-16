@@ -158,7 +158,8 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     //invoices export
     Route::get('invoices/export', [App\Http\Controllers\InvoicesController::class, 'dailyMontlyYearlyExport']);
     Route::get('advancedinvoices/export/{month}/{year}', [App\Http\Controllers\InvoicesController::class, 'advancedExport']);
-    
+    //classes export
+    Route::get('advancedclasses/export/{from_year}/{to_year}/{dept}/{prog}/{level}/{sem}/{faculty}/{subj}/{ac}', [App\Http\Controllers\StudentClassesController::class, 'advanceExport']);
 
     Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);

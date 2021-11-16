@@ -850,10 +850,12 @@ class ApplicantsController extends Controller
             $subject_to_take->student_id = $student_id;
             $subject_to_take->subject_id = $subject->id;
 
-            if($student->department == 0)
+            if(!$student->department)
                 $total_balance += Setting::first()->shs_price_per_unit * $subject->units;
-            else 
-                $total_balance += Setting::first()->college_price_per_unit * $subject->units; 
+            else {
+                if(!$student->program->is_tesda)
+                    $total_balance += Setting::first()->college_price_per_unit * $subject->units; 
+            }
 
             if($counter == ($subjects->count() - 1)) {  
             

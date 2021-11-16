@@ -299,19 +299,20 @@ function anotherSched(){
                 if(newSchedRow.childNodes[i].childNodes[j].tagName  == "DIV"){
 
                 
-                    for(let k=0; k<newSchedRow.childNodes[i].childNodes[j].childNodes.length; k++){                                                                                                
+                    for(let k=0; k<newSchedRow.childNodes[i].childNodes[j].childNodes.length; k++){      
+
                         if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].tagName  == "SELECT" ) {
 
-                           newSchedRow.childNodes[i].childNodes[j].childNodes[k].name += '_' + schedContainerChildCount;
-                           newSchedRow.childNodes[i].childNodes[j].childNodes[k].id += '_' + schedContainerChildCount;  
+                            newSchedRow.childNodes[i].childNodes[j].childNodes[k].name += '_' + schedContainerChildCount;
+                            newSchedRow.childNodes[i].childNodes[j].childNodes[k].id += '_' + schedContainerChildCount;  
 
-                           if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('day')){                                
-                                selects.day = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
-                           }else if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('room')){
-                               selects.room = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
-                           }else if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('instructor')){
-                               selects.faculty = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
-                           }
+                            if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('day')){                                
+                                    selects.day = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
+                            }else if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('room')){
+                                selects.room = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
+                            }else if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].name.includes('instructor')){
+                                selects.faculty = newSchedRow.childNodes[i].childNodes[j].childNodes[k];
+                            }
                                                    
                         
                         }                      
@@ -321,8 +322,7 @@ function anotherSched(){
 
                             for(let l=0; l<newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes.length; l++){
 
-                                if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].tagName == "INPUT")
-
+                                if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].tagName == "INPUT")  {
 
                                     if(newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name != null){
                                         newSchedRow.childNodes[i].childNodes[j].childNodes[k].childNodes[l].name += '_' + schedContainerChildCount;
@@ -337,6 +337,8 @@ function anotherSched(){
 
                                     }
 
+                                }
+
                             }
 
                         }
@@ -350,7 +352,6 @@ function anotherSched(){
         }
 
     }    
-    
 
     selects.day.addEventListener('change', () => {
         availableRooms(selects.room);    
@@ -362,17 +363,18 @@ function anotherSched(){
         changeProgramID(selectSubject.value, selects.faculty);  
 
     });
+
     selects.until.addEventListener('input', () => {
         availableRooms(selects.room);    
         changeProgramID(selectSubject.value, selects.faculty);
     });
-    
 
     if(schedContainerChildCount <= 2){
         schedContainer.appendChild(newSchedRow);
         counter++;   
         updateSchedCounter();             
     }            
+
     minusButton.className = "btn btn-light border-danger";              
 
 }
@@ -493,8 +495,6 @@ function changeClassesSelects($isSelectProg = false){
     dept = selectDept.value;
     prog = selectProg.value;
     subj = selectSubject.value;   
-
-    
 
     let xhr = new XMLHttpRequest();
 

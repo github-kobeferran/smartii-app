@@ -587,6 +587,11 @@ class StudentClassesController extends Controller
         return $classes->count();
 
     }
+    //                              2021/       2022/      0/    0/     0/     0/      0/        0/   0
+    public function advanceExport($from_year, $to_year, $dept, $prog, $level, $sem, $faculty, $subj, $ac){                
+
+
+    }
 
     
 }

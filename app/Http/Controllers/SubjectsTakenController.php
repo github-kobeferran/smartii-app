@@ -176,7 +176,7 @@ class SubjectsTakenController extends Controller
 
         }
 
-        $settings->sem_desc = $settings->sem;
+        $settings->sem_desc = $settings->semester;
 
         $program = $student->program;
 

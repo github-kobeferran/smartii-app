@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Models\Program;
+use App\Models\StudentClass;
 
 class Faculty extends Model
 {
@@ -13,6 +14,14 @@ class Faculty extends Model
 
     protected $table = 'faculty';
     protected $appends = ['age' => null, 'specialty' => null];
+
+    public function classes(){
+        return $this->hasMany(StudentClass::class);
+    }
+
+    public function program(){        
+        return $this->hasOne(Program::class,'id', 'program_id');
+    }
 
     public function setAgeAttribute($id)
     {

@@ -32,10 +32,10 @@
                 <table>
                     <tr>
                         <td>
-                            <b style="font-size: 1.7em;">Certificate Of Registration</b>
+                            <b style="font-size: 1.6em;">Certificate Of Registration</b>
                         </td>
 
-                        <td style="font-size: ">S.Y. {{$settings->from_year . '-' . $settings->to_year . ' | ' . $settings->sem_desc}} semester</td>
+                        <td>S.Y. {{$settings->from_year . '-' . $settings->to_year . ' | ' . $settings->sem_desc}} semester</td>
                     </tr>
                 </table>
             </td>
