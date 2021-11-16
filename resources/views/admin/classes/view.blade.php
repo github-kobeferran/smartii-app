@@ -318,7 +318,7 @@ let checkActiveExport = document.getElementById('check-export-active');
 
 let cur_sched_id = null;
 let cur_faculty_id = null;;
-let cur_school_id = null;;
+let cur_room_id = null;;
 
 selectDeptExport.addEventListener('change', deptIsChanged)
 selectProgExport.addEventListener('change', progExportIsChanged)
@@ -328,17 +328,17 @@ selectFromYearExport.addEventListener('change', () => {
 
 editDay.addEventListener('change', () => {   
     availableFacultyExcept(cur_faculty_id);
-    availableRoomsExcept(cur_faculty_id);        
+    availableRoomsExcept(cur_room_id);        
 });
 
 edit_from_time.addEventListener('input', () => {
     availableFacultyExcept(cur_faculty_id);
-    availableRoomsExcept(cur_faculty_id);     
+    availableRoomsExcept(cur_room_id);     
 
 });
 edit_until_time.addEventListener('input', () => {
     availableFacultyExcept(cur_faculty_id);
-    availableRoomsExcept(cur_faculty_id);     
+    availableRoomsExcept(cur_room_id);     
 });
 
 let dept = 0;
@@ -754,9 +754,9 @@ function editSched(schedID){
 
 }
 
-function availableFacultyExcept(facultyID){
+function availableFacultyExcept(facultyID){ 
 
-    
+    cur_faculty_id = facultyID;   
 
     let xhr = new XMLHttpRequest();
 
@@ -793,7 +793,9 @@ function availableFacultyExcept(facultyID){
 }
 
 
-function availableRoomsExcept(roomId){
+function availableRoomsExcept(roomId){    
+
+    cur_room_id = roomId;
 
     let xhr = new XMLHttpRequest();
 
@@ -804,32 +806,20 @@ function availableRoomsExcept(roomId){
     xhr.open('GET', APP_URL + '/admin/availablerooms/' + from + '/' + until + '/' + day + '/' + roomId, true);
 
     xhr.onload = function() {
-        if (this.status == 200) { 
+        if (this.status == 200) {             
+            let rooms = JSON.parse(this.responseText);      
 
-            removeOptions(editRoom); 
-            
-            let rooms = JSON.parse(this.responseText);                         
-
-            for (let i in rooms) {                                        
-                editRoom.options[i] = new Option(rooms[i].name, rooms[i].id);
-
-                if(rooms[i].id == roomId)
-                    editRoom.selectedIndex = i;
+            let output =`<select name="room" class="custom-select bg-light text-dark border-secondary" id="editRoom">`;
+            for (let i in rooms) {                 
+                output+= `<option value="${rooms[i].id}" ${(rooms[i].id == roomId) ? 'selected' : ''}>${rooms[i].name}</option>`;
             }
-            
+            output +=`</select>`;
 
-                        
-
-        } else {
-        
-        }                
-
+            editRoom.innerHTML = output;
+        } 
     }
 
     xhr.send(); 
-
-
-
 }
 
 function cancelEditSched(){

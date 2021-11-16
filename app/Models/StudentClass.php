@@ -42,6 +42,19 @@ class StudentClass extends Model
         return $this->belongsTo(Faculty::class);
     }    
 
+    public function students_list_string(){
+        $students = collect();
+        foreach($this->subjectsTaken as $subject_taken){
+            $students->push('['. $subject_taken->student->student_id . '-' . $subject_taken->student->first_name . ' ' . $subject_taken->student->last_name . ']');
+        }
+
+        $students = $students->toArray();
+        $list = implode(', ', $students);        
+    
+
+        return $list;
+    }    
+
     public function setFacultyNameAttribute($id){
 
         $faculty = Faculty::find($id);

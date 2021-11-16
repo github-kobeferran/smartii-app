@@ -262,12 +262,16 @@ from_time.addEventListener('input', () => {
     availableFaculty();
     availableRooms();  
     changeProgramID(selectSubject.value);  
+    // from_time.setAttribute('max', until_time.value);
+    // until_time.setAttribute('min', from_time.value);
 
 });
 until_time.addEventListener('input', () => {
     availableFaculty();
     availableRooms();    
     changeProgramID(selectSubject.value);
+    // from_time.setAttribute('max', until_time.value);
+    // until_time.setAttribute('min', from_time.value);
 });
 
 

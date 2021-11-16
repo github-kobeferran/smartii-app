@@ -156,49 +156,50 @@ class RoomsController extends Controller
      }
 
     public function availableRoomsExcept($from, $until, $day = null, $exceptid){
-
-        
         if($day != null){
+            $scheds = Schedule::where('day', $day)->where('start_time','<', $until)->where('until','>', $from)->get();                                    
 
-            $scheds = Schedule::where('day', $day)
-                              ->where('start_time','<', $until)
-                              ->where('until','>', $from)                                                  
-                              ->get();                                    
+            $rooms = Room::all()->filter(function($room) use($scheds, $exceptid){
+                $valid = true;
+                foreach($scheds as $sched){
+                    if($room->id == $sched->room_id)
+                        $valid = false;                        
+                    
+                    if($room->id == $exceptid)
+                        $valid = true;                    
+                }        
+                if($valid && !is_null($room))
+                    return $room;
+            });
+  
+            // if($scheds != null){
 
-            if($scheds != null){
+            //    $valids = collect();
 
-               $valids = collect();
+            //    foreach(Room::all() as $room){
 
-               foreach(Room::all() as $room){
+            //        $valid = true;
 
-                   $bawal = false;
+            //        foreach($scheds as $sched){
+            //             if($room->id == $sched->room_id)
+            //                 $valid = false;
+                    
+            //             if($room->id == $exceptid)
+            //                 $valid = true;
+            //        }
 
-                   foreach($scheds as $sched){
+            //        if($valid)
+            //            $valids->push($room);
 
-                       if($room->id == $sched->room_id){
-                           $bawal = true;
-                       }
-
-                       if($room->id == $exceptid)
-                          $bawal = false;
-
-                   
-                   }
-
-                   if(!$bawal)
-                       $valids->push($room);
-
-               }
+            //    }
               
-               return $valids;
+            //    return $valids;
                
-            } else {
-               return Room::all()->toJson();
-               
-            }
+            // } else {
+            //    return Room::all()->toJson();
+            // }
 
-            
-
+            return $rooms;
        }else{
            return Room::all()->toJson();
        }

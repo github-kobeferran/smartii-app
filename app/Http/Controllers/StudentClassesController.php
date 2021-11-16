@@ -12,6 +12,8 @@ use App\Models\Schedule;
 use App\Models\Subject;
 use App\Models\Program;
 use \Carbon\Carbon;
+use App\Exports\StudentClassAdvancedExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class StudentClassesController extends Controller
@@ -351,18 +353,28 @@ class StudentClassesController extends Controller
             }
 
             $from_time = Carbon::parse(($request->input('from')));
-            $until_time = Carbon::parse(($request->input('until')));
+            $until_time = Carbon::parse(($request->input('until')));            
 
             $totalDuration = $until_time->diffInHours($from_time);
 
-            if(!Program::find($request->input('prog'))->is_tesda){
-                if($totalDuration > $theSubject->units){
-                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
-                }elseif($totalDuration < $theSubject->units){
-                    return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+           
+            
+            if($from_time->lt($until_time->subMinutes(59))){
+                if(!Program::find($request->input('prog'))->is_tesda){
+                    if($totalDuration > $theSubject->units){
+                        return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is above the units of the subject. '. $theSubject->desc . ' has only ' . $theSubject->units . ' units.');
+                    }elseif($totalDuration < $theSubject->units){
+                        return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
+                    }
+                } else {
+                    if($totalDuration < 1)
+                        return redirect()->route('adminClasses')->with('warning', 'TESDA Courses are required atleast 1 hour per session ');
                 }
+                
+            } else {
+                return redirect()->route('adminClasses')->with('warning', 'Until Time must be greater than From Time.');
             }
-
+            
             $students = $request->input('student_ids');
 
             $class = new StudentClass;
@@ -456,30 +468,42 @@ class StudentClassesController extends Controller
 
         $sched->day = $request->input('day');
 
-        $inputHours = Carbon::parse($request->input('until'))->diffInHours(Carbon::parse($request->input('from')));        
+        $until_time = Carbon::parse($request->input('until'));
+        $from_time = Carbon::parse($request->input('from'));
+
+        $inputHours = $until_time->diffInHours($from_time);                
 
         $subject = $class->subjectsTaken->first()->subject;         
-        $program = $class->subjectsTaken->first()->student->program;         
+        $program = $class->subjectsTaken->first()->student->program;                 
 
-        if(!$program->is_tesda){
-            if(($inputHours + $otherSchedHours) > $subject->units ){
-
-                $status = 'warning';
-                $msg = 'Updateasdffasd failed, schedule total hours is above the units of the subject. '. $subject->desc . ' has only ' . $subject->units . ' units.';
+        if($from_time->lt($until_time->subMinutes(59))){
+            if(!$program->is_tesda){
+                if(($inputHours + $otherSchedHours) > $subject->units ){
     
-                $valid = false;
+                    $status = 'warning';
+                    $msg = 'Updated failed, schedule total hours is above the units of the subject. '. $subject->desc . ' has only ' . $subject->units . ' units.';
+        
+                    $valid = false;
+                    
+                }
                 
+                if(($inputHours + $otherSchedHours) < $subject->units ){
+                    
+                    $status = 'warning';
+                    $msg = 'Updated failed, schedule total hours is below the units of the subject. '. $subject->desc . ' has ' . $subject->units . ' units.';
+                    
+                    $valid = false;
+                }
+            } else {
+                if(($inputHours + $otherSchedHours) < 1){
+                    return redirect()->route('adminClasses')->with('warning', 'TESDA Courses are required atleast 1 hour per session ')->with('active', 'view');
+                }
             }
-            
-            if(($inputHours + $otherSchedHours) < $subject->units ){
-                
-                $status = 'warning';
-                $msg = 'Updateasdfasdf failed, schedule total hours is below the units of the subject. '. $subject->desc . ' has ' . $subject->units . ' units.';
-                
-                $valid = false;
-            }
+        } else {
+            return redirect()->route('adminClasses')->with('warning', 'Until Time must be greater than From Time')->with('active', 'view');
         }
 
+       
         $sched->start_time = $request->input('from');
         $sched->until = $request->input('until');
 
@@ -588,10 +612,27 @@ class StudentClassesController extends Controller
 
     }
     //                              2021/       2022/      0/    0/     0/     0/      0/        0/   0
-    public function advanceExport($from_year, $to_year, $dept, $prog, $level, $sem, $faculty, $subj, $ac){                
+    public function advanceExport($from_year, $to_year, $dept, $prog, $level, $sem, $faculty, $subj, $ac){                                        
 
+        $level_desc = "";
+        switch($level){
+            case 1:
+                $level_desc = "Grade 11";
+                break;
+            case 2:
+                $level_desc = "Grade 11";
+                break;
+            case 11:
+                $level_desc = "First Year";
+                break;
+            case 12:
+                $level_desc = "Second Year";
+                break;
+        }
+
+        return Excel::download(new StudentClassAdvancedExport($from_year, $to_year, $dept, $prog, $level, $sem, $faculty, $subj, $ac), 'SMARTII Classes A. Y' . $from_year . '-'. $to_year . '.xlsx');
 
     }
 
-    
+    // . ($sem == 1 ? ' First Semester ': ' Second Semester ') . ($level > 0 ? $level_desc : 'All Students of ') . ($prog > 0 ? Program::find($prog)->abbrv :  $dept > 0 ) ? ' COLLEGE ' : " SHS " 
 }
