@@ -291,6 +291,9 @@ class AdminsController extends Controller
 
                 
             break;
+            case 'programs':               
+                return Program::all();
+            break;
 
             default:
             redirect('/home');

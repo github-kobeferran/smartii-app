@@ -631,4 +631,32 @@ class FacultiesController extends Controller
 
     }
 
+    public function changeSpecialty(Request $request){
+
+        if($request->method() != "POST")
+            return redirect()->back();
+
+        $faculty = Faculty::find($request->input('id'));
+
+        if($request->input('prog') != null){
+            $program = Program::find($request->input('prog'));
+
+            if($faculty->program_id == $program->id)
+                return redirect()->back()->with('active', 'faculties');
+
+            $faculty->program_id = $program->id;
+            $faculty->save();
+            return redirect()->route('adminView')->with('active', 'faculties')->with('success', 'FACULTY ' . $faculty->first_name . ' ' . $faculty->last_name . '  Program changed to '. $program->abbrv);
+        } else {
+
+            if($faculty->program_id == null)
+                return redirect()->back()->with('active', 'faculties');
+
+            $faculty->program_id = null;
+            $faculty->save();
+            return redirect()->route('adminView')->with('active', 'faculties')->with('success', 'FACULTY ' . $faculty->first_name . ' ' . $faculty->last_name . '  Program changed to All Programs');
+        }        
+            
+    }
+
 }

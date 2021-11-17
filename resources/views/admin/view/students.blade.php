@@ -116,15 +116,19 @@ let selectDeptExport = document.getElementById('select-dept-export');
 let selectProgExport = document.getElementById('select-prog-export');
 let selectLevelExport = document.getElementById('select-level-export');
 
+document.getElementById('students-view-tab').addEventListener('click', fillProgramList);
+
+// fillProgramList();
+
 shsOption.onclick = () => {
-    fillProgramList(0);
+    fillProgramList();
 }
 
 collegeOption.onclick = () => {
     fillProgramList(1);
 }
 
-function fillProgramList(dept){
+function fillProgramList(dept = 0){    
 
     let xhr = new XMLHttpRequest();
 
@@ -279,9 +283,7 @@ function searchStudent(){
     }
 
     xhr.send();
-
     
-
 }
 
 selectDeptExport.addEventListener('change', deptIsChanged)

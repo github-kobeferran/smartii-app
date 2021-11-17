@@ -96,6 +96,13 @@ let birthCert = document.getElementById("birt-cert");
 let goodMoral = document.getElementById("good-moral");
 let reportCard = document.getElementById("report-card");
 
+// if(typeof APP_ID !== 'undefined')  {
+//     fillApplicantList(APP_ID);  
+// } else {
+// }
+
+fillApplicantList();  
+
 allOption.onclick = () => {
     selectedDept = null;
     fillApplicantList();
