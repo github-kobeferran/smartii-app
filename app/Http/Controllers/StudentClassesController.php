@@ -461,7 +461,9 @@ class StudentClassesController extends Controller
                 if(!$valid)
                     break;
             }
-        }        
+        }
+        if (StudentClass::where('id', '!=', $class->id)->where('class_name', str_replace(' ', '', $request->input('class_name')))->exists())
+            return redirect()->back()->with('error', 'There is already a class name "'. $request->input('class_name') . '"')->with('active', 'view');
 
         $class->faculty_id = $request->input('instructor');
         $class->class_name = $request->input('class_name');
@@ -520,11 +522,7 @@ class StudentClassesController extends Controller
 
         }
 
-        return redirect()->route('adminClasses')
-                         ->with($status, $msg)
-                         ->with('active', 'view');
-
-
+        return redirect()->route('adminClasses')->with($status, $msg)->with('active', 'view');
     }
 
 

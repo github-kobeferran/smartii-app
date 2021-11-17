@@ -6,12 +6,12 @@
 <div >    
     <div class="table-responsive">
         <table  class="table table-striped table table-responsive-sm" >
-            <thead>
+            <thead class="bg-dark text-white">
                 <tr>
-                <th scope="col">Admin ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Position</th>
+                    <th scope="col">Admin ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Position</th>
                 </tr>
             </thead>
             <tbody id="admins-table">
@@ -46,11 +46,20 @@ function viewAdmins(){
             output = '<tbody id="admins-table">';
 
             for (let i in admins) {
-                output += `<tr ${admins[i].position == 'superadmin' ? `style="background: #b3dbff;"` : ``}>` +
+                output += `<tr>` +
                     '<th scope="row">' + admins[i].admin_id + '</th>' +
                     '<td>' + admins[i].name + '</td>' +
-                    '<td>' + admins[i].email + '</td>' +
-                    '<td>' + admins[i].position + '</td>' +
+                    '<td>' + admins[i].email + '</td>';
+                    output+= `<td`;
+
+                    if(admins[i].position == 'superadmin')
+                        output+= ` style="background: #b3dbff;"`;
+                    else if(admins[i].position == 'registrar')
+                        output+= ` style="background: #ccffdd;"`;
+                    else
+                        output+= ` style="background: #ffe6b3;"`;
+
+                    output+=`>${admins[i].position}</td>` +
                     '</tr>';
             }
 

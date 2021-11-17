@@ -71,10 +71,6 @@
 
     </div>
 
-
-   
-
-
 </div>
 
 <script>
@@ -304,11 +300,7 @@ function applicantSelect(btnId, id, isdefault = false ){
         if(applicant.resubmitted != undefined && applicant.resubmitted != null){
             resubmitted = true;
         }
-
-        
-            
-
-        
+                            
 
     output=`
    
@@ -572,7 +564,7 @@ function applicantSelect(btnId, id, isdefault = false ){
             if(selectedDept != 4)
                 output2 +=`{!! Form::open(['url' => 'admin/approveapplicant/', 'id' => 'approveApplicantForm']) !!}`;
             
-            output2 +=`<ul class="list-group list-group-flush ">
+            output2 +=`<ul class="list-group list-group-flush roboto-font">
                             <li class="list-group-item">Last Name: <strong>`+ ucfirst(applicant.last_name)  + `</strong></li>                            
                             <li class="list-group-item">First Name: <strong>`+ ucfirst(applicant.first_name)  + `</strong></li>                            
                             <li class="list-group-item">Middle Name: <strong>${applicant.middle_name != null ? ucfirst(applicant.middle_name) : ''}</strong></li>                            
@@ -582,15 +574,15 @@ function applicantSelect(btnId, id, isdefault = false ){
                             <li class="list-group-item">Previous School: <strong>`+ applicant.last_school + `</strong></li>                                                        
                             {{ Form::hidden('app_id','`+ applicant.id  + `') }}`;
                 if(selectedDept != 4){
-                    output2 +=`<li class="list-group-item"><button type="submit" class="btn btn-success btn-block mb-2">Approve</button></li>
+                    output2 +=`<li class="list-group-item p-0" type="submit" ><button type="submit" class="btn btn-success btn-block rounded-0">Approve</button></li>
                             {!! Form::close() !!}
                             
-                            <li class="list-group-item border-0"><button  data-toggle="modal" data-target="#reject-${applicant.id}" type="button" class="btn btn-warning text-dark btn-block"><b>Reject</b></button> </li>
+                            <li class="list-group-item p-0"><button  data-toggle="modal" data-target="#reject-${applicant.id}" type="button" class="btn btn-warning rounded-0 text-dark btn-block"><b>Reject</b></button> </li>
 
                             <div class="modal fade" id="reject-${applicant.id}" tabindex="-1" role="dialog" aria-labelledby="reportcard-modal-title" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header">
+                                        <div class="modal-header bg-warning">
                                         <h5 class="modal-title" id="reportcard-modal-title">Reject ${ucfirst(applicant.first_name) + ' ' + ucfirst(applicant.last_name)}?</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>

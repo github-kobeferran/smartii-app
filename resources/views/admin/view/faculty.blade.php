@@ -14,11 +14,11 @@
     </div>
     <div class=" table-responsive" id="faculty-list" style="max-height: 100vh; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch;">
         <table  class="table table-striped table-bordered" >
-            <thead>
+            <thead style="background: #ccffcc;">
                 <tr>
-                    <th class="bg-light" scope="col">Faculty ID</th>
-                    <th  class="bg-light"  scope="col">Name</th>
-                    <th  class="bg-light"  scope="col">More Details</th>            
+                    <th scope="col">Faculty ID</th>
+                    <th scope="col">Name</th>
+                    <th  scope="col">More Details</th>            
                 </tr>
             </thead>
             <tbody id="faculty-table">
