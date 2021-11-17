@@ -367,36 +367,36 @@
                     </button>
                     </div>
                     <div class="modal-body">
-                    <div class="row">
-                        <div class="col text-center">
-                            <a href="{{url('/remindapplicationform')}}" class="btn btn-warning text-dark">Remind All via Email</a>                        
+                        <div class="row">
+                            <div class="col text-center">
+                                <a href="{{url('/remindapplicationform')}}" class="btn btn-warning text-dark">Remind All via Email</a>                        
+                            </div>
+                            <div class="col text-center">
+                                {!!Form::open(['url' => '/deletenoform'])!!}
+                                    <button type="submit" class="btn btn-danger">Delete All</button>
+                                {!!Form::close()!!}
+                            </div>
                         </div>
-                        <div class="col text-center">
-                            {!!Form::open(['url' => '/deletenoform'])!!}
-                                <button type="submit" class="btn btn-danger">Delete All</button>
-                            {!!Form::close()!!}
+                        <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
+                            <table class="table table-bordered">
+                                <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th class="bg-secondary">Email</th>
+                                    <th class="bg-secondary">Name</th>
+                                    <th class="bg-secondary">Duration in the system</th>
+                                </tr>
+                                </thead>
+                                <tbody>                              
+                                    @foreach ($still_no_app_form as $user_applicant)
+                                        <tr>
+                                            <td>{{$user_applicant->email}}</td>
+                                            <td>{{$user_applicant->name}}</td>
+                                            <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
-                        <table class="table table-bordered">
-                            <thead class="bg-secondary text-white">
-                            <tr>
-                                <th class="bg-secondary">Email</th>
-                                <th class="bg-secondary">Name</th>
-                                <th class="bg-secondary">Duration in the system</th>
-                            </tr>
-                            </thead>
-                            <tbody>                              
-                                @foreach ($still_no_app_form as $user_applicant)
-                                    <tr>
-                                        <td>{{$user_applicant->email}}</td>
-                                        <td>{{$user_applicant->name}}</td>
-                                        <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
                     </div>                                   
                 </div>
                 </div>

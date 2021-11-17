@@ -4,24 +4,24 @@
 
 
 <div >    
-    <table  class="table table-striped table table-responsive-sm" >
-        <thead>
-            <tr>
-            <th scope="col">Admin ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Position</th>
-            <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody id="admins-table">
-
-        </tbody>
-        
-        <div class="loader-parent">
-            <div class="dual-ring" style=""></div>            
-        </div>  
-    </table>           
+    <div class="table-responsive">
+        <table  class="table table-striped table table-responsive-sm" >
+            <thead>
+                <tr>
+                <th scope="col">Admin ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Position</th>
+                </tr>
+            </thead>
+            <tbody id="admins-table">
+    
+            </tbody>
+            
+            <div class="loader-parent">
+                <div class="dual-ring" style=""></div>            
+            </div>  
+        </table>   </div>        
 </div>
 
  
@@ -46,13 +46,11 @@ function viewAdmins(){
             output = '<tbody id="admins-table">';
 
             for (let i in admins) {
-                output += '<tr>' +
+                output += `<tr ${admins[i].position == 'superadmin' ? `style="background: #b3dbff;"` : ``}>` +
                     '<th scope="row">' + admins[i].admin_id + '</th>' +
                     '<td>' + admins[i].name + '</td>' +
                     '<td>' + admins[i].email + '</td>' +
                     '<td>' + admins[i].position + '</td>' +
-                    '<td><a href="#" class="btn btn-primary">delete</a></td>' +
-                    // '<td><a href=\"admin/delete/' + admins[i].id + ' \" class="btn btn-primary">delete</a></td>' +
                     '</tr>';
             }
 

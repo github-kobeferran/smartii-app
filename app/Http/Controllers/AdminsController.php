@@ -235,6 +235,7 @@ class AdminsController extends Controller
 
                 foreach($faculties as $faculty ){
                     $faculty->specialty = $faculty->id;
+                    $faculty->active_classes;
                 }
 
                 return $faculties->toJson();
@@ -768,16 +769,14 @@ class AdminsController extends Controller
                 ->orWhere('first_name', 'LIKE', '%' . $text . "%")
                 ->orWhere('middle_name', 'LIKE', '%' . $text . "%")
                 ->orWhere('faculty_id', 'LIKE', '%' . $text . "%")
-                ->get();  
-
-                $faculties = Faculty::all();        
+                ->get();                       
 
                 foreach($faculties as $faculty ){
                     $faculty->specialty = $faculty->id;
+                    $faculty->active_classes;
                 }
                 
                 return $faculties;
-               
 
             break;
 
@@ -930,35 +929,30 @@ class AdminsController extends Controller
         switch($type){
             case 'idpic':
 
-                $file_path = public_path() . '/storage/applicants/id_pics/' . $filename;
+                $file_path = public_path() . '\storage\images\applicants\id_pics\\' . $filename;
             
             break;
             case 'birthcert':
 
-                $file_path = public_path() . '/storage/applicants/birth_certs/' . $filename;
+                $file_path = public_path() . '\storage\images\applicants\birth_certs\\' . $filename;
 
             break;
             case 'goodmoral':
 
-                $file_path = public_path() . '/storage/applicants/good_morals/' . $filename;
+                $file_path = public_path() . '\storage\images\applicants\good_morals\\' . $filename;
 
             break;
             case 'reportcard':
 
-                $file_path = public_path() . '/storage/applicants/report_cards/' . $filename;
+                $file_path = public_path() . '\storage\images\applicants\report_cards\\' . $filename;
 
             break;
         }
-
-        return response()->download($file_path);   
-
-
+        return response()->download($file_path);
     }
 
 
-    public function requestFileResubmission(Request $request){        
-        
-        // return $request->all();
+    public function requestFileResubmission(Request $request){                    
 
         $filetype = $request->input('req_type');        
         $id = $request->input('app_id');        

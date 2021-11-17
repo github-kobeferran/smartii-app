@@ -19,6 +19,14 @@ class Faculty extends Model
         return $this->hasMany(StudentClass::class);
     }
 
+    public function active_classes(){
+        return $this->hasMany(StudentClass::class)->where('archive', 0);
+    }
+
+    public function archived_classes(){
+        return $this->hasMany(StudentClass::class)->where('archive', 1);
+    }
+
     public function program(){        
         return $this->hasOne(Program::class,'id', 'program_id');
     }

@@ -17,6 +17,7 @@ use App\Models\SubjectTaken;
 use App\Models\Subject;
 use App\Models\Program;
 use App\Mail\WelcomeMember;
+use App\Mail\RemindToArchive;
 use Carbon\Carbon;
 use App\Exports\ClassStudenList;
 use Maatwebsite\Excel\Facades\Excel;
@@ -613,7 +614,21 @@ class FacultiesController extends Controller
 
         return Excel::download(new ClassStudenList($alphabetical), 'SMARTII Class ' . strtoupper($class->class_name) . ' ' . Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');            
 
-     }
+    }
 
+    public function remindToArchive($id){
+        if(Faculty::where('id', $id)->doesntExist())
+            return 0;
+
+        $faculty = Faculty::find($id);
+
+        if($faculty->active_classes->count() < 1)
+            return 0;
+
+        Mail::to($faculty)->send(new RemindToArchive($faculty));
+
+        return 1;
+
+    }
 
 }

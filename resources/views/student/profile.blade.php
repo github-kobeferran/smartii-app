@@ -567,9 +567,74 @@
             @endif      
             @if($admin->position == 'superadmin' || $admin->position == 'registrar')
                     <div class="col text-right">
-                        <div class="col text-right ">
+                        <div>
                             <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">View Certificate of Registration</a>
                         </div>
+                        
+                        @if (!is_null($student->applicant))
+                            <button type="button" data-toggle="modal" data-target="#viewimage" class="btn btn-sm btn-light border">View Images</button>
+
+                            <div class="modal fade" id="viewimage" tabindex="-1" aria-labelledby="viewImage" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{$student->first_name}} {{$student->last_name}}'s Images</h5>
+                                            <button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="text-center">
+                                                <h4>Click to download image</h4>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="text-center">
+                                                        <label for="">ID Picture</label>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <a href="{{url('/admin/download/idpic/'. $appLink->id_pic)}}">
+                                                            <img class="img-fluid w-25" src="{{url('/storage/images/applicants/id_pics/' . $appLink->id_pic)}}" alt="Id image">    
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="text-center">
+                                                        <label for="">Birth Certificate</label>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <a href="{{url('/admin/download/birthcert/'. $appLink->birth_cert)}}">
+                                                            <img class="img-fluid w-25" src="{{url('/storage/images/applicants/birth_certs/' . $appLink->birth_cert)}}" alt="Id image">    
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="text-center">
+                                                        <label for="">Good Moral Certificate</label>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <a href="{{url('/admin/download/goodmoral/'. $appLink->good_moral)}}">
+                                                            <img class="img-fluid w-25" src="{{url('/storage/images/applicants/good_morals/' . $appLink->good_moral)}}" alt="Id image">    
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="text-center">
+                                                        <label for="">Form 138</label>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <a href="{{url('/admin/download/reportcard/'. $appLink->report_card)}}">
+                                                            <img class="img-fluid w-25" src="{{url('/storage/images/applicants/report_cards/' . $appLink->report_card)}}" alt="Id image">    
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
             @endif
         </div>
@@ -635,23 +700,3 @@ function toggleDetails(){
 
 
 @endsection
-
-{{-- //     $subjects_taken = $student->subject_taken;    
-
-//     $sorted_by_from_year = $subjects_taken->sortBy('from_year');
-//     $from_years = $sorted_by_from_year->pluck('from_year');
-//     $semesters = $sorted_by_from_year->pluck('semester');
-//     $last_from_year = $from_years->last();
-//     $last_semester = $semesters->last();
-
-//     $sorted_by_to_year = $subjects_taken->sortBy('to_year');
-//     $to_years = $sorted_by_to_year->pluck('to_year');
-//     $last_to_year = $to_years->last();        
-//     @if (
-//         $last_from_year >= \App\Models\Setting::first()->from_year &&
-//         $last_to_year >= \App\Models\Setting::first()->to_year &&
-//         $last_semester !=  \App\Models\Setting::first()->semester
-//     )
-
-
-// @endif      --}}
