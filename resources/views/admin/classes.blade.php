@@ -11,6 +11,8 @@
     $view = false;
     $rooms = false;
     $archived = false;
+
+    $the_admin = \App\Models\Admin::find(auth()->user()->member->member_id);
 ?>
 
 @if ( session()->has('active') )
@@ -65,10 +67,13 @@
         </li>             
         <li class="nav-item">
             <a class="nav-link {{ $archived ? 'active' : '' }}" id="archived-class-tab" data-toggle="tab" href="#archived" role="tab" aria-controls="view" aria-selected="false">View Archived Classes</a>
-        </li>             
-        <li class="nav-item">
-            <a class="nav-link {{ $rooms ? 'active' : '' }}" id="rooms-class-tab" data-toggle="tab" href="#rooms" role="tab" aria-controls="view" aria-selected="false">Rooms</a>
-        </li>             
+        </li>      
+        @if ($the_admin->position == 'superadmin')
+            <li class="nav-item">
+                <a class="nav-link {{ $rooms ? 'active' : '' }}" id="rooms-class-tab" data-toggle="tab" href="#rooms" role="tab" aria-controls="view" aria-selected="false">Rooms</a>
+            </li>             
+
+        @endif     
     </ul>
 
 </div>
@@ -92,11 +97,14 @@
 
 	<div class="tab-pane {{ $archived ? 'active' : '' }}" id="archived">
         @include('admin.classes.archived') 
-	</div>                
+	</div> 
+    
+    @if ($the_admin->position == 'superadmin')
+        <div class="tab-pane {{ $rooms ? 'active' : '' }}" id="rooms">
+            @include('admin.classes.rooms') 
+        </div>                
+    @endif
 
-	<div class="tab-pane {{ $rooms ? 'active' : '' }}" id="rooms">
-        @include('admin.classes.rooms') 
-	</div>                
 </div>
 
 <script>

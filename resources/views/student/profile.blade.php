@@ -101,6 +101,10 @@
                 @endif
             @endif
 
+            @if (auth()->user()->isAdmin())
+                
+            @endif
+
             
  
             <table class="table table-striped border">
@@ -352,44 +356,45 @@
 
                 @if($show == 2)
 
-                <tr>
+                    @if (auth()->user()->isAdmin())    
 
-                    <td id="" role="button" data-toggle="modal" data-target="#subjects" class="text-center bg-warning bg-info text-secondary" colspan="2">
-                        Enroll to a Subject
-                    </td>                   
+                    <?php
+                        $admin = \App\Models\Admin::where('id', auth()->user()->member->member_id)->first();
+                    ?>
+            
+                        @if ($admin->position == 'superadmin' || $admin->position == 'registrar')
+                            <tr>
+                                <td id="" role="button" data-toggle="modal" data-target="#subjects" class="text-center bg-warning bg-info text-secondary" colspan="2">
+                                    Enroll to a Subject
+                                </td>                               
+                            </tr>
 
-                </tr>
+                            <div class="modal fade" id="subjects" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Input Subject Code</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        {!!Form::open(['url' => 'enrolltosubject'])!!}
+                                            <div class="modal-body">
+                                                {{Form::hidden('student_id', $student->id)}}
+                                                {{Form::text('subject_code', '', ['class' => 'form-control', 'required'=>'required'])}}                        
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        {!!Form::close() !!}
+                                    </div>
+                                </div>
+                            </div>
 
-                
+                        @endif
 
-                
-
-                <!-- Modal -->
-                <div class="modal fade" id="subjects" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Input Subject Code</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
-                        <div class="modal-body">
-                        {!!Form::open(['url' => 'enrolltosubject'])!!}
-
-                        {{Form::hidden('student_id', $student->id)}}
-                        {{Form::text('subject_code', '', ['class' => 'form-control', 'required'=>'required'])}}                        
-
-                       
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                        {!!Form::close() !!}
-                        </div>
-                    </div>
-                    </div>
-                </div>
+                    @endif                            
            
                 @endif
 
@@ -465,132 +470,126 @@
   
     @if (auth()->user()->isAdmin())    
 
-        @if ($student->subjectsTakenThisSemester()->count() > 0)
-
-            <div class="row my-1">
-                <div class="col text-left ">                    
-                    <h5>Discounts attached to {{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name)}} </h5>                        
-                    <ul class="list-group list-group-flush">
-                        @if ($student->discounts->count() > 0)                    
-                            @foreach ($student->discounts as $discount_rel)
-                                <?php $discount = \App\Models\Discount::find($discount_rel->discount_id); ?>
-                                <li class="list-group-item"> <button data-toggle="modal" data-target="#remove-{{$discount->id}}" class="btn btn-sm btn-danger mr-2">Remove</button> {{$discount->description}} - {{$discount->percentage}} %</li>                                
-                                <div class="modal fade" id="remove-{{$discount->id}}" tabindex="-1" role="dialog" aria-labelledby="remove-{{$discount->discount_id}}Title" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-danger text-white" >
-                                        <h6 class="modal-title" id="exampleModalLongTitle">Remove {{$discount->description}} from {{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name)}} ?</h6>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+        <?php
+            $admin = \App\Models\Admin::where('id', auth()->user()->member->member_id)->first();
+        ?>
+        <div class="row my-1">
+            @if ($admin->position == 'superadmin' || $admin->position == 'accounting')
+                @if ($student->subjectsTakenThisSemester()->count() > 0)
+                    <div class="col text-left">                    
+                        <h5>Discounts attached to {{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name)}} </h5>                        
+                        <ul class="list-group list-group-flush">
+                            @if ($student->discounts->count() > 0)                    
+                                @foreach ($student->discounts as $discount_rel)
+                                    <?php $discount = \App\Models\Discount::find($discount_rel->discount_id); ?>
+                                    <li class="list-group-item"> <button data-toggle="modal" data-target="#remove-{{$discount->id}}" class="btn btn-sm btn-danger mr-2">Remove</button> {{$discount->description}} - {{$discount->percentage}} %</li>                                
+                                    <div class="modal fade" id="remove-{{$discount->id}}" tabindex="-1" role="dialog" aria-labelledby="remove-{{$discount->discount_id}}Title" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white" >
+                                            <h6 class="modal-title" id="exampleModalLongTitle">Remove {{$discount->description}} from {{ucfirst($student->first_name) . ' ' . ucfirst($student->last_name)}} ?</h6>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            </div>
+                                            <div class="modal-body">
+                                            Removing {{$discount->description}} from {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}} 
+                                            will add {{$discount->percentage}}% of {{$student->pronoun}} supposed total tuition this sem without discount (which is &#8369; {{number_format($student->tuition_without_discount, 2)}})
+                                            </div>
+                                            <div class="modal-footer">
+                                                {{Form::open(['url' => 'detachdiscount'])}}
+                                                    {{Form::hidden('stud_id', $student->id)}}
+                                                    {{Form::hidden('disc_id', $discount->id)}}
+                                                    <button type="submit" class="btn btn-danger">Remove</button>
+                                                {{Form::close()}}
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
                                         </div>
+                                        </div>
+                                    </div>
+
+                                @endforeach                                                        
+
+                            @else  
+
+                            @endif
+                            <li class="list-group-item text-right"><button data-toggle="modal" data-target="#add-discount-modal" type="button" class="btn btn-success">Attach a Discount <i class="fa fa-plus" aria-hidden="true"></i></button></li>
+
+                            <div class="modal fade" id="add-discount-modal" tabindex="-1" role="dialog" aria-labelledby="add-discount-modalTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success text-white" >
+                                    <h6 class="modal-title" id="exampleModalLongTitle">Attach a Discount to {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}}</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    {{Form::open(['url' => 'attachdiscount'])}}
                                         <div class="modal-body">
-                                        Removing {{$discount->description}} from {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}} 
-                                        will add {{$discount->percentage}}% of {{$student->pronoun}} supposed total tuition this sem without discount (which is &#8369; {{number_format($student->tuition_without_discount, 2)}})
+                                            <div class="text-center w-75 mx-auto">
+                                                Attaching Discounts will update {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}}'s balance amount (&#8369; {{number_format($student->balance->amount, 2)}})
+                                            </div>
+                                            {{Form::hidden('stud_id', $student->id)}}
+                                            <select name="discount[]" value="" id="select-discount" class="form-control " multiple required>                                            
+                                                <?php 
+                                                    $total_percentage = 0;
+                                                    $all_discounts = \App\Models\Discount::all();
+                                                    
+                                                    if($student->discounts->count() > 0){          
+                                                        
+                                                        $already_attached = collect(new \App\Models\Discount);
+                                                        
+                                                        foreach ($student->discounts as $discount_rel) {
+                                                            $already_attached->push(\App\Models\Discount::find($discount_rel->discount_id));                                                        
+                                                            $total_percentage += \App\Models\Discount::find($discount_rel->discount_id)->percentage;
+                                                        }
+                                                        
+                                                        $all_discounts = $all_discounts->diff($already_attached);
+                                                    }                                              
+                                                    ?>                                                                                              
+                                                @foreach ($all_discounts as $discount)
+                                                    <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
+                                                @endforeach
+                                            </select>
+                                            {{Form::hidden('total_percentage', $total_percentage)}}                                        
                                         </div>
                                         <div class="modal-footer">
-                                            {{Form::open(['url' => 'detachdiscount'])}}
-                                                {{Form::hidden('stud_id', $student->id)}}
-                                                {{Form::hidden('disc_id', $discount->id)}}
-                                                <button type="submit" class="btn btn-danger">Remove</button>
-                                            {{Form::close()}}
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-success">Attach</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         </div>
-                                    </div>
-                                    </div>
+                                    {{Form::close()}}
                                 </div>
-
-                            @endforeach                                                        
-
-                        @else  
-
-                        @endif
-                        <li class="list-group-item text-right"><button data-toggle="modal" data-target="#add-discount-modal" type="button" class="btn btn-success">Attach a Discount <i class="fa fa-plus" aria-hidden="true"></i></button></li>
-
-                        <div class="modal fade" id="add-discount-modal" tabindex="-1" role="dialog" aria-labelledby="add-discount-modalTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header bg-success text-white" >
-                                <h6 class="modal-title" id="exampleModalLongTitle">Attach a Discount to {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}}</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
                                 </div>
-                                {{Form::open(['url' => 'attachdiscount'])}}
-                                    <div class="modal-body">
-                                        <div class="text-center w-75 mx-auto">
-                                            Attaching Discounts will update {{ucfirst($student->first_name) . ' '  . ucfirst($student->last_name)}}'s balance amount (&#8369; {{number_format($student->balance->amount, 2)}})
-                                        </div>
-                                        {{Form::hidden('stud_id', $student->id)}}
-                                        <select name="discount[]" value="" id="select-discount" class="form-control " multiple required>                                            
-                                            <?php 
-                                                $total_percentage = 0;
-                                                $all_discounts = \App\Models\Discount::all();
-                                                
-                                                if($student->discounts->count() > 0){          
-                                                    
-                                                    $already_attached = collect(new \App\Models\Discount);
-                                                    
-                                                    foreach ($student->discounts as $discount_rel) {
-                                                        $already_attached->push(\App\Models\Discount::find($discount_rel->discount_id));                                                        
-                                                        $total_percentage += \App\Models\Discount::find($discount_rel->discount_id)->percentage;
-                                                    }
-                                                    
-                                                    $all_discounts = $all_discounts->diff($already_attached);
-                                                }                                              
-                                                ?>                                                                                              
-                                            @foreach ($all_discounts as $discount)
-                                                 <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
-                                            @endforeach
-                                        </select>
-                                        {{Form::hidden('total_percentage', $total_percentage)}}                                        
-                                    </div>
-                                    <div class="modal-footer">
-                                            <button type="submit" class="btn btn-success">Attach</button>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                {{Form::close()}}
                             </div>
-                            </div>
+                        </ul>
+                    </div>
+                @endif      
+            @endif      
+            @if($admin->position == 'superadmin' || $admin->position == 'registrar')
+                    <div class="col text-right">
+                        <div class="col text-right ">
+                            <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">View Certificate of Registration</a>
                         </div>
-                    </ul>
-                        
+                    </div>
+            @endif
+        </div>
 
-                </div>
-                <div class="col text-right ">
-                    <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">View Certificate of Registration</a>
-                </div>
-            </div>
-            
-        @endif
     @endif
 
 
     @if($show > 2)
-
-    <div class="row m-4">
-
-        <div class="col mx-auto d-flex justify-content-center">
- 
-            <a href="{{route('studentClasses')}}" class="student-button">
-
-                My Classes
-
-            </a>
-
+        <div class="row m-4">
+            <div class="col mx-auto d-flex justify-content-center">
+                <a href="{{route('studentClasses')}}" class="student-button">
+                    My Classes
+                </a>
+            </div>
+            <div class="col mx-auto d-flex justify-content-center">
+                <a href="/student/balance/" class="student-button">
+                    Balance and Payments
+                </a>
+            </div>
         </div>
-        <div class="col mx-auto d-flex justify-content-center">
- 
-            <a href="/student/balance/" class="student-button">
-
-                Balance and Payments
-
-            </a>
-
-        </div>
-
-    </div>
-
     @endif  
     
 </div>

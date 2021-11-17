@@ -63,27 +63,26 @@
         <li class="nav-item ">
             <a class="nav-link {{ $student ? 'active' : '' }}" id="student-create-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{ $faculty ? 'active' : ''}}" id="faculty-create-tab" data-toggle="tab" href="#faculty" role="tab" aria-controls="faculty" aria-selected="false">Faculty</a>
-        </li>
-
+        
         @if ($the_admin->position == 'superadmin')
-
+        
+            <li class="nav-item">
+                <a class="nav-link {{ $faculty ? 'active' : ''}}" id="faculty-create-tab" data-toggle="tab" href="#faculty" role="tab" aria-controls="faculty" aria-selected="false">Faculty</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link {{ $admin ? 'active' : ''}}" id="admin-create-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Admin</a>
             </li>
 
-        @else 
+            <li class="nav-item">
+                <a class="nav-link {{ $subject ? 'active' : '' }}" id="subject-create-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ $program ? 'active' : '' }}" id="program-create-tab" data-toggle="tab" href="#program" role="tab" aria-controls="program" aria-selected="false">Program</a>
+            </li>                          
 
         @endif
 
 
-        <li class="nav-item">
-            <a class="nav-link {{ $subject ? 'active' : '' }}" id="subject-create-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{ $program ? 'active' : '' }}" id="program-create-tab" data-toggle="tab" href="#program" role="tab" aria-controls="program" aria-selected="false">Program</a>
-        </li>       
        
     </ul>
 
