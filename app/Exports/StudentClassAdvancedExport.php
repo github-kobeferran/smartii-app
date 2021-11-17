@@ -7,11 +7,25 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Carbon\Carbon;
 
-class StudentClassAdvancedExport implements  FromCollection, WithMapping, WithHeadings
+class StudentClassAdvancedExport implements  FromCollection, WithMapping, WithHeadings, WithStyles
 {
     use Exportable;
+
+    public function styles(Worksheet $sheet)
+    {
+
+        return [
+            // Style the first row as bold text.
+            1    => ['font' => ['bold' => true]],           
+                  
+        ];
+    }
+
+
     public function __construct($from_year, $to_year, $dept, $prog, $level, $sem, $faculty, $subj, $ac)
     {
         $this->from_year = $from_year;
@@ -22,6 +36,7 @@ class StudentClassAdvancedExport implements  FromCollection, WithMapping, WithHe
         $this->sem = $sem;
         $this->faculty = $faculty;
         $this->subj = $subj;        
+        $this->ac = $ac;        
     }
 
     /**
@@ -71,7 +86,7 @@ class StudentClassAdvancedExport implements  FromCollection, WithMapping, WithHe
 
         if(!empty($this->ac)){
             $classes = $classes->filter(function($class){
-                return $class->archive == 1;
+                return $class->archive == 0;
             });
         }        
 
@@ -99,10 +114,10 @@ class StudentClassAdvancedExport implements  FromCollection, WithMapping, WithHe
             $classes->subjectsTaken->first()->from_year . '-' . $classes->subjectsTaken->first()->from_year . '/' . ($classes->subjectsTaken->first()->semester > 1 ? '2nd Sem' : '1st Sem'),
             $classes->subjectsTaken->first()->student->department ? 'COLLEGE, ':'SHS, ' . $classes->subjectsTaken->first()->student->program->abbrv . ' - ' . $classes->subjectsTaken->first()->student->program->desc,
             $classes->subjectsTaken->first()->student->get_level_description(),            
-            'Intr ' . $classes->faculty->first_name . ' ' . $classes->faculty->last_name,
+            'Instructor ' . $classes->faculty->first_name . ' ' . $classes->faculty->last_name,
             $classes->subjectsTaken->first()->subject->code . ' - '. $classes->subjectsTaken->first()->subject->desc,
             $classes->students_list_string(),
-            $classes->archived ? 'archived' : 'NOT archived',
+            $classes->archived ? 'ARCHIVED' : 'NOT ARCHIVED',
         ];
     }
   

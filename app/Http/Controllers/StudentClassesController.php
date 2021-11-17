@@ -611,7 +611,7 @@ class StudentClassesController extends Controller
         return $classes->count();
 
     }
-    //                              2021/       2022/      0/    0/     0/     0/      0/        0/   0
+
     public function advanceExport($from_year, $to_year, $dept, $prog, $level, $sem, $faculty, $subj, $ac){                                        
 
         $level_desc = "";
@@ -633,6 +633,4 @@ class StudentClassesController extends Controller
         return Excel::download(new StudentClassAdvancedExport($from_year, $to_year, $dept, $prog, $level, $sem, $faculty, $subj, $ac), 'SMARTII Classes A. Y' . $from_year . '-'. $to_year . '.xlsx');
 
     }
-
-    // . ($sem == 1 ? ' First Semester ': ' Second Semester ') . ($level > 0 ? $level_desc : 'All Students of ') . ($prog > 0 ? Program::find($prog)->abbrv :  $dept > 0 ) ? ' COLLEGE ' : " SHS " 
 }
