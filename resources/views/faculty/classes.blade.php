@@ -48,7 +48,16 @@
                                     <ul class="list-group rounded-0"> 
                                         @foreach ($classes as $class)
                                             <li class="list-group">
-                                                <a href="{{ url('/myclass/' . $class->id) }}" class="list-group-item "><i class="fa fa-caret-right" aria-hidden="true"></i> <em>{{$class->topic}}</em></a>
+                                                <a href="{{ url('/myclass/' . $class->id) }}" class="list-group-item" style="{{$class->subjectsTaken->count() == $class->subjectsTaken->where('rating', '!=', 3.5)->count() ? 'background: #d9d9d9 !important; color: black !important;': ''}}">
+                                                    <i class="fa fa-caret-right ml-3" aria-hidden="true"></i> 
+                                                    <em>{{$class->topic}}</em>
+                                                    <?php 
+                                                    
+                                                    ?>
+                                                @if ($class->subjectsTaken->count() == $class->subjectsTaken->where('rating', '!=', 3.5)->count())                                                
+                                                    <span class="float-right ">ready for archive</span>
+                                                @endif                                                    
+                                                </a>
                                             </li>
                                         @endforeach
                                     </ul>
