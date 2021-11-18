@@ -55,30 +55,37 @@ Admission guidelines page of St Mark Institute Integrated Information System, pl
                 </ul>              
                 
             </div>
-            <div class="ml-2 roboto-font" >
-                <div>
-                    <i class="fa fa-caret-right"></i> <span style="font-size: 1.3em;">File Requirements</span>                        
-                    <button type="button" data-toggle="modal" data-target="#idpicsample" class="badge badge-warning float-right">see file requirements detailed.</button> 
+
+            <div class="row mb-1">
+                <div class="col ml-2 roboto-font">
+                    <div>
+                        <i class="fa fa-caret-right"></i> <span style="font-size: 1.3em;">File Requirements</span>                        
+                        <button type="button" data-toggle="modal" data-target="#idpicsample" class="badge badge-warning float-right">see file requirements detailed.</button> 
+                    </div>
                 </div>
-                <ul class="list-group ml-3 ">
-                    <li class="list-group-item smartii-bg-light">
-                        1x1 ID Picture                         
-                    </li>
-                    <li class="list-group-item smartii-bg-light">
-                        PSA Birth Certificate 
-                    </li>
-                    <li class="list-group-item smartii-bg-light">
-                        Good Moral Certificate 
-                    </li>
-                    <li class="list-group-item smartii-bg-light">
-                        Grade <span class="report-card"></span> Report Card
-                    </li>
-                </ul>
-                <div class="text-right my-1" style="font-size: .8em;">
-                    <span class="text-muted">all files must be in <b><em>JPEG</em></b> format <b> must not be more than <em>300 kilobytes </em></b> in size.</span>
-                </div>
-                
             </div>
+            <div class="row">
+                <div class="col ml-2 roboto-font">
+                    <ul class="list-group ml-3 ">
+                        <li class="list-group-item smartii-bg-light">
+                            1x1 ID Picture                         
+                        </li>
+                        <li class="list-group-item smartii-bg-light">
+                            PSA Birth Certificate 
+                        </li>
+                        <li class="list-group-item smartii-bg-light">
+                            Good Moral Certificate 
+                        </li>
+                        <li class="list-group-item smartii-bg-light">
+                            Grade <span class="report-card"></span> Report Card
+                        </li>
+                    </ul>
+                    <div class="text-right my-1" style="font-size: .8em;">
+                        <span class="text-muted">all files must be in <b><em>JPEG</em></b> format <b> must not be more than <em>300 kilobytes </em></b> in size.</span>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="row roboto-font" id="steps">
                 <div class="col">
