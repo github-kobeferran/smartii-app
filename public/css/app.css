@@ -643,6 +643,26 @@ tbody td {
   color: white !important;
 }
 
+.smartii-bg-light {
+  background-color: #FCF5DE !important;
+}
+
+.smartii-bg-dark {
+  background-color: #05551B !important;
+}
+
+.green-bg-light {
+  background-color: #e3ffe3c9 !important;
+}
+
+.red-bg-light {
+  background-color: #ffd4d3 !important;
+}
+
+.blue-bg-light {
+  background-color: #c9fcfca1 !important;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

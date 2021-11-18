@@ -3,50 +3,28 @@
 @section('content')
 
 @include('inc.homenav')
+<div class="container">
 
-    <div class="container border border-success rounded p-5 mt-5 mx-auto">
+    <div class="row">
+        <div class="col p-5 mx-auto formal-font" style="background-color: #fcf5de; border: .2rem solid #05551B;">
 
-        <div class="row">
-        
-            <div>
-    
-                <h5 class="text-center mx-auto">
-    
-                    SENIOR HIGH SCHOOL PROGRAMS
-    
-                </h5>
-    
-            </div>
-    
-           
-    
-        </div>
+            <h5 class=""><span class="formal-font">SENIOR HIGH SCHOOL PROGRAMS</span></h5>
 
-        @if (App\Models\Program::where('department' , 0)->where('id', '!=', 3)->count() > 0)
+            @if (App\Models\Program::where('department' , 0)->where('id', '!=', 3)->count() > 0)            
     
-            <div class="d-flex flex-wrap">
-
+                <ul class="list-group list-group-flush">
                 @foreach (App\Models\Program::where('department', 0)->where('id', '!=', 3)->get() as $prog)
-
-                    <div class="border rounded border-dark m-2 p-3">
-
-                        <p>{{$prog->desc}}</p>
-
-                    </div>
-            
-                    
+                
+                    <li style="font-size: 1.2em;" class="list-group-item smartii-bg-light"><i class="fa fa-square" aria-hidden="true"></i><span class="ml-3">{{$prog->desc}} ({{$prog->abbrv}})</span></li>
+    
                 @endforeach
-
-            </div>
-
+                </ul>
+            @else
             
-        @else
-            
+            @endif
 
-            
-        @endif
-        
-        
+        </div>
+    </div>   
 
-    </div>
+</div>
 @endsection

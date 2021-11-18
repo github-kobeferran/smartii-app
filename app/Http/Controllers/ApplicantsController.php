@@ -107,7 +107,11 @@ class ApplicantsController extends Controller
                          ->with('active', 'dept');
         }
 
-        $before_date = Carbon::now()->subYears(15);       
+        $before_date = Carbon::now()->subYears(15);
+        
+        if($request->input('dept'))
+            $before_date = Carbon::now()->subYears(18);
+        
         $after_date = new Carbon('1903-01-01');
 
         $validated = ['dept' => $request->input('dept'),
@@ -144,6 +148,8 @@ class ApplicantsController extends Controller
 
             'dob.required' => 'Date of Birth is required.',
             'dob.date' => 'Date of Birth is invalid.',
+            'dob.before' => 'Date of Birth must be before ' . $before_date->isoFormat('MMMM DD, YYYY'),
+            'dob.after' => 'Date of Birth must be after ' .  $after_date->isoFormat('MMMM DD, YYYY'),
 
         ]);        
 

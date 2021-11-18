@@ -625,7 +625,7 @@ window.addEventListener('load', (event) => {
       step1.disabled = true;  
       selectProg.options[0].value = val_prog;
 
-      monitorInputs.textContent = "SHS | " + val_prog_desc;
+      monitorInputs.textContent = "SHS | " + val_prog_desc;      
 
     } else {
 

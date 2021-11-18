@@ -24,9 +24,7 @@
           ADMISSION
       </button>
       <div class="dropdown-menu text-left" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="{{url('/admissionhelp#shs')}}">For SHS</a>
-        <a class="dropdown-item" href="{{url('/admissionhelp#college')}}">For College</a>                  
-        <a class="dropdown-item" href="{{url('/admissionhelp#transferee')}}">Transferees</a>                  
+        <a class="dropdown-item" href="{{url('/admissionhelp')}}">Admission Guidelines</a>
       </div>
     </div>
     <div class="dropdown homepage-dropdown ">
