@@ -34,7 +34,7 @@ Admission guidelines page of St Mark Institute Integrated Information System, pl
                     </div>
                 </div>
             </div>
-        </div>
+        </div>     
     </div>
 
     <div class="row" id="req-panel">
