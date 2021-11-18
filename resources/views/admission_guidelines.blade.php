@@ -35,9 +35,6 @@ Admission guidelines page of St Mark Institute Integrated Information System, pl
                 </div>
             </div>
         </div>
-        {{-- <div>
-            <h2 style="font-family: 'Cinzel', serif; background-color:#05551b; color: white;" id="reqs">FILE REQUIREMENTS GUIDELINES</h2>
-        </div>               --}}
     </div>
 
     <div class="row" id="req-panel">
@@ -52,8 +49,7 @@ Admission guidelines page of St Mark Institute Integrated Information System, pl
                     <li class="list-group-item">
                         must be <span class="age"></span> years of age and older.
                     </li>                                
-                </ul>              
-                
+                </ul>                              
             </div>
 
             <div class="row mb-1">
