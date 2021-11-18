@@ -518,8 +518,7 @@ function programSelect(id){
 
 function subjectSelect(subjid, subjDescAndCode, programid){  
     cancelEditSched();      
-
-
+    
     let subjectbuttons = document.getElementsByClassName('subject-button');
 
     let btn = document.getElementById('subj-' + subjid);

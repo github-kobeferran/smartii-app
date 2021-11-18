@@ -470,7 +470,7 @@ class AdminsController extends Controller
                 break;
                 case 'subjects':
                     if(!is_null($all)){
-                        
+                        return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
                     } else {
                         return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
                     }

@@ -60,7 +60,7 @@
 <div  id="createTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
 
-        <li class="nav-item ">
+        <li class="nav-item">
             <a class="nav-link {{ $student ? 'active' : '' }}" id="student-create-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Student</a>
         </li>
         
@@ -72,7 +72,6 @@
             <li class="nav-item">
                 <a class="nav-link {{ $admin ? 'active' : ''}}" id="admin-create-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Admin</a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link {{ $subject ? 'active' : '' }}" id="subject-create-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject</a>
             </li>
@@ -81,8 +80,6 @@
             </li>                          
 
         @endif
-
-
        
     </ul>
 
@@ -137,8 +134,6 @@ window.addEventListener('load', (event) => {
     fillSubjectsList(0);
     fillProgramList(0);     
 }); 
-
-
 
 </script>
 

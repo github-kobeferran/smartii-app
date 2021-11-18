@@ -59,17 +59,17 @@
 
 <div  id="classesTab" class="bs-example"> 
      <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
+        <li data-dismiss="alert" class="nav-item">
             <a class="nav-link {{ $create ? 'active' : '' }}" id="create-class-tab" data-toggle="tab" href="#create" role="tab" aria-controls="create" aria-selected="false">Class Assignment</a>
         </li>
-        <li class="nav-item">
+        <li data-dismiss="alert" class="nav-item">
             <a class="nav-link {{ $view ? 'active' : '' }}" id="view-class-tab" data-toggle="tab" href="#view" role="tab" aria-controls="view" aria-selected="false">View Classes</a>
         </li>             
-        <li class="nav-item">
+        <li data-dismiss="alert" class="nav-item">
             <a class="nav-link {{ $archived ? 'active' : '' }}" id="archived-class-tab" data-toggle="tab" href="#archived" role="tab" aria-controls="view" aria-selected="false">View Archived Classes</a>
         </li>      
         @if ($the_admin->position == 'superadmin')
-            <li class="nav-item">
+            <li data-dismiss="alert" class="nav-item">
                 <a class="nav-link {{ $rooms ? 'active' : '' }}" id="rooms-class-tab" data-toggle="tab" href="#rooms" role="tab" aria-controls="view" aria-selected="false">Rooms</a>
             </li>             
 

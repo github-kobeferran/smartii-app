@@ -85,12 +85,30 @@
                         <div class="col-10 mt-3 ml-1 mr-auto">
                                             
                             @yield('content')
+                            
+                            <script>
+                                let navItems = document.getElementsByClassName('nav-item');
+
+
+                                for(let i in navItems){
+                                    if(typeof navItems[i] == 'object'){
+                                        navItems[i].addEventListener('click', () =>  {
+                                            let alerts = document.getElementsByClassName('alert');
+                                            for(let i in alerts){
+                                                if(typeof alerts[i] == 'object')
+                                                    alerts[i].style.display = "none";
+                                            }
+                                        });
+                                    }
+                                }
+                            </script>
                         
                         </div> 
                         <div>
                         </div>
                     </div> 
                 </div> 
+                
 
 
                 {{-- ******************************* IF USER IS STUDENT --}}

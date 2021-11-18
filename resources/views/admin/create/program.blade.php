@@ -1,3 +1,6 @@
+@include('inc.messages')
+
+
 {!! Form::open(['url' => 'admin/create/program', 'id' => 'programForm']) !!}    
 
     <div class="row">    
