@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\SubjectTaken;
 use App\Models\Subject;
 use App\Models\Student;
@@ -14,15 +15,39 @@ use App\Models\Setting;
 class Subject extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
-    protected $appends = ['student_count' => null, 'program_desc' => null, 'level_desc' => null, 'semester_desc' => null];
+    protected $appends = [
+                            'student_count' => null, 
+                            'program_desc' => null, 
+                            'level_desc' => null, 
+                            'semester_desc' => null,
+                            'is_taken' => null,
+                            'is_trashed' => null
+                        ];
  
     public function pre_reqs(){
         return $this->belongsToMany(Subject::class, 'subjects_pre_req', 'subject_id', 'subject_pre_req_id');
     }
+    
 
     public function program() {
         return $this->belongsTo(Program::class, 'program_id', 'id');
+    }
+
+    public function getIsTakenAttribute(){
+        if(SubjectTaken::where('subject_id', $this->id)->exists())
+            return $this->attributes['is_taken'] = true;
+        else
+            return $this->attributes['is_taken'] = false;
+
+    }
+    public function getIsTrashedAttribute(){
+        if($this->trashed())
+            return $this->attributes['is_trashed'] = true;
+        else
+            return $this->attributes['is_trashed'] = false;
+
     }
 
     public function setSemesterDescAttribute($value)
@@ -70,7 +95,7 @@ class Subject extends Model
 
     public function setProgramDescAttribute($id){
 
-        $subject = Subject::find($id);
+        $subject = Subject::withTrashed()->find($id);
 
         $program = Program::find($subject->program_id);
 

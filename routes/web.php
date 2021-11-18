@@ -80,18 +80,36 @@ Auth::routes(['verify' => true]);
 
 // ADMIN protected routes 
 Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->group(function () {
+    //view
     Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard')->middleware(['admin.superadmin']);
-    
     Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate')->middleware(['admin.registrar']);
-    Route::post('/admin/create/student', [App\Http\Controllers\StudentsController::class, 'store'])->name('studentCreate');    
+    Route::get('/admin/payment', [App\Http\Controllers\AdminsController::class, 'adminPayment'])->name('adminPayment')->middleware(['admin.accounting']);
+    //programs
     Route::post('/admin/create/program', [App\Http\Controllers\ProgramsController::class, 'store'])->name('programStore');    
-    Route::post('/admin/create/subject', [App\Http\Controllers\SubjectsController::class, 'store'])->name('subjectStore');    
+    Route::any('/updateprogram', [App\Http\Controllers\ProgramsController::class, 'update'])->name('updateProgram');
+    //student
+    Route::post('/admin/create/student', [App\Http\Controllers\StudentsController::class, 'store'])->name('studentCreate');                
     Route::post('/admin/create/admin', [App\Http\Controllers\AdminsController::class, 'store'])->name('adminStore');    
     Route::post('/admin/create/faculty', [App\Http\Controllers\FacultiesController::class, 'store'])->name('facultyStore');    
     Route::post('/admin/create/class', [App\Http\Controllers\StudentClassesController::class, 'store'])->name('classStore');    
     Route::post('/admin/create/room', [App\Http\Controllers\RoomsController::class, 'store'])->name('roomStore');    
     Route::any('/admin/create/invoice', [App\Http\Controllers\InvoicesController::class, 'store'])->name('createInvoice');    
-
+    Route::any('/enrolltosubject', [App\Http\Controllers\AdminsController::class, 'enrollToSubject'])->name('enrolltosubject');     
+    //subjects
+    Route::post('/admin/create/subject', [App\Http\Controllers\SubjectsController::class, 'store'])->name('subjectStore');    
+    Route::any('/updatesubject', [App\Http\Controllers\SubjectsController::class, 'update'])->name('updatesubject');
+    Route::any('/attachprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'attach'])->name('pre_req.attach');
+    Route::any('/detachprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'detach'])->name('pre_req.detach');
+    Route::any('/deletesubject/{id}', [App\Http\Controllers\SubjectsController::class, 'destroy'])->name('destroySubject');   
+    Route::any('/disablesubject', [App\Http\Controllers\SubjectsController::class, 'disable'])->name('subject.disable');
+    Route::any('/restoresubject', [App\Http\Controllers\SubjectsController::class, 'restore'])->name('subject.restore');   
+    /**
+     * 
+     * 
+     * ajax
+     * 
+     * 
+     * */
     Route::get('/admin/view', [App\Http\Controllers\AdminsController::class, 'adminView'])->name('adminView');
     Route::get('/admin/pendingstudentclass/{dept}/{prog}/{subj}/{sortby?}', [App\Http\Controllers\SubjectsTakenController::class, 'pendingStudentClass'])->name('adminPendingStudentClass');
     Route::get('/admin/view/{table}', [App\Http\Controllers\AdminsController::class, 'showTable'])->name('adminViewTable');    
@@ -99,60 +117,53 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/admin/view/{table}/{by}/{value}/{all?}', [App\Http\Controllers\AdminsController::class, 'showTableBy'])->name('adminViewTableBy');    
     Route::get('/admin/view/{table}/{dept}/{deptvalue}/{prog}/{progvalue}', [App\Http\Controllers\AdminsController::class, 'showTableByTwo'])->name('adminViewTableByTwo');
     Route::get('/admin/view/{table}/{department}/{departmentvalue}/{program}/{programvalue}/{level}/{levelvalue}/{semester}/{semestervalue}/{all?}', [App\Http\Controllers\AdminsController::class, 'showTableByFour'])->name('adminViewTableByFour');
-
     // prepare for classes query
     Route::get('/admin/available/rooms/{from}/{until}/{day?}', [App\Http\Controllers\RoomsController::class, 'availableRooms'])->name('availableRooms');    
     Route::get('/admin/available/faculty/{programid}/{from}/{until}/{day?}', [App\Http\Controllers\FacultiesController::class, 'availableFaculty'])->name('availableFaculty');    
     Route::get('/admin/availablerooms/{from}/{until}/{day}/{exceptid}', [App\Http\Controllers\RoomsController::class, 'availableRoomsExcept'])->name('availableRoomsExcept');    
     Route::get('/admin/availablefaculty/{from}/{until}/{day}/{exceptid}/{programid}', [App\Http\Controllers\FacultiesController::class, 'availableFacultyExcept'])->name('availableFacultyExcept');    
-
     //search, searchby
     Route::get('/admin/search/{table}/{text?}/{dept?}', [App\Http\Controllers\AdminsController::class, 'search'])->name('AdminSearch');    
     Route::get('/admin/searchby/{table}/{by}/{value}/{text?}/', [App\Http\Controllers\AdminsController::class, 'searchBy'])->name('AdminSearchBy');    
-    
-
+    /**
+     * 
+     * 
+     * ajax
+     * 
+     * 
+     * */    
+    //rooms
     Route::post('/admin/update/room/', [App\Http\Controllers\RoomsController::class, 'update'])->name('updateRoom');
     Route::post('/admin/update/setting/', [App\Http\Controllers\SettingsController::class, 'update'])->name('updateSetting');
-    Route::post('/admin/approvereq/{reqType}/{id}', [App\Http\Controllers\AdminsController::class, 'approveReq'])->name('approveReq');
-    Route::post('/admin/requestreq/{reqType}/{id}', [App\Http\Controllers\AdminsController::class, 'approveReq'])->name('approveReq');
-
-
     Route::get('/admin/delete/room/{id}', [App\Http\Controllers\RoomsController::class, 'destroy'])->name('deleteRoom');
-
-    Route::get('/admin/payment', [App\Http\Controllers\AdminsController::class, 'adminPayment'])->name('adminPayment')->middleware(['admin.accounting']);
+    //payments
+    Route::post('/admin/approvereq/{reqType}/{id}', [App\Http\Controllers\AdminsController::class, 'approveReq'])->name('approveReq');
+    Route::post('/admin/requestreq/{reqType}/{id}', [App\Http\Controllers\AdminsController::class, 'approveReq'])->name('approveReq');    
+    //payment request
+    Route::get('/admin/paymentrequests', [App\Http\Controllers\PaymentRequestsController::class, 'view'])->name('payment_request.view')->middleware(['admin.accounting']);
+    Route::any('/admin/approvepaymentrequest', [App\Http\Controllers\PaymentRequestsController::class, 'approve'])->name('payment_request.approve');
+    Route::any('/admin/rejectpaymentrequest', [App\Http\Controllers\PaymentRequestsController::class, 'reject'])->name('payment_request.reject');
+    //settings
     Route::get('/admin/settings', [App\Http\Controllers\AdminsController::class, 'adminSettings'])->name('adminSettings')->middleware(['admin.superadmin']);
-    
+    //classes
     Route::get('/admin/classes/', [App\Http\Controllers\StudentClassesController::class, 'view'])->name('adminClasses')->middleware(['admin.registrar']);
     Route::get('/admin/classes/archived', [App\Http\Controllers\StudentClassesController::class, 'viewArchived'])->name('viewArchived')->middleware(['admin.registrar']);
     Route::get('/admin/searcharchived/{text?}', [App\Http\Controllers\StudentClassesController::class, 'searchArchived'])->name('view.class.archived.search')->middleware(['admin.registrar']);
     Route::get('/admin/schedules/{prog}/{subj}', [App\Http\Controllers\SubjectsTakenController::class, 'showClassSchedules'])->name('showClassSchedules');
-
+    Route::any('/updateschedule', [App\Http\Controllers\StudentClassesController::class, 'updateSchedule'])->name('updateschedule');    
+    //applicants 
     Route::get('/admin/download/{type}/{filename}', [App\Http\Controllers\AdminsController::class, 'download'])->name('AdminDownload');
     Route::post('/admin/requestupload', [App\Http\Controllers\AdminsController::class, 'requestFileResubmission'])->name('requestFileResubmission');
     Route::post('/admin/approveapplicant', [App\Http\Controllers\ApplicantsController::class, 'approve'])->name('applicant.approve');
     Route::any('/admin/rejectapplicant', [App\Http\Controllers\ApplicantsController::class, 'reject'])->name('applicant.reject');
-    Route::any('/admin/restoreapplicant', [App\Http\Controllers\ApplicantsController::class, 'restore'])->name('applicant.restore');
-
-    //payment request
-    Route::get('/admin/paymentrequests', [App\Http\Controllers\PaymentRequestsController::class, 'view'])->name('payment_request.view')->middleware(['admin.accounting']);
-    Route::any('/admin/approvepaymentrequest', [App\Http\Controllers\PaymentRequestsController::class, 'approve'])->name('payment_request.approve');
-    Route::any('/admin/rejectpaymentrequest', [App\Http\Controllers\PaymentRequestsController::class, 'reject'])->name('payment_request.reject');\
-    
-    Route::any('/updateschedule', [App\Http\Controllers\StudentClassesController::class, 'updateSchedule'])->name('updateschedule');
-    Route::any('/enrolltosubject', [App\Http\Controllers\AdminsController::class, 'enrollToSubject'])->name('enrolltosubject');
-
-    Route::any('/updatesubject', [App\Http\Controllers\SubjectsController::class, 'update'])->name('updatesubject');
-    Route::any('/attachprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'attach'])->name('pre_req.attach');
-    Route::any('/detachprereq', [App\Http\Controllers\SubjectsPreReqController::class, 'detach'])->name('pre_req.detach');
-    Route::any('/deletesubject/{id}', [App\Http\Controllers\SubjectsController::class, 'destroy'])->name('destroySubject');
-
-    Route::any('/updateprogram', [App\Http\Controllers\ProgramsController::class, 'update'])->name('updateProgram');
+    Route::any('/admin/restoreapplicant', [App\Http\Controllers\ApplicantsController::class, 'restore'])->name('applicant.restore');            
+    //announcement
     Route::any('/createannouncement', [App\Http\Controllers\AnnouncementsController::class, 'store'])->name('storeAnnouncement');
     Route::any('/deleteannouncement/{id}', [App\Http\Controllers\AnnouncementsController::class, 'delete'])->name('storeAnnouncement');
+    //fees
     Route::any('/addfee', [App\Http\Controllers\FeesController::class, 'store'])->name('addfee');
     Route::any('/deletefee', [App\Http\Controllers\FeesController::class, 'delete'])->name('editfee');
     Route::any('/editfee', [App\Http\Controllers\FeesController::class, 'update'])->name('update');
-
     //students export
     Route::get('allstudents/export/', [App\Http\Controllers\StudentsController::class, 'allStudentsExport']);
     Route::get('allactivestudents/export/', [App\Http\Controllers\StudentsController::class, 'allActiveStudentsExport']);
@@ -162,37 +173,33 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('advancedinvoices/export/{month}/{year}', [App\Http\Controllers\InvoicesController::class, 'advancedExport']);
     //classes export
     Route::get('advancedclasses/export/{from_year}/{to_year}/{dept}/{prog}/{level}/{sem}/{faculty}/{subj}/{ac}', [App\Http\Controllers\StudentClassesController::class, 'advanceExport']);
-
+    //events
     Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);
     Route::get('/events/delete/{id}', [App\Http\Controllers\EventsController::class, 'delete']);
     Route::any('/events/update', [App\Http\Controllers\EventsController::class, 'update']);
-    
+    //homepage images
     Route::any('/homepageimage/store', [App\Http\Controllers\AdminsController::class, 'homepageImageStore']);
     Route::get('/homepageimage/delete/{id}', [App\Http\Controllers\AdminsController::class, 'homepageImageDelete']);
     Route::any('/homepageimage/update/', [App\Http\Controllers\AdminsController::class, 'homepageImageUpdate']);    
-
+    //posts
     Route::get('/togglepoststatus/{id}', [App\Http\Controllers\PostsController::class, 'togglestatus']);    
     Route::get('/featurepost/{id}', [App\Http\Controllers\PostsController::class, 'feature']);    
     Route::get('/viewprogramsfromdashboard', [App\Http\Controllers\ProgramsController::class, 'viewFromDashboard']);    
-    
+    // discounts
     Route::any('/attachdiscount', [App\Http\Controllers\StudentDiscountsController::class, 'attachToStudent'])->name('student_discounts.attach');    
     Route::any('/detachdiscount', [App\Http\Controllers\StudentDiscountsController::class, 'detachFromStudent'])->name('student_discounts.detach');    
     Route::any('/updatediscount', [App\Http\Controllers\DiscountsController::class, 'update'])->name('discount.update');    
     Route::any('/deletediscount', [App\Http\Controllers\DiscountsController::class, 'delete'])->name('discount.delete');    
     Route::any('/storediscount', [App\Http\Controllers\DiscountsController::class, 'store'])->name('discount.store');    
-    
     //counts
     Route::get('/countclass/{prog}/{subj}', [App\Http\Controllers\StudentClassesController::class, 'countClasses']);
     //no forms
     Route::get('/remindapplicationform', [App\Http\Controllers\UsersController::class, 'remindToSubmit']);
-    Route::any('/deletenoform', [App\Http\Controllers\UsersController::class, 'deleteNoAdmissionForms']);
-    
+    Route::any('/deletenoform', [App\Http\Controllers\UsersController::class, 'deleteNoAdmissionForms']);    
     //faculty functions
     Route::get('/remindtoarchive/{id}', [App\Http\Controllers\FacultiesController::class, 'remindToArchive']);
     Route::any('/changefacultyspecialty', [App\Http\Controllers\FacultiesController::class, 'changeSpecialty']);
-
-
 });
 
 // APPLICANT protected routes 

@@ -73,7 +73,7 @@ class StudentClass extends Model
 
         $subjecttaken = SubjectTaken::where('class_id', $id)->first();
 
-        $subject = Subject::find($subjecttaken->subject_id);
+        $subject = Subject::withTrashed()->find($subjecttaken->subject_id);
 
         $this->attributes['topic'] = $subject->desc;
         

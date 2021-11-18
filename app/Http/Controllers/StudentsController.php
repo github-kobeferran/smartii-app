@@ -132,7 +132,11 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {                                    
-        $before_date = Carbon::now()->subYears(15);       
+        $before_date = Carbon::now()->subYears(15);  
+        
+        if($request->input('department'))
+            $before_date = Carbon::now()->subYears(18);  
+        
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [

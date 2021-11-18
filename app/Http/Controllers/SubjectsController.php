@@ -197,32 +197,17 @@ class SubjectsController extends Controller
                          ->with('active','subject');
         }      
         
-        // foreach(Subject::all() as $subject){
-
-        //     foreach($subject->pre_reqs as $pre_req){
-
-        //         if($pre_req->id == $request->input('subject_id')){
-
-        //             return redirect()->route('adminCreate')
-        //                 ->with('active', 'subject')
-        //                 ->with('error', 'Can\'t update a Pre-Requisite Subject.');
-
-        //         }
-
-        //     }
-
-        // }
-
+        
         $subject = Subject::find($request->input('subject_id'));
 
-        $subject->code = $request->input('code');
+        $subject->code = $request->input('code');     
         $oldDesc = $subject->desc;
         $subject->desc = $request->input('desc');
         $subject->program_id = $request->input('prog');
         $subject->level = $request->input('level');
         $subject->dept = $request->input('dept');
         $subject->semester = $request->input('semester');
-        $subject->units = $request->input('units');
+        $subject->units = $request->input('units');      
 
         $subject->save();
 
@@ -241,11 +226,10 @@ class SubjectsController extends Controller
         foreach(Subject::all() as $subject){
             foreach($subject->pre_reqs as $pre_req){
                 if($pre_req->id == $id)
-                    return redirect()->route('adminCreate')->with('active', 'subject')->with('error', 'Can\'t delete a Pre Requisite');
-                
+                    return redirect()->route('adminCreate')->with('active', 'subject')->with('error', 'Can\'t delete a Pre-Requisite');
             }
         }
-
+                
         Subject::find($id)->delete();
 
         return redirect()->route('adminCreate')
@@ -253,4 +237,37 @@ class SubjectsController extends Controller
         ->with('info', 'Subject Deleted');
 
     }
+
+    public function disable(Request $request)
+    {             
+        if($request->method() != "POST")
+            return redirect()->back();
+
+        $subject = Subject::find($request->input('id'));                     
+
+        foreach(Subject::all() as $s){
+            foreach($s->pre_reqs as $pre_req){
+                if($pre_req->id == $subject->id){
+                    return redirect()->route('adminCreate')->with('active', 'subject')->with('error', 'Can\'t disable a Pre-Requisite Subject.');
+                }
+            }
+        }          
+
+        $subject->delete();
+
+        return redirect()->route('adminCreate')->with('active', 'subject')->with('warning', $subject->desc . 'has been Disabled');
+
+    }
+
+    public function restore(Request $request){
+
+        if($request->method() != "POST")
+            return redirect()->back();
+
+        $subject = Subject::withTrashed()->find($request->input('id'));   
+        $subject->restore();
+        return redirect()->route('adminCreate')->with('active', 'subject')->with('info', $subject->desc . ' has been Restored.');
+
+    }
+
 }

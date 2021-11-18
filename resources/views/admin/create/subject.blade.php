@@ -161,6 +161,7 @@
                         <button type="button" onclick="cancelSubjEdit()" class="btn btn-sm btn-light text-danger">&times;</button>
                     </div>
                 </div>
+                
                 {{Form::hidden('subject_id', null, ['id' => 'subj-id'])}}
                 Code
                 {{Form::text('code', '', ['id'=> 'edit-code', 'class' => 'form-control'])}}
@@ -191,9 +192,8 @@
                 {{Form::hidden('is_tesda', 0, ['id'=> 'edit-is-tesda', 'class' => 'form-control'])}}
 
                 <div class="form-group mt-2">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                <button type="button" onclick="cancelSubjEdit()" class="btn btn-danger">Cancel</button>
-
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" onclick="cancelSubjEdit()" class="btn btn-danger">Cancel</button>
                 </div>
 
                 {!! Form::close() !!}
@@ -486,19 +486,88 @@ function subjectClicked(id){
                                 output+=`                                          
                                     </td>      
                                 </tr>
+                                <tr>`;
+                                   
 
-                                <tr>
+                                        if(subject.is_taken){
+                                            if(subject.is_trashed)
+                                                output+=`<td role="button" data-toggle="modal" data-target="#restore-${subject.id}" class="bg-light text-dark text-center"><b>RESTORE THIS SUBJECT</b></td>`;
+                                            else
+                                                output+=`<td role="button" data-toggle="modal" data-target="#disable-${subject.id}" class="bg-warning text-dark text-center"><b>DISABLE THIS SUBJECT</b></td>`;
+                                        } else{
+                                            output+=`<td class="bg-danger">
+                                                <a href="/deletesubject/`+ subject.id +`" class="btn btn-danger btn-block text-white" > DELETE THIS SUBJECT</a>
+                                            </td>`;
+                                        }
 
-                                    <td role="button" class="bg-danger">
-                                        <a href="/deletesubject/`+ subject.id +`" class="btn btn-danger btn-block text-white" > DELETE THIS SUBJECT</a>
-                                    </td>
-                                    <td onclick="showEdit(`+ subject.id +`,`+ subject.dept+`)" role="button" class="bg-info text-center" style="text-align: center; vertical-align: middle;">
+                                    output+=`
+                                    <td onclick="${subject.is_trashed ? `` : `showEdit(${subject.id},${subject.dept})`}" role="button" class="bg-info text-center" style="text-align: center; vertical-align: middle;" >
                                        <div class="my-auto text-white"> EDIT THIS SUBJECT</div>
                                     </td>
-
                                 </tr>
 
                             </table> 
+
+                            <div class="modal fade" id="disable-`+ subject.id +`" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-warning">
+                                            <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-dark">Disable ${subject.desc}</span></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="text-justify">
+                                                ${subject.desc} have already been taken by a student therefore you can't delete it.
+                                                If editing the subject isn't an option, you must disable it instead.
+                                                <br>
+                                                <br>
+                                                <b>Disabling</b> will not list the subject on subject automation, but will be still shown when viewing classes history.
+                                                <div class="text-right text-muted">
+                                                    <em>Note: you can't disable a pre-requisite subject.</em>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                        {!!Form::open(['url' => "/disablesubject"])!!}
+                                            <input type="hidden" name="id" value="${subject.id}">
+                                            <button type="submit" class="btn btn-warning text-dark">Disable</button>
+                                            <button type="button" data-dismiss="modal" class="btn btn-light text-dark">Cancel</button>
+                                        {!!Form::close()!!}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="modal fade" id="restore-`+ subject.id +`" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-light">
+                                            <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-dark">Restore ${subject.desc}</span></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="text-justify">
+                                                
+                                                <b>Restore</b> ${subject.desc}?
+                                                <div class="text-right text-muted">
+                                                    <em>Note: restoring a subject will be added to automation.</em>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                        {!!Form::open(['url' => "/restoresubject"])!!}
+                                            <input type="hidden" name="id" value="${subject.id}">
+                                            <button type="submit" class="btn btn-info text-white">Restore</button>
+                                            <button type="button" data-dismiss="modal" class="btn btn-light text-dark">Cancel</button>
+                                        {!!Form::close()!!}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
                             <div class="modal fade" id="add-prereq-form-`+ subject.id +`" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">

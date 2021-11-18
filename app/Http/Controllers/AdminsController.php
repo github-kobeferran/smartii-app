@@ -362,7 +362,7 @@ class AdminsController extends Controller
             break;   
             case 'subjects':
 
-                $subject = Subject::find($id);
+                $subject = Subject::withTrashed()->find($id);
 
                 $subject->program_desc = $subject->id;
                 $subject->level_desc = $subject->level;
@@ -370,6 +370,8 @@ class AdminsController extends Controller
 
                 $subject->pre_reqs;
                 $subject->program;
+                $subject->is_taken;
+                $subject->is_trashed;
 
                 return $subject;
 
@@ -470,7 +472,7 @@ class AdminsController extends Controller
                 break;
                 case 'subjects':
                     if(!is_null($all)){
-                        return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
+                        return Subject::where($by,$value)->orderBy('desc', 'asc')->withTrashed()->get();
                     } else {
                         return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
                     }
