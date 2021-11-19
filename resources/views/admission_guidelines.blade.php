@@ -41,7 +41,7 @@ Admission guidelines page of St Mark Institute Integrated Information System, pl
         <div class="col-lg text-left">
 
             <div>
-                <u><h6 class="formal-font">for <span id="dept"></span> students : </h6></u>
+                <u><h6 style="font-weight: bold !important;" class="formal-font">for <span id="dept"></span> students : </h6></u>
             </div>    
             
             <div class="ml-2 roboto-font mb-2" >                
@@ -56,7 +56,7 @@ Admission guidelines page of St Mark Institute Integrated Information System, pl
                 <div class="col ml-2 roboto-font">
                     <div>
                         <i class="fa fa-caret-right"></i> <span style="font-size: 1.3em;">File Requirements</span>                        
-                        <button type="button" data-toggle="modal" data-target="#idpicsample" class="badge badge-warning float-right">see file requirements detailed.</button> 
+                        <button type="button" data-toggle="modal" data-target="#idpicsample" class="badge badge-btn badge-warning text-dark float-right">see file requirements detailed.</button> 
                     </div>
                 </div>
             </div>
@@ -232,6 +232,7 @@ let col_button= document.getElementById('col-button');
 let dept = document.getElementById('dept');
 let report_card = document.getElementsByClassName('report-card');
 let ages = document.getElementsByClassName('age');
+let badge_btn = document.getElementsByClassName('badge-btn');
 
 shs_button.addEventListener('click', () =>  {
     shs_button.className = 'btn btn-warning active formal-font';
@@ -266,6 +267,12 @@ function showSHS(){
 
         }
     }
+    for(let i in badge_btn){
+        if(typeof badge_btn[i] == 'object'){
+            badge_btn[i].className = 'badge badge-btn badge-warning text-dark float-right';
+
+        }
+    }
 }
 
 function showCollege(){
@@ -279,6 +286,12 @@ function showCollege(){
     for(let i in ages){
         if(typeof ages[i] == 'object'){
             ages[i].textContent = '18';
+
+        }
+    }
+    for(let i in badge_btn){
+        if(typeof badge_btn[i] == 'object'){
+            badge_btn[i].className = 'badge badge-btn badge-success text-dark float-right';
 
         }
     }

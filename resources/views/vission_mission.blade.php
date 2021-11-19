@@ -8,7 +8,7 @@ Vission and Mission page of St Mark Institute Integrated Information System, pla
 
 @include('inc.homenav')
 
-<div class="container">
+<div class="container" style="font-weight: bold !important;">
 
     <div style="background-color: #fcf5de; border: .2rem solid #05551B;" class="row p-5 mx-auto ">
 
