@@ -1,5 +1,10 @@
 @extends('layouts.module')
 
+
+@section('page-title')
+    Application Status
+@endsection
+
 @section('status')
 <div class="container-fluid">
    

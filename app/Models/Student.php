@@ -59,6 +59,62 @@ class Student extends Model
         return $this->hasMany(StudentDiscounts::class, 'student_id', 'id');
     }
 
+    public function stillToBeTakenSubjects(){
+        $values = [
+                    'department' => $this->department,
+                    'program' => $this->program_id,
+                    'level' => ($this->department? 12 : 2),
+                    'semester' => 2,
+                  ];
+
+        $subjects = Subject::allWhere($values);
+
+        $subjects = $subjects->filter(function($subject) {
+            $valid = true;
+            if($this->subject_taken->where('subject_id', $subject->id)){
+
+                foreach($this->subject_taken->where('subject_id', $subject->id) as $subject_taken){
+                    if($subject_taken->rating <= 3)
+                        $valid = false;
+                    if($subject_taken->rating == 3.5)
+                        $valid = false;
+                    if($subject_taken->rating == 4.5)
+                        $valid = false;
+                    if($subject_taken->rating == 4)
+                        $valid = false;
+                    if($subject_taken->rating == 5)
+                        $valid = false;
+                }             
+            }
+
+            if($valid)
+                return $subject;
+        });
+
+        $subjects = $subjects->filter(function($subject) {
+            $valid = false;
+            if($subject->hasPreReqs()){                
+                foreach($subject->pre_reqs as $pre_req){
+                    foreach($this->subject_taken as $subject_taken){
+                        if($subject_taken->subject_id == $pre_req->id){
+                            if($subject_taken->rating <= 3){
+                                $valid = true;
+                            } 
+                        }
+                    }                   
+                }
+            } else {
+                $valid = true;
+            }
+            if($valid)  
+                return $subject;
+
+        });
+
+        return $subjects->values();
+
+    }
+
     public function setAgeAttribute($id)
     {
         $student = Student::find($id);    

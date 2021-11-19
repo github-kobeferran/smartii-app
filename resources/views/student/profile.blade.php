@@ -1,5 +1,8 @@
-
 @extends('layouts.app')
+
+@section('page-title')
+    {{$student->last_name}} ({{$student->student_id}})
+@endsection
 
 @section('studentprofile')
 
@@ -364,28 +367,32 @@
             
                         @if ($admin->position == 'superadmin' || $admin->position == 'registrar')
                             <tr>
-                                <td id="" role="button" data-toggle="modal" data-target="#subjects" class="text-center bg-warning bg-info text-secondary" colspan="2">
-                                    Enroll to a Subject
+                                <td id="" role="button" data-toggle="modal" data-target="#subjects-valid-to-enroll" class="text-center bg-warning bg-info text-secondary" colspan="2">
+                                    <span style="font-weight: bold !important;">Enroll to Subjects</span>
                                 </td>                               
                             </tr>
 
-                            <div class="modal fade" id="subjects" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="subjects-valid-to-enroll" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Input Subject Code</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">PICK SUBJECTS TO ENROLL</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         </div>
-                                        {!!Form::open(['url' => 'enrolltosubject'])!!}
+                                        {!!Form::open(['url' => 'enrolltosubject'])!!}                                            
                                             <div class="modal-body">
-                                                {{Form::hidden('student_id', $student->id)}}
-                                                {{Form::text('subject_code', '', ['class' => 'form-control', 'required'=>'required'])}}                        
+                                                <select style="min-height: 400px;" name="subjects[]" value="" id="select-subjects" class="custom-select rounded-0" multiple required>                    
+                                                    @foreach ($student->stillToBeTakenSubjects() as $subject)
+                                                        <option value="{{$subject->id}}">{{$subject->code}} - {{$subject->desc}}</option>
+                                                    @endforeach
+                                                </select>
+                                                {{Form::hidden('id', $student->id)}}
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button type="submit" class="btn btn-primary">Enroll {{$student->first_name}} {{$student->last_name}} to selected Subjects</button>
+                                                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
                                             </div>
                                         {!!Form::close() !!}
                                     </div>

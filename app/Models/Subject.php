@@ -50,6 +50,13 @@ class Subject extends Model
 
     }
 
+    public function hasPreReqs(){
+        if($this->pre_reqs->count() > 0)
+            return true;
+        else 
+            return false;
+    }
+
     public function setSemesterDescAttribute($value)
     {
 

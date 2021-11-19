@@ -1076,85 +1076,13 @@ class AdminsController extends Controller
 
         }
 
-    }    
-
-    public function enrollToSubject(Request $request){
-
-        if($request->method() != 'POST'){
-            return redirect()->back();
-        }   
-
-        if(!Subject::where('code', $request->input('subject_code'))->exists()){
-            return redirect()->back()->with('error', 'Subject does not exist');
-        }
-
-        $subject = Subject::where('code', $request->input('subject_code'))->first();
-
-        $student = Student::find($request->input('student_id'));
-
-        if($student->department == 0){
-
-            if(($student->program_id != $subject->program_id) && ($subject->program_id != 3)){
-                return redirect()->back()->with('error', 'Subject invalid');
-            }
-
-        } else {
-
-            if(($student->program_id != $subject->program_id) && ($subject->program_id != 4)){
-                return redirect()->back()->with('error', 'Subject invalid');
-            }
-
-        }
-
-        if(SubjectTaken::where('subject_id', $subject->id)
-                        ->where('student_id', $student->id)
-                        ->where(function($query) {
-                            $query->where('rating', 4.5)
-                                  ->orWhere('rating', 3.5);
-                        })                       
-                        ->exists()
-          ){
-            return redirect()->back()->with('warning', 'Subject is currently taken or had been already passed by this student');
-        }
-        
-        
-        foreach($subject->pre_reqs as $pre_req){
-
-            if(!SubjectTaken::where('student_id', $student->id)
-                        ->where('subject_id', $pre_req->id)
-                        ->where('rating', '<=', 3)->exists()){
-
-                            return redirect()->back()->with('error', 'Subject ' . $pre_req->code . ' is not passed by this student');
-
-                        }
-
-        }
-
-        $settings = Setting::first();
-
-        $subjectToTake = new SubjectTaken; 
-
-        $subjectToTake->student_id = $student->id;
-        $subjectToTake->subject_id = $subject->id;
-        $subjectToTake->rating = 4.5;
-        $subjectToTake->from_year = $settings->from_year;
-        $subjectToTake->to_year = $settings->to_year;
-        $subjectToTake->semester = $settings->semester;      
-
-        $subjectToTake->save();
-
-        return redirect('studentprofile/' . $student->student_id)->with('success', 'Enrolled to ' . $subject->desc);
-
-
-    }
+    }       
 
     public function homepageImageStore(Request $request){
 
         if($request->method() != 'POST'){
             return redirect()->back();
-        }   
-
-        
+        }           
 
         $validator = Validator::make($request->all(), [
             'image' => 'image|max:10000',                                              

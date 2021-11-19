@@ -1,5 +1,10 @@
 @extends('layouts.module')
 
+
+@section('page-title')
+    Payment Request
+@endsection
+
 @section('content')
 
 <div class="container">

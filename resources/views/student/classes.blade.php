@@ -1,5 +1,9 @@
 @extends('layouts.module')
 
+@section('page-title')
+    My Classes
+@endsection
+
 @section('content')
 <div class="container mt-2">
 
@@ -97,7 +101,7 @@
 
         <div class="row my-1">
             <div class="col text-right ">
-                <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">COR [PDF]<i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+                <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">{{$settings->from_year}}-{{$settings->from_year}} {{$settings->semester > 1 ? '2nd Sem' : '1st Sem'}} COR [PDF]<i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
             </div>
         </div>
         

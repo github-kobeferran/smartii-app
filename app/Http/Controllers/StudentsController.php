@@ -819,8 +819,7 @@ class StudentsController extends Controller
         return Excel::download(new ActiveStudentsExport, 'SMARTII Active Students as of A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
     }   
 
-    public function advancedStudentsExport($dept, $prog = 0, $level = 0) 
-    {        
+    public function advancedStudentsExport($dept, $prog = 0, $level = 0) {        
 
         $semester = "";
         $department = "";
@@ -864,5 +863,34 @@ class StudentsController extends Controller
 
         return Excel::download(new AdvancedStudentExport($dept, $prog, $level), 'SMARTII '.  $the_level . ' ' . $department . ' Students of ' . $program . ' A.Y.'. Setting::first()->from_year . '-' . Setting::first()->to_year . '['. $semester .']'. '.xlsx');
     }   
+
+    public function enrollToSubject(Request $request){
+
+        if($request->method() != 'POST'){
+            return redirect()->back();
+        }   
+
+        $subjects = $request->input('subjects');
+        $student = Student::find($request->input('id'));
+        $settings = Setting::first();
+        $msg = "";
+
+        foreach($subjects as $subj_id){
+            $subject_to_take = new SubjectTaken;
+    
+            $subject_to_take->student_id = $student->id;
+            $subject_to_take->subject_id = $subj_id;
+            $subject_to_take->rating = 4.5;
+            $subject_to_take->from_year = $settings->from_year;
+            $subject_to_take->to_year = $settings->to_year;
+            $subject_to_take->semester = $settings->semester;      
+            
+            $msg .= "[" . Subject::find($subj_id)->code . "] ";
+
+            $subject_to_take->save();
+        }
+
+        return redirect('studentprofile/' . $student->student_id)->with('success', $student->first_name . ' ' . $student->last_name . ' is enrolled to ' . $msg);
+    }
 
 }

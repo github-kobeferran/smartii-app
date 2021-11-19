@@ -1,5 +1,10 @@
 @extends('layouts.module')
 
+
+@section('page-title')
+    Admission Form
+@endsection
+
 <style>
 
 .multisteps-form__progress {

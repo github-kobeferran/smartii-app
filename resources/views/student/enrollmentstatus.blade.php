@@ -1,6 +1,10 @@
 @extends('layouts.module')
 
 
+@section('page-title')
+    Enrollment Status
+@endsection
+
 @section('content')
 
 <div class="container">

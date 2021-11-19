@@ -1,5 +1,10 @@
 @extends('layouts.module')
 
+
+@section('page-title')
+    Balance
+@endsection
+
 @section('content')
 <div class="container mt-2">
     <div class="row text-left ml-2 mb-1">
@@ -49,7 +54,7 @@
         
         </div>
 
-        <div class="col-sm-3 mt-2 mb-4 ">
+        <div class="col-sm-3 mt-2 mb-4">
             @if (\App\Models\PaymentRequest::where('student_id', $student->id)->whereNull('admin_id')->exists())
                 <button class="btn btn-primary disabled">
                     Make a Payment Request <br>
@@ -61,42 +66,71 @@
                     <em>(disabled, Balance is empty)</em>
                 </button>
             @else
-                <a  href="{{url('/student/createpayment/')}}" class="btn btn-primary border" >Make a Payment Request</a>                
+                <div class="mt-3 text-right">
+                    <a  href="{{url('/student/createpayment/')}}" class="btn btn-primary border" >Make a Payment Request</a>                
+                </div>
             @endif
 
             <?php                                    
                 $fees = \App\Models\Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
             ?>
 
-            <div class="mt-2">
-                <button type="button" data-toggle="modal" data-target="#fees" class="btn btn-sm btn-info text-white">See Fees for this semester</button>
+            <div class="mt-2 text-right">
+                <button type="button" data-toggle="modal" data-target="#feesanddiscounts" class="btn btn-sm btn-info text-white">Fees and Discounts</button>
                 
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="fees" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal fade" id="feesanddiscounts" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Fees you are paying this semester</h5>
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-danger">FEES</span> & <span class="text-warning">Discounts</span></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
 
                         <div class="modal-body">
-                            @if ($fees->count() > 0)
-                                <ul class="list-group list-group-flush">
-                                    @foreach ($fees as $fee)
-                                        <li class="list-group-item">{{'Php '. number_format($fee->amount, 2) . ' |  ' . ucfirst($fee->desc )}}</li>
-                                    @endforeach                                    
-                                </ul>
+                            <div class="row">
+                                <div class="col">
+                                    @if ($fees->count() > 0)
+                                        <h4 class="badge badge-pill badge-danger">Fees</h4>
+                                        <ul class="list-group list-group-flush">
+                                            @foreach ($fees as $fee)
+                                                <li class="list-group-item">{{'Php '. number_format($fee->amount, 2) . ' |  ' . ucfirst($fee->desc )}}</li>
+                                            @endforeach                                    
+                                        </ul>
+        
+                                    @else
+                                        No fees for this semester
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    @if ($student->discounts->count() > 0)
+                                        <h4 class="badge badge-pill badge-warning">Discounts</h4>
+                                        <ul class="list-group list-group-flush">
+                                            @foreach ($student->discounts as $stud_disc)
+                                                <li class="list-group-item">{{$stud_disc->discount->description}} ({{$stud_disc->discount->percentage}}%)</li>
+                                            @endforeach                                    
+                                        </ul>
+        
+                                        @else
+                                        No fees for this semester
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
 
-                                <span class="text-muted mt-2 float-right">for inquiries, contact the site administrator</span>
-                            @else
-                                No fees for this semester
-                            @endif
-                        </div>
+                                <div class="col text-right">
+                                    <span class="text-muted mt-2">for inquiries, please <a href="{{url('contactus')}}">contact</a> the site administrator</span>
+
+                                </div>
+
+                            </div>
                     </div>
                 </div>
             </div>

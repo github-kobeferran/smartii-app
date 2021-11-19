@@ -1,5 +1,8 @@
 @extends('layouts.module')
 
+@section('page-title')
+    My Classes
+@endsection
 
 @section('content')
 

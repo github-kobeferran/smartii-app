@@ -1,5 +1,9 @@
 @extends('layouts.module')
 
+@section('page-title')
+    {{$faculty->first_name}} {{$faculty->last_name}}
+@endsection
+
 @section('content')
 
 <div class="container">

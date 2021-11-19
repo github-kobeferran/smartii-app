@@ -1,8 +1,10 @@
 @extends('layouts.module')
 
+@section('page-title')
+    {{$class->class_name}}
+@endsection
 
 @section('content')
-
 
 <div class="container">
 

@@ -160,7 +160,7 @@
                     <label class="align-middle" for="">Apply a Discount</label>
             </div>
             <div class="col">
-                <select name="discount[]" value="" id="select-discount" class="form-control w-50 rounded-0" multiple>                    
+                <select name="discount[]" value="" id="select-discount" class="custom-select w-50 rounded-0" multiple>                    
                     @foreach (\App\Models\Discount::all() as $discount)
                         <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
                     @endforeach
