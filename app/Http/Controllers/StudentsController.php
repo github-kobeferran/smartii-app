@@ -296,6 +296,7 @@ class StudentsController extends Controller
             $student->balance_id = $balanceID;
 
             if($student->save()){
+
                 $id = $student->id;
 
                 if($user->save()){
@@ -306,12 +307,13 @@ class StudentsController extends Controller
                     $member->member_id = $id;
 
                     $member->save();
-
-                    Mail::to($user)->send(new WelcomeMember(ucfirst($student->first_name), $password));
+                    
+                    Mail::to($user)->send(new WelcomeMember(ucfirst($student->first_name), $password));                    
+                    $user->sendEmailVerificationNotification();
 
                     $status ='success';
                     $message = 'Student '. ucfirst($student->first_name) . ' ' .
-                     ucfirst($student->last_name) . ' has been successfully created';
+                    ucfirst($student->last_name) . ' has been successfully created';
                 }
 
           
@@ -352,6 +354,7 @@ class StudentsController extends Controller
                     $member->save();
 
                     Mail::to($user)->send(new WelcomeMember(ucfirst($student->first_name) . ' ' . ucfirst($student->last_name), $password));
+                    $user->sendEmailVerificationNotification();
 
                     $status ='success';
                     $message = 'Student '. ucfirst($student->first_name) . ' ' .

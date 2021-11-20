@@ -178,6 +178,7 @@ class AdminsController extends Controller
                 $member->save();
 
                 Mail::to($user)->send(new WelcomeMember($admin->name, $password));
+                $user->sendEmailVerificationNotification();
 
                 $status ='success';
                 $msg = 'Admin '. ucfirst($user->name) . ' has been successfully created';

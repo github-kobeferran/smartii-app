@@ -106,6 +106,7 @@ class FacultiesController extends Controller
                 $member->save();
 
                 Mail::to($user)->send(new WelcomeMember(ucfirst($faculty->first_name) . ' ' . ucfirst($faculty->last_name), $password));
+                $user->sendEmailVerificationNotification();
 
                 $status ='success';
                 $msg = 'Faculty '. ucfirst($user->name) . ' has been successfully created';
@@ -232,11 +233,8 @@ class FacultiesController extends Controller
              }              
  
         }else{
-
             return Faculty::all()->toJson();
-
         }
- 
  
      }
 
