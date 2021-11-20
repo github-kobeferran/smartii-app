@@ -58,6 +58,7 @@ class StudentsController extends Controller
                 $student->level_desc = $student->level;                                
                 $student->pronoun;
                 $student->subjects_taken;
+                $student->registrar_requests;
 
                return view('student.profile')
                         ->with('student', $student)

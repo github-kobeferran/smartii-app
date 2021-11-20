@@ -98,7 +98,7 @@
         ['College',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#BB6ECC" ],             
         ['College Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->where('approved', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#DBB7E2" ],             
         ]);
-
+        >requestor_type
         let options = {
             title: 'Applicants this Semester S.Y.' + setting_obj.from_year + '-' + setting_obj.to_year +  (setting_obj.semester == 1 ? ' First ' : ' Second ') + 'Semester',        
         };
@@ -219,7 +219,7 @@
 
         {{-- ##########################  OVERVIEW  #########################--}}
 
-        <div class="card dashboard-card rounded-0 ">
+        <div class="card dashboard-card rounded-0 mb-1">
             
             <div class="card-header ">
                 <div>
@@ -269,215 +269,348 @@
         @endif
         
         @include('inc.messages')
-        
+
+        <div class="row my-0">
+            <div class="col my-0">
+                <div class="btn-group dropleft float-right mb-1">
+                    <button type="button" style="border:2px solid rgb(66, 66, 66) !important;" class="btn btn-info text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Other Actions
+                    </button>
+                    <div class="dropdown-menu border-info">
+                        <ul class="list-group list-group-flush p-0 m-0">
+                            <a href="/events/create" class="dropdown-item list-group-item">Create a School Event</a>
+                            <br>
+                            <a href="/events" class="dropdown-item list-group-item">View School Events</a>
+                            <br>
+                            <a role="button" class="dropdown-item list-group-item" data-toggle="modal" data-target="#showGallery">Homepage Images</a>
+                            <br>
+                            <a href="/createpost" class="dropdown-item list-group-item">Create a Blog/Article Post</a>
+                        </ul>                
+                    </div>
+                  </div>
+            </div>
+        </div>
+                
 
         {{--######################### COUNTS BADGES #########################--}}
 
-        <div class="d-flex flex-wrap justify-content-center">
+        <div class="row">
+            <div class="col">
 
-            <button data-toggle="modal" data-target="#applicantsCount" type="button" class="btn btn-primary btn-lg m-1">
-                <span class="raleway-font">PENDING APLICANTS</span> <span class="badge badge-danger rounded-circle">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->count()}}</span>                 
-              </button>
-              <a href="#statistics" type="button" class="btn btn-primary btn-lg m-1">
-                <span class="raleway-font">STUDENTS</span> <span class="badge badge-danger rounded-circle">{{$studentCount}}</span>
-              </a>
-              <a href={{url('/viewprogramsfromdashboard')}} class="btn btn-primary btn-lg m-1">
-                <span class="raleway-font">PROGRAMS OFFERED</span> <span class="badge badge-danger rounded-circle">{{$programsOffered}}</span>
-              </a>
+                <div class="d-flex flex-wrap justify-content-left">
 
-        </div>
-
-        <div class="modal fade bd-example-modal-lg" id="applicantsCount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-header bg-primary">
-                  <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Applicant Data S.Y. {{\App\Models\Setting::first()->from_year . '-' . \App\Models\Setting::first()->to_year . (\App\Models\Setting::first()->semester == 1 ? ' First' : ' Second')}} SEMESTER</span></h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">                    
-
-                    @if (\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count() > 0)
-
-
-                        <div class="row text-left mx-auto">
-
-                            <div class="col">
-
-                                <b>Applicants this semester: <span class="ml-2">{{\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
-                                <br>
-                                <b>Pending applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
-                                <br>
-                                <b>Approved applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
-                                                            
-                            </div>
-
-
-                        </div>
-
-                        <div class="row">
-
-                            <div id="applicantsChart" style="width: 100%; height: 100%;"></div>
-
-                        </div>                            
-                        
-                    @else
-                        <div class="row text-center border py-3">
-                            There are no Applicant Data this semester
-                        </div>
-                    @endif
-                    
-                    <?php
-                        $applicantUsersThisSem = \App\Models\User::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->where('user_type', 'applicant')->get();                            
-                                                    
-                        $still_no_app_form = $applicantUsersThisSem->filter(function ($applicant_user, $key) {
-                            return is_null($applicant_user->member);
-                        });
-
-                        
-                    ?>                        
-
-                    @if ($still_no_app_form->count() > 0)
-                        
-                        <div class="row justify-content-end">
-
-                            <button role="button" data-toggle="modal" data-target="#noAppFormList" class="btn btn-info text-white float-right mr-2">
-                                Still waiting for Admission Form Submission <span class="badge badge-danger">{{$still_no_app_form->count()}}</span>                                                                                                               
-                            </button>                                                                             
-                        </div>
-                    @endif
-                    
-                            
-                </div>
-              
-              </div>
-            </div>
-        </div>
-
-        @if ($still_no_app_form->count() > 0)
-
-            <div class="modal fade" id="noAppFormList" tabindex="-1" role="dialog" aria-labelledby="noAppFormListTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg" style="width: 100%;" role="document">
-                <div class="modal-content" >
-                    <div class="modal-header bg-info">
-                    <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Still Waiting to pass their Admission Form</span></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button data-toggle="modal" data-target="#applicantsCount" type="button" class="btn btn-light btn-lg m-1 border">
+                        <span class="raleway-font">PENDING APLICANTS</span> <span class="badge badge-danger rounded-circle">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->count()}}</span>                 
                     </button>
+                    <a href="#statistics" type="button" class="btn btn-light btn-lg m-1">
+                        <span class="raleway-font">STUDENTS</span> <span class="badge badge-danger rounded-circle">{{number_format($studentCount)}}</span>
+                    </a>
+                    <a href={{url('/viewprogramsfromdashboard')}} class="btn btn-light btn-lg m-1">
+                        <span class="raleway-font">PROGRAMS OFFERED</span> <span class="badge badge-danger rounded-circle">{{$programsOffered}}</span>
+                    </a>
+
+                    @if (\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->count() > 0)                            
+                        <button data-toggle="modal" data-target="#shift-modal" type="button" class="btn btn-light btn-lg m-1 border">
+                            <span class="raleway-font">CHANGE PROGRAM</span> <span class="badge badge-danger rounded-circle">{{\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->count()}}</span>                 
+                        </button>
+                    @endif
+                      
+                </div>
+
+
+                @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'shift')->count() > 0)                            
+                    <div class="modal fade bd-example-modal-lg" id="shift-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg " style="max-width: 80%;"  role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary">
+                            <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Shifting of Program Requests</span></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">                    
+            
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="bg-dark text-white">
+                                            <tr>
+                                                <th>Requestor</th>
+                                                <th>Current Program</th>
+                                                <th>Change to</th>
+                                                <th>Created at</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                             @foreach (\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->orderBy('created_at', 'desc')->get() as $request)
+                                                 <tr>
+                                                     <td>                                                    
+                                                         @if ($request->requestor_type == 'student')
+                                                             <a target="_blank" href="{{url('studentprofile/'. $request->requestor->student_id)}}">{{$request->requestor->first_name}} {{$request->requestor->last_name}}</a> (student)
+                                                         @endif
+                                                     </td>
+                                                     <td>{{$request->requestor->program->desc}}</td>
+                                                     <td>{{\App\Models\Program::find($request->type_id)->desc}}</td>
+                                                     <td>{{$request->created_at->isoFormat('MMM DD, YYYY hh:mm A')}}</td>
+                                                     <td>
+                                                         <button data-toggle="modal" data-target="#approve-request-{{$request->id}}" class="btn btn-sm btn-success">Approve</button>
+                                                         <button data-toggle="modal" data-target="#reject-request-{{$request->id}}" class="btn btn-sm btn-danger">Reject</button>
+                                                     </td>
+     
+                                                 </tr>
+                                             @endforeach
+                                        </tbody>
+                                    </table>      
+                                </div>
+                                                                                                         
+                            </div>
+                        
+                        </div>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col text-center">
-                                {!!Form::open(['url' => '/deletenoform'])!!}
-                                    <button type="submit" class="btn btn-danger">Delete All</button>
-                                {!!Form::close()!!}
-                            </div>
-                            <div class="col text-center">
-                                <a href="{{url('/remindapplicationform')}}" class="btn btn-warning text-dark">Remind All via Email</a>                        
+
+                    @foreach (\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->orderBy('created_at', 'desc')->get() as $request)
+
+                        <div class="modal fade" id="approve-request-{{$request->id}}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-success">
+                                        <h5 class="modal-title"><span class="text-white">APPROVE CHANGING PROGRAM OF {{$request->requestor->first_name}} {{$request->requestor->first_name}}</span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {!!Form::open(['url' => '/approveshift'])!!}
+                                        <div class="modal-body text-justify">
+                                            <p>Change program of {{$request->requestor->last_name}}, {{$request->requestor->first_name}} [{{$request->requestor->student_id}}]</p>
+                                            <p>From <u><b>{{$request->requestor->program->desc}} ({{$request->requestor->program->abbrv}})</b></u> <span class="roboto-font" style="font-size:1.2em;" >to <em><u><b>{{\App\Models\Program::find($request->type_id)->desc}} ({{\App\Models\Program::find($request->type_id)->abbrv}})</b></u></em></span> ?</p>
+                                            {{Form::hidden('id', $request->id)}}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-success">Yes</button>
+                                            <button class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    {!!Form::close()!!}
+                                </div>
                             </div>
                         </div>
-                        <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
-                            <table class="table table-bordered">
-                                <thead class="bg-secondary text-white">
-                                <tr>
-                                    <th class="bg-secondary">Email</th>
-                                    <th class="bg-secondary">Name</th>
-                                    <th class="bg-secondary">Duration in the system</th>
-                                </tr>
-                                </thead>
-                                <tbody>                              
-                                    @foreach ($still_no_app_form as $user_applicant)
-                                        <tr>
-                                            <td>{{$user_applicant->email}}</td>
-                                            <td>{{$user_applicant->name}}</td>
-                                            <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+
+                        <div class="modal fade" id="reject-request-{{$request->id}}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title"><span class="text-white">REJECT CHANGING OF PROGRAM OF {{$request->requestor->first_name}} {{$request->requestor->first_name}}</span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {!!Form::open(['url' => '/rejectshift'])!!}
+                                        <div class="modal-body text-justify">
+                                            <p>Reject changing program of {{$request->requestor->last_name}}, {{$request->requestor->first_name}} [{{$request->requestor->student_id}}]</p>
+                                            <p>From <u><b>{{$request->requestor->program->desc}} ({{$request->requestor->program->abbrv}})</b></u> <span class="roboto-font" style="font-size:1.2em;" >to <em><u><b>{{\App\Models\Program::find($request->type_id)->desc}} ({{\App\Models\Program::find($request->type_id)->abbrv}})</b></u></em></span> ?</p>
+                                            {{Form::hidden('id', $request->id)}}
+                                            <b class="mt-2 float-right">{{Form::label('Reason of reject: ')}}</b>
+                                            {{Form::text('reason', '', ['class' => 'form-control', 'placeholder' => 'Enter the reject cause here..'])}}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-danger">Yes</button>
+                                            <button class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    {!!Form::close()!!}
+                                </div>
+                            </div>
                         </div>
-                    </div>                                   
-                </div>
-                </div>
-            </div>           
                 
-        @endif
-
-    
-        {{--######################### END OF BADGES #########################--}}
-
-        <div class="container border" style="min-height: 100px; background: #faf89d46;">
-
-            <h5 class="mt-2 text-center">ANNOUNCEMENTS</h5> <span role="button" data-toggle="modal" data-target="#announcementForm" class="float-right" style="font-size: 2em;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-
-            <div class="modal fade" id="announcementForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content" style="background: #faf89d;" >
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLongTitle">Add Announcement</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    {!!Form::open(['url' => '/createannouncement'])!!}
-                    <div class="modal-body">
-
-                        <div class="form-group">
-                            Title (What it is about)
-                            {{Form::text('title', '', ['class' => 'form-control'])}}
-                            
+                    @endforeach
+                                   
+                @endif
+        
+                <div class="modal fade bd-example-modal-lg" id="applicantsCount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                          <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Applicant Data S.Y. {{\App\Models\Setting::first()->from_year . '-' . \App\Models\Setting::first()->to_year . (\App\Models\Setting::first()->semester == 1 ? ' First' : ' Second')}} SEMESTER</span></h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
                         </div>
-                        <div class="form-group">
-                            Content (What do you want to say)
-                            {{Form::textarea('content', '', ['class' => 'form-control'])}}
-
+                        <div class="modal-body">                    
+        
+                            @if (\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count() > 0)
+        
+        
+                                <div class="row text-left mx-auto">
+        
+                                    <div class="col">
+        
+                                        <b>Applicants this semester: <span class="ml-2">{{\App\Models\Applicant::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
+                                        <br>
+                                        <b>Pending applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
+                                        <br>
+                                        <b>Approved applicants: <span class="ml-2">{{\App\Models\Applicant::where('approved', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()}}</span></b>
+                                                                    
+                                    </div>
+        
+        
+                                </div>
+        
+                                <div class="row">
+        
+                                    <div id="applicantsChart" style="width: 100%; height: 100%;"></div>
+        
+                                </div>                            
+                                
+                            @else
+                                <div class="row text-center border py-3">
+                                    There are no Applicant Data this semester
+                                </div>
+                            @endif
+                            
+                            <?php
+                                $applicantUsersThisSem = \App\Models\User::whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->where('user_type', 'applicant')->get();                            
+                                                            
+                                $still_no_app_form = $applicantUsersThisSem->filter(function ($applicant_user, $key) {
+                                    return is_null($applicant_user->member);
+                                });
+        
+                                
+                            ?>                        
+        
+                            @if ($still_no_app_form->count() > 0)
+                                
+                                <div class="row justify-content-end">
+        
+                                    <button role="button" data-toggle="modal" data-target="#noAppFormList" class="btn btn-info text-white float-right mr-2">
+                                        Still waiting for Admission Form Submission <span class="badge badge-danger">{{$still_no_app_form->count()}}</span>                                                                                                               
+                                    </button>                                                                             
+                                </div>
+                            @endif
+                            
+                                    
                         </div>
                       
+                      </div>
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-light">Save changes</button>                        
-                    </div>
-                    {!!Form::close() !!}
-                  </div>
                 </div>
-              </div>
-
-            <div class="d-flex justify-content-center  flex-wrap" >
-
-                @foreach ($announcements as $announcement)
-
-                <div class="card text-white bg-warning text-secondary mb-3 m-2" style="min-width: 18rem;">
-                    <div class="card-header">{{\Carbon\Carbon::parse($announcement->created_at)->format('g:i A, D d F')}} <span><a class="float-right" href="/deleteannouncement/{{$announcement->id}}">X</a></span> </div>
-                    <div class="card-body announcement-body">
-                    <h5 class="card-title">{{$announcement->title}}</h5>
-                    <p class="card-text">{{$announcement->content}}</p>
-                    </div>
-                </div>   
+        
+                @if ($still_no_app_form->count() > 0)
+        
+                    <div class="modal fade" id="noAppFormList" tabindex="-1" role="dialog" aria-labelledby="noAppFormListTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" style="width: 100%;" role="document">
+                        <div class="modal-content" >
+                            <div class="modal-header bg-info">
+                            <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Still Waiting to pass their Admission Form</span></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col text-center">
+                                        {!!Form::open(['url' => '/deletenoform'])!!}
+                                            <button type="submit" class="btn btn-danger">Delete All</button>
+                                        {!!Form::close()!!}
+                                    </div>
+                                    <div class="col text-center">
+                                        <a href="{{url('/remindapplicationform')}}" class="btn btn-warning text-dark">Remind All via Email</a>                        
+                                    </div>
+                                </div>
+                                <div class="table-responsive" style="max-height: 500px; overflow: auto; display:inline-block;">
+                                    <table class="table table-bordered">
+                                        <thead class="bg-secondary text-white">
+                                        <tr>
+                                            <th class="bg-secondary">Email</th>
+                                            <th class="bg-secondary">Name</th>
+                                            <th class="bg-secondary">Duration in the system</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>                              
+                                            @foreach ($still_no_app_form as $user_applicant)
+                                                <tr>
+                                                    <td>{{$user_applicant->email}}</td>
+                                                    <td>{{$user_applicant->name}}</td>
+                                                    <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>                                   
+                        </div>
+                        </div>
+                    </div>   
                     
-                @endforeach                              
-            
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                    </div>
+                        
+                @endif
+                {{--######################### END OF BADGES #########################--}}
+        
             </div>
 
-        </div>
+            <div class="col" style="min-height: 100px; background: #faf89d46;">
 
-        <div class="btn-group dropleft float-right mt-2">
-            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Other Actions
-            </button>
-            <div class="dropdown-menu border-info">
-                <ul class="list-group list-group-flush p-0 m-0">
-                    <a href="/events/create" class="dropdown-item list-group-item">Create a School Event</a>
-                    <br>
-                    <a href="/events" class="dropdown-item list-group-item">View School Events</a>
-                    <br>
-                    <a role="button" class="dropdown-item list-group-item" data-toggle="modal" data-target="#showGallery">Homepage Images</a>
-                    <br>
-                    <a href="/createpost" class="dropdown-item list-group-item">Create a Blog/Article Post</a>
-                </ul>                
+                {{--######################### START OF ANNOUNCEMENTS #########################--}}
+
+                <h5 class="mt-2 text-center">ANNOUNCEMENTS</h5> <span role="button" data-toggle="modal" data-target="#announcementForm" class="float-right" style="font-size: 2em;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+
+                <div class="modal fade" id="announcementForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content" style="background: #faf89d;" >
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Add Announcement</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        {!!Form::open(['url' => '/createannouncement'])!!}
+                        <div class="modal-body">
+    
+                            <div class="form-group">
+                                Title (What it is about)
+                                {{Form::text('title', '', ['class' => 'form-control'])}}
+                                
+                            </div>
+                            <div class="form-group">
+                                Content (What do you want to say)
+                                {{Form::textarea('content', '', ['class' => 'form-control'])}}
+    
+                            </div>
+                          
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-light">Save changes</button>                        
+                        </div>
+                        {!!Form::close() !!}
+                      </div>
+                    </div>
+                  </div>
+    
+                <div class="d-flex justify-content-center  flex-wrap" >
+    
+                    @foreach ($announcements as $announcement)
+    
+                    <div class="card text-white bg-warning text-secondary mb-3 m-2" style="min-width: 18rem;">
+                        <div class="card-header">{{\Carbon\Carbon::parse($announcement->created_at)->format('g:i A, D d F')}} <span><a class="float-right" href="/deleteannouncement/{{$announcement->id}}">X</a></span> </div>
+                        <div class="card-body announcement-body">
+                        <h5 class="card-title">{{$announcement->title}}</h5>
+                        <p class="card-text">{{$announcement->content}}</p>
+                        </div>
+                    </div>   
+                        
+                    @endforeach                              
+                
+                </div>
+
+                {{--######################### END OF ANNOUNCEMENTS #########################--}}
+
             </div>
-          </div>
+
+        </div>                          
         
         
         <div class="modal fade" id="showGallery" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

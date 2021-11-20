@@ -14,6 +14,7 @@ use App\Models\StudentDiscounts;
 use App\Models\Fee;
 use App\Models\Discount;
 use App\Models\Setting;
+use App\Models\RegistrarRequest;
 use Carbon\Carbon;
 
 
@@ -57,6 +58,10 @@ class Student extends Model
 
     public function discounts(){
         return $this->hasMany(StudentDiscounts::class, 'student_id', 'id');
+    }
+
+    public function registrar_requests(){
+        return $this->hasMany(RegistrarRequest::class, 'requestor_id', 'id');
     }
 
     public function stillToBeTakenSubjects(){

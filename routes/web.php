@@ -200,6 +200,9 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     //faculty functions
     Route::get('/remindtoarchive/{id}', [App\Http\Controllers\FacultiesController::class, 'remindToArchive']);
     Route::any('/changefacultyspecialty', [App\Http\Controllers\FacultiesController::class, 'changeSpecialty']);
+    // registrar requests
+    Route::any('/approveshift', [App\Http\Controllers\RegistrarRequestsController::class, 'approveShift'])->name('approve.shift');
+    Route::any('/rejectshift', [App\Http\Controllers\RegistrarRequestsController::class, 'rejectShift'])->name('reject.shift');    
 });
 
 // APPLICANT protected routes 
@@ -225,6 +228,7 @@ Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->
     Route::any('/student/request/payment', [App\Http\Controllers\PaymentRequestsController::class, 'store'])->name('storePaymentRequest');    
     Route::any('/studentenroll', [App\Http\Controllers\StudentsController::class, 'enroll'])->name('studentenroll');    
     Route::any('/updatestudent', [App\Http\Controllers\StudentsController::class, 'update'])->name('studentudpate');    
+    Route::any('/storeshift', [App\Http\Controllers\RegistrarRequestsController::class, 'storeShift'])->name('store.shift');
 
 });
 

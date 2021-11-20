@@ -126,11 +126,78 @@
                 <tr>
 
                     <td class="border-right">
-                        Program
+                        Program                         
+                        @if (\App\Models\Setting::first()->enrollment_mode)
+                            @if ($show == 3 && $student->registrar_requests->where('type', 'shift')->where('status', 0)->count() < 1)
+                                <span role="button" data-toggle="modal" data-target="#create-shift" class="float-right text-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                            @endif
+                        @endif
+
                     </td>
 
                     <td class="w-50">
                         <a target="_blank" class="text-dark" href="{{url('viewprogramcourses/export/' . $student->program->abbrv)}}">{{ucfirst($student->program_desc)}}</a>          
+
+                        @if ($show >= 2 && $student->registrar_requests->where('type', 'shift')->count() > 0)
+
+                            <button type="button" data-target="#shift-history" data-toggle="modal" class="badge badge-light">See Shift Requests History</button>
+
+                            <div id="shift-history" class="modal fade" aria-hidden="true" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 80%;" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-dark">
+                                            <h5 class="modal-title"><span class="text-white">{{$student->first_name}} {{$student->last_name}} Shifting Requests History <i class="fa fa-history"></i></span></h5>
+                                            <button class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered">
+                                                    <thead class="bg-secondary text-white">
+                                                        <tr>
+                                                            <th>Made at</th>
+                                                            <th>Shift to</th>
+                                                            <th>Status</th>
+                                                            <th>Marked by</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($student->registrar_requests->where('type', 'shift')->sortByDesc('created_at') as $request)
+                                                            <tr>
+                                                                <td>{{$request->created_at->isoFormat('MMM DD, YYYY hh:mm A')}}</td>
+                                                                <td>{{\App\Models\Program::find($request->type_id)->desc}} ({{\App\Models\Program::find($request->type_id)->abbrv}})</td>
+                                                                <td>
+                                                                    @switch($request->status)
+                                                                        @case(0)
+                                                                            <span class="text-info">Pending</span>
+                                                                            @break
+                                                                        @case(1)
+                                                                            <span class="text-success">Approved</span>
+                                                                            @break
+                                                                        @case(2)
+                                                                            <span class="text-danger">Rejected</span>
+                                                                            @break
+                                                                        @default
+                                                                            <span class="text-info">Pending</span>
+                                                                    @endswitch
+                                                                </td>
+                                                                <td>
+                                                                     @if (!is_null($request->marked_by))
+                                                                        <b>{{$request->admin->name}} </b> <em>{{!is_null($request->reject_reason) ? $request->reject_reason : ''}}</em>
+                                                                     @else
+                                                                        -- 
+                                                                     @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                     </td>
 
                 </tr>
@@ -432,7 +499,7 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLongTitle">Edit Form</h5>
+                          <h5 class="modal-title" id="exampleModalLongTitle">Edit My Personal Profile</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
@@ -454,13 +521,11 @@
                             Guardian's Name
                             {{Form::text('guardian_name', $student->guardian_name, ['class' => 'form-control'])}}
                             Contact in case of Emergency
-                            {{Form::text('emergency_person_contact', $student->emergency_person_contact, ['class' => 'form-control'])}}
-
-                          
+                            {{Form::text('emergency_person_contact', $student->emergency_person_contact, ['class' => 'form-control'])}}                          
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
                         </div>
                         {!!Form::close() !!}
                       </div>
@@ -647,6 +712,44 @@
         </div>
 
     @endif
+
+    <div class="modal fade" id="create-shift" aria-hidden="true" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title"><span class="text-white">Create a Shifting Program Request</span></h5>
+                    <button class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                </div>
+                {!! Form::open(['url' => '/storeshift'])!!}
+                    <div class="modal-body">
+                        <b><label for="">Change my program to: </label></b>
+                        <select name="program" id="" class="form-control" required>                                        
+                            <?php 
+                                $programs = \App\Models\Program::where('department', $student->department)
+                                                                ->where(function($query) use($student) {
+                                                                    $query->where('id', '!=', $student->department ? 4 : 3)
+                                                                        ->where('id', '!=', $student->program_id);
+                                                                })
+                                                                ->get();
+                            ?>                                        
+                            <option value="" selected>Select a Program</option>
+                            @foreach ($programs as $program)
+                                <option value="{{$program->id}}">{{$program->abbrv}} {{$program->desc}}</option>
+                            @endforeach
+                            {{Form::hidden('id', $student->id)}}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-dark">Submit Request to change my Program</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-light">Cancel</button>
+                    </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+
 
 
     @if($show > 2)
