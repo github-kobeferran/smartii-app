@@ -300,24 +300,30 @@
                 <div class="d-flex flex-wrap justify-content-left">
 
                     <button data-toggle="modal" data-target="#applicantsCount" type="button" class="btn btn-light btn-lg m-1 border">
-                        <span class="raleway-font">PENDING APLICANTS</span> <span class="badge badge-danger rounded-circle">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->count()}}</span>                 
+                        <span class="raleway-font">PENDING APLICANTS</span> <span  class="badge badge-info text-white rounded-circle">{{\App\Models\Applicant::where('approved', 0)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek())->count()}}</span>                 
                     </button>
                     <a href="#statistics" type="button" class="btn btn-light btn-lg m-1">
-                        <span class="raleway-font">STUDENTS</span> <span class="badge badge-danger rounded-circle">{{number_format($studentCount)}}</span>
+                        <span class="raleway-font">STUDENTS</span> <span class="badge badge-dark rounded-circle">{{number_format($studentCount)}}</span>
                     </a>
                     <a href={{url('/viewprogramsfromdashboard')}} class="btn btn-light btn-lg m-1">
-                        <span class="raleway-font">PROGRAMS OFFERED</span> <span class="badge badge-danger rounded-circle">{{$programsOffered}}</span>
+                        <span class="raleway-font">PROGRAMS OFFERED</span> <span class="badge badge-dark rounded-circle">{{$programsOffered}}</span>
                     </a>
 
-                    @if (\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->count() > 0)                            
+                    @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'shift')->count() > 0)                            
                         <button data-toggle="modal" data-target="#shift-modal" type="button" class="btn btn-light btn-lg m-1 border">
-                            <span class="raleway-font">CHANGE PROGRAM</span> <span class="badge badge-danger rounded-circle">{{\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->count()}}</span>                 
+                            <span class="raleway-font">CHANGE PROGRAM</span> <span class="badge badge-info text-white rounded-circle">{{\App\Models\RegistrarRequest::where('status', 0)->where('type', 'shift')->count()}}</span>                 
+                        </button>
+                    @endif
+
+                    @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->count() > 0)                            
+                        <button data-toggle="modal" data-target="#drop-modal" type="button" class="btn btn-light btn-lg m-1 border">
+                            <span class="raleway-font">DROP REQUESTS</span> <span class="badge badge-info text-white rounded-circle">{{\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->count()}}</span>                 
                         </button>
                     @endif
                       
                 </div>
 
-
+                {{-- SHIFT MODAL --}}
                 @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'shift')->count() > 0)                            
                     <div class="modal fade bd-example-modal-lg" id="shift-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg " style="max-width: 80%;"  role="document">
@@ -342,7 +348,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                             @foreach (\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->orderBy('created_at', 'desc')->get() as $request)
+                                             @foreach (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'shift')->orderBy('created_at', 'desc')->get() as $request)
                                                  <tr>
                                                      <td>                                                    
                                                          @if ($request->requestor_type == 'student')
@@ -353,7 +359,7 @@
                                                      <td>{{\App\Models\Program::find($request->type_id)->desc}}</td>
                                                      <td>{{$request->created_at->isoFormat('MMM DD, YYYY hh:mm A')}}</td>
                                                      <td>
-                                                         <button data-toggle="modal" data-target="#approve-request-{{$request->id}}" class="btn btn-sm btn-success">Approve</button>
+                                                         <button data-toggle="modal" data-target="#approve-request-{{$request->id}}" class="btn btn-sm btn-success mb-1">Approve</button>
                                                          <button data-toggle="modal" data-target="#reject-request-{{$request->id}}" class="btn btn-sm btn-danger">Reject</button>
                                                      </td>
      
@@ -369,7 +375,7 @@
                         </div>
                     </div>
 
-                    @foreach (\App\Models\RegistrarRequest::whereNull('marked_by')->where('type', 'shift')->orderBy('created_at', 'desc')->get() as $request)
+                    @foreach (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'shift')->orderBy('created_at', 'desc')->get() as $request)
 
                         <div class="modal fade" id="approve-request-{{$request->id}}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -423,6 +429,131 @@
                 
                     @endforeach
                                    
+                @endif
+
+                {{-- DROP MODAL --}}
+
+                @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->count() > 0)
+
+                    <div class="modal fade bd-example-modal-lg" id="drop-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg " style="max-width: 80%;"  role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary">
+                            <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">DROP SUBJECT REQUESTS</span></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">                    
+            
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="bg-dark text-white">
+                                            <tr>
+                                                <th>Requestor</th>
+                                                <th>Student</th>
+                                                <th>Subject</th>
+                                                <th>Class Details</th>
+                                                <th>Created at</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->orderBy('created_at', 'desc')->get() as $request)
+                                                <tr>
+                                                    <?php 
+                                                        $subject_taken = \App\Models\SubjectTaken::find($request->type_id);
+                                                    ?>
+                                                    <td>                                                    
+                                                        @if ($request->requestor_type == 'student')
+                                                            <a target="_blank" href="{{url('studentprofile/'. $request->requestor->student_id)}}">{{$request->requestor->first_name}} {{$request->requestor->last_name}}</a> (student)
+                                                        @else
+                                                            {{$request->requestor->first_name}} {{$request->requestor->last_name}} (instructor)
+                                                        @endif
+                                                    </td>
+                                                    <td><a target="_blank" href="{{url('studentprofile/'. $subject_taken->student->student_id)}}">{{$subject_taken->student->first_name}} {{$subject_taken->student->last_name}}</a></td>
+                                                    <td>{{$subject_taken->subject->desc}} ({{$subject_taken->subject->code}})</td>
+                                                    <td>
+                                                        @if (!is_null($subject_taken->class))
+                                                            {{$subject_taken->class->class_name}} | {{$subject_taken->class->faculty->first_name}} {{$subject_taken->class->faculty->last_name}}
+                                                        @else
+                                                            -- 
+                                                        @endif
+                                                    </td>
+                                                    <td>{{$request->created_at->isoFormat('MMM DD, YYYY hh:mm A')}}</td>
+                                                    <td class="">
+                                                        <button data-toggle="modal" data-target="#approve-drop-{{$request->id}}" class="btn btn-sm btn-success mb-1">Approve</button>
+                                                        <button data-toggle="modal" data-target="#reject-drop-{{$request->id}}" class="btn btn-sm btn-danger">Reject</button>
+                                                    </td>
+    
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>      
+                                </div>
+                                                                                                        
+                            </div>
+                        
+                        </div>
+                        </div>
+                    </div>
+
+                    @foreach (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->orderBy('created_at', 'desc')->get() as $request)
+                        <div class="modal fade" id="approve-drop-{{$request->id}}" tabindex="-1" aria-hidden="true" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark">
+                                        <h5 class="modal-title"><span class="text-white">APPROVE DROP REQUEST</span></h5>
+                                        <button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>                                        
+                                    </div>
+                                    {!!Form::open(['url' => '/approvedrop'])!!}
+                                        <?php 
+                                            $subject_taken = \App\Models\SubjectTaken::find($request->type_id);
+                                        ?>
+                                        <div class="modal-body text-justify">
+                                            <p><b>DROP</b> <em>({{$subject_taken->subject->code}}) - {{$subject_taken->subject->desc}}</em> from</p>
+                                            <p><b>[{{$subject_taken->student->student_id}}] {{$subject_taken->student->first_name}} {{$subject_taken->student->last_name}}</b> subjects taken?</p>
+                                            {{Form::hidden('id', $request->id)}}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-dark">Drop {{$subject_taken->student->last_name}} -> {{$subject_taken->subject->code}}</button>
+                                            <button type="button" data-dismiss="modal" class="btn btn-light">Cancel</button>
+                                        </div>
+                                    {!!Form::close()!!}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="reject-drop-{{$request->id}}" tabindex="-1" aria-hidden="true" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title"><span class="text-white">REJECT DROP REQUEST</span></h5>
+                                        <button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>                                        
+                                    </div>
+                                    {!!Form::open(['url' => '/rejectdrop'])!!}
+                                        <?php 
+                                            $subject_taken = \App\Models\SubjectTaken::find($request->type_id);
+                                        ?>
+                                        <div class="modal-body text-justify">
+                                            <p><b>REJECT</b> {{$request->requestor->first_name}} {{$request->requestor->last_name}} DROP REQUEST ? </p> 
+                                            <p>Request Details:</p>
+                                            <p>Drop <em>({{$subject_taken->subject->code}}) - {{$subject_taken->subject->desc}}</em></p>
+                                            <p>of <b>[{{$subject_taken->student->student_id}}] {{$subject_taken->student->first_name}} {{$subject_taken->student->last_name}}</b> subjects taken?</p>
+                                            <b class="mt-2 float-right">{{Form::label('Reason of reject: ')}}</b>
+                                            {{Form::text('reason', '', ['class' => 'form-control', 'placeholder' => 'Enter the reject cause here..'])}}
+                                            {{Form::hidden('id', $request->id)}}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-danger">Reject Drop Request</button>
+                                            <button type="button" data-dismiss="modal" class="btn btn-light">Cancel</button>
+                                        </div>
+                                    {!!Form::close()!!}
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    
                 @endif
         
                 <div class="modal fade bd-example-modal-lg" id="applicantsCount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

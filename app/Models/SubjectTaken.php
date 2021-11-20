@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Student;
 use App\Models\Setting;
 use App\Models\Subject;
@@ -12,6 +13,7 @@ use App\Models\StudentClass;
 class SubjectTaken extends Model
 {
     use HasFactory;    
+    use SoftDeletes;
 
     protected $table = 'subjects_taken';
 

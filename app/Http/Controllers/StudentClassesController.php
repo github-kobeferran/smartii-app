@@ -11,6 +11,7 @@ use App\Models\Faculty;
 use App\Models\Schedule;
 use App\Models\Subject;
 use App\Models\Program;
+use App\Models\RegistrarRequest;
 use \Carbon\Carbon;
 use App\Exports\StudentClassAdvancedExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -23,7 +24,18 @@ class StudentClassesController extends Controller
 
         $archivedClasses = StudentClass::where('archive', 1)
                                         ->orderBy('id', 'desc')
-                                        ->get();                                  
+                                        ->get();   
+                                        
+        foreach($archivedClasses as $class){
+            foreach($class->subjectsTaken as $subject_taken){
+                foreach(RegistrarRequest::all() as $request){
+                    if($request->type_id == $subject_taken->id){
+                        $subject_taken->student->drop_status = $request->status;
+                        $subject_taken->student->drop_request = $request;
+                    }
+                }
+            }
+        }
         
 
         return view('admin.classes')
@@ -539,11 +551,21 @@ class StudentClassesController extends Controller
         $students = StudentClass::getStudentsbyClass($class->id)->filter(function ($value, $key) {
             return $value != null;
         });
-                
-        
 
+        foreach($students as $student){
+
+            foreach($student->subject_taken as $subject_taken){
+                foreach(RegistrarRequest::all() as $request){
+                    if($request->type_id == $subject_taken->id){
+                        $student->drop_status = $request->status;
+                        $student->drop_request = $request;
+                    }
+                }
+            }            
+        }
+                
         $alphabetical = $students->sortBy('last_name');
-        $idAsc = $students->sortBy('student_id');        
+        $idAsc = $students->sortBy('student_id');                     
 
         foreach($alphabetical as $student){
             $student->rating = $values = ['class_id' => $class->id, 'student_id' => $student->id];
@@ -553,8 +575,7 @@ class StudentClassesController extends Controller
             $student->rating = $values = ['class_id' => $class->id, 'student_id' => $student->id];
         }
 
-        $rating =  $alphabetical->sortBy('rating');
-        
+        $rating =  $alphabetical->sortBy('rating');        
 
         switch($sortby){
             case 'id':

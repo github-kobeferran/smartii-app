@@ -95,8 +95,18 @@
                                                             </div>
                                                             <div class="col text-center">
                                                                 
-                                                                <span >
+                                                                <span>
+                                                                    @if (\App\Models\RegistrarRequest::where('type', 'drop')->where('type_id', $subjectTaken->id)->exists())
+                                                                        @if (!is_null($subjectTaken->student->drop_request))
+                                                                            @if ($subjectTaken->student->drop_request->status == 1)
+                                                                                DROPPED
+                                                                            @else 
+                                                                            {{number_format($subjectTaken->rating, 2)}}   
+                                                                            @endif
+                                                                        @endif
+                                                                    @else
                                                                     {{number_format($subjectTaken->rating, 2)}}   
+                                                                    @endif
                                                                 </span>
 
                                                             </div>

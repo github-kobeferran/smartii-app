@@ -11,6 +11,7 @@ use App\Models\StudentClass;
 use App\Models\Schedule;
 use App\Models\Faculty;
 use App\Models\Setting;
+use App\Models\RegistrarRequest;
 use Carbon\Carbon;
 use PDF;
 
@@ -190,6 +191,7 @@ class SubjectsTakenController extends Controller
         $pdf = PDF::loadView('pdf.cor', compact('student', 'subjectsTaken', 'settings', 'program'));
         return $pdf->stream( 'COR_'. strtoupper($student->first_name) . '_' .  strtoupper($student->first_name) . '.pdf');  
 
-    }
+    }    
+    
 
 }

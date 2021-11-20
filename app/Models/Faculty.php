@@ -31,6 +31,10 @@ class Faculty extends Model
         return $this->hasOne(Program::class,'id', 'program_id');
     }
 
+    public function registrar_requests(){
+        return $this->hasMany(RegistrarRequest::class, 'requestor_id', 'id');
+    }    
+
     public function setAgeAttribute($id)
     {
         $faculty = Faculty::find($id);    

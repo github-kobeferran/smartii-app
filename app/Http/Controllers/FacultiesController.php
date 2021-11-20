@@ -398,7 +398,7 @@ class FacultiesController extends Controller
         $class = StudentClass::find($id);
 
         if($class->archive == 1){
-            return redirect()->back();
+            return redirect()->route('facultyClasses');
         }
 
         $class->topic = $class->id;
@@ -413,7 +413,7 @@ class FacultiesController extends Controller
 
         $students = StudentClass::getStudentsbyClass($class->id)->filter(function ($value, $key) {
             return $value != null;
-        });                        
+        });                     
         
         
         $alphabetical = $students->sortBy('last_name');
@@ -441,10 +441,7 @@ class FacultiesController extends Controller
         return view('faculty.class')
         ->with('class', $class)
         ->with('students', $alphabetical)                   
-        ->with('schedules', $schedules);
-
-                     
-
+        ->with('schedules', $schedules);                     
      }
 
      public function showDetail($id, $detail){

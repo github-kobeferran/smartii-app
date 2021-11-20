@@ -50,18 +50,21 @@
                                 <li id="class-list-{{$classes->first()->id}}" class="list-group-item border border-success class-list d-none py-0 px-0">
                                     <ul class="list-group rounded-0"> 
                                         @foreach ($classes as $class)
-                                            <li class="list-group">
-                                                <a href="{{ url('/myclass/' . $class->id) }}" class="list-group-item" style="{{$class->subjectsTaken->count() == $class->subjectsTaken->where('rating', '!=', 3.5)->count() ? 'background: #d9d9d9 !important; color: black !important;': ''}}">
-                                                    <i class="fa fa-caret-right ml-3" aria-hidden="true"></i> 
-                                                    <em>{{$class->topic}}</em>
-                                                    <?php 
-                                                    
-                                                    ?>
-                                                @if ($class->subjectsTaken->count() == $class->subjectsTaken->where('rating', '!=', 3.5)->count())                                                
-                                                    <span class="float-right ">ready for archive</span>
-                                                @endif                                                    
-                                                </a>
-                                            </li>
+
+                                            @if ($class->subjectsTaken->count() > 0)
+                                                <li class="list-group">
+                                                    <a href="{{ url('/myclass/' . $class->id) }}" class="list-group-item" style="{{$class->subjectsTaken->count() == $class->subjectsTaken->where('rating', '!=', 3.5)->count() ? 'background: #d9d9d9 !important; color: black !important;': ''}}">
+                                                        <i class="fa fa-caret-right ml-3" aria-hidden="true"></i> 
+                                                        <em>{{$class->topic}}</em>
+                                                        <?php 
+                                                        
+                                                        ?>
+                                                    @if ($class->subjectsTaken->count() == $class->subjectsTaken->where('rating', '!=', 3.5)->count())                                                
+                                                        <span class="float-right ">ready for archive</span>
+                                                    @endif                                                    
+                                                    </a>
+                                                </li>
+                                            @endif
                                         @endforeach
                                     </ul>
                                 </li>   

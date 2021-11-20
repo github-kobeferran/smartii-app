@@ -33,7 +33,9 @@ class Student extends Model
                           'pronoun' => null,
                           'tuition_without_discount' => null,
                           'tuition_with_discount' => null,
-                          'level_desc_better' => null
+                          'level_desc_better' => null,
+                          'drop_status' => null,
+                          'drop_request' => null
                         ];
 
     public function member(){
@@ -41,7 +43,7 @@ class Student extends Model
     }    
 
     public function subject_taken(){
-        return $this->hasMany(SubjectTaken::class);
+        return $this->hasMany(SubjectTaken::class)->withTrashed();
     } 
 
     public function applicant(){
@@ -62,6 +64,22 @@ class Student extends Model
 
     public function registrar_requests(){
         return $this->hasMany(RegistrarRequest::class, 'requestor_id', 'id');
+    }    
+
+    public function setDropStatusAttribute($status){
+        $this->attributes['drop_status'] = $status;
+    }
+
+    public function getDropStatusAttribute(){
+        return $this->attributes['drop_status'];
+    }
+    
+    public function setDropRequestAttribute($request){
+        $this->attributes['drop_request'] = $request;
+    }
+
+    public function getDropRequestAttribute(){
+        return $this->attributes['drop_request'];
     }
 
     public function stillToBeTakenSubjects(){

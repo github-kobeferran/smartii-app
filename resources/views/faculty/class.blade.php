@@ -74,12 +74,8 @@
                 
             @endforeach
 
-            
-            
+                        
             <h4 class="mt-5">Students List </h4>   
-
-          
-
 
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
@@ -117,21 +113,25 @@
                 
             </div>           
             
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Student Name</th>
-                        <th class="border-left">Final Rating</th>
-                    </tr>
-                </thead>
-                <tbody id="students-table">
-                
-                </tbody>
-            </table>
+           <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="green-bg-light">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th class="border-left">Final Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table">
+                    
+                    </tbody>
+                </table>
+           </div>
+
+           <div id="modals">
+
+           </div>
                               
-       
-               
         </div>
 
     </div>
@@ -159,6 +159,7 @@ function selectTable(mode){
     let btnArchive = document.getElementById('btn-archive');
     let availForArchive = true;
     let studentList = document.getElementById('students-table');
+    let modal_div = document.getElementById('modals');
 
     switch(mode){
         case 'alpha':
@@ -178,34 +179,82 @@ function selectTable(mode){
         xhr.onload = function() {
             if (this.status == 200) {
 
-                students = JSON.parse(this.responseText);
-
-                console.log(students);
+                students = JSON.parse(this.responseText);                
 
                 output = '<tbody id="students-table">';
                                 
                 for(let i in students){
                     
                     
-                    output+= '<tr>';
-                        output+= `<td><a href="{{url('studentprofile/` + students[i].student_id + `')}}"> ` + students[i].student_id + `</a></td>`;
-                        output+= '<td>'+ students[i].first_name + ' ' + students[i].last_name +'</td>';
+                    output+= `<tr>
+                        <td>`;
+                    if(typeof students[i].drop_request != null && typeof students[i].drop_request != 'undefined')   {
+                        switch(students[i].drop_request.status){
+                            case 0:
+                                output+= `<span class="float-left text-secondary">drop request pending</span>`;
+                                break;
+                            case 2:
+                                output+= `<span class="float-left text-danger">drop request denied ${students[i].drop_request.reject_reason != null ? `(` +students[i].drop_request.reject_reason  +`)` : ``}</span>`;
+                                
+                                break;
+                            default: 
+                            
+                        }                        
+                    } else {
+                        if(students[i].rating == 3.5){
+                            output+= `<span role="button" data-toggle="modal" data-target="#drop-${students[i].id}" class="badge badge-danger float-left" >DROP</span>`;
+                        }
+                    }                
+
+                    output+=`<a href="{{url('studentprofile/${students[i].student_id}')}}">${students[i].student_id}</a>
+                        </td>
+                        <td>${students[i].first_name} ${students[i].last_name}</td>`;
 
                     if(students[i].rating == 3.5){
                         output+= '<td id="rating-' + students[i].id + '" class="btn-input border-left"><button onclick="selectRating('+ students[i].id +')" class="btn btn-primary">Input Rating</button></td>';
                         availForArchive = false;
                     }else{                                                
-                        
                         if(students[i].rating == 4)
                             output+= '<td id="rating-' + students[i].id + '" class="btn-input border-left rated"><span class="rating-text"> INC </span><a onclick="selectRating('+ students[i].id +', '+ students[i].rating +')" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>';
                         else
                             output+= '<td id="rating-' + students[i].id + '" class="btn-input border-left rated"><span class="rating-text"> '+ students[i].rating +'</span>   <a onclick="selectRating('+ students[i].id +', '+ students[i].rating +')" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>';
-
                     }
-                        
                     output+= '</tr>';
 
                 }
+
+                modal_output = `<div id="modals">`;
+
+                for(let i in students){
+                    modal_output += `
+                    <div class="modal fade" id="drop-${students[i].id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger">
+                                    <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">REQUEST DROP ${students[i].first_name} ${students[i].last_name}</span></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {!! Form::open(['url' => '/requestdrop']) !!}
+                                    <div class="modal-body text-justify">
+                                        <p>Request Drop for <b>${students[i].first_name} ${students[i].last_name}</b> [${students[i].student_id}]?</p>                                        
+                                        <input type="hidden" name="student_id" value="${students[i].id}">
+                                        <input type="hidden" name="class_id" value="${CLASS_ID}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Request Drop for ${students[i].last_name}</button>
+                                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                    </div>
+                                {!!Form::close()!!}
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }
+
+                modal_output += `</div>`;
+                modal_div.innerHTML = modal_output;
 
                 if(availForArchive){
                     btnArchive.classList.remove('d-none');

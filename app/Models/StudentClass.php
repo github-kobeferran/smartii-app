@@ -31,7 +31,7 @@ class StudentClass extends Model
     }
 
     public function subjectsTaken(){
-        return $this->hasMany(SubjectTaken::class, 'class_id', 'id');
+        return $this->hasMany(SubjectTaken::class, 'class_id', 'id')->withTrashed();
     }
     
     public function schedules(){
@@ -45,12 +45,11 @@ class StudentClass extends Model
     public function students_list_string(){
         $students = collect();
         foreach($this->subjectsTaken as $subject_taken){
-            $students->push('['. $subject_taken->student->student_id . '-' . $subject_taken->student->first_name . ' ' . $subject_taken->student->last_name . ']');
+            $students->push( '['. ($subject_taken->trashed() ? 'DROPPED ' : '') . $subject_taken->student->student_id . '-' . $subject_taken->student->first_name . ' ' . $subject_taken->student->last_name . ']');
         }
 
         $students = $students->toArray();
         $list = implode(', ', $students);        
-    
 
         return $list;
     }    
@@ -179,9 +178,12 @@ class StudentClass extends Model
         
     }
 
-    public static function getStudentsbyClass($id){
+    public static function getStudentsbyClass($id, $withTrashed = false){
 
-        $subtakens = SubjectTaken::where('class_id', $id)->get();
+        if($withTrashed)
+            $subtakens = SubjectTaken::where('class_id', $id)->withTrashed()->get();
+        else
+            $subtakens = SubjectTaken::where('class_id', $id)->get();
 
         $students = collect(new Student);
 
