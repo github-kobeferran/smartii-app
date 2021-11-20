@@ -717,13 +717,13 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-dark">
-                    <h5 class="modal-title"><span class="text-white">Create a Shifting Program Request</span></h5>
-                    <button class="close" data-dismiss="modal">
+                    <h5 class="modal-title"><span class="text-white">Create a Shifting to Another Program Request</span></h5>
+                    <button class="close text-white" data-dismiss="modal">
                         &times;
                     </button>
                 </div>
                 {!! Form::open(['url' => '/storeshift'])!!}
-                    <div class="modal-body">
+                    <div class="modal-body">                        
                         <b><label for="">Change my program to: </label></b>
                         <select name="program" id="" class="form-control" required>                                        
                             <?php 

@@ -34,13 +34,16 @@
                                 <th class="class-table-header" scope="col">Day</th>
                                 <th class="class-table-header" scope="col">Time</th>                          
                                 <th class="class-table-header" scope="col">Room</th>
-                                <th class="class-table-header" scope="col">Instructor</th>
+                                <th class="class-table-header" scope="col">Instructor</th>                            
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($student->subjectsTakenThisSemester() as $subject_taken)
                                 <tr>
-                                    <th>{{$subject_taken->subject->desc}}</th>
+                                    <th>
+                                        {{$subject_taken->subject->desc}}
+                                        <span style="font-size: .6em;" role=button class="badge badge-danger float-right">Drop this</span>
+                                    </th>
                                     <td class="text-right">
                                         @if (!is_null($subject_taken->class))
                                             @foreach ($subject_taken->class->schedules as $sched)
@@ -48,7 +51,7 @@
                                             @endforeach
                                         @else
                                            --
-                                        @endif
+                                        @endif                                        
                                     </td>
                                     <td class="text-right">
                                         @if (!is_null($subject_taken->class))
@@ -77,7 +80,7 @@
                                             --
                                         @endif
                                         
-                                    </td>
+                                    </td>                                   
                                 </tr>
                                 
                             @endforeach

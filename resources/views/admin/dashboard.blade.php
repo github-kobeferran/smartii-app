@@ -98,7 +98,7 @@
         ['College',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#BB6ECC" ],             
         ['College Approved',      {!! json_encode(\App\Models\Applicant::where('dept', 1)->where('approved', 1)->whereDate('created_at', '>=', \Carbon\Carbon::parse(\App\Models\Setting::first()->semester_updated_at)->subWeek() )->count()) !!}, "#DBB7E2" ],             
         ]);
-        >requestor_type
+        
         let options = {
             title: 'Applicants this Semester S.Y.' + setting_obj.from_year + '-' + setting_obj.to_year +  (setting_obj.semester == 1 ? ' First ' : ' Second ') + 'Semester',        
         };
