@@ -122,7 +122,7 @@
             </div>
         @else
             <div class="text-center">
-                <em><h4>No Drop Requests yet.</h4></em>
+                <em><h4>No Shift Requests yet.</h4></em>
             </div>
         @endif
     </div>
