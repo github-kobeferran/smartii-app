@@ -82,7 +82,7 @@ class ProgramsController extends Controller
         $program = Program::find($request->input('id'));
 
         if($request->has('dept'))
-            $program->department = $request->input('dept');       
+            $program->department = $request->input('dept');                       
         
         $program->desc = $request->input('desc');
         $program->abbrv = $request->input('abbrv');
@@ -103,6 +103,11 @@ class ProgramsController extends Controller
                 }
             }
         }               
+
+        if ($program->isDirty('department')) {
+            if(!$program->department)
+                $program->is_tesda = 0;
+        }
     
         $program->save();
         return redirect()->route('adminCreate')->with('active', 'program')->with('success', 'Program ' . $program->desc . ' updated');
@@ -126,6 +131,17 @@ class ProgramsController extends Controller
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                                    
         $pdf = PDF::loadView('pdf.program_courses', compact('program', 'subjects'));
         return $pdf->stream(  $program->abbrv . '.pdf');  
+    }
+
+    public function delete(Request $request){
+        if($request->method() != "POST")        
+            return redirect()->back();
+
+        $program = Program::find($request->input('id'));
+        $program->delete();
+
+        return redirect()->route('adminCreate')->with('active', 'program')->with('info', 'Program ' . $program->desc . ' deleted');
+
     }
 
     

@@ -88,8 +88,7 @@
             <h5 id="desc"></h5>
             <p>Program Description</p>
 
-            <button onclick="progEdit()" type="button" class="btn btn-info text-white">Edit</button>
-            <button href="" class="btn btn-danger text-white" disabled>Delete</button>          
+            <button onclick="progEdit()" type="button" class="btn btn-info text-white">Edit</button>            
 
         </div>
 
@@ -235,10 +234,32 @@ function programsSelect(id){
                             <p>Program Abbreviation</p>
                             <h5 id="desc">${program.desc.toUpperCase()}</h5>
                             <p>Program Description</p>
-                            <button onclick="progEdit(${program.id})" type="button" class="btn btn-primary text-white" >Edit</button>`;
+                            <button onclick="progEdit(${program.id})" type="button" class="btn btn-primary text-white" >Edit</button> `;
 
-                            if(program.student_count < 1)
-                                output+=`<button class="btn btn-danger text-white mx-2" >Delete</button>`;                    
+                            if(program.student_count < 1){
+                                output+=`<button data-toggle="modal" data-target="#delete-program-modal" class="btn btn-danger text-white" >Delete</button>          
+
+                                        <div class="modal fade" tabindex="-1" id="delete-program-modal" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-danger">
+                                                        <h5 class="modal-title"><span class="text-white">DELETE PROGRAM</span></h5>
+                                                        <button data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                                                    </div>
+                                                    {!! Form::open(['url' => '/deleteprogram']) !!}
+                                                    <div class="modal-body">
+                                                        Delete <b>${program.desc}</b> ?
+                                                        <input type="hidden" name="id" value="${program.id}">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                        <button data-dismiss="modal" class="btn btn-light">Cancel</button>
+                                                    </div>
+                                                    {!!Form::close()!!}
+                                                </div>
+                                            </div>
+                                        </div>`;                    
+                            }
 
                     output+= `<div class="text-right">
                                 <a target="_blank" href="${APP_URL}/viewprogramcourses/export/${program.abbrv}">view course outline</a>
