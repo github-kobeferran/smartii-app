@@ -12,7 +12,10 @@ class Program extends Model
 {
     use HasFactory;
 
-    protected $appends = ['dept_desc' => null, 'student_count' => null];
+    protected $appends = [
+                            'dept_desc' => null, 
+                            'student_count' => null
+                        ];
 
     public function subjects(){
         return $this->hasMany(Subject::class);

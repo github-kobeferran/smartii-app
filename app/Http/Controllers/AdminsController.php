@@ -382,11 +382,10 @@ class AdminsController extends Controller
                 $program = Program::find($id); 
 
                 $program->dept_desc = $program->department;
+                $program->student_count;
+                $program->append('student_count')->toArray();
 
-                if($program->count() > 0)
-                    return $program;
-                else 
-                    return 0;
+                return $program;
 
 
             break;        

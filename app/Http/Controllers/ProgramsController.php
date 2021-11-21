@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Program;
 use App\Models\Subject;
+use App\Models\SubjectTaken;
 use PDF;
 use Illuminate\Support\Facades\Validator;
 
@@ -76,20 +77,35 @@ class ProgramsController extends Controller
             return redirect()->back();
         }   
 
+        // return $request->all();
+
         $program = Program::find($request->input('id'));
 
-        $program->department = $request->input('dept');
+        if($request->has('dept'))
+            $program->department = $request->input('dept');       
+        
         $program->desc = $request->input('desc');
         $program->abbrv = $request->input('abbrv');
-
+        
         if($request->has('is_tesda'))
             $program->is_tesda = 1;
         else
             $program->is_tesda = 0;
 
+        if($program->isDirty('is_tesda')){
+            foreach($program->subjects as $subject){
+                if($program->is_tesda){
+                    $subject->units = 80;
+                    $subject->save();
+                } else {
+                    $subject->units = 3;
+                    $subject->save();
+                }
+            }
+        }               
+    
         $program->save();
-
-        return redirect()->route('adminCreate')->with('active', 'program')->with('success', 'Program updated');
+        return redirect()->route('adminCreate')->with('active', 'program')->with('success', 'Program ' . $program->desc . ' updated');
 
     }
 
