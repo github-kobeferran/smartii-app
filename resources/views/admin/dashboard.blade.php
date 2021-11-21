@@ -218,12 +218,12 @@
         <div class="col">
             <h5>Dashboard</h5>
         </div>
-        <div class="col">
+        <div class="col mb-1">
             
-            <button type="button" style="border:2px solid rgb(66, 66, 66) !important;" class="btn btn-info text-dark float-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" style="border:2px solid rgb(66, 66, 66) !important;" class="btn text-white smartii-bg-dark float-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Other Actions
             </button>
-            <div class="dropdown-menu border-info dropdown-menu-right">
+            <div style="border:1px solid #05551B !important;" class="dropdown-menu dropdown-menu-right">
                 <ul class="list-group list-group-flush p-0 m-0 text-right">
                     @if (auth()->user()->member->admin->position == 'superadmin')
                         <a href="{{url('/events/create')}}" class="dropdown-item list-group-item">Create a School Event</a>
