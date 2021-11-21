@@ -1,49 +1,45 @@
 {!! Form::open(['url' => 'admin/create/program', 'id' => 'programForm']) !!}    
 
-    <div class="row">    
+    <div class="row">   
+        
+        <div class="col-xl-6">
+            <b>{{Form::label('department', 'Department')}}</b>
+            <div class="input-group">     
 
-        <div class="col-sm"> 
-            {{Form::label('department', 'Department')}}
-                <div class="input-group">     
+                {{Form::select('dept', 
+                ['0' => 'Senior High School',                              
+                '1' => 'College'], 0,
+                ['class' => 'custom-select',
+                 'id' => 'selectDeptForProgram',
+                 'required' => 'required'])}}      
 
-                    {{Form::select('dept', 
-                    ['0' => 'Senior High School',                              
-                    '1' => 'College'], 0,
-                    ['class' => 'custom-select',
-                     'id' => 'selectDeptForProgram',
-                     'required' => 'required'])}}      
-
-                    <div class="p-2 d-none" id="is-tesda-div">
-                        <label class="px-2 pb-4" for="">Is this a Tesda Program? Check if yes</label>
-                        <input type="checkbox" name="is_tesda" style="width: 20px; height: 20px;">                        
-                        <i type="button" class="fa fa-info-circle text-info ml-2" data-toggle="tooltip" title="TESDA courses are not affected by CHED rules like unit pricing, unit scheduling and general subjects" aria-hidden="true"></i>                        
-                    </div>
-                    
+                <div class="p-2 d-none" id="is-tesda-div">
+                    <label class="px-2 pb-4" for="">Is this a Tesda Program? Check if yes</label>
+                    <input type="checkbox" name="is_tesda" style="width: 20px; height: 20px;">                        
+                    <i type="button" class="fa fa-info-circle text-info ml-2" data-toggle="tooltip" title="TESDA courses are not affected by CHED rules like unit pricing, unit scheduling and general subjects" aria-hidden="true"></i>                        
                 </div>
                 
-                <div class = "form-group">        
-                    {{Form::label('desc', 'Program Description', ['class' => 'mt'])}}
-                    {{Form::text('desc', '', ['class' => 'form-control',
-                        'placeholder' => 'Course/Strand Description',
-                        'required' => 'required'])}}
-                </div> 
+            </div>
+            
+            <div class = "form-group">        
+                <b>{{Form::label('desc', 'Program Description', ['class' => 'mt-2'])}}</b>
+                {{Form::text('desc', '', ['class' => 'form-control',
+                    'placeholder' => 'Course/Strand Description',
+                    'required' => 'required'])}}
+            </div> 
 
-                <div class = "form-group">        
-                    {{Form::label('abbrv', 'Program Abbreviation', ['class' => 'mt'])}}
-                    {{Form::text('abbrv', '', ['class' => 'form-control w-50',
-                                               'placeholder' => 'Course/Strand Abbreviation',
-                                               'required' => 'required'])}}
-                </div>   
-                
-                <div class = "form-group text-right">        
-                    {{Form::submit('Save',  ['class' => 'btn btn-success btn-block'])}}
-                </div>
-
+            <div class = "form-group">        
+                <b>{{Form::label('abbrv', 'Program Abbreviation', ['class' => 'mt-2'])}}</b>
+                {{Form::text('abbrv', '', ['class' => 'form-control w-50',
+                                           'placeholder' => 'Course/Strand Abbreviation',
+                                           'required' => 'required'])}}
+            </div>   
+            
+            <div class = "form-group ">        
+                {{Form::submit('Save',  ['class' => 'btn btn-success btn-block'])}}
+            </div>
         </div>
 
-        <div class="col">                
-
-        </div>
 
     </div>     
     

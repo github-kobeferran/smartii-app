@@ -12,17 +12,11 @@
         @empty(auth()->user()->member)                        
 
         @else                        
-
             @if (auth()->user()->member->member_type == 'admin')
-            
-                <a href="/events/create" class="btn-sm btn-primary m-2"><i class="fa fa-plus" aria-hidden="true"></i> Add an Event</a>
-
-            @else
-                
-
+                @if (auth()->user()->member->admin->position == 'superadmin')
+                    <a href="/events/create" class="btn-sm btn-primary m-2"><i class="fa fa-plus" aria-hidden="true"></i> Add an Event</a>
+                @endif                                                                                        
             @endif
-
-
         @endempty
 
     </div>
@@ -72,11 +66,10 @@
                     @else                        
             
                         @if (auth()->user()->member->member_type == 'admin')
-                        
-                            <th>Action</th>
-            
-                        @else
-                            
+
+                            @if (auth()->user()->member->admin->position == 'superadmin')
+                                <th>Action</th>
+                            @endif                                                                                        
             
                         @endif
             
@@ -122,18 +115,16 @@
                 
                             @if (auth()->user()->member->member_type == 'admin')
                             
-                                <td>
-
-                                    <button type="button" class="btn-sm btn-info text-white m-2y" data-toggle="modal" data-target="#editEvent-{{$event->id}}">
-                                       Edit
-                                    </button>        
-
-                                    <button type="button" class="btn-sm btn-danger text-white m-2y" data-toggle="modal" data-target="#deleteEvent-{{$event->id}}">
-                                        Delete
-                                    </button>                                    
-                                
-                                </td>
-
+                                @if (auth()->user()->member->admin->position == 'superadmin')
+                                    <td>
+                                        <button type="button" class="btn-sm btn-info text-white m-2y" data-toggle="modal" data-target="#editEvent-{{$event->id}}">
+                                            Edit
+                                        </button>        
+                                        <button type="button" class="btn-sm btn-danger text-white m-2y" data-toggle="modal" data-target="#deleteEvent-{{$event->id}}">
+                                            Delete
+                                        </button>                                    
+                                    </td>
+                                @endif
                                 <div class="modal fade" id="editEvent-{{$event->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                       <div class="modal-content">

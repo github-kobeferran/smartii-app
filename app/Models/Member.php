@@ -15,10 +15,15 @@ class Member extends Pivot
     }
     
     public function admin(){
-        if($this->user_type == 'admin')
-            return $this->belongsTo(Admin::class, 'member_id', 'id');    
-        else 
-            return;    
+        return $this->belongsTo(Admin::class, 'member_id', 'id');    
+    }
+
+    public function student(){
+        return $this->belongsTo(Admin::class, 'member_id', 'id');    
+    }
+
+    public function faculty(){
+        return $this->belongsTo(Admin::class, 'member_id', 'id');    
     }
 
 }

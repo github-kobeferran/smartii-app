@@ -11,7 +11,21 @@ use App\Models\StudentClass;
 
 class RegistrarRequestsController extends Controller
 {
-    
+
+    public function viewDropRequests(){
+
+        $requests = RegistrarRequest::where('type', 'drop')->orderBy('created_at', 'desc')->paginate(5); 
+
+        return view('admin.drop')->with('requests', $requests);
+    }
+
+    public function viewShiftRequests(){
+
+        $requests = RegistrarRequest::where('type', 'shift')->orderBy('created_at', 'desc')->paginate(5); 
+
+        return view('admin.shift')->with('requests', $requests);
+    }
+
     public function storeShift(Request $request){
         if($request->method() != "POST")
             return redirect()->back();

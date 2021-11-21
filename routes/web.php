@@ -81,7 +81,7 @@ Auth::routes(['verify' => true]);
 // ADMIN protected routes 
 Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->group(function () {
     //view
-    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard')->middleware(['admin.superadmin']);
+    Route::get('/admin', [App\Http\Controllers\AdminsController::class, 'index'])->name('adminDashboard');
     Route::get('/admin/create', [App\Http\Controllers\AdminsController::class, 'adminCreate'])->name('adminCreate')->middleware(['admin.registrar']);
     Route::get('/admin/payment', [App\Http\Controllers\AdminsController::class, 'adminPayment'])->name('adminPayment')->middleware(['admin.accounting']);
     //programs
@@ -174,7 +174,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     //classes export
     Route::get('advancedclasses/export/{from_year}/{to_year}/{dept}/{prog}/{level}/{sem}/{faculty}/{subj}/{ac}', [App\Http\Controllers\StudentClassesController::class, 'advanceExport']);
     //events
-    Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent');
+    Route::get('/events/create', [App\Http\Controllers\EventsController::class, 'create'])->name('createEvent')->middleware(['admin.superadmin']);
     Route::any('/events/store', [App\Http\Controllers\EventsController::class, 'store']);
     Route::get('/events/delete/{id}', [App\Http\Controllers\EventsController::class, 'delete']);
     Route::any('/events/update', [App\Http\Controllers\EventsController::class, 'update']);
@@ -201,6 +201,8 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/remindtoarchive/{id}', [App\Http\Controllers\FacultiesController::class, 'remindToArchive']);
     Route::any('/changefacultyspecialty', [App\Http\Controllers\FacultiesController::class, 'changeSpecialty']);
     // registrar requests
+    Route::get('/droprequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewDropRequests'])->name('drop.view')->middleware(['admin.registrar']);
+    Route::get('/shiftrequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewShiftRequests'])->name('shift.view')->middleware(['admin.registrar']);
     Route::any('/approveshift', [App\Http\Controllers\RegistrarRequestsController::class, 'approveShift'])->name('approve.shift');
     Route::any('/rejectshift', [App\Http\Controllers\RegistrarRequestsController::class, 'rejectShift'])->name('reject.shift');    
     Route::any('/approvedrop', [App\Http\Controllers\RegistrarRequestsController::class, 'approveDrop'])->name('subjecttaken.approvedrop');    

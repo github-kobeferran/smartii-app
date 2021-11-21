@@ -59,7 +59,14 @@
                                                     </span>
                                                     @break
                                                 @case(2)
-                                                    <span style="font-size: .8em;" class="text-secondary float-right">drop request rejected <em>{{!is_null($request->reject_reason) ? '(' . $request->reject_reason . ')' : ''}}</em></span>
+                                                    <span style="font-size: .8em;" class="text-secondary float-right">drop request rejected 
+                                                    
+                                                        @if ($request->requestor_type == 'faculty')
+                                                            made by your instructor
+                                                        @endif  
+                                                        <em>{{!is_null($request->reject_reason) ? '(' . $request->reject_reason . ')' : ''}}</em>
+                                                    
+                                                    </span>
                                                     @break
                                                 @default
                                                     

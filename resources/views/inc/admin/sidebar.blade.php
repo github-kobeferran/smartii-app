@@ -147,8 +147,8 @@
                         Dashboard
                     </span>
                 </a>
-            
             </li>
+
             <li class="has-subnav">
                 <a href="/admin/view">
                     <i class="fa fa-laptop fa-2x sidebar-icon"></i>
@@ -208,6 +208,15 @@
 
         @elseif($admin->position == 'registrar')
 
+            <li>
+                <a href="/admin">
+                    <i class="fa fa-map-o sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Dashboard
+                    </span>
+                </a>
+            </li>
+
             <li class="has-subnav">
                 <a href="/admin/view">
                     <i class="fa fa-laptop fa-2x sidebar-icon"></i>
@@ -237,6 +246,15 @@
             </li>
 
         @elseif($admin->position == 'accounting')
+
+            <li>
+                <a href="/admin">
+                    <i class="fa fa-map-o sidebar-icon" aria-hidden="true"></i>
+                    <span class="nav-text">
+                        Dashboard
+                    </span>
+                </a>
+            </li>
 
             <li class="has-subnav">
                 <a href="/admin/payment">
