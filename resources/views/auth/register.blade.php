@@ -106,8 +106,8 @@
                     <div class="card-body">
                       <h5 class="card-title">ENROLLMENT IS NOW OFFICIALY CLOSED</h5>
                       <h6 class="card-subtitle mb-2 text-muted">at {{\Carbon\Carbon::parse(\App\Models\Setting::first()->enrollment_mode_updated_at)->isoFormat("MMMM DD, YYYY h:mm A")}}</h6>
-                      <p class="card-text">for inquiries please contact us.</p>
-                      <a href="{{url('/contactus')}}" class="card-link">Contact us</a>
+                      <p class="card-text">for inquiries please <a href="{{url('/contactus')}}" class="card-link">contact us</a></p>
+                     
                     </div>
                   </div>
                 @endif

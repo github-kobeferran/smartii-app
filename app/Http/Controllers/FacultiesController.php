@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -24,11 +25,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 
 class FacultiesController extends Controller
-{
-    public function index()
-    {
-        return view('faculty.dashboard');
-    }
+{    
 
     public function store(Request $request){                             
         
@@ -331,6 +328,11 @@ class FacultiesController extends Controller
 
      public function getClasses(){
 
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
+        
         $id = auth()->user()->member->member_id;                                   
 
         $classesByProgram = StudentClass::getFacultyClassesByProgram($id); //base the loop here
@@ -505,6 +507,8 @@ class FacultiesController extends Controller
 
                 $this->validate($request, [           
                     'detail' => 'in:male,female',                       
+                ],[
+                    'detail.in' => 'Must be "Male" or "Female" only',
                 ]);
 
             break;
@@ -527,7 +531,7 @@ class FacultiesController extends Controller
             case 'college_alumni': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',                     
+                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',
                 ]);
 
             break;
@@ -652,6 +656,42 @@ class FacultiesController extends Controller
             return redirect()->route('adminView')->with('active', 'faculties')->with('success', 'FACULTY ' . $faculty->first_name . ' ' . $faculty->last_name . '  Program changed to All Programs');
         }        
             
+    }
+
+    public function delete(Request $request){
+        if($request->method() != "POST")
+            return redirect()->back();       
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|current_password',
+        ],[
+            'password.current_password' => 'Invalid password.',
+        ]);
+           
+        if ($validator->fails()) {
+            return redirect()->route('facultydetails')->withErrors($validator);                                                        
+        }  
+
+        $faculty = Faculty::find($request->input('id'));
+        $faculty->delete();
+        $faculty->member->user->access_grant = 1;
+        $faculty->member->user->save();
+
+        Auth::logout();
+        return redirect('/home');
+
+    }
+
+    public function restore(Request $request){
+        if($request->method() != "POST")
+            return redirect()->back();
+
+        $faculty = Faculty::withTrashed()->find($request->input('id'));
+        $faculty->restore();
+        $faculty->member->user->access_grant = 0;
+        $faculty->member->user->save();
+
+        return redirect()->route('adminView')->with('active', 'faculties')->with('info', 'Faculty ' . $faculty->first_name . ' ' . $faculty->last_name . ' \'s account restored.');
     }
 
 }

@@ -5,11 +5,11 @@
 @endsection
 
 <script>
-    var applicantCount = {!! json_encode($applicantCount) !!}    
-    var studentCount = {!! json_encode($studentCount) !!}    
-    var classCount = {!! json_encode($classCount) !!}    
-    var femaleCount = {!! json_encode($femaleCount) !!}    
-    var maleCount = {!! json_encode($maleCount) !!}    
+    var applicantCount = {!! json_encode($applicantCount) !!}
+    var studentCount = {!! json_encode($studentCount) !!}
+    var classCount = {!! json_encode($classCount) !!}
+    var femaleCount = {!! json_encode($femaleCount) !!}
+    var maleCount = {!! json_encode($maleCount) !!}
     var genderNullCount = {!! json_encode($genderNullCount) !!}    
     var passedStudents = {!! json_encode($passedStudents) !!}    
     var failedStudents = {!! json_encode($failedStudents) !!}    
@@ -18,7 +18,6 @@
 </script>
 
 <?php 
-
     $shsPrograms = \App\Models\Program::where('department', 0)->where('id', '!=', 3)->orderBy('created_at', 'asc')->get();
 
     foreach ($shsPrograms as $prog) {
@@ -34,8 +33,6 @@
     }    
 
 ?>
-
-
 
 @section('charts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -56,7 +53,7 @@
 
         let options = {
         title: 'Students Gender Count',
-        pieHole: 0.4,
+        pieHole: 0.4       
         };
 
         let chart = new google.visualization.PieChart(document.getElementById('donutchart'));
@@ -252,8 +249,35 @@
                             @endif
                         </a>
                     @endif
-                    
+
+                    <a type="button" data-toggle="modal" data-target="#delete-account" class="dropdown-item list-group-item">Delete this Account</a>
+                                    
                 </ul>                
+            </div>
+
+            <div class="modal fade" id="delete-account" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                    <h5 class="modal-title" id="exampleModalCenterTitle"><span class="text-white">DELETE ACCOUNT</span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    {!!Form::open(['url' => '/deleteadmin'])!!}
+                        <div class="modal-body text-justify">
+                            <h5><span class="text-danger">YOU'RE ABOUT TO DELETE YOUR ADMIN ACCOUNT {{auth()->user()->member->admin->admin_id}} {{auth()->user()->member->admin->name}}.</span></h5>
+                            <b>Enter your password to continue:</b>
+                            {{Form::password('password', ['class' => 'form-control', 'required' => 'required'])}}
+                            {{Form::hidden('id', auth()->user()->member->admin->id)}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Delete My Account</button>
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        </div>
+                    {!!Form::close()!!}
+                </div>
+                </div>
             </div>
 
             <div class="modal fade" id="showGallery" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -798,74 +822,71 @@
             </div>
             
         </div>
-
-        {{-- announcements col --}}
-        <div class="col" 
         @if (auth()->user()->member->admin->position == 'superadmin')
-            style=" background: #faf89d46;"
-        @endif
-        >
-
+        {{-- announcements col --}}
+            <div class="col" 
             @if (auth()->user()->member->admin->position == 'superadmin')
-                {{--######################### START OF ANNOUNCEMENTS #########################--}}
-                <h5 class="mt-2 text-center">ANNOUNCEMENTS</h5> <span role="button" data-toggle="modal" data-target="#announcementForm" class="float-right" style="font-size: 2em;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                <div class="modal fade" id="announcementForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content" style="background: #faf89d;" >
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Add Announcement</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        {!!Form::open(['url' => '/createannouncement'])!!}
-                        <div class="modal-body">
+                style=" background: #faf89d46;"
+            @endif
+            >           
+                    {{--######################### START OF ANNOUNCEMENTS #########################--}}
+                    <h5 class="mt-2 text-center">ANNOUNCEMENTS</h5> <span role="button" data-toggle="modal" data-target="#announcementForm" class="float-right" style="font-size: 2em;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                    <div class="modal fade" id="announcementForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content" style="background: #faf89d;" >
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Add Announcement</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {!!Form::open(['url' => '/createannouncement'])!!}
+                            <div class="modal-body">
 
-                            <div class="form-group">
-                                Title (What it is about)
-                                {{Form::text('title', '', ['class' => 'form-control'])}}
+                                <div class="form-group">
+                                    Title (What it is about)
+                                    {{Form::text('title', '', ['class' => 'form-control'])}}
+                                    
+                                </div>
+                                <div class="form-group">
+                                    Content (What do you want to say)
+                                    {{Form::textarea('content', '', ['class' => 'form-control'])}}
+
+                                </div>
                                 
                             </div>
-                            <div class="form-group">
-                                Content (What do you want to say)
-                                {{Form::textarea('content', '', ['class' => 'form-control'])}}
-
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-light">Save changes</button>                        
                             </div>
-                            
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-light">Save changes</button>                        
-                        </div>
-                        {!!Form::close() !!}
+                            {!!Form::close() !!}
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="d-flex justify-content-center  flex-wrap" >
-                    @foreach ($announcements as $announcement)
-                    <div class="card text-white bg-warning text-secondary mb-3 m-2" style="min-width: 18rem;">
-                        <div class="card-header">{{\Carbon\Carbon::parse($announcement->created_at)->format('g:i A, D d F')}} <span><a class="float-right" href="/deleteannouncement/{{$announcement->id}}">X</a></span> </div>
-                        <div class="card-body announcement-body">
-                        <h5 class="card-title">{{$announcement->title}}</h5>
-                        <p class="card-text">{{$announcement->content}}</p>
-                        </div>
-                    </div>   
-                    @endforeach                              
-                
-                </div>
+                    <div class="d-flex justify-content-center  flex-wrap" >
+                        @foreach ($announcements as $announcement)
+                        <div class="card text-white bg-warning text-secondary mb-3 m-2" style="min-width: 18rem;">
+                            <div class="card-header">{{\Carbon\Carbon::parse($announcement->created_at)->format('g:i A, D d F')}} <span><a class="float-right" href="/deleteannouncement/{{$announcement->id}}">X</a></span> </div>
+                            <div class="card-body announcement-body">
+                            <h5 class="card-title">{{$announcement->title}}</h5>
+                            <p class="card-text">{{$announcement->content}}</p>
+                            </div>
+                        </div>   
+                        @endforeach                              
+                    
+                    </div>
 
-                {{--######################### END OF ANNOUNCEMENTS #########################--}}
-                @endif
-        </div>
+                    {{--######################### END OF ANNOUNCEMENTS #########################--}}
+            </div>
+        @endif
     </div>
 
     <div class="row border-top mt-3">
-        <div class="col mt-2 text-center">
+        <div class="col mt-2 text-left">
             <h5 id="statistics">Statistics <i class="fa fa-bar-chart" aria-hidden="true"></i></h5>
 
-            <div class="d-flex flex-wrap justify-content-center">
-                
+            <div class="d-flex flex-column smartii-bg-light justify-content-center">
                 <div class="mx-auto mb-2 px-auto w-100" id="donutchart" ></div>
                 <div class="mx-auto mb-2 px-auto w-100" id="piechart" ></div>
                 <div class="mx-auto mb-2 px-auto w-100" id="shsChart" ></div>

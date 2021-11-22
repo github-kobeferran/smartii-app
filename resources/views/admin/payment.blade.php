@@ -11,6 +11,11 @@
         </div>
         <div class="col ">
             <button type="button" data-toggle="modal" data-target="#invoices-export-modal" class="btn btn-sm btn-success">Export Invoices to Excel</button>
+            <a href="{{url('admin/paymentrequests')}}" class="btn btn-sm btn-info float-right"><span class="text-white">Payment Requests 
+                @if(\App\Models\PaymentRequest::pendingRequestCount() > 0)
+                    <span class="badge badge-pill badge-danger">{{\App\Models\PaymentRequest::pendingRequestCount()}}</span>
+                @endif 
+            </span></a>
         </div>
 
         <div class="modal fade" id="invoices-export-modal" tabindex="-1" role="dialog" aria-labelledby="invoices-export-title" aria-hidden="true">

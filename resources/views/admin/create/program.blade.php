@@ -253,7 +253,7 @@ function programsSelect(id){
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-danger">Delete</button>
-                                                        <button data-dismiss="modal" class="btn btn-light">Cancel</button>
+                                                        <button type="button" onclick="cancelEdit()" class="btn btn-light">Cancel</button>
                                                     </div>
                                                     {!!Form::close()!!}
                                                 </div>

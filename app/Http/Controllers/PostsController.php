@@ -48,6 +48,8 @@ class PostsController extends Controller
 
         if($request->method() != 'POST')
             return redirect()->back(); 
+
+        $msg = "";
             
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:100', 

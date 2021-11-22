@@ -24,48 +24,52 @@ Posts, Articles and News page of St Mark Institute Integrated Information System
   @else   
   
 
-  <div class="custom-control custom-switch text-right mr-5 my-3 ">
-        <input type="checkbox" class="custom-control-input" id="customSwitch1">
-        <label class="custom-control-label" for="customSwitch1"><b>View Unapproved</b></label>
-    </div>
+    @if (auth()->user()->member->admin->position == 'superadmin')
 
-   <div id="unapproved-panel" class="d-none">
-
-        <div id="unapproved-panel" class="d-flex justify-content-between flex-wrap mt-2">
-
-            @foreach ($unapproved as $post)
-
-            <div class="text-center mx-auto">
-                
-                <a href="/post/{{$post->id}}">
-
-                    <span onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-title">{{$post->title}}</span>
-
-                </a>
-
-                <a href="/post/{{$post->id}}">
-
-                    <div onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-card">
-                                                            
-                        @if (!empty($post->post_image) )                    
-
-                            <img src="{{url('/storage/images/posts/' . $post->post_image)}}" alt="" class="img-thumbnail m-auto">
-                                                
-                        @endif
-
-                        <span> {!!$post->body!!}</span>
-                            
-                    </div>      
-
-                </a> 
-                                                                    
-            </div>  
-
-            @endforeach       
-
+        <div class="custom-control custom-switch text-right mr-5 my-3 ">
+            <input type="checkbox" class="custom-control-input" id="customSwitch1">
+            <label class="custom-control-label" for="customSwitch1"><b>View Unapproved</b></label>
         </div>
 
-   </div>
+        <div id="unapproved-panel" class="d-none">
+
+            <div id="unapproved-panel" class="d-flex justify-content-between flex-wrap mt-2">
+
+                @foreach ($unapproved as $post)
+
+                <div class="text-center mx-auto">
+                    
+                    <a href="/post/{{$post->id}}">
+
+                        <span onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-title">{{$post->title}}</span>
+
+                    </a>
+
+                    <a href="/post/{{$post->id}}">
+
+                        <div onmouseout="onOut(document.getElementsByClassName('article-{{$post->id}}'))" onmouseover="onHover(document.getElementsByClassName('article-{{$post->id}}'))" class="article-{{$post->id}} article-card">
+                                                                
+                            @if (!empty($post->post_image) )                    
+
+                                <img src="{{url('/storage/images/posts/' . $post->post_image)}}" alt="" class="img-thumbnail m-auto">
+                                                    
+                            @endif
+
+                            <span> {!!$post->body!!}</span>
+                                
+                        </div>      
+
+                    </a> 
+                                                                        
+                </div>  
+
+                @endforeach       
+
+            </div>
+
+        </div>
+        
+    @endif
         
   @endif
 
@@ -75,9 +79,7 @@ Posts, Articles and News page of St Mark Institute Integrated Information System
 
     <h5 class="text-center m-2">Nothing to see here..</h5>
 
-@else 
-
-   
+@else    
 
    <div id="post-panel">
 

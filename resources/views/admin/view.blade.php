@@ -68,6 +68,7 @@
 @endif
 
 <h5>View</h5>
+@include('inc.messages')
 <?php 
     $admin = \App\Models\Admin::find(auth()->user()->member->member_id);
 ?>

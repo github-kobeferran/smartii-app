@@ -13,16 +13,12 @@ class RegistrarRequestsController extends Controller
 {
 
     public function viewDropRequests(){
-
-        $requests = RegistrarRequest::where('type', 'drop')->orderBy('created_at', 'desc')->paginate(5); 
-
+        $requests = RegistrarRequest::where('type', 'drop')->orderBy('created_at', 'desc')->paginate(10); 
         return view('admin.drop')->with('requests', $requests);
     }
 
     public function viewShiftRequests(){
-
-        $requests = RegistrarRequest::where('type', 'shift')->orderBy('created_at', 'desc')->paginate(5); 
-
+        $requests = RegistrarRequest::where('type', 'shift')->orderBy('created_at', 'desc')->paginate(10); 
         return view('admin.shift')->with('requests', $requests);
     }
 

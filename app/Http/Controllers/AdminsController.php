@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -37,6 +38,11 @@ class AdminsController extends Controller
 {    
     
     public function index(){            
+
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
 
         if(!empty(Setting::first())){
 
@@ -203,8 +209,41 @@ class AdminsController extends Controller
           
                 
     }
-    
 
+    public function delete(Request $request){
+        if($request->method() != "POST")
+            return redirect()->back();         
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|current_password',
+        ],[
+            'password.current_password' => 'Invalid password.',
+        ]);
+           
+        if ($validator->fails()) {
+            return redirect()->route('adminDashboard')->withErrors($validator);                                                        
+        }  
+
+        $admin = Admin::find($request->input('id'));
+        $admin->delete();
+        $admin->member->user->access_grant = 1;
+        $admin->member->user->save();
+
+        Auth::logout();
+        return redirect('/home');        
+    }
+
+    public function restore(Request $request){
+        if($request->method() != "POST")
+            return redirect()->back();
+
+        $admin = Admin::withTrashed()->find($request->input('id'));
+        $admin->restore();
+        $admin->member->user->access_grant = 0;
+        $admin->member->user->save();
+
+        return redirect()->route('adminView')->with('active', 'admins')->with('info', 'Admin ' . $admin->name . '\'s account has been restored.');
+    }
 
     public function showTable($table){
         switch($table){
@@ -212,6 +251,13 @@ class AdminsController extends Controller
 
                 $admins = Admin::orderBy('created_at', 'desc')->get();
                 return $admins->toJson();
+            case 'adminswithtrashed':
+
+                $admins = Admin::withTrashed()->orderBy('created_at', 'desc')->get();
+                foreach($admins as $admin){
+                    $admin->is_trashed;
+                }
+                return $admins;
             break;        
             case 'students':
 
@@ -237,6 +283,18 @@ class AdminsController extends Controller
                 foreach($faculties as $faculty ){
                     $faculty->specialty = $faculty->id;
                     $faculty->active_classes;
+                }
+
+                return $faculties->toJson();
+            break;    
+            case 'facultywithtrashed':
+
+                $faculties = Faculty::withTrashed()->get();        
+
+                foreach($faculties as $faculty ){
+                    $faculty->specialty = $faculty->id;
+                    $faculty->active_classes;
+                    $faculty->is_trashed;
                 }
 
                 return $faculties->toJson();
@@ -593,15 +651,28 @@ class AdminsController extends Controller
 
                 if($text == null){
 
-                    return Admin::all();                    
+                    $admins = Admin::withTrashed()->get();                    
+
+                    foreach($admins as $admin){
+                        $admin->is_trashed;
+                    }
+
+                    return $admins;
 
                 }else{
 
-                    return Admin::query()
+                    $admins = Admin::query()
                     ->where('name', 'LIKE',  $text . "%")
                     ->orWhere('email', 'LIKE',  $text . "%")
                     ->orWhere('position', 'LIKE', $text . "%")
-                    ->get()->toJson();                  
+                    ->withTrashed()
+                    ->get();                  
+
+                    foreach($admins as $admin){
+                        $admin->is_trashed;
+                    }
+
+                    return $admins;
                     
                 }    
 

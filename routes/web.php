@@ -88,10 +88,17 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::post('/admin/create/program', [App\Http\Controllers\ProgramsController::class, 'store'])->name('programStore');    
     Route::any('/updateprogram', [App\Http\Controllers\ProgramsController::class, 'update'])->name('updateProgram');
     Route::any('/deleteprogram', [App\Http\Controllers\ProgramsController::class, 'delete'])->name('program.delete');
+    //faculty functions
+    Route::post('/admin/create/faculty', [App\Http\Controllers\FacultiesController::class, 'store'])->name('facultyStore');    
+    Route::get('/remindtoarchive/{id}', [App\Http\Controllers\FacultiesController::class, 'remindToArchive']);
+    Route::any('/changefacultyspecialty', [App\Http\Controllers\FacultiesController::class, 'changeSpecialty']);
+    Route::any('/restorefaculty', [App\Http\Controllers\FacultiesController::class, 'restore'])->name('faculty.restore');        
+    //admin functions 
+    Route::post('/admin/create/admin', [App\Http\Controllers\AdminsController::class, 'store'])->name('adminStore');    
+    Route::any('/deleteadmin', [App\Http\Controllers\AdminsController::class, 'delete'])->name('admin.delete');        
+    Route::any('/restoreadmin', [App\Http\Controllers\AdminsController::class, 'restore'])->name('admin.restore');        
     //student
     Route::post('/admin/create/student', [App\Http\Controllers\StudentsController::class, 'store'])->name('studentCreate');                
-    Route::post('/admin/create/admin', [App\Http\Controllers\AdminsController::class, 'store'])->name('adminStore');    
-    Route::post('/admin/create/faculty', [App\Http\Controllers\FacultiesController::class, 'store'])->name('facultyStore');    
     Route::post('/admin/create/class', [App\Http\Controllers\StudentClassesController::class, 'store'])->name('classStore');    
     Route::post('/admin/create/room', [App\Http\Controllers\RoomsController::class, 'store'])->name('roomStore');    
     Route::any('/admin/create/invoice', [App\Http\Controllers\InvoicesController::class, 'store'])->name('createInvoice');    
@@ -197,10 +204,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::get('/countclass/{prog}/{subj}', [App\Http\Controllers\StudentClassesController::class, 'countClasses']);
     //no forms
     Route::get('/remindapplicationform', [App\Http\Controllers\UsersController::class, 'remindToSubmit']);
-    Route::any('/deletenoform', [App\Http\Controllers\UsersController::class, 'deleteNoAdmissionForms']);    
-    //faculty functions
-    Route::get('/remindtoarchive/{id}', [App\Http\Controllers\FacultiesController::class, 'remindToArchive']);
-    Route::any('/changefacultyspecialty', [App\Http\Controllers\FacultiesController::class, 'changeSpecialty']);
+    Route::any('/deletenoform', [App\Http\Controllers\UsersController::class, 'deleteNoAdmissionForms']);        
     // registrar requests
     Route::get('/droprequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewDropRequests'])->name('drop.view')->middleware(['admin.registrar']);
     Route::get('/shiftrequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewShiftRequests'])->name('shift.view')->middleware(['admin.registrar']);
@@ -255,7 +259,7 @@ Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->
     Route::get('/facultydetails/{id?}', [App\Http\Controllers\FacultiesController::class, 'show'])->middleware(['verified'])->name('facultydetails');
     Route::get('/showfacultydetail/{id}/{detail}', [App\Http\Controllers\FacultiesController::class, 'showDetail'])->name('showdetail');
     Route::any('/updatefaculty', [App\Http\Controllers\FacultiesController::class, 'update'])->name('updatefaculty');        
-    
+    Route::any('/deletefaculty', [App\Http\Controllers\FacultiesController::class, 'delete'])->name('faculty.delete');           
 });
 
 

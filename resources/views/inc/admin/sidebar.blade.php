@@ -184,19 +184,7 @@
                     </span>
                 </a>
             
-            </li>
-            <li class="has-subnav">
-                @if(\App\Models\PaymentRequest::pendingRequestCount() > 0)
-                    <span class="badge badge-danger rounded-circle">{{\App\Models\PaymentRequest::pendingRequestCount()}}</span>
-                @endif
-                <a href="/admin/paymentrequests/">
-                    <i  class="fa fa-bell sidebar-icon" aria-hidden="true"></i>
-                    <span class="nav-text">
-                    Payment Requests
-                    </span>                    
-                </a>            
-            
-            </li>
+            </li>           
             <li>
                 <a href="/admin/settings">
                     <i class="fa fa-cogs sidebar-icon" aria-hidden="true"></i>
@@ -264,20 +252,7 @@
                     </span>
                 </a>
             
-            </li>
-            <li class="has-subnav">
-                @if(\App\Models\PaymentRequest::pendingRequestCount() > 0)
-                    <span class="badge badge-primary ">{{\App\Models\PaymentRequest::pendingRequestCount()}}</span>
-                @endif
-                <a href="/admin/paymentrequests/">
-                    <i  class="fa fa-bell sidebar-icon" aria-hidden="true"></i>
-                    <span class="nav-text">
-                    Payment Requests
-                    </span>
-                    
-                </a>            
-            
-            </li>
+            </li>           
             
         @endif
 

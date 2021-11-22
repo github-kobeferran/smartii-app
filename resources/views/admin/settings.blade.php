@@ -46,7 +46,7 @@
 <div class="row">  
 
     <div class="col-sm-8">                                
-{!! Form::open(['url' => 'admin/update/setting', 'id' => 'settingsForm']) !!}
+{!! Form::open(['url' => 'admin/update/setting', 'id' => 'settingsForm']) !!}    
 
     <div class="container border m-2">
 

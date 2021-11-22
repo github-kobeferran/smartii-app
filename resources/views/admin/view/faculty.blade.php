@@ -49,10 +49,8 @@ document.getElementById('faculty-view-tab').addEventListener('click', function()
 });
 
 function viewFaculty(btn){      
-  
-
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', APP_URL + '/admin/view/faculty', true);
+    xhr.open('GET', APP_URL + '/admin/view/facultywithtrashed', true);
 
     spinner_grow.classList.remove('d-none');
     btn.style.pointerEvents = "none";
@@ -66,11 +64,16 @@ function viewFaculty(btn){
             let modals = `<div id="modals">`;
 
             for (let i in faculty) {
-                output += '<tr>' +
+                output += `<tr class="${faculty[i].is_trashed ? 'text-muted': '' }">` +
                     '<th scope="row">' + faculty[i].faculty_id + '</th>' +
-                    '<td>' + ucfirst(faculty[i].last_name) + ', ' + ucfirst(faculty[i].first_name) + ', ' + ucfirst(faculty[i].middle_name) +'</td>' +                  
-                    '<td><button data-toggle="modal" data-target="#modal' + faculty[i].faculty_id + `" class="btn ${Object.keys(faculty[i].active_classes).length  > 0 ? `btn-success`: `btn-info`} text-white"> Show </buton></td>` +                  
-                '</tr>';     
+                    '<td>' + ucfirst(faculty[i].last_name) + ', ' + ucfirst(faculty[i].first_name) + ', ' + ucfirst(faculty[i].middle_name) +'</td>';
+
+                    if(faculty[i].is_trashed)
+                        output += `<td><button data-toggle="modal" data-target="#restore-${faculty[i].id}" class="btn btn-secondary text-white"> Restore <i class="fa fa-recycle" aria-hidden="true"></i> </buton></td>`;
+                    else
+                        output +=  '<td><button data-toggle="modal" data-target="#modal' + faculty[i].faculty_id + `" class="btn ${Object.keys(faculty[i].active_classes).length  > 0 ? `btn-success`: `btn-info`} text-white"> Show </buton></td>`;                  
+
+                output+= '</tr>';     
 
                 modals += `<div class="modal fade" id="modal`+ faculty[i].faculty_id +`" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -139,7 +142,33 @@ function viewFaculty(btn){
                        
                         </div>
                     </div>
-                </div>`;  
+                </div>
+                
+                <div class="modal fade" id="restore-${faculty[i].id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-info">
+                                <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Restore ${faculty[i].first_name} ${faculty[i].last_name}?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {!!Form::open(['url' => '/restorefaculty']) !!}
+                                <div class="modal-body text-justify">
+                                    <h5><span class="text-white">Restoring ${faculty[i].first_name} ${faculty[i].last_name}</span></h5>
+                                    <p>Restoring this instructor will make his/her available for schedules again.</p>
+                                    <p>Continue?</p>
+                                    <input type="hidden" name="id" value="${faculty[i].id}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Yes, restore ${faculty[i].first_name} ${faculty[i].last_name} SMARTII Account</button>
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                </div>
+                            {!!Form::close()!!}
+                        </div>
+                    </div>
+                </div>
+                `;  
             }
 
             output += '</tbody>';                             

@@ -39,7 +39,7 @@ class StudentClass extends Model
     }
 
     public function faculty(){
-        return $this->belongsTo(Faculty::class);
+        return $this->belongsTo(Faculty::class)->withTrashed();
     }    
 
     public function students_list_string(){
