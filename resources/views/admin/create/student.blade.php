@@ -1,230 +1,182 @@
-{!! Form::open(['url' => 'admin/create/student', 'id' => 'studentForm']) !!}
-    <div class="custom-control custom-switch">
-        <input name="new_stud_switch" type="checkbox" class="custom-control-input" id="newStudSwitch">
-        <label class="custom-control-label" for="newStudSwitch"><strong>Generate Student ID</strong></label>
+<div class="container ml-0">
+    {!! Form::open(['url' => 'admin/create/student', 'id' => 'studentForm']) !!}
+    <div class="row">
+        <div class="col-lg-6">
+
+            <div>
+                <div class="custom-control custom-switch float-left">
+                    <input name="new_stud_switch " type="checkbox" class="custom-control-input" id="newStudSwitch">
+                    <label class="custom-control-label " for="newStudSwitch"><strong>Generate Student ID</strong></label>
+                </div>
+                <div id="new-stud-div" class="form-group" style="display:block;">         
+                    <b>{{Form::label('studentId', 'Student ID', ['class' => 'float-right'])}}</b>
+                    {{Form::text('student_id', '', ['maxlength' => '8', 'class' => 'form-control material-input', 'id' => 'studentID', 'required' => 'required', 'placeholder' => 'ex. C18-2159'])}}
+                </div> 
+            </div>           
+
+        </div>
     </div>
 
-    <div id="new-stud-div" class="form-group" style="display:block;">         
-        {{Form::label('studentId', 'Student ID', ['class' => 'mt-3'])}}
-        {{Form::text('student_id', '', ['maxlength' => '8', 'class' => 'form-control w-25 ', 'id' => 'studentID', 'required' => 'required', 'placeholder' => 'ex. C18-2159'])}}
-    </div> 
+    <hr >
 
+    <div class="row mt-3 ">
+        <div class="col-lg ">
 
-
- <hr class= "w-75 ml-0"/>
-
-
-
-{{-- row0 --}}
-    <div class="row">    
-
-        <div class="col-sm-5"> 
-
-                <div class="form-inline">
+            <div class="row no-gutters">
+                <div class="col-lg-6">
                     <b>{{Form::label('department', 'Department')}}</b>
-                    {{Form::select('department', 
-                      ['0' => 'Senior High School',                              
-                      '1' => 'College'], 0,
-                      ['class' => 'custom-select w-50 ml-2', 'id' => 'selectDept'])}}                   
+                    {{Form::select('department', ['0' => 'Senior High School', '1' => 'College'], 0, ['class' => 'custom-select material-input', 'id' => 'selectDept'])}}                   
+                    <b>{{Form::label('level', 'Student Level',  ['class' => 'mt-3'])}}</b>
+                    {{Form::select('level', [], null, ['class' => 'custom-select material-input', 'id' => 'selectLevel'])}}                   
                 </div>
-                
-                <div class="form-inline">
-                    <b>{{Form::label('level', 'Student Level',  ['class' => 'mt-2'])}}</b>
-                    {{Form::select('level', [], null, ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectLevel'])}}                   
+                <div class="col-lg-6">
+                    <b>{{Form::label('program', 'Program')}}</b>
+                    {{Form::select('program_id', [], null, ['class' => 'custom-select material-input' , 'id' => 'selectProg'])}}                   
+    
+                    <b>{{Form::label('semester', 'Semester',  ['class' => 'mt-2'])}}</b>
+                    {{Form::select('semester', ['1' => 'First Semester', '2' => 'Second Semester'], null, ['class' => 'custom-select material-input mt-2 ', 'id' => 'selectSemester'])}}                   
                 </div>
-
-        </div>
-
-        <div class="col-sm-7"> 
-
-            <div class="form-inline">
-                  <b>{{Form::label('program', 'Program')}}</b>
-                  {{Form::select('program_id', [], null, ['class' => 'custom-select ml-2' , 'id' => 'selectProg'])}}                   
-            </div>
-
-            <div class="form-inline">
-                  <b>{{Form::label('semester', 'Semester',  ['class' => 'mt-2'])}}</b>
-                  {{Form::select('semester', ['1' => 'First Semester',
-                                              '2' => 'Second Semester'], null,
-                                              ['class' => 'custom-select w-50 mt-2 ml-2', 'id' => 'selectSemester'])}}                   
             </div>
 
         </div>
+    </div>
 
-    </div>  
-    
-    
+    <hr>
 
-    <hr class= "w-75 ml-0"/>
+    <div class="row mt-3 ">
 
-
-
-    <div class="row "> 
-
-        <div class="col-sm">  
-
-            <div class = "form-group">        
-                {{Form::label('', 'Email Address', ['class' => 'mt'])}}
-                {{Form::email('email', '', ['class' => 'form-control rounded-0', 'required' => 'required', 'placeholder' => 'Email here..'])}}
-            </div> 
-
-        </div>
-
-        <div class="col-sm">  
-
-            <div class = "form-group">        
-                {{Form::label('theContact', 'Contact Number', ['class' => 'mt'])}}
-                {{Form::text('contact', '', ['minlength' => '11', 'maxlength' => '11','class' => 'form-control rounded-0 w-50', 'placeholder' => 'Contact Number here..', 'id' => 'contactInput'])}}
-            </div> 
-
+        <div class="col-lg">
+            <div class="row">
+                <div class="col-lg-6">
+                    <b>{{Form::label('', 'Email Address', ['class' => ''])}}</b>
+                    {{Form::email('email', '', ['class' => 'form-control rounded-0 material-input', 'required' => 'required', 'placeholder' => 'Email here..'])}}
+                </div>
+                <div class="col-lg-3">
+                    <b>{{Form::label('theContact', 'Contact Number', ['class' => ''])}}</b>
+                    {{Form::text('contact', '', ['minlength' => '11', 'maxlength' => '11','class' => 'form-control material-input rounded-0 ', 'placeholder' => 'Contact Number here..', 'id' => 'contactInput'])}}
+                </div>
+                <div class="col-lg-3">
+                    <b>{{Form::label('program', 'Sex')}}</b>
+                    {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select rounded-0 material-input' , 'id' => 'selectProg', 'required' => 'required'])}}                   
+                </div>
+            </div>
         </div>
 
     </div>
 
+    <hr>
 
-    <hr class= "w-75 ml-0"/>
+    <div class="row mt-3">
 
-    
-    <div class="row">    
-
-        <div class="col-sm">  
-
-            <div class = "form-group">        
-                {{Form::label('lastName', 'Last Name', ['class' => 'mt'])}}
-                {{Form::text('last_name', '', ['class' => 'form-control', 'placeholder' => 'Last Name here..', 'required' => 'required'])}}
-            </div> 
-
-            <div class = "form-group">        
-                {{Form::label('middleName', 'Middle Name')}}
-                {{Form::text('middle_name', '', ['class' => 'form-control', 'placeholder' => 'Middle Name here..', 'required' => 'required'])}}
-            </div> 
-                   
+        <div class="col-lg-4">
+            <b>{{Form::label('lastName', 'Last Name', ['class' => ''])}}</b>
+            {{Form::text('last_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Last Name here..', 'required' => 'required'])}}
         </div>
-
-        <div class="col-sm"> 
-
-            <div class = "form-group">        
-                {{Form::label('firstName', 'First Name')}}
-                {{Form::text('first_name', '', ['class' => 'form-control', 'placeholder' => 'First Name here..' , 'required' => 'required'])}}
-            </div>  
-
-            {{Form::label('', 'Date of Birth')}}
-            <div class = "form-group">                         
-                {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'form-control w-50 rounded-0 ml-2', 'id' => 'dob', 'max' => \Carbon\Carbon::now()->subYears(15)->toDateString() ] )}}
-            </div> 
-
+        <div class="col-lg-4">
+            <b>{{Form::label('firstName', 'First Name')}}</b>
+            {{Form::text('first_name', '', ['class' => 'form-control material-input', 'placeholder' => 'First Name here..' , 'required' => 'required'])}}
         </div>
-
-      
-
-    </div>
-    
-
-    <hr class= "w-75 ml-0"/>
-
-
-    <div class="row">    
-
-         <div class="col-sm">  
-
-            <div class = "form-group">        
-                {{Form::label('permanent_address', 'Permanent Address')}}
-                {{Form::text('permanent_address', '', ['class' => 'form-control rounded-0', 'placeholder' => 'Permanent Address'])}}
-            </div>
-
-            <div class = "form-group">        
-                {{Form::label('present_address', 'Present Address')}}
-                {{Form::text('present_address', '', ['class' => 'form-control rounded-0 w-50', 'placeholder' => 'Present Address'])}}
-            </div> 
-            
-        </div>
-
-        <div class="col-sm">
-            {{Form::label('program', 'Sex')}}
-            <div class="form-inline">
-            
-                {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select rounded-0 w-50 ml-2' , 'id' => 'selectProg', 'required' => 'required'])}}                   
-          </div>
-
+        <div class="col-lg-4">
+            <b>{{Form::label('middleName', 'Middle Name')}}</b>
+            {{Form::text('middle_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Middle Name here..', 'required' => 'required'])}}
         </div>
 
     </div>
-      
 
-    <hr class= "w-75 ml-0"/> 
+    <hr>
 
-    @if (\App\Models\Discount::count() > 0)
+    <div class="row mt-3">
 
-        <div class="row mb-2">
-            <div class="col-2 ">
-                    <label class="align-middle" for="">Apply a Discount</label>
-            </div>
-            <div class="col">
-                <select name="discount[]" value="" id="select-discount" class="custom-select w-50 rounded-0" multiple>                    
-                    @foreach (\App\Models\Discount::all() as $discount)
-                        <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="col-lg-8">
+            <b>{{Form::label('permanent_address', 'Permanent Address')}}</b>
+            {{Form::text('permanent_address', '', ['class' => 'form-control rounded-0 material-input', 'placeholder' => 'Permanent Address'])}}
         </div>
-                        
-
-    @else
-
-    @endif
-      
-    <div class="row" >
-
-        <div class="col-sm">
-
-            Transferee<strong>?</strong>
-            <div class="form-check form-check-inline ml-4">  
-                {{Form::label('', 'No')}}                 
-                {{ Form::radio('transferee', '0', true, ['class' => 'mb-2 ml-2'] )}}
-                {{Form::label('', 'Yes', ['class' => 'mb-2 ml-2'])}}                 
-                {{ Form::radio('transferee', '1', false, ['class' => 'mb-2 ml-2'])}}
-            </div>  
-
-        </div>  
-
-        <div class="col-sm">
-
-            Student Type<strong>?</strong>
-            <div class="form-check form-check-inline ml-4">  
-                {{Form::label('', 'Regular')}}                 
-                {{ Form::radio('cur_status', '0', true, ['class' => 'mb-2 ml-2'] )}}
-                {{Form::label('', 'Irregular', ['class' => 'mb-2 ml-2'])}}                 
-                {{ Form::radio('cur_status', '1', false, ['class' => 'mb-2 ml-2'])}}
-            </div>  
-            
+        <div class="col-lg-4">
+            <b>{{Form::label('', 'Date of Birth')}}</b>
+            {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'form-control rounded-0 material-input', 'id' => 'dob', 'max' => \Carbon\Carbon::now()->subYears(15)->toDateString() ] )}}
         </div>
-
-    </div>  
-
-    <div class = "form-group mr-0">        
-        {{Form::submit('Save',  ['class' => 'btn btn-success w-25 mt-3'])}}
-    </div> 
-    <hr class=""/> 
-    
-    <h3>Subjects<span class="lead"><em> leave empty for default values in settings</em></span></h3>
-    
-    <div class="table-responsive">
-
-        <table class="table table-striped h-50" id="subjects-table">
-            
-        </table>
 
     </div>
 
+    <hr>    
 
-    {{-- {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{SUBMIT}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} --}}
-   <hr class= "w-75 ml-0"/>
+    <div class="row mt-3">
 
+        <div class="col-lg-8">
+            <b>{{Form::label('present_address', 'Present Address')}}</b>
+            {{Form::text('present_address', '', ['class' => 'form-control rounded-0 material-input', 'placeholder' => 'Present Address'])}}
+        </div>
+        <div class="col-lg-4">
+            <div class="mt-2">
+                <b>Transferee ?</b>
+                <div class="form-check form-check-inline">  
+                    {{Form::label('', 'No')}}                 
+                    {{ Form::radio('transferee', '0', true, ['class' => 'mb-2 ml-2'] )}}
+                    {{Form::label('', 'Yes', ['class' => 'mb-2 ml-2'])}}                 
+                    {{ Form::radio('transferee', '1', false, ['class' => 'mb-2 ml-2'])}}
+                </div>  
+            </div>
+            <div class="mt-2">
+                <b>Student Type ?</b>
+                <div class="form-check form-check-inline">  
+                    {{Form::label('', 'Regular')}}                 
+                    {{ Form::radio('cur_status', '0', true, ['class' => 'mb-2 ml-2'] )}}
+                    {{Form::label('', 'Irregular', ['class' => 'mb-2 ml-2'])}}                 
+                    {{ Form::radio('cur_status', '1', false, ['class' => 'mb-2 ml-2'])}}
+                </div>  
+            </div>
+        </div>
 
-    {{-- {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{SUBMIT}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} --}}
+    </div>
 
+    <hr>    
 
-{!! Form::close() !!}
+    <div class="row mt-3">
+        <div class="col-lg-8">
+            @if (\App\Models\Discount::count() > 0)
+
+                <div class="row mb-2">
+                    <div class="col-2 ">
+                            <b><label class="align-middle" for="">Apply a Discount</label></b>
+                    </div>
+                    <div class="col">
+                        <select name="discount[]" value="" id="select-discount" class="custom-select rounded-0 material-input" multiple>                    
+                            @foreach (\App\Models\Discount::all() as $discount)
+                                <option value="{{$discount->id}}">{{$discount->description}} ({{number_format($discount->percentage, 1)}} %)</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                                    
+            @endif
+        </div>
+    </div>
+    
+    <hr>
+
+    <div class="row mt-3">
+        <div class="col-lg">
+            <h5 style="font-size: 2em;">Subjects</h5>
+            <span class="lead"><em> leave empty for default values in settings</em></span>
+
+            <div class="table-responsive">
+                <table class="table table-striped h-50" id="subjects-table">
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row mt-3">
+        <div class="col-lg mb-3">
+            {{Form::submit('Save',  ['class' => 'btn btn-block btn-success'])}}
+        </div>
+    </div>
+    
+    {!! Form::close() !!}
+</div>
 
 <script>
 
@@ -486,5 +438,7 @@ function subjectToggle(el, row){
     
     }
 }
+
+
 
 </script>

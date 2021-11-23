@@ -18,7 +18,7 @@ class Invoice extends Model
     }    
 
     public function admin(){
-        return $this->hasOne(Admin::class, 'id',  'admin_id');
+        return $this->hasOne(Admin::class, 'id',  'admin_id')->withTrashed();
     }    
 
     public function setStudNameAttribute($stud_id){

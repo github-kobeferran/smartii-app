@@ -618,3 +618,10 @@ tbody td {
 .blue-bg-light{
     background-color: #c9fcfca1 !important;
 }
+
+.material-input{
+    filter: drop-shadow(0 0 0.3rem #05551c9a);
+    border-radius: 0% !important;   
+    color: black !important; 
+    font-weight: bold !important;
+}

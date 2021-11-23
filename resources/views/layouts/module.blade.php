@@ -27,15 +27,13 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">    
  
     @yield('charts')            
                 
 </head>
-<body>  
+<body>      
   
-
     <script>      
         
         var APP_URL = {!! json_encode(url('/')) !!}    
@@ -165,7 +163,7 @@
 
                 @endif
     
-  
+                
     <script src="{{ asset('js/app.js') }}" defer></script>  
 
     @yield('javascript')

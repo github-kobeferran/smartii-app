@@ -7,27 +7,27 @@
         
         <div class = "form-group">        
             {{Form::label('Last Name', 'Last Name', ['class' => 'mt'])}}
-            {{Form::text('last_name', '', ['class' => 'form-control', 'placeholder' => 'Last Name here..'])}}
+            {{Form::text('last_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Last Name here..'])}}
         </div> 
 
         <div class = "form-group">        
             {{Form::label('First Name', 'First Name', ['class' => 'mt'])}}
-            {{Form::text('first_name', '', ['class' => 'form-control', 'placeholder' => 'First Name here..'])}}
+            {{Form::text('first_name', '', ['class' => 'form-control material-input', 'placeholder' => 'First Name here..'])}}
         </div> 
 
         <div class = "form-group">        
             {{Form::label('Middle Name', 'Middle Name', ['class' => 'mt'])}}
-            {{Form::text('middle_name', '', ['class' => 'form-control', 'placeholder' => 'Middle Name here..'])}}
+            {{Form::text('middle_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Middle Name here..'])}}
         </div> 
 
         {{Form::label('dob', 'Date of Birth')}}
         <div class = "form-group">                        
-            {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2', 'id' => 'dob'] )}}
+            {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'ml-2 form-control w-50 material-input', 'id' => 'dob'] )}}
         </div> 
 
         <div class = "form-group">        
             {{Form::label('email', 'Email Address', ['class' => 'mt'])}}
-            {{Form::email('email', '', ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Email here..'])}}
+            {{Form::email('email', '', ['class' => 'form-control material-input', 'required' => 'required', 'placeholder' => 'Email here..'])}}
         </div>      
         
         <?php
@@ -36,7 +36,7 @@
 
         <label for="">Specialty (Select Program)</label>
         <div class="form-inline">            
-            {{Form::select('program_id', $programs, null, ['required' => 'required', 'id' => 'programSelect', 'placeholder' => '--Select a Specialty--', 'class' => 'form-control mr-2'])}}
+            {{Form::select('program_id', $programs, null, ['required' => 'required', 'id' => 'programSelect', 'placeholder' => 'Select Faculty Specialty', 'class' => 'form-control material-input mr-2'])}}
             {{Form::hidden('all_program', 0)}}
             <input type="checkbox" name="all_program" value="1" class="form-check-input" style="width: 25px; height: 25px;" id="programCheck">
             <label class="form-check-label" for="exampleCheck1">Check to make faculty elligble for all Programs</label>

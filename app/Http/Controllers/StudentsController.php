@@ -311,9 +311,8 @@ class StudentsController extends Controller
                     Mail::to($user)->send(new WelcomeMember(ucfirst($student->first_name), $password));                    
                     $user->sendEmailVerificationNotification();
 
-                    $status ='success';
-                    $message = 'Student '. ucfirst($student->first_name) . ' ' .
-                    ucfirst($student->last_name) . ' has been successfully created';
+                    $status ='success_with_link';
+                    $message = 'Student <a target="_blank" href="'. url('studentprofile/'. $student->student_id) .'">'. ucfirst($student->first_name) . ' ' . ucfirst($student->last_name) . '</a> has been successfully created';
                 }
 
           
@@ -356,9 +355,8 @@ class StudentsController extends Controller
                     Mail::to($user)->send(new WelcomeMember(ucfirst($student->first_name) . ' ' . ucfirst($student->last_name), $password));
                     $user->sendEmailVerificationNotification();
 
-                    $status ='success';
-                    $message = 'Student '. ucfirst($student->first_name) . ' ' .
-                     ucfirst($student->last_name) . ' has been successfully created';
+                    $status ='success_with_link';
+                    $message = 'Student <a target="_blank" href="'. url('studentprofile/'. $student->student_id) .'">'. ucfirst($student->first_name) . ' ' . ucfirst($student->last_name) . '</a> has been successfully created';
                 }              
 
             } else {

@@ -32,7 +32,7 @@ class DiscountsController extends Controller
 
         $discount->save();
 
-        return redirect()->route('adminPayment')->with('succes', 'Discount Created Successfully');
+        return redirect()->route('adminPayment')->with('success', 'Discount Created Successfully');
         
     }
 

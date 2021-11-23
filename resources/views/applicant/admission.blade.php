@@ -240,7 +240,7 @@ Define your own CSS3 animations in the CSS.
                         <div class="multisteps-form__content">
 
                             <div class="form-group text-center text-white">                                 
-                                
+                               
                                 <button id="btnShsSelect"  value="0" onclick="toggleDepartment(document.getElementById('btnShsSelect'))" style="height: 100px; width: 120px;" type="button" class="btn btn-primary m-1 " data-toggle="button" aria-pressed="false" autocomplete="off">
                                     <h4>Senior High School</h4>
                                 </button>
@@ -267,13 +267,15 @@ Define your own CSS3 animations in the CSS.
                         <script>
                           let val_dept = null;
                           let val_prog = null;
+                          let test = null;
 
                         </script>
 
-                        @if (session('dept'))                          
+                        @if (session()->has('dept'))                          
 
                           <script>
-                              val_dept = {!! json_encode(session()->get('dept')) !!}
+                              val_dept = {!! json_encode(session()->get('dept')) !!}                              
+                              test = {!! json_encode(session()->get('test')) !!}                              
                           </script>
 
                           <script>
@@ -286,7 +288,7 @@ Define your own CSS3 animations in the CSS.
 
                         @endif                 
 
-                        @if (session('l_name'))                          
+                        @if (session()->has('l_name'))                          
 
                           <script>
                             val_l_name = {!! json_encode(session()->get('l_name')) !!}
@@ -620,11 +622,12 @@ let theProgramOutput = '';
 let agreeCheck = document.getElementById('agreeCheck');
 let submitbutton = document.getElementById('submitbutton');
 
-window.addEventListener('load', (event) => {      
+window.addEventListener('load', (event) => {         
 
   if(typeof val_dept !== 'undefined' && typeof val_prog_desc != 'undefined' && typeof val_l_name === 'undefined' ){    
 
-    if(val_dept == 0){
+    if(val_dept == "0"){
+
       monitorInputs.className = "text-center";
       hiddenDept.value = "0";  
       step1.disabled = true;  
@@ -648,7 +651,7 @@ window.addEventListener('load', (event) => {
     step1.disabled = true;  
     step2.disabled = true;  
 
-    if(val_dept == 0){
+    if(val_dept == "0"){
       monitorInputs.className = "text-center";
       hiddenDept.value = "0";  
       step1.disabled = true;  

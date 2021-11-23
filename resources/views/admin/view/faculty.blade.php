@@ -1,4 +1,3 @@
-@include('inc.messages')
 
 <div class="form-group">    
     <input id="faculty-search" type="text" class="form-control" placeholder="Search Name here..">

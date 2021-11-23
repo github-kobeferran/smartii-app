@@ -27,7 +27,7 @@ class PaymentRequest extends Model
     }
 
     public function admin(){
-        return $this->belongsTo(Admin::class, 'admin_id', 'id');
+        return $this->belongsTo(Admin::class, 'admin_id', 'id')->withTrashed();
     }
 
     public function setStudIdAttribute($id){

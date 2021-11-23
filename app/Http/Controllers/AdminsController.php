@@ -95,14 +95,26 @@ class AdminsController extends Controller
     }
 
     public function adminCreate(){
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
         return view('admin.create')->with('empty', 'active');
     }
 
     public function adminView(){
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
         return view('admin.view');
     }
 
     public function adminPayment(){
+        if(auth()->user()->access_grant == 1){
+            Auth::logout();
+            return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
+        }
         return view('admin.payment');
     }
 

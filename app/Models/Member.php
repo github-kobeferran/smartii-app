@@ -15,11 +15,11 @@ class Member extends Pivot
     }
     
     public function admin(){
-        return $this->belongsTo(Admin::class, 'member_id', 'id');    
+        return $this->belongsTo(Admin::class, 'member_id', 'id')->withTrashed();    
     }
 
     public function student(){
-        return $this->belongsTo(Admin::class, 'member_id', 'id');    
+        return $this->belongsTo(Admin::class, 'member_id', 'id')->withTrashed();    
     }
 
     public function faculty(){

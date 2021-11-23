@@ -662,6 +662,13 @@ tbody td {
   background-color: #c9fcfca1 !important;
 }
 
+.material-input {
+  filter: drop-shadow(0 0 0.3rem #05551c9a);
+  border-radius: 0% !important;
+  color: black !important;
+  font-weight: bold !important;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors

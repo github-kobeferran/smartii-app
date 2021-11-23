@@ -81,7 +81,7 @@ class ApplicantsController extends Controller
     public function store(Request $request){                 
         if($request->method() != 'POST'){
             return redirect()->back();
-        }
+        }        
 
         if(Applicant::where('email', auth()->user()->email)->exists()) {
             return redirect()->route('appStatus');
@@ -108,16 +108,19 @@ class ApplicantsController extends Controller
         }
 
         $before_date = Carbon::now()->subYears(15);
+        $req_age = 15;
         
-        if($request->input('dept'))
+        if($request->input('dept')){
             $before_date = Carbon::now()->subYears(18);
+            $req_age = 18;
+        }
         
         $after_date = new Carbon('1903-01-01');
 
         $validated = ['dept' => $request->input('dept'),
                       'prog' => $request->input('program_id'),
                       'prog_desc' => Program::find($request->input('program_id'))->desc,
-                    ];                    
+                     ];        
 
         $validator = Validator::make($request->all(), [
             
@@ -148,10 +151,12 @@ class ApplicantsController extends Controller
 
             'dob.required' => 'Date of Birth is required.',
             'dob.date' => 'Date of Birth is invalid.',
-            'dob.before' => 'Date of Birth must be before ' . $before_date->isoFormat('MMMM DD, YYYY'),
+            'dob.before' => 'Must be ' .  $req_age . ' years or older. Date of Birth must be before ' . $before_date->isoFormat('MMMM DD, YYYY'),
             'dob.after' => 'Date of Birth must be after ' .  $after_date->isoFormat('MMMM DD, YYYY'),
 
         ]);        
+
+       
 
         if ($validator->fails()) {         
             return redirect()->route('admissionForm')
@@ -197,6 +202,8 @@ class ApplicantsController extends Controller
             'report_card.mimes' => 'The Form 138 File must be in JPEG file format.',
 
         ]);
+
+        return $validated['dept'];
 
         if ($validator->fails()) {   
             return redirect()->route('admissionForm')
