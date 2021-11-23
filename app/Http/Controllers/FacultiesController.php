@@ -37,9 +37,9 @@ class FacultiesController extends Controller
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
-            'last_name' => 'required|regex:/^[\pL\s\-]+$/u|max:100', 
-            'first_name' => 'required|regex:/^[\pL\s\-]+$/u|max:100', 
-            'middle_name' => 'regex:/^[\pL\s\-]+$/u|max:100', 
+            'last_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100', 
+            'first_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100', 
+            'middle_name' => 'regex:/^[a-zA-Z Ññ-]*$/|max:100', 
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
             'email' => 'required',             
         ]);
@@ -478,21 +478,21 @@ class FacultiesController extends Controller
             case 'last_name': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',
+                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:100',
                 ]);
 
             break;
             case 'first_name': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',                      
+                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:100',                      
                 ]);
 
             break;
             case 'middle_name': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',                       
+                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:100',                       
                 ]);
 
             break;
@@ -515,7 +515,7 @@ class FacultiesController extends Controller
             case 'civil_status': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50|in:married,single,divorced,widowed,annuled',                       
+                    'detail' => 'nullable|regex:/^[a-zA-Z -]*$/|max:50|in:married,single,divorced,widowed,annuled',                       
                 ],[
                     'detail.in' => 'Invalid detail value. Civil Status value must either be: Single, Married, Divorced, Annuled or Widowed.'
                 ]);
@@ -524,14 +524,14 @@ class FacultiesController extends Controller
             case 'religion': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:25',                      
+                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:25',                      
                 ]);
 
             break;
             case 'college_alumni': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[\pL\s\-]+$/u|max:100',
+                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:100',
                 ]);
 
             break;
@@ -674,8 +674,8 @@ class FacultiesController extends Controller
 
         $faculty = Faculty::find($request->input('id'));
         $faculty->delete();
-        $faculty->member->user->access_grant = 1;
-        $faculty->member->user->save();
+        auth()->user()->access_grant = 1;
+        auth()->user()->save();
 
         Auth::logout();
         return redirect('/home');

@@ -193,6 +193,9 @@ function selectTable(mode){
                             case 0:
                                 output+= `<span class="float-left text-secondary">drop request pending</span>`;
                                 break;
+                            // case 1:
+                            //     output+= `<span class="float-left text-secondary">drop request pending</span>`;
+                                break;
                             case 2:
                                 output+= `<span class="float-left text-danger">drop request denied ${students[i].drop_request.reject_reason != null ? `(` +students[i].drop_request.reject_reason  +`)` : ``}</span>`;                                
                                 break;

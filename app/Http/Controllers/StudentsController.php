@@ -148,9 +148,9 @@ class StudentsController extends Controller
             'email' => 'required',
             'gender' => 'required',
             'contact' => 'required|digits:11',
-            'last_name' => 'required|regex:/^[\pL\s\-]+$/u|max:100',
-            'first_name' => 'required|regex:/^[\pL\s\-]+$/u|max:100',
-            'middle_name' => 'regex:/^[\pL\s\-]+$/u|max:100',
+            'last_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100',
+            'first_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100',
+            'middle_name' => 'regex:/^[a-zA-Z Ññ-]*$/|max:100',
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
             'permanent_address' => 'required|max:191',
             'present_address' => 'required|max:191',      
@@ -523,13 +523,13 @@ class StudentsController extends Controller
         $student = Student::find($id);
 
         $validator = Validator::make($request->all(), [
-            'nationality' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',
-            'civil_status' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50', 
-            'religion' => 'nullable|regex:/^[\pL\s\-]+$/u|max:50',
+            'nationality' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:50',
+            'civil_status' => 'nullable|regex:/^[a-zA-Z-]*$/|max:50', 
+            'religion' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:50',
             'contact' => 'nullable|digits:11',             
-            'father_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
-            'mother_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
-            'guardian_name' => 'nullable|regex:/^[\pL\s\-]+$/u|max:191',
+            'father_name' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:191',
+            'mother_name' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:191',
+            'guardian_name' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:191',
             'emergency_person_contact' => 'nullable|digits:11',                      
         ]);
        

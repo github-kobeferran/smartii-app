@@ -71,7 +71,7 @@
                         <?php $eligibility = true; ?>
 
                         <tr>
-                            <td>{{$subject->desc}}</td>
+                            <td><h5 class="roboto-font">{{$subject->desc}}</h5></td>
 
                             @if (is_array($lastSemStatus[$counter]))
                                     
@@ -188,15 +188,15 @@
                                     <span class="text-white" aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body">
-                                <div class="text-left" style="font-size: 1.2em;">
+                            <div class="modal-body text-justify">
+                                <div class="" style="font-size: 1.2em;">
                                     <p>Proceed to Process Your <b>Enrollment</b> to A.Y. {{\App\Models\Setting::first()->from_year}} - {{\App\Models\Setting::first()->to_year}} | {{\App\Models\Setting::first()->semester == 1 ? 'First Semester' : 'Second Semester'}} ?</p>                                                                        
                                 </div>
-                                <div class="text-left">
+                                <div class="">
                                     <p class="mb-0">By clicking <u><b class="text-success" style="font-size: 1.2em;">yes</b></u>:</p> 
                                     <p class="ml-2 my-0"> <i class="fa fa-caret-right"></i> you will be enrolled to your elligble subjects of <b>{{$student->program->desc}}</b> <em>intented for</em> <b>{{$level}} - {{$semester}}</b> </p>
                                     <p class="ml-2 mt-0"> <i class="fa fa-caret-right"></i> your <b>balance</b> will be updated depending on {{($student->program->is_tesda ? '' : $student->program->department) ? 'College price per unit which is Php ' . number_format(\App\Models\Setting::first()->col_price_per_unit,2) . ' and ' : 'SHS price per unit which is Php ' . number_format(\App\Models\Setting::first()->shs_price_per_unit, 2) . ' and '}} 
-                                    ORGANIZATIONAL, {{$student->department ? " COL, " : " SHS, "}} and {{$student->program->desc}}'s <b>fees</b>.
+                                    ORGANIZATIONAL, {{$student->department ? " COL, " : " SHS, "}} and {{$student->program->desc}}'s <b role="button" data-toggle="modal" data-target="#feesanddiscounts"  >fees</b>.
                                     </p>
                                 </div>
                                 <div class="text-right">
@@ -217,6 +217,66 @@
                 {{-- <button type="submit" class="btn btn-success shadow btn-block">ENROLL</button> --}}
 
             {!! Form::close() !!}
+
+
+                <?php                                    
+                    $fees = \App\Models\Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
+                ?>                
+
+                <!-- Modal -->
+                <div class="modal fade" id="feesanddiscounts" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-info text-white">
+                                <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-danger">FEES</span> & <span class="text-warning">Discounts</span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="badge badge-pill badge-danger">Fees</h4>
+                                        @if ($fees->count() > 0)
+                                            <ul class="list-group list-group-flush">
+                                                @foreach ($fees as $fee)
+                                                    <li class="list-group-item">{{'Php '. number_format($fee->amount, 2) . ' |  ' . ucfirst($fee->desc )}}</li>
+                                                @endforeach                                    
+                                            </ul>
+            
+                                        @else
+                                            <em class="text-muted">No fees for this semester</em>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="badge badge-pill badge-warning">Discounts</h4>
+                                        @if ($student->discounts->count() > 0)
+                                            <ul class="list-group list-group-flush">
+                                                @foreach ($student->discounts as $stud_disc)
+                                                    <li class="list-group-item">{{$stud_disc->discount->description}} ({{$stud_disc->discount->percentage}}%)</li>
+                                                @endforeach                                    
+                                            </ul>
+            
+                                            @else
+                                                <em class="text-muted">No discounts attached to you.</em>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col text-right">
+                                        <span class="text-muted mt-2">for inquiries, please <a href="{{url('contactus')}}">contact</a> the site administrator</span>
+
+                                    </div>
+
+                                </div>
+                        </div>
+                    </div>
+                </div>
             
             
 

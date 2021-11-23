@@ -37,11 +37,10 @@
 
                                 {{Auth::user()->name}}
                                 
-                            @else
-
+                            @else                          
 
                                 @switch(Auth::user()->member->member_type)
-                                    @case('admin')
+                                    @case('admin')                                        
                                         {{\App\Models\Admin::find(auth()->user()->member->member_id)->name}}
                                         @break
                                     @case('faculty')

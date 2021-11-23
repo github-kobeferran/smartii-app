@@ -37,7 +37,7 @@ use PDF;
 class AdminsController extends Controller
 {    
     
-    public function index(){            
+    public function index(){
 
         if(auth()->user()->access_grant == 1){
             Auth::logout();
@@ -133,7 +133,7 @@ class AdminsController extends Controller
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|regex:/^[a-z ,.\w\'-]*$/|max:100', 
+            'name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100', 
             'email' => 'required', 
             'address' => 'required|max:100', 
             'contact' => 'required|numeric',
@@ -238,8 +238,8 @@ class AdminsController extends Controller
 
         $admin = Admin::find($request->input('id'));
         $admin->delete();
-        $admin->member->user->access_grant = 1;
-        $admin->member->user->save();
+        auth()->user()->access_grant = 1;
+        auth()->user()->save();
 
         Auth::logout();
         return redirect('/home');        

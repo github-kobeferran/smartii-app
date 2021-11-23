@@ -94,8 +94,8 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col">
+                                    <h4 class="badge badge-pill badge-danger">Fees</h4>
                                     @if ($fees->count() > 0)
-                                        <h4 class="badge badge-pill badge-danger">Fees</h4>
                                         <ul class="list-group list-group-flush">
                                             @foreach ($fees as $fee)
                                                 <li class="list-group-item">{{'Php '. number_format($fee->amount, 2) . ' |  ' . ucfirst($fee->desc )}}</li>
@@ -103,14 +103,14 @@
                                         </ul>
         
                                     @else
-                                        No fees for this semester
+                                        <em class="text-muted">No fees for this semester</em>
                                     @endif
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
+                                    <h4 class="badge badge-pill badge-warning">Discounts</h4>
                                     @if ($student->discounts->count() > 0)
-                                        <h4 class="badge badge-pill badge-warning">Discounts</h4>
                                         <ul class="list-group list-group-flush">
                                             @foreach ($student->discounts as $stud_disc)
                                                 <li class="list-group-item">{{$stud_disc->discount->description}} ({{$stud_disc->discount->percentage}}%)</li>
@@ -118,7 +118,7 @@
                                         </ul>
         
                                         @else
-                                        No fees for this semester
+                                            <em class="text-muted">No discounts attached to you.</em>
                                         @endif
                                     </div>
                                 </div>

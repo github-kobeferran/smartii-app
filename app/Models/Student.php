@@ -64,7 +64,16 @@ class Student extends Model
 
     public function registrar_requests(){
         return $this->hasMany(RegistrarRequest::class, 'requestor_id', 'id');
-    }    
+    }  
+    
+    public function hasUnarchivedClass(){
+        foreach($this->subject_taken as $subject_taken){
+            if($subject_taken->class->archive == 0)
+                return true;                
+        }
+
+        return false;
+    }
 
     public function setDropStatusAttribute($status){
         $this->attributes['drop_status'] = $status;

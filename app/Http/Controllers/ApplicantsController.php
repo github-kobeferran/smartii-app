@@ -124,11 +124,11 @@ class ApplicantsController extends Controller
 
         $validator = Validator::make($request->all(), [
             
-            'l_name' => 'required|max:100|regex:/^[\w Ññ-]*$/', 
-            'f_name' => 'required|max:100|regex:/^[\w Ññ-]*$/', 
-            'm_name' => 'nullable|max:100|regex:/^[\w Ññ-]*$/', 
+            'l_name' => 'required|max:100|regex:/^[a-zA-Z Ññ-]*$/', 
+            'f_name' => 'required|max:100|regex:/^[a-zA-Z Ññ-]*$/', 
+            'm_name' => 'nullable|max:100|regex:/^[a-zA-Z Ññ-]*$/', 
             'present_address' => 'required|max:191', 
-            'last_school' => 'required|max:191|regex:/^[\w Ññ-]*$/',
+            'last_school' => 'required|max:191|regex:/^[a-zA-Z Ññ-]*$/',
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
 
         ],
@@ -203,7 +203,7 @@ class ApplicantsController extends Controller
 
         ]);
 
-        return $validated['dept'];
+        
 
         if ($validator->fails()) {   
             return redirect()->route('admissionForm')

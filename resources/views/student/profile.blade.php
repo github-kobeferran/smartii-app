@@ -77,28 +77,30 @@
             @if ($show == 3)                
 
                 @if (\App\Models\Setting::first()->enrollment_mode)
-                    @if ($student->subjectsTakenThisSemester()->count() == 0)                                     
-                        <?php $valid = true;?>                        
-                        @foreach ($student->subject_taken as $subject_taken)
-                            @if ($subject_taken->from_year == \App\Models\Setting::first()->from_year &&
-                                $subject_taken->to_year == \App\Models\Setting::first()->to_year &&
-                                $subject_taken->semester == \App\Models\Setting::first()->semester)
-                                <?php $valid = false;?>                        
-                            @endif
-                        @endforeach
+                    @if ($student->subjectsTakenThisSemester()->count() == 0)    
+                        @if (!$student->hasUnarchivedClass())
+                            <?php $valid = true;?>                        
+                            @foreach ($student->subject_taken as $subject_taken)
+                                @if ($subject_taken->from_year == \App\Models\Setting::first()->from_year &&
+                                    $subject_taken->to_year == \App\Models\Setting::first()->to_year &&
+                                    $subject_taken->semester == \App\Models\Setting::first()->semester)
+                                    <?php $valid = false;?>                        
+                                @endif
+                            @endforeach
 
-                        @if ($valid)
-                            <div class="row">
-                                <div class="col my-auto text-right mr-1">
-                                    <h5 class="">ENROLLMENT IS NOW OPEN !</h5> 
-                                </div>
-                                <div class="col text-left ml-1">
-                                    <a href="/enroll" class="btn btn-outline-success m-2 neon neon-div"> <span></span>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>Proceed to Enrollment</a>                         
-                                </div>
-                            </div>  
+                            @if ($valid)
+                                <div class="row">
+                                    <div class="col my-auto text-right mr-1">
+                                        <h5 class="">ENROLLMENT IS NOW OPEN !</h5> 
+                                    </div>
+                                    <div class="col text-left ml-1">
+                                        <a href="/enroll" class="btn btn-outline-success m-2 neon neon-div"> <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>Proceed to Enrollment</a>                         
+                                    </div>
+                                </div>  
+                            @endif
                         @endif
                     @endif  
                 @endif

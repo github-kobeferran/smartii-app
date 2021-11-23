@@ -30,8 +30,6 @@ class SubjectsPreReqController extends Controller
     public function detach(Request $request){
         if($request->method() != 'POST')
             return redirect()->back();
-
-        // return $request->all();
         
         $subject = Subject::find($request->input('subj_id'));        
         $desc = $subject->pre_reqs->where('id', $request->input('pre_req_id'))->first()->desc;                        
