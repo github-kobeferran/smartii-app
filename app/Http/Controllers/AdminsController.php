@@ -121,7 +121,6 @@ class AdminsController extends Controller
     public function adminSettings(){
         return view('admin.settings');
     }
-
     
     public function store(Request $request){
 
@@ -133,27 +132,17 @@ class AdminsController extends Controller
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100', 
-            'email' => 'required', 
+            'name' => 'required|regex:/^[a-zA-Z]{4,}[ Ññ-]*$/|max:100', 
+            'email' => 'required|unique:users', 
             'address' => 'required|max:100', 
-            'contact' => 'required|numeric',
+            'contact' => 'required|digits:11',
             'position' => 'required',             
+        ],[
+            'name.regex' => "Some characters in Full Name are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 4 characters or more.",
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->route('adminPayment')
-                         ->withErrors($validator)
-                         ->withInput();                         
-        }
-
-        if(Admin::where('email', $request->input('email'))->exists() ||
-           User::where('email', $request->input('email'))->exists()){
-
-            return redirect()->route('adminCreate')
-                             ->with('error', 'Email Already Exist')
-                             ->with('active', 'admin');
-                            
-        }
+        if ($validator->fails())
+            return redirect()->route('adminCreate')->withErrors($validator)->withInput()->with('active', 'admin');
 
         $admin = new Admin;     
 
@@ -542,9 +531,21 @@ class AdminsController extends Controller
                 break;
                 case 'subjects':
                     if(!is_null($all)){
-                        return Subject::where($by,$value)->orderBy('desc', 'asc')->withTrashed()->get();
+                        $subjects = Subject::where($by,$value)->orderBy('desc', 'asc')->withTrashed()->get();
+
+                        foreach($subjects as $subject){
+                            $subject->program;
+                        }
+
+                        return $subjects;
                     } else {
-                        return Subject::where($by,$value)->orderBy('desc', 'asc')->get();
+                        $subjects =  Subject::where($by,$value)->orderBy('desc', 'asc')->get();
+
+                        foreach($subjects as $subject){
+                            $subject->program;
+                        }
+
+                        return $subjects;
                     }
                 break;    
                 case 'faculty':
@@ -584,7 +585,14 @@ class AdminsController extends Controller
                 $values = [$firstColumn => $firstValue,
                            $secondColumn => $secondValue];                
                         
-                return Subject::subjectsForClasses($values)->toJson();                               
+                $subjects = Subject::subjectsForClasses($values);                               
+                
+                foreach($subjects as $subject){
+                    $subject->program;
+                }
+
+                return $subjects;
+
             }
     }    
 

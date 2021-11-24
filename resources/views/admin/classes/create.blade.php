@@ -36,7 +36,7 @@
                     
                 {{Form::select('subj', 
                 [], null,
-                ['class' => 'custom-select w-50 m-1', 'id' => 'selectSubject'])}}    
+                ['class' => 'custom-select w-50 m-1 material-input', 'id' => 'selectSubject'])}}    
                 {{Form::hidden('programid', '', ['id' => 'programID'])}}                        
             </div>    
 
@@ -67,7 +67,6 @@
             <div class="col-sm mx-auto text-center">
                 <h6 class="">SET CLASS NAME</h6>
                 <input type="text" name="class_name" maxlength="25" class="text-center mx-auto w-25" required>                               
-
             </div>            
             
         </div>
@@ -82,10 +81,10 @@
                     </button>
     
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <button class="dropdown-item" onclick="classesTableData('id_asc')">Student ID (ASC)</button>              
-                        <button class="dropdown-item" onclick="classesTableData('id_desc')">Student ID (DESC)</button>              
-                      <button class="dropdown-item" onclick="classesTableData('last_name_asc')">Last Name (ASC)</button>              
-                      <button class="dropdown-item" onclick="classesTableData('last_name_desc')">Last Name (DESC)</button>              
+                        <button type="button" class="dropdown-item" onclick="classesTableData('id_asc')">Student ID (ASC)</button>              
+                        <button type="button" class="dropdown-item" onclick="classesTableData('id_desc')">Student ID (DESC)</button>              
+                        <button type="button" class="dropdown-item" onclick="classesTableData('last_name_asc')">Last Name (ASC)</button>              
+                        <button type="button" class="dropdown-item" onclick="classesTableData('last_name_desc')">Last Name (DESC)</button>              
                     </div>
     
                     <span id="cur-sort" class="ml-2">                    
@@ -551,11 +550,11 @@ function changeSubjects(){
 
             var subjects = JSON.parse(this.responseText);                                
 
-            for (let i in subjects) {   
+            for (let i in subjects) {                   
                 if(subjects[i].student_count < 1)
-                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc  + ' [units: ' + subjects[i].units + ']', subjects[i].id);                                    
+                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} [${subjects[i].program.is_tesda? `hours:` : `units:`} ${subjects[i].units}]`, subjects[i].id);                                    
                 else
-                    selectSubject.options[i] = new Option(subjects[i].code + ' - ' + subjects[i].desc + ' [units: '+ subjects[i].units +']  (pending:' + subjects[i].student_count + ')', subjects[i].id); 
+                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} [${subjects[i].program.is_tesda? `hours:` : `units:`} ${subjects[i].units}]  (pending:${subjects[i].student_count})`, subjects[i].id); 
             }              
                     
             classesTableData();     

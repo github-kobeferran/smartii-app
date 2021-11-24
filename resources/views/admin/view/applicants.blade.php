@@ -176,8 +176,8 @@ function fillApplicantList(id = null){
 
                 if(id != null && id == applicants[i].id){
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start active">';
-                    output +='<div class="d-flex w-100 jusstify-content-between">';
-                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + `${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
+                    output +='<div class="d-flex w-100 justify-content-between">';
+                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ' ' + `${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
 
                         if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
                             
@@ -190,7 +190,7 @@ function fillApplicantList(id = null){
                             output +='<span class="badge badge-primary badge-pill">'+ count +'</span>'
                         }
                         
-                        output +='<small class="pr-2">'+ applicants[i].days_ago +'</small>';
+                        output +='<small class="pr-2 float-right">'+ applicants[i].days_ago +'</small>';
                     output += '</div>'
                     output += '<p class="mb-1">'+ applicants[i].dept_desc + '</p>'
                     output += '<p class="mb-1">'+ applicants[i].prog_desc +'</p>'                    
@@ -201,8 +201,8 @@ function fillApplicantList(id = null){
                 } else{
 
                     output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
-                    output +='<div class="d-flex w-100 jusstify-content-between">';
-                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + `${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
+                    output +='<div class="d-flex w-100 justify-content-between">';
+                        output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ` ${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
 
                         if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){
                             
@@ -661,7 +661,7 @@ applicantSearch.addEventListener('keyup', () => {
             
 
             output += '<button id="app-'+ applicants[i].id +'" type="button" onclick="applicantSelect(\'app-'+ applicants[i].id +'\', ' + applicants[i].id + ')" class=" app-button list-group-item list-group-item-action flex-column align-items-start">';
-            output +='<div class="d-flex w-100 jusstify-content-between">';
+            output +='<div class="d-flex w-100 justify-content-between">';
                 output +='<h6 style="font-family: \'Raleway\', sans-serif; font-weight: 900px;" class="mb-1 ">'+ ucfirst(applicants[i].last_name) + ', ' + ucfirst(applicants[i].first_name) + ` ${applicants[i].middle_name != null ? ucfirst(applicants[i].middle_name) : ''}</h6>`;
 
                 if(applicants[i].resubmitted != null && applicants[i].resubmitted != '0000' && applicants[i].resubmitted != 'undefined'){

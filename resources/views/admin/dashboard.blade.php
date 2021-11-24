@@ -250,7 +250,7 @@
                         </a>
                     @endif
 
-                    <a type="button" data-toggle="modal" data-target="#delete-account" class="dropdown-item list-group-item">Delete this Account</a>
+                    <a style="font-size: .8em;" type="button" data-toggle="modal" data-target="#delete-account" class="dropdown-item list-group-item py-2">Delete this Account</a>
                                     
                 </ul>                
             </div>

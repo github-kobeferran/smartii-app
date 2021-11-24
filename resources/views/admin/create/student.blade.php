@@ -1,23 +1,33 @@
 <div class="container ml-0">
     {!! Form::open(['url' => 'admin/create/student', 'id' => 'studentForm']) !!}
-    <div class="row">
-        <div class="col-lg-6">
 
-            <div>
+    <div class="row">
+        <div class="col-lg text-center mb-3">
+            <h4 class="formal-font smartii-text-dark">Student Registration Form</h4>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-6">
+            <div class="">
                 <div class="custom-control custom-switch float-left">
-                    <input name="new_stud_switch " type="checkbox" class="custom-control-input" id="newStudSwitch">
+                    <input name="new_stud_switch"  type="checkbox" class="custom-control-input" id="newStudSwitch">
                     <label class="custom-control-label " for="newStudSwitch"><strong>Generate Student ID</strong></label>
                 </div>
                 <div id="new-stud-div" class="form-group" style="display:block;">         
                     <b>{{Form::label('studentId', 'Student ID', ['class' => 'float-right'])}}</b>
-                    {{Form::text('student_id', '', ['maxlength' => '8', 'class' => 'form-control material-input', 'id' => 'studentID', 'required' => 'required', 'placeholder' => 'ex. C18-2159'])}}
+                    {{Form::text('student_id', old('student_id') , ['maxlength' => '8', 'class' => 'form-control material-input', 'id' => 'studentID', 'required' => 'required', 'placeholder' => 'ex. C18-2159'])}}
                 </div> 
             </div>           
-
+            
+        </div>
+        <div class="col-lg-3">
         </div>
     </div>
 
-    <hr >
+    <hr>
 
     <div class="row mt-3 ">
         <div class="col-lg ">
@@ -25,16 +35,16 @@
             <div class="row no-gutters">
                 <div class="col-lg-6">
                     <b>{{Form::label('department', 'Department')}}</b>
-                    {{Form::select('department', ['0' => 'Senior High School', '1' => 'College'], 0, ['class' => 'custom-select material-input', 'id' => 'selectDept'])}}                   
+                    {{Form::select('department', ['0' => 'Senior High School', '1' => 'College'], old('department'), ['class' => 'custom-select material-input', 'id' => 'selectDept'])}}                   
                     <b>{{Form::label('level', 'Student Level',  ['class' => 'mt-3'])}}</b>
-                    {{Form::select('level', [], null, ['class' => 'custom-select material-input', 'id' => 'selectLevel'])}}                   
+                    {{Form::select('level', [], old('department'), ['class' => 'custom-select material-input', 'id' => 'selectLevel'])}}                   
                 </div>
                 <div class="col-lg-6">
                     <b>{{Form::label('program', 'Program')}}</b>
-                    {{Form::select('program_id', [], null, ['class' => 'custom-select material-input' , 'id' => 'selectProg'])}}                   
-    
+                    {{Form::select('program_id', [], old('department'), ['class' => 'custom-select material-input' , 'id' => 'selectProg'])}}                                                           
+
                     <b>{{Form::label('semester', 'Semester',  ['class' => 'mt-2'])}}</b>
-                    {{Form::select('semester', ['1' => 'First Semester', '2' => 'Second Semester'], null, ['class' => 'custom-select material-input mt-2 ', 'id' => 'selectSemester'])}}                   
+                    {{Form::select('semester', [strval(\App\Models\Setting::first()->semester) => \App\Models\Setting::first()->semester > 1 ? 'Second Semester' : 'First Semester', '2' => 'Second Semester'], null, ['class' => 'custom-select material-input mt-2 ', 'id' => 'selectSemester'])}}                   
                 </div>
             </div>
 
@@ -49,15 +59,18 @@
             <div class="row">
                 <div class="col-lg-6">
                     <b>{{Form::label('', 'Email Address', ['class' => ''])}}</b>
-                    {{Form::email('email', '', ['class' => 'form-control rounded-0 material-input', 'required' => 'required', 'placeholder' => 'Email here..'])}}
+                    {{-- {{Form::email('email', '', ['class' => 'form-control rounded-0 material-input', 'required' => 'required', 'placeholder' => 'Email here..'])}} --}}
+                    <input id="email" type="email" value="{{old('email')}}" name="email" class="form-control material-input @error('email') is-invalid @enderror" placeholder="Email here.." required>
+                    
                 </div>
                 <div class="col-lg-3">
                     <b>{{Form::label('theContact', 'Contact Number', ['class' => ''])}}</b>
-                    {{Form::text('contact', '', ['minlength' => '11', 'maxlength' => '11','class' => 'form-control material-input rounded-0 ', 'placeholder' => 'Contact Number here..', 'id' => 'contactInput'])}}
+                    {{-- {{Form::text('contact', '', ['minlength' => '11', 'maxlength' => '11','class' => 'form-control material-input rounded-0 ', 'placeholder' => 'Contact Number here..', 'id' => 'contactInput'])}} --}}
+                    <input id="contactInput" type="text" value="{{old('contact')}}" name="contact" minlength="11" maxlength="11" class="form-control material-input @error('contact') is-invalid @enderror" placeholder="Student's Mobile Number here.." required>
                 </div>
                 <div class="col-lg-3">
                     <b>{{Form::label('program', 'Sex')}}</b>
-                    {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], null, ['class' => 'custom-select rounded-0 material-input' , 'id' => 'selectProg', 'required' => 'required'])}}                   
+                    {{Form::select('gender', [null => 'Choose Sex', 'male' => 'Male', 'female' => 'Female'], old('gender'), ['class' => 'custom-select rounded-0 material-input' , 'id' => 'selectProg', 'required' => 'required'])}}                   
                 </div>
             </div>
         </div>
@@ -70,15 +83,18 @@
 
         <div class="col-lg-4">
             <b>{{Form::label('lastName', 'Last Name', ['class' => ''])}}</b>
-            {{Form::text('last_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Last Name here..', 'required' => 'required'])}}
+            {{-- {{Form::text('last_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Last Name here..', 'required' => 'required'])}} --}}
+            <input name="last_name" value="{{old('last_name')}}" id="last_name" type="text" class="form-control material-input @error('last_name') is-invalid @enderror" placeholder="Last Name here.." required>            
         </div>
         <div class="col-lg-4">
             <b>{{Form::label('firstName', 'First Name')}}</b>
-            {{Form::text('first_name', '', ['class' => 'form-control material-input', 'placeholder' => 'First Name here..' , 'required' => 'required'])}}
+            {{-- {{Form::text('first_name', '', ['class' => 'form-control material-input', 'placeholder' => 'First Name here..' , 'required' => 'required'])}} --}}
+            <input name="first_name" value="{{old('first_name')}}" id="first_name" type="text" class="form-control material-input @error('first_name') is-invalid @enderror" placeholder="First Name here.." required>            
         </div>
         <div class="col-lg-4">
             <b>{{Form::label('middleName', 'Middle Name')}}</b>
-            {{Form::text('middle_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Middle Name here..', 'required' => 'required'])}}
+            {{-- {{Form::text('middle_name', '', ['class' => 'form-control material-input', 'placeholder' => 'Middle Name here..', 'required' => 'required'])}} --}}
+            <input name="middle_name" value="{{old('middle_name')}}" id="middle_name" type="text" class="form-control material-input @error('middle_name') is-invalid @enderror" placeholder="Middle Name here..">            
         </div>
 
     </div>
@@ -89,12 +105,33 @@
 
         <div class="col-lg-8">
             <b>{{Form::label('permanent_address', 'Permanent Address')}}</b>
-            {{Form::text('permanent_address', '', ['class' => 'form-control rounded-0 material-input', 'placeholder' => 'Permanent Address'])}}
+            {{-- {{Form::text('permanent_address', '', ['class' => 'form-control rounded-0 material-input', 'placeholder' => 'Permanent Address'])}} --}}
+            <input name="permanent_address" value="{{old('permanent_address')}}" id="permanent_address" type="text" class="form-control material-input @error('permanent_address') is-invalid @enderror" placeholder="Student's Permanent Address here.." required>            
         </div>
         <div class="col-lg-4">
-            <b>{{Form::label('', 'Date of Birth')}}</b>
-            {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'form-control rounded-0 material-input', 'id' => 'dob', 'max' => \Carbon\Carbon::now()->subYears(15)->toDateString() ] )}}
+            <b>{{Form::label('', 'Date of Birth')}}</b>            
+            {{-- {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), ['class' => 'form-control rounded-0 material-input', 'id' => 'dob', 'max' => \Carbon\Carbon::now()->subYears(15)->toDateString() ] )}} --}}
+            <input  id="dob" name="dob" value="{{ old('dob') ? old('dob') : \Carbon\Carbon::now()->subYears(15)->toDateString()}}" min="1903-01-01" max="{{\Carbon\Carbon::now()->subYears(15)->toDateString()}}" type="date" class="form-control material-input @error('dob') is-invalid @enderror" placeholder="" required>            
         </div>
+
+        <?php 
+            $shs_date = \Carbon\Carbon::now()->subYears(15)->toDateString();
+            $col_date = \Carbon\Carbon::now()->subYears(18)->toDateString();
+        ?>
+        <script>                              
+            let shs_max_date = {!! json_encode($shs_date) !!}
+            let col_max_date = {!! json_encode($col_date) !!}
+            document.getElementById('selectDept').addEventListener('change', () => {
+                if(document.getElementById('selectDept').value == '0') {
+                    document.getElementById('dob').setAttribute('max', shs_max_date);
+                    document.getElementById('dob').value = shs_max_date;
+                }
+                else{
+                    document.getElementById('dob').setAttribute('max', col_max_date);
+                    document.getElementById('dob').value = col_max_date;
+                }
+            });
+        </script>  
 
     </div>
 
@@ -104,25 +141,26 @@
 
         <div class="col-lg-8">
             <b>{{Form::label('present_address', 'Present Address')}}</b>
-            {{Form::text('present_address', '', ['class' => 'form-control rounded-0 material-input', 'placeholder' => 'Present Address'])}}
+            {{-- {{Form::text('present_address', '', ['class' => 'form-control rounded-0 material-input', 'placeholder' => 'Present Address'])}} --}}
+            <input name="present_address" value="{{old('present_address')}}" id="present_address" type="text" class="form-control material-input @error('present_address') is-invalid @enderror" placeholder="Student's Present Address here.." required>            
         </div>
         <div class="col-lg-4">
             <div class="mt-2">
                 <b>Transferee ?</b>
                 <div class="form-check form-check-inline">  
                     {{Form::label('', 'No')}}                 
-                    {{ Form::radio('transferee', '0', true, ['class' => 'mb-2 ml-2'] )}}
+                    {{ Form::radio('transferee', '0', old('transferee') ? old('transferee') : true, ['class' => 'mb-2 ml-2'] )}}
                     {{Form::label('', 'Yes', ['class' => 'mb-2 ml-2'])}}                 
-                    {{ Form::radio('transferee', '1', false, ['class' => 'mb-2 ml-2'])}}
+                    {{ Form::radio('transferee', '1', old('transferee') ? old('transferee') : false, ['class' => 'mb-2 ml-2'])}}
                 </div>  
             </div>
             <div class="mt-2">
                 <b>Student Type ?</b>
                 <div class="form-check form-check-inline">  
                     {{Form::label('', 'Regular')}}                 
-                    {{ Form::radio('cur_status', '0', true, ['class' => 'mb-2 ml-2'] )}}
+                    {{ Form::radio('cur_status', '0', old('cur_status') ? old('cur_status') : true, ['class' => 'mb-2 ml-2'] )}}
                     {{Form::label('', 'Irregular', ['class' => 'mb-2 ml-2'])}}                 
-                    {{ Form::radio('cur_status', '1', false, ['class' => 'mb-2 ml-2'])}}
+                    {{ Form::radio('cur_status', '1', old('cur_status') ? old('cur_status') : false, ['class' => 'mb-2 ml-2'])}}
                 </div>  
             </div>
         </div>
@@ -171,7 +209,7 @@
 
     <div class="row mt-3">
         <div class="col-lg mb-3">
-            {{Form::submit('Save',  ['class' => 'btn btn-block btn-success'])}}
+            {{Form::submit('REGISTER STUDENT',  ['class' => 'material-btn btn btn-block btn-success w-75 mx-auto mt-3'])}}
         </div>
     </div>
     

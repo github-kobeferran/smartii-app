@@ -133,68 +133,45 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {                                    
-        $before_date = Carbon::now()->subYears(15);  
+        $before_date = Carbon::tomorrow()->subYears(15);  
         
         if($request->input('department'))
-            $before_date = Carbon::now()->subYears(18);  
+            $before_date = Carbon::tomorrow()->subYears(18);  
         
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
+            'student_id' => 'nullable|max:8|unique:students,student_id|regex:/^[0-9C-]*$/',
             'department' => 'required',
             'level' => 'required', 
             'program_id' => 'required',
             'semester' => 'required', 
-            'email' => 'required',
+            'email' => 'unique:users,email|unique:students,email|required',
             'gender' => 'required',
             'contact' => 'required|digits:11',
-            'last_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100',
-            'first_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100',
-            'middle_name' => 'regex:/^[a-zA-Z Ññ-]*$/|max:100',
-            'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
+            'last_name' => 'required|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100',
+            'first_name' => 'required|regex:/^[a-zA-Z]{3,}[ Ññ-]*$/|max:100',
+            'middle_name' => 'nullable|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100',
+            'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date->toDateString(),            
             'permanent_address' => 'required|max:191',
             'present_address' => 'required|max:191',      
+        ],[
+            'student_id.unique' => "The Student ID has already been taken.",
+            'student_id.regex' => "Some Student ID characters are invalid, allowed characters are only: Capital letter 'C', numbers from 0 to 9 and '-' (hyphen).",
+
+            'last_name.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
+            'first_name.regex' => "Some First Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 4 characters or more.",
+            'middle_name.regex' => "Some Middle Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
+
+            'dob.before' => 'Date must be before ' . $before_date->isoFormat('MMM DD, YYYY'),
+            'dob.after' => 'Date must be after ' . $after_date->isoFormat('MMM DD, YYYY'),
+            
         ]);
     
-        if ($validator->fails()) {
-            return redirect()
-                            ->route('adminCreate')
-                            ->withInput()
-                            ->withErrors($validator)                            
-                            ->with('active', 'student');
-        }      
+        if ($validator->fails())
+            return redirect()->route('adminCreate')->withInput()->withErrors($validator)->with('active', 'student');
         
-        if($request->input('student_id') != ''){
-            
-            if(Student::where('student_id', $request->input('student_id'))->exists()){
-                return redirect()
-                            ->route('adminCreate')
-                            ->withInput()
-                            ->with('error', 'Student ID Already Exist')
-                            ->with('active', 'student');
-            }
-        }
-
-        if($request->input('email')){
-            
-            if(Student::where('email', $request->input('email'))->exists()){
-                return redirect()
-                            ->route('adminCreate')
-                            ->withInput()
-                            ->with('error', 'Email Already Exist')
-                            ->with('active', 'student');
-            }
-
-            if(User::where('email', $request->input('email'))->exists()){
-                return redirect()
-                            ->route('adminCreate')
-                            ->withInput()
-                            ->with('error', 'Email Already Exist')
-                            ->with('active', 'student');
-            }
-            
-        }
-
+   
         $subjects = $request->input('subjects');
         $ratings = $request->input('ratings');
         $from_years = $request->input('from_years');
@@ -628,33 +605,49 @@ class StudentsController extends Controller
         
 
         $level = '';
+        $level_val = 0;
         $semester = '';
+        $semester_val = 0;
 
         if($student->level == 11 && $student->semester == 1){
             $level = 'Freshman Year';
             $semester = 'Second Semester';
+            $level_val = 11;
+            $semester_val = 2;
         } elseif($student->level == 11 && $student->semester == 2){
             $level = 'Sophomore Year';
             $semester = 'First Semester';
+            $level_val = 12;
+            $semester_val = 1;
         } elseif($student->level == 12 && $student->semester == 1){
             $level = 'Sophomore Year';
             $semester = 'Second Semester';
+            $level_val = 12;
+            $semester_val = 2;
         } elseif($student->level == 1 && $student->semester == 1){
             $level = 'Grade 11 ';
             $semester = 'Second Semester';
+            $level_val = 1;
+            $semester_val = 2;
         } elseif($student->level == 1 && $student->semester == 2){
             $level = 'Grade 12 ';
             $semester = 'First Semester';
+            $level_val = 2;
+            $semester_val = 1;
         } elseif($student->level == 2 && $student->semester == 1){
             $level = 'Grade 12';
             $semester = 'Second Semester';
+            $level_val = 2;
+            $semester_val = 2;
         } else {
-            $graduate = true;
+            $graduate = true;            
         }              
         
         return view('student.enrollmentstatus')
              ->with('student', $student)
              ->with('level', $level)
+             ->with('level_val', $level_val)
+             ->with('semester_val', $semester_val)
              ->with('semester', $semester)
              ->with('subjectsToTake', $subjects)
              ->with('lastSemStatus', $lastSemStatus)             

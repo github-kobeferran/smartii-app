@@ -19,17 +19,15 @@ class ProgramsController extends Controller
     public function store(Request $request){                   
 
         $validator = Validator::make($request->all(), [            
-            'desc' => 'required|max:100', 
-            'abbrv' => 'required|max:12',                        
+            'desc' => 'required|max:100|regex:/^[A-Z]{3,}[ \/-]*$/|size:8', 
+            'abbrv' => 'required|max:12|regex:/^[A-Z]{2,}[-]*$/|size:4',                        
+        ],[
+           'desc.regex' => 'Some program description characters are invalid, allowed characters are only: capital letters from A-Z, spaces, / (forward slash), and - (hyphen). Must also be 3 characters or more.',
+           'abbrv.regex' => 'Some program abbreviation characters are invalid, allowed characters are only: capital letters from A-Z and - (hyphen). Must also be 2 characters or more.',
         ]);
     
-        if ($validator->fails()){
-            return redirect()
-                            ->route('adminCreate')
-                            ->withErrors($validator)
-                            ->withInput()
-                            ->with('active', 'program');
-        }        
+        if ($validator->fails())
+            return redirect()->route('adminCreate')->withErrors($validator)->withInput()->with('active', 'program');
                 
         $program = new Program;
         $valid = true;
@@ -77,15 +75,24 @@ class ProgramsController extends Controller
             return redirect()->back();
         }   
 
-        // return $request->all();
+        $validator = Validator::make($request->all(), [            
+            'edit_desc' => 'required|max:100|regex:/^[A-Z]{3,}[ \/-]*$/', 
+            'edit_abbrv' => 'required|max:12|regex:/^[A-Z]{2,}[-]*$/',                        
+        ],[
+           'edit_desc.regex' => 'IN UPDATE : Some program description characters are invalid, allowed characters are only: capital letters from A-Z, spaces, / (forward slash), and - (hyphen). Must also be 3 characters or more.',
+           'edit_abbrv.regex' => 'IN UPDATE : Some program abbreviation characters are invalid, allowed characters are only: capital letters from A-Z and - (hyphen). Must also be 2 characters or more.',
+        ]);
+    
+        if ($validator->fails())
+            return redirect()->route('adminCreate')->withErrors($validator)->withInput()->with('active', 'program');
 
         $program = Program::find($request->input('id'));
 
         if($request->has('dept'))
             $program->department = $request->input('dept');                       
         
-        $program->desc = $request->input('desc');
-        $program->abbrv = $request->input('abbrv');
+        $program->desc = $request->input('edit_desc');
+        $program->abbrv = $request->input('edit_abbrv');
         
         if($request->has('is_tesda'))
             $program->is_tesda = 1;

@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Setting extends Model
 {
-    protected $appends = ['sem_desc' => null];
+    protected $appends = [
+                            'sem_desc' => null,
+                            'before_date' => null
+                         ];
 
     use HasFactory;
 
@@ -23,6 +27,13 @@ class Setting extends Model
         else 
             $this->attributes['sem_desc'] = '2nd';
         
+    }
+
+    public function getBeforeDateAttribute($dept){
+        if($dept)
+            return $this->attributes['before_date'] = Carbon::now()->subYears(18)->toDateString();
+        else
+            return $this->attributes['before_date'] = Carbon::now()->subYears(15)->toDateString();
     }
     
     public static function generateRandomString($length = 8) {

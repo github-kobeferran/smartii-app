@@ -603,8 +603,16 @@ tbody td {
     background-color: #FCF5DE !important;
 }
 
+.smartii-bg-lighter{
+    background-color: #fcf5de8e !important;
+}
+
 .smartii-bg-dark{
     background-color: #05551B !important;
+}
+
+.smartii-text-dark{
+    color: #05551B !important;
 }
 
 .green-bg-light{
@@ -620,8 +628,23 @@ tbody td {
 }
 
 .material-input{
-    filter: drop-shadow(0 0 0.3rem #05551c9a);
+    filter: drop-shadow(0 0 0.3rem #cfd0d1);
     border-radius: 0% !important;   
     color: black !important; 
     font-weight: bold !important;
+}
+
+.material-input:hover{
+    filter: drop-shadow(0 0 0.3rem #05551c3a);    
+}
+
+.material-btn{
+    filter: drop-shadow(0 0 0.4rem #cfd0d1);
+    border-radius: 0% !important;       
+    font-weight: bold !important;
+}
+
+.material-btn:hover{
+    filter: drop-shadow(0 0 1rem #898a8b) !important;
+    background-color: #05551B !important;
 }

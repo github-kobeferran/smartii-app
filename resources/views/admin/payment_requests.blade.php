@@ -1,11 +1,17 @@
 @extends('layouts.module')
 
 @section('page-title')
-    Payment Requests
-    
+    Payment Requests    
 @endsection
 
 @section('content')
+
+<div class="row mb-2 ">
+    <div class="col text-left">
+        <a href="{{url("/admin/payment")}}" class="btn btn-sm smartii-bg-dark text-white "><i class="fa fa-caret-left"></i> Back to Payments</a>
+
+    </div>
+</div>
 
 <div class="row mb-2">
     <div class="col-3">
@@ -26,7 +32,7 @@
 	    
 <div class="tab-content clearfix">            
 
-    <div id="requests-panel" class="row no-gutters vh-100">
+    <div id="requests-panel" class="row no-gutters vh-100 border-top">
         
         <div class="col-5 border-right">
                               

@@ -23,7 +23,6 @@ use Carbon\Carbon;
 use App\Exports\ClassStudenList;
 use Maatwebsite\Excel\Facades\Excel;
 
-
 class FacultiesController extends Controller
 {    
 
@@ -33,32 +32,30 @@ class FacultiesController extends Controller
         $msg = '';
         $id = 0;
 
-        $before_date = Carbon::now()->subYears(15);       
+        $before_date = Carbon::now()->subYears(18);       
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
-            'last_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100', 
-            'first_name' => 'required|regex:/^[a-zA-Z Ññ-]*$/|max:100', 
-            'middle_name' => 'regex:/^[a-zA-Z Ññ-]*$/|max:100', 
+            'last_name' => 'required|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100', 
+            'first_name' => 'required|regex:/^[a-zA-Z]{3,}[ Ññ-]*$/|max:100', 
+            'middle_name' => 'nullable|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100', 
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
-            'email' => 'required',             
+            'email' => 'unique:users,email|unique:faculty,email|required',             
+        ], [
+            'last_name.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
+            'first_name.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 3 characters or more.",
+            'middle_name.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
+
+            'dob.before' => 'Date must be before ' . $before_date->isoFormat('MMM DD, YYYY'),
+            'dob.after' => 'Date must be after ' . $after_date->isoFormat('MMM DD, YYYY'),
         ]);
 
         if ($validator->fails()) {
             return redirect()->route('adminCreate')
+                         ->with('active', 'faculty')
                          ->withErrors($validator)
-                         ->withInput()
-                         ->with('active', 'faculty');
-        }
-
-        if(Faculty::where('email', $request->input('email'))->exists() ||
-           User::where('email', $request->input('email'))->exists()){
-
-            return redirect()->route('adminCreate')
-                             ->with('error', 'Email Already Exist')
-                             ->with('active', 'faculty');
-                            
-        }
+                         ->withInput();
+        }  
 
         $faculty = new Faculty;
 

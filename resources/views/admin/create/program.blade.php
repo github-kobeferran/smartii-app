@@ -1,47 +1,76 @@
 {!! Form::open(['url' => 'admin/create/program', 'id' => 'programForm']) !!}    
 
-    <div class="row">   
-        
-        <div class="col-xl-6">
-            <b>{{Form::label('department', 'Department')}}</b>
-            <div class="input-group">     
+<div class="row mb-2s">   
 
+    <div class="col-lg">
+
+        <div class="row mb-2">
+            <div class="col-lg-4">
+                <b>{{Form::label('department', 'Department')}}</b>
                 {{Form::select('dept', 
                 ['0' => 'Senior High School',                              
-                '1' => 'College'], 0,
-                ['class' => 'custom-select',
-                 'id' => 'selectDeptForProgram',
-                 'required' => 'required'])}}      
-
-                <div class="p-2 d-none" id="is-tesda-div">
-                    <label class="px-2 pb-4" for="">Is this a Tesda Program? Check if yes</label>
-                    <input type="checkbox" name="is_tesda" style="width: 20px; height: 20px;">                        
-                    <i type="button" class="fa fa-info-circle text-info ml-2" data-toggle="tooltip" title="TESDA courses are not affected by CHED rules like unit pricing, unit scheduling and general subjects" aria-hidden="true"></i>                        
+                '1' => 'College'], old('dept') ? old('dept') : 0,
+                ['class' => 'material-input custom-select',
+                    'id' => 'selectDeptForProgram',
+                    'required' => 'required'])}} 
+            </div>
+            <div class="col-lg-8">
+                <div class=" {{old('is_tesda') ? '' : 'd-none' }}" id="is-tesda-div">
+                    <b><label class="" for="">Is this a <h5 class="text-info my-0">TESDA</h5> Program? Check if yes</label></b>
+                    <input class="mx-2 pt-2" type="checkbox" name="is_tesda" style="width: 20px; height: 20px;"  {{old('is_tesda') ? 'checked' : '' }}>                        
+                    <button type="button" class="badge badge-pill badge-info text-white" data-toggle="modal" data-target="#tesdainfo">
+                        Tesda Rules <i class="fa fa-info-circle"></i>
+                    </button>
+                      
+                      <!-- Modal -->
+                      <div class="modal fade" id="tesdainfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header bg-primary">
+                              <h5 class="modal-title" id="exampleModalCenterTitle"><span class="text-white">TESDA RULES</span></h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body text-justify p-4">
+                                <p>TESDA programs are not affected by CHED rules:</p>
+                                <p>Like:</p>
+                                <ul>
+                                    <li>Not affected by CHED <b>unit-to-hours scheduling</b></li>
+                                    <li>Not affected by <b>per unit pricing</b></li>
+                                    <li>Will not include <b>MINOR</b> subjects in subject automation</li>
+                                </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                 </div>
-                
             </div>
-            
-            <div class = "form-group">        
-                <b>{{Form::label('desc', 'Program Description', ['class' => 'mt-2'])}}</b>
-                {{Form::text('desc', '', ['class' => 'form-control',
-                    'placeholder' => 'Course/Strand Description',
-                    'required' => 'required'])}}
-            </div> 
+        </div>       
 
-            <div class = "form-group">        
-                <b>{{Form::label('abbrv', 'Program Abbreviation', ['class' => 'mt-2'])}}</b>
-                {{Form::text('abbrv', '', ['class' => 'form-control w-50',
-                                           'placeholder' => 'Course/Strand Abbreviation',
-                                           'required' => 'required'])}}
-            </div>   
-            
-            <div class = "form-group ">        
-                {{Form::submit('Save',  ['class' => 'btn btn-success btn-block'])}}
-            </div>
+        <div class = "form-group mb-2">        
+            <b>{{Form::label('desc', 'Program Description')}}</b>
+            {{-- {{Form::text('desc', '', ['class' => 'form-control',
+                'placeholder' => 'Course/Strand Description',
+                'required' => 'required'])}} --}}
+            <input id="desc" name="desc" type="text" value="{{ old('desc') }}" class="form-control material-input @error('desc') is-invalid @enderror" placeholder="Course/Stand Description.." required>
+        </div> 
+
+        <div class = "form-group mb-2">        
+            <b>{{Form::label('abbrv', 'Program Abbreviation', ['class' => 'mt-2'])}}</b>
+            {{-- {{Form::text('abbrv', '', ['class' => 'form-control w-50',
+                                        'placeholder' => 'Course/Strand Abbreviation',
+                                        'required' => 'required'])}} --}}
+            <input id="abbrv" name="abbrv" type="text" value="{{ old('abbrv') }}" class="form-control material-input @error('abbrv') is-invalid @enderror" placeholder="Course/Stand Abbreviation.." required>                                        
+        </div>   
+
+        <div class = "form-group">        
+            {{Form::submit('Save',  ['class' => 'material-btn btn btn-block btn-success w-75 mx-auto'])}}
         </div>
+        
+    </div>
 
-
-    </div>     
+</div>     
     
 
 {!! Form::close() !!}
@@ -106,9 +135,9 @@
                 </div>
 
                 Abbreviation
-                {{Form::text('abbrv' , '', ['class' => 'mb-2 form-control' , 'id' => 'edit-abbrv' ])}}
+                {{Form::text('edit_abbrv' , '', ['class' => 'mb-2 form-control' , 'id' => 'edit-abbrv' ])}}
                 Description
-                {{Form::text('desc' , '', ['class' => 'mb-2 form-control' , 'id' => 'edit-progdesc' ])}}
+                {{Form::text('edit_desc' , '', ['class' => 'mb-2 form-control' , 'id' => 'edit-progdesc' ])}}
                 {{Form::hidden('id' , '', ['id' => 'prog-id'])}}
 
                 <button id="submit-button" data-toggle="modal" data-target="#update-modal" type="button" class="btn btn-primary">Update</button>

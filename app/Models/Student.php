@@ -68,8 +68,10 @@ class Student extends Model
     
     public function hasUnarchivedClass(){
         foreach($this->subject_taken as $subject_taken){
-            if($subject_taken->class->archive == 0)
-                return true;                
+            if(!is_null($subject_taken->class)){
+                if($subject_taken->class->archive == 0)
+                    return true;                
+            }
         }
 
         return false;
@@ -319,7 +321,7 @@ class Student extends Model
 
         return $this->attributes['tuition_with_discount'] = $tuition;
 
-    }    
+    }        
 
     public function subjectsTakenThisSemester(){
         $subjects_taken = SubjectTaken::enrolledSubjectsbyStudent($this->id);

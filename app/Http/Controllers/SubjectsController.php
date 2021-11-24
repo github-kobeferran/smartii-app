@@ -44,60 +44,44 @@ class SubjectsController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'code' => 'required|max:12|regex:/^[\s\w-]*$/', 
-            'desc' => 'required|max:100|regex:/^[\s\w-]*$/', 
+            'code' => 'required|unique:subjects,code|max:12|regex:/^[A-Z]{3,}[0-9-]*$/', 
+            'desc' => 'required|unique:subjects,desc|max:100|regex:/^[A-Za-z]{4,}[1-9 -]*$/', 
             'dept' => 'required', 
             'level' => 'required', 
             'prog' => 'required',
             'sem' => 'required',
             'units' => 'exclude_if:is_tesda,1|required|numeric|between:3,12',
             'units' => 'exclude_if:is_tesda,0|required|numeric|between:10,500',
+        ], [
+            'code.unique' => 'The Subject Code has already been taken.',
+            'code.regex' => 'Some characters in the subject code are invalid, allowed characters are only: capital letters from A-Z, numbers from 0-9 and - (hyphen). Must also be 3 characters or more.',
+
+            'desc.unique' => 'The Subject Description has already been taken.',
+            'desc.regex' => 'Some characters in the subject description are invalid, allowed characters are only: capital and small letters from A-Z, numbers from 1-9, spaces, and - (hyphen). Must also be 4 characters or more.',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->route('adminCreate')
-                         ->withErrors($validator)
-                         ->withInput()
-                         ->with('active','subject');
-        }
+        if ($validator->fails())
+            return redirect()->route('adminCreate')->withErrors($validator)->withInput()->with('active','subject');
 
         $subject = new Subject;
 
-        if(Subject::where('code', $request->input('code'))->exists() || 
-           Subject::where('desc', $request->input('desc'))->exists()){
-            return redirect()->route('adminCreate')
-                             ->with('error', 'Code or Description already exist')
-                             ->with('active', 'subject');
-                                        
-        } else {
-            $subject->code = $request->input('code');
-            $subject->desc = $request->input('desc');
-            $subject->dept = $request->input('dept');
-            $subject->level = $request->input('level');
-            $subject->program_id = $request->input('prog');
-            $subject->semester = $request->input('sem');
-            $subject->units = $request->input('units');
+        $subject->code = $request->input('code');
+        $subject->desc = $request->input('desc');
+        $subject->dept = $request->input('dept');
+        $subject->level = $request->input('level');
+        $subject->program_id = $request->input('prog');
+        $subject->semester = $request->input('sem');
+        $subject->units = $request->input('units');
 
-            if($request->input('preReqs') > 0 )
-                $subject->pre_req = 1;
-            else 
-                $subject->pre_req = 0;
+        if($request->input('preReqs') > 0 )
+            $subject->pre_req = 1;
+        else 
+            $subject->pre_req = 0;
 
-            if($subject->save())
-                $subjectID = $subject->id;
-            else {
-
-                return redirect()->route('adminCreate')
-                                 ->with('error', 'There is a problem saving, please try again.')
-                                 ->with('active', 'subject');
-
-            } 
-            
-        }
+        $subject->save();
+        $subjectID = $subject->id;
 
         $preReqs = $request->input('preReqs');
-
-        
         
         if($preReqs > 0 ){                       
             $noproblems = true;
@@ -131,12 +115,7 @@ class SubjectsController extends Controller
             $msg = 'Subject Created Successfully';
         }
 
-        
-        
-
-        return redirect()->route('adminCreate')
-                         ->with($status, $msg)
-                         ->with('active', 'subject');
+        return redirect()->route('adminCreate')->with($status, $msg)->with('active', 'subject');
     }
 
     /**
@@ -180,34 +159,38 @@ class SubjectsController extends Controller
             return redirect()->route('adminCreate')->withInput()->with('active','subject')->with('warning', 'That subject description is already taken by other subject');
 
         $validator = Validator::make($request->all(), [
-            'code' => 'required|max:12|regex:/^[\s\w-]*$/', 
-            'desc' => 'required|max:100|regex:/^[\s\w-]*$/', 
-            'dept' => 'required', 
-            'level' => 'required', 
-            'prog' => 'required',
-            'semester' => 'required',
-            'units' => 'exclude_if:is_tesda,1|required|numeric|between:3,12',
-            'units' => 'exclude_if:is_tesda,0|required|numeric|between:10,500',
+            'edit_code' => 'required|unique:subjects,code,' . $request->input('subject_id') . '|max:12|regex:/^[A-Z]{3,}[0-9-]*$/',
+            'edit_desc' => 'required|unique:subjects,desc,' . $request->input('subject_id') . '|max:100|regex:/^[A-Za-z]{4,}[1-9 -]*$/', 
+            'edit_dept' => 'required', 
+            'edit_level' => 'required', 
+            'edit_prog' => 'required',
+            'edit_semester' => 'required',
+            'edit_units' => 'exclude_if:edit_is_tesda,1|required|numeric|between:3,12',
+            'edit_units' => 'exclude_if:edit_is_tesda,0|required|numeric|between:10,500',
+        ],[
+            'edit_code.unique' => 'In updating: The Subject Code has already been taken.',
+            'edit_code.max' => 'In updating: The Subject Code must not be greater than 12 characters.',
+            'edit_code.regex' => 'In updating: Some characters in the subject code are invalid, allowed characters are only: capital letters from A-Z, numbers from 0-9 and - (hyphen). Must also be 3 characters or more.',
+
+            'edit_desc.unique' => 'In updating: The Subject Description has already been taken.',
+            'edit_desc.regex' => 'In updating: Some characters in the subject description are invalid, allowed characters are only: capital and small letters from A-Z, numbers from 1-9, spaces, and - (hyphen). Must also be 4 characters or more.', 
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->route('adminCreate')
-                         ->withErrors($validator)
-                         ->withInput()
-                         ->with('active','subject');
-        }      
+        if ($validator->fails()) 
+            return redirect()->route('adminCreate')->withErrors($validator)->withInput()->with('active','subject');
+              
         
         
         $subject = Subject::find($request->input('subject_id'));
 
-        $subject->code = $request->input('code');     
+        $subject->code = $request->input('edit_code');     
         $oldDesc = $subject->desc;
-        $subject->desc = $request->input('desc');
-        $subject->program_id = $request->input('prog');
-        $subject->level = $request->input('level');
-        $subject->dept = $request->input('dept');
-        $subject->semester = $request->input('semester');
-        $subject->units = $request->input('units');      
+        $subject->desc = $request->input('edit_desc');
+        $subject->program_id = $request->input('edit_prog');
+        $subject->level = $request->input('edit_level');
+        $subject->dept = $request->input('edit_dept');
+        $subject->semester = $request->input('edit_semester');
+        $subject->units = $request->input('edit_units');      
 
         $subject->save();
 

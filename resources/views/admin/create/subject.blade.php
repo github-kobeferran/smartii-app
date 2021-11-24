@@ -1,114 +1,127 @@
 {!! Form::open(['url' => 'admin/create/subject', 'id' => 'subjectForm']) !!}    
 
-    <div class="row no-gutters">    
+<div class="row">    
+    <div class="col-lg">
 
-        <div class="col-lg-2">
-            <div class="form-group">
-                <b>{{Form::label('', 'Subject Code', ['class' => 'mt'])}}</b>
-                {{Form::text('code', '', ['class' => 'form-control rounded-0', 'placeholder' => 'Subject Code'])}}                 
+        <div class="row">
+            <div class="col-lg text-center">
+                <h4  class="formal-font smartii-text-dark">Subject Registration Form</h4>
+                <a href="#viewsubjects" role="button" class="badge badge-pill badge-light float-right border">View Subjects</a>
             </div>
         </div>
 
-        <div class="col-lg-8">
-            <div class = "form-group">        
-                <b>{{Form::label('', 'Subject Description', ['class' => ''])}}</b>
-                {{Form::text('desc', '', ['class' => 'form-control rounded-0', 'placeholder' => 'Subject Description'])}}
-            </div> 
+        <div class="row">            
+            <div class="col-lg-2">
+                
+            </div>
+            <div class="col-lg-3 mx-auto">
+                <b>{{Form::label('', 'Subject Code')}}</b>
+                {{-- {{Form::text('code', '', ['class' => 'form-control rounded-0', 'placeholder' => 'Subject Code'])}}                  --}}
+                <input id="code" name="code" type="text" value="{{ old('code') }}" class="form-control material-input @error('code') is-invalid @enderror" placeholder="Subject Code here.." required>
+            </div>
+            <div class="col-lg-5 mx-auto">
+                <b>{{Form::label('', 'Subject Description')}}</b>
+                {{-- {{Form::text('desc', '', ['class' => 'form-control rounded-0', 'placeholder' => 'Subject Description'])}} --}}
+                <input id="desc" name="desc" type="text" value="{{ old('desc') }}" class="form-control material-input @error('desc') is-invalid @enderror" placeholder="Subject Description here.." required>
+
+            </div>
+            <div class="col-lg-2">
+                
+            </div>
         </div>
 
+        <hr>
 
+        <div class="row">
+            <div class="col-lg-6">
 
-    </div>
+                <b>{{Form::label('department', 'Subject is for:')}}</b>
+                <div class="form-group">                
+                    {{Form::select('dept', 
+                      ['0' => 'Senior High School Students',                              
+                      '1' => 'College Students'], old('dept'),
+                      ['class' => 'material-input custom-select ml-2', 'id' => 'selectSubjDept'])}}                   
+                </div>                      
     
-    <hr class= "w-75 ml-0"/>
+                <div class="form-group">                
+                    {{Form::select('level', 
+                      [], old('level'),
+                      ['class' => 'material-input  custom-select ml-2', 'id' => 'selectSubjLevel'])}}                   
+                </div>  
+
+                <b>{{Form::label('prog', 'Choose Dedicated Program:')}}</b>
+                <div class="form-group">                
+                    {{Form::select('prog', 
+                    [], old('prog'),
+                    ['class' => 'material-input custom-select ml-2', 'id' => 'selectSubjProg'])}}                   
+                </div>                      
+                
+                <b>{{Form::label('sem', 'To be taken in:')}}</b>
+                <div class="form-group">                
+                    {{Form::select('sem', 
+                    ['1' => 'First Semester ',
+                    '2' => 'Second Semester '], old('sem'),
+                    ['class' => 'material-input custom-select ml-2', 'id' => 'selectSubjSem'])}}                   
+                </div>  
+
+                <div class="form-group " id="units-div">
+                    <b>{{Form::label('units', 'No. of Units', ['class' => '', 'id'=> 'units-label'])}}</b>
+                    {{Form::number('units', ( old('units') ? old('units') : old('is_tesda') ) ? 80 : 3 , ['id' => 'subject-units', 'class' => 'material-input form-control w-50 ml-2', 'step' => old('is_tesda') ? '1' : '3', 'min' => old('is_tesda') ? '80' : 3 , 'max' => old('is_tesda') ? '500' : 12, 'required' => 'required', 'placeholder' => 'Units'])}}                 
+                </div>
+               
+                {{Form::hidden('is_tesda', old('is_tesda') ? old('is_tesda') : 0, ['id' => 'is-tesda-hidden'])}}
+
+            </div>
+            <div class="col-lg-6 text-justify mb-3">
+                
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input name="pre_req" type="checkbox" class="custom-control-input" id="preReqSwitch">
+                        <label class="custom-control-label" for="preReqSwitch"><strong>Add Pre-Requisites</strong></label>
+                    </div>            
+                </div>
+                <div class="form-inline" id="addPreReq" style="display: none;">
+                    {{-- {{Form::select('prereqList', 
+                    [], null, 
+                    ['class' => 'material-input custom-select ml-2', 'id' => 'selectPreReq', 'placeholder' => 'Select a Pre-Req Subject'])}}   --}}
+                    <select name="prereqList" id="selectPreReq" class="material-input custom-select ml-2">
+                        <option value="" selected>No available subject to select</option>
+                    </select>
+                    <button type="button" onclick="clearList()" id="clear-pre-req" class="badge badge-pill badge-danger" >Clear List <i class="fa fa-times-circle-o" aria-hidden="true"></i></button>
     
-
-    <div class="row">    
-        
-        <div class="col-lg-5"> 
-
-            <b>{{Form::label('department', 'Subject is for:')}}</b>
-            <div class="form-group">                
-                {{Form::select('dept', 
-                  ['0' => 'Senior High School Students',                              
-                  '1' => 'College Students'], 0,
-                  ['class' => 'custom-select ml-2', 'id' => 'selectSubjDept'])}}                   
-            </div>                      
-
-            <div class="form-group">                
-                {{Form::select('level', 
-                  [], null,
-                  ['class' => 'custom-select ml-2', 'id' => 'selectSubjLevel'])}}                   
-            </div>                      
-
-            <b>{{Form::label('prog', 'Choose Dedicated Program:')}}</b>
-            <div class="form-group">                
-                {{Form::select('prog', 
-                  [], null,
-                  ['class' => 'custom-select ml-2', 'id' => 'selectSubjProg'])}}                   
-            </div>                      
-            
-            <b>{{Form::label('sem', 'To be taken in:')}}</b>
-            <div class="form-group">                
-                {{Form::select('sem', 
-                  ['1' => 'First Semester ',
-                   '2' => 'Second Semester '], null,
-                  ['class' => 'custom-select ml-2', 'id' => 'selectSubjSem'])}}                   
-            </div>  
-            
-            <div class="form-group" id="units-div">
-                <b>{{Form::label('units', 'No. of Units', ['class' => '', 'id'=> 'units-label'])}}</b>
-                {{Form::number('units', 3, ['id' => 'subject-units', 'class' => 'form-control w-50', 'step' => '3', 'min' => '3', 'max' => '12', 'required' => 'required', 'placeholder' => 'Units'])}}                 
-            </div>
-           
-            {{Form::hidden('is_tesda', 0, ['id' => 'is-tesda-hidden'])}}
-
-        </div>
-
-
-        <div class="col-lg-5"> 
-            <div class="form-group">
-                <div class="custom-control custom-switch">
-                    <input name="pre_req" type="checkbox" class="custom-control-input" id="preReqSwitch">
-                    <label class="custom-control-label" for="preReqSwitch"><strong>Add Pre-Requisites</strong></label>
-                </div>            
-            </div>
-            <div class="form-inline" id="addPreReq" style="display: none;">
-                {{Form::select('prereqList', 
-                  [], null, 
-                  ['class' => 'custom-select w-50 ml-2', 'id' => 'selectPreReq', 'placeholder' => 'Select a Pre-Req Subject'])}}  
-                <button type="button" onclick="clearList()" id="clear-pre-req" class="btn btn-danger" >Clear List</button>
-
-                <div id="pre-req-list" class="card rounded-0 mt-2 ml-3 w-75 d-none" >
-                    <h5 class="card-header bg-info text-white">Added Subjects</h5>
-                    <ul id="preReqList" class="list-group list-group-flush ">
-                        
-                    </ul>
+                    <div id="pre-req-list" class="card rounded-0 mt-2 ml-3 w-75 d-none" >
+                        <h5 class="card-header smartii-bg-dark"><span class="text-white formal-font">Pre-Requisite Subject(s) to be Added</span></h5>
+                        <ul id="preReqList" class="list-group list-group-flush ">
+                            
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-5"></div>
-        <div class="col-lg-5">
-            <div class = "form-group text-right">        
-                {{Form::submit('Save',  ['class' => 'btn btn-block btn-success'])}}
-            </div>  
+        <div class="row mb-3">
+            <div class="col-lg">
+                {{Form::submit('REGISTER SUBJECT',  ['class' => 'material-btn btn btn-block w-75 mx-auto btn-success'])}}
+            </div>
         </div>
+
     </div>
-    
-    
-            
-    
-    <hr class= "ml-0"/>
-    
+</div>
+
+<hr class="mb-2">
 
 {!! Form::close() !!}
 
     {{----------------------------------------- VIEW SECTION --}}   
 
-<h5>VIEW SUBJECTS</h5>
+    
+<div class="row">
+    <div class="col-lg text-left">
+        <h5 id="viewsubjects">VIEW SUBJECTS</h5>
+        <a href="#top" role="button" class="badge badge-pill badge-light float-right border">Create a Subject</a>
+    </div>
+</div>
+
 
 <div class="row no-gutters">
 
@@ -161,13 +174,13 @@
                 
                 {{Form::hidden('subject_id', null, ['id' => 'subj-id'])}}
                 Code
-                {{Form::text('code', '', ['id'=> 'edit-code', 'class' => 'form-control'])}}
+                {{Form::text('edit_code', '', ['id'=> 'edit-code', 'class' => 'form-control'])}}                
                 Description
-                {{Form::text('desc', '', ['id'=> 'edit-desc', 'class' => 'form-control'])}}                
+                {{Form::text('edit_desc', '', ['id'=> 'edit-desc', 'class' => 'form-control'])}}                
                 Department
-                {{Form::select('dept', ['0' => 'SHS', '1' => 'College'], '', ['id'=> 'edit-dept', 'class' => 'form-control'])}}                
+                {{Form::select('edit_dept', ['0' => 'SHS', '1' => 'College'], '', ['id'=> 'edit-dept', 'class' => 'form-control'])}}                
                 Program
-                {{Form::select('prog', [], null, ['id'=> 'edit-prog', 'class' => 'form-control'])}}                
+                {{Form::select('edit_prog', [], null, ['id'=> 'edit-prog', 'class' => 'form-control'])}}                
                 Level
                 {{Form::select('', [
                                         '1' => 'Grade 11',
@@ -178,15 +191,15 @@
                                         '12' => 'Second Year',                                      
                                        ], null, ['id'=> 'edit-level-col', 'class' => 'd-none form-control'])}}
                 Semester 
-                {{Form::select('semester', [
+                {{Form::select('edit_semester', [
                     '1' => 'First Semester',
                     '2' => 'Second Semester',                                      
                    ], '', ['id'=> 'edit-sem', 'class' => 'form-control'])}}
                
                 Units/Hours
-                {{Form::number('units', 3, ['id'=> 'edit-units', 'class' => 'form-control'])}}
+                {{Form::number('edit_units', 3, ['id'=> 'edit-units', 'class' => 'form-control'])}}
 
-                {{Form::hidden('is_tesda', 0, ['id'=> 'edit-is-tesda', 'class' => 'form-control'])}}
+                {{Form::hidden('edit_is_tesda', 0, ['id'=> 'edit-is-tesda', 'class' => 'form-control'])}}
 
                 <div class="form-group mt-2">
                     <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -202,8 +215,6 @@
     </div>
 
 </div>
-
-
 
 
 <script>
@@ -626,10 +637,10 @@ function showEdit(id, dept){
     
     if(dept == 0){
         editLevelSHS.classList.remove('d-none');
-        editLevelSHS.name = 'level';
+        editLevelSHS.name = 'edit_level';
     }else {
         editLevelCOL.classList.remove('d-none');
-        editLevelCOL.name = 'level';
+        editLevelCOL.name = 'edit_level';
     }
 
     fillProgramSelect(dept);
@@ -840,7 +851,9 @@ function changePreReqList(){
             let subjects = JSON.parse(this.responseText); 
                                                             
             if( (level == 1 || level == 11) &&  (semester == 1) ){
-                
+                selectPreReq.innerHTML = `<select id="selectPreReq" name="prereqList" class="form-control ml-2">
+                                                <option value="" selected> No availble subjects to select </option>
+                                          </select>`;
             } else {                           
 
                 let output = `<select id="selectPreReq" name="prereqList" class="form-control ml-2">
@@ -952,16 +965,16 @@ async function changeToUnitsOrHours(id){
     if(program.is_tesda == 1){        
         
         unitsDiv.innerHTML = `<div class="form-group" id="units-div">        
-            {{Form::label('units', 'No. of Hours', ['class' => '', 'id'=> 'units-label'])}}
-            <input type="number" name="units" value="10" id="subject-units" class="form-control w-25 rounded-0" step="1" min="10" max="500" placeholder="Number of Hours" required>
+            <b>{{Form::label('units', 'No. of Hours', ['class' => '', 'id'=> 'units-label'])}}</b>
+            <input type="number" name="units" value="80" id="subject-units" class="material-input form-control w-50 rounded-0 ml-2" step="1" min="80" max="500" placeholder="Number of Hours" required>
         </div>`;        
                 
         document.getElementById('is-tesda-hidden').value = 1;
 
     } else {        
         unitsDiv.innerHTML = `<div class="form-group" id="units-div">
-            {{Form::label('units', 'No. of Units', ['class' => '', 'id'=> 'units-label'])}}
-            <input type="number" name="units" value="3" id="subject-units" class="form-control w-25 rounded-0" step="3" min="3" max="12" placeholder="Number of Units" required>
+            <b>{{Form::label('units', 'No. of Units', ['class' => '', 'id'=> 'units-label'])}}</b>
+            <input type="number" name="units" value="3" id="subject-units" class="material-input form-control w-50 rounded-0 ml-2" step="3" min="3" max="12" placeholder="Number of Units" required>            
         </div>`; 
         document.getElementById('is-tesda-hidden').value = 0;
     }

@@ -11,7 +11,7 @@
 
     <div class="row my-2">
         <div class="col mt-2">
-            <a class="btn-back" href="{{url()->previous()}}">   <i class="fa fa-angle-left" aria-hidden="true"></i> Back</a>
+            <a class="btn-back" href="{{url('/studentprofile')}}">   <i class="fa fa-angle-left" aria-hidden="true"></i> Profile</a>
         </div>
     </div>    
     
@@ -71,7 +71,7 @@
                         <?php $eligibility = true; ?>
 
                         <tr>
-                            <td><h5 class="roboto-font">{{$subject->desc}}</h5></td>
+                            <td class="smartii-bg-lighter"><h5 class="roboto-font">{{$subject->desc}}</h5></td>
 
                             @if (is_array($lastSemStatus[$counter]))
                                     
@@ -175,7 +175,13 @@
                     
                 @endfor
 
-                <button type="button" data-toggle="modal" data-target="#confirm-enroll" class="btn btn-success btn-block shadow">ENROLL</button>
+                <?php $eligble_subjs_collection = collect($eligbleSubjs); ?>
+                
+                @if ($eligble_subjs_collection->contains('1'))                    
+                    <button type="button" data-toggle="modal" data-target="#confirm-enroll" class="btn btn-success btn-block shadow">ENROLL</button>
+                @else
+                    <button type="button" data-toggle="modal" data-target="#" class="btn btn-success btn-block shadow" disabled>ENROLL (disabled, no eligble subjects) </button>
+                @endif
 
                 <div class="modal fade" id="confirm-enroll" tabindex="-1" role="dialog"  aria-labelledby="confirm-enroll-title" aria-hidden="true">
 
@@ -220,15 +226,19 @@
 
 
                 <?php                                    
-                    $fees = \App\Models\Fee::getMergedFees($student->department, $student->program_id, $student->level, $student->semester);
+                    $if_enrolled_stud = $student;
+                    $if_enrolled_stud->level = $level_val;
+                    $if_enrolled_stud->semester = $semester_val;
+
+                    $fees = \App\Models\Fee::getMergedFees($if_enrolled_stud->department, $if_enrolled_stud->program_id, $if_enrolled_stud->level, $if_enrolled_stud->semester);
                 ?>                
 
                 <!-- Modal -->
                 <div class="modal fade" id="feesanddiscounts" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <div class="modal-header bg-info text-white">
-                                <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-danger">FEES</span> & <span class="text-warning">Discounts</span></h5>
+                            <div class="modal-header smartii-bg-dark">
+                                <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">FEES</span></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -237,43 +247,19 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h4 class="badge badge-pill badge-danger">Fees</h4>
+                                        <h4 class="badge badge-pill badge-danger">Fees for {{$student->program->abbrv}} {{$level}}/{{$semester}}</h4>
                                         @if ($fees->count() > 0)
                                             <ul class="list-group list-group-flush">
                                                 @foreach ($fees as $fee)
                                                     <li class="list-group-item">{{'Php '. number_format($fee->amount, 2) . ' |  ' . ucfirst($fee->desc )}}</li>
                                                 @endforeach                                    
                                             </ul>
-            
                                         @else
                                             <em class="text-muted">No fees for this semester</em>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <h4 class="badge badge-pill badge-warning">Discounts</h4>
-                                        @if ($student->discounts->count() > 0)
-                                            <ul class="list-group list-group-flush">
-                                                @foreach ($student->discounts as $stud_disc)
-                                                    <li class="list-group-item">{{$stud_disc->discount->description}} ({{$stud_disc->discount->percentage}}%)</li>
-                                                @endforeach                                    
-                                            </ul>
-            
-                                            @else
-                                                <em class="text-muted">No discounts attached to you.</em>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-
-                                    <div class="col text-right">
-                                        <span class="text-muted mt-2">for inquiries, please <a href="{{url('contactus')}}">contact</a> the site administrator</span>
-
-                                    </div>
-
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
