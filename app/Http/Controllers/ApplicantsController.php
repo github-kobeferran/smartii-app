@@ -124,9 +124,9 @@ class ApplicantsController extends Controller
 
         $validator = Validator::make($request->all(), [
             
-            'l_name' => 'required|max:100|regex:/^[a-zA-Z Ññ-]*$/', 
-            'f_name' => 'required|max:100|regex:/^[a-zA-Z Ññ-]*$/', 
-            'm_name' => 'nullable|max:100|regex:/^[a-zA-Z Ññ-]*$/', 
+            'l_name' => 'required|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100',
+            'f_name' => 'required|regex:/^[a-zA-Z ]{3,}[ Ññ-]*$/|max:100',
+            'm_name' => 'nullable|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100',
             'present_address' => 'required|max:191', 
             'last_school' => 'required|max:191|regex:/^[a-zA-Z Ññ-]*$/',
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
@@ -136,14 +136,14 @@ class ApplicantsController extends Controller
 
             'l_name.required' => 'Last Name is required.',
             'l_name.max' => 'Last Name must be less than a hundred characters.',
-            'l_name.regex' => 'Some Last Name characters are invalid.',
+            'l_name.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
 
             'f_name.required' => 'First Name is required.',
             'f_name.max' => 'First Name must be less than a hundred characters.',
-            'f_name.regex' => 'Some First Name characters are invalid.',
+            'f_name.regex' => "Some First Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 3 characters or more.",
             
             'm_name.max' => 'Middle Name must be less than a hundred characters.',
-            'm_name.regex' => 'Some Middle Name characters are invalid.',
+            'm_name.regex' => "Some Middle Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
 
             'present_address.required' => 'Present Address is required.',
 
