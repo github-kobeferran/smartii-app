@@ -149,9 +149,9 @@ class StudentsController extends Controller
             'email' => 'unique:users,email|unique:students,email|required',
             'gender' => 'required',
             'contact' => 'required|digits:11',
-            'last_name' => 'required|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100',
-            'first_name' => 'required|regex:/^[a-zA-Z]{3,}[ Ññ-]*$/|max:100',
-            'middle_name' => 'nullable|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100',
+            'last_name' => 'required|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100',
+            'first_name' => 'required|regex:/^[a-zA-Z ]{3,}[ Ññ-]*$/|max:100',
+            'middle_name' => 'nullable|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100',
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date->toDateString(),            
             'permanent_address' => 'required|max:191',
             'present_address' => 'required|max:191',      
@@ -160,7 +160,7 @@ class StudentsController extends Controller
             'student_id.regex' => "Some Student ID characters are invalid, allowed characters are only: Capital letter 'C', numbers from 0 to 9 and '-' (hyphen).",
 
             'last_name.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
-            'first_name.regex' => "Some First Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 4 characters or more.",
+            'first_name.regex' => "Some First Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 3 characters or more.",
             'middle_name.regex' => "Some Middle Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
 
             'dob.before' => 'Date must be before ' . $before_date->isoFormat('MMM DD, YYYY'),

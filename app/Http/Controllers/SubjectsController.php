@@ -45,7 +45,7 @@ class SubjectsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'code' => 'required|unique:subjects,code|max:12|regex:/^[A-Z]{3,}[0-9-]*$/', 
-            'desc' => 'required|unique:subjects,desc|max:100|regex:/^[A-Za-z]{4,}[1-9 -]*$/', 
+            'desc' => 'required|unique:subjects,desc|max:100|regex:/^[A-Za-z ]{4,}[1-9 -]*$/', 
             'dept' => 'required', 
             'level' => 'required', 
             'prog' => 'required',
@@ -160,7 +160,7 @@ class SubjectsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'edit_code' => 'required|unique:subjects,code,' . $request->input('subject_id') . '|max:12|regex:/^[A-Z]{3,}[0-9-]*$/',
-            'edit_desc' => 'required|unique:subjects,desc,' . $request->input('subject_id') . '|max:100|regex:/^[A-Za-z]{4,}[1-9 -]*$/', 
+            'edit_desc' => 'required|unique:subjects,desc,' . $request->input('subject_id') . '|max:100|regex:/^[A-Za-z ]{4,}[1-9 -]*$/', 
             'edit_dept' => 'required', 
             'edit_level' => 'required', 
             'edit_prog' => 'required',

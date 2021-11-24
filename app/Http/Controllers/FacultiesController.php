@@ -36,9 +36,9 @@ class FacultiesController extends Controller
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
-            'last_name' => 'required|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100', 
-            'first_name' => 'required|regex:/^[a-zA-Z]{3,}[ Ññ-]*$/|max:100', 
-            'middle_name' => 'nullable|regex:/^[a-zA-Z]{2,}[ Ññ-]*$/|max:100', 
+            'last_name' => 'required|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100', 
+            'first_name' => 'required|regex:/^[a-zA-Z ]{3,}[ Ññ-]*$/|max:100', 
+            'middle_name' => 'nullable|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100', 
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
             'email' => 'unique:users,email|unique:faculty,email|required',             
         ], [
@@ -475,21 +475,27 @@ class FacultiesController extends Controller
             case 'last_name': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:100',
+                    'detail' => 'required|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100', 
+                ], [
+                    'detail.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
                 ]);
 
             break;
             case 'first_name': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:100',                      
+                    'detail' => 'required|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100', 
+                ], [
+                    'detail.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 3 characters or more.",
                 ]);
 
             break;
             case 'middle_name': 
 
                 $this->validate($request, [            
-                    'detail' => 'nullable|regex:/^[a-zA-Z Ññ-]*$/|max:100',                       
+                    'detail' => 'required|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100', 
+                ], [
+                    'detail.regex' => "Some Last Name characters are invalid, allowed characters are only: Capital and small letters from A to Z, spaces, Ñ ñ (enye), and - (hyphen). Must also be 2 characters or more.",
                 ]);
 
             break;

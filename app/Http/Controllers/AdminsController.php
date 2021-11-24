@@ -132,7 +132,7 @@ class AdminsController extends Controller
         $after_date = new Carbon('1903-01-01');
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|regex:/^[a-zA-Z]{4,}[ Ññ-]*$/|max:100', 
+            'name' => 'required|regex:/^[a-zA-Z ]{4,}[ Ññ-]*$/|max:100', 
             'email' => 'required|unique:users', 
             'address' => 'required|max:100', 
             'contact' => 'required|digits:11',
