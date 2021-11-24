@@ -44,7 +44,7 @@
                     {{Form::select('program_id', [], old('department'), ['class' => 'custom-select material-input' , 'id' => 'selectProg'])}}                                                           
 
                     <b>{{Form::label('semester', 'Semester',  ['class' => 'mt-2'])}}</b>
-                    {{Form::select('semester', [strval(\App\Models\Setting::first()->semester) => \App\Models\Setting::first()->semester > 1 ? 'Second Semester' : 'First Semester', '2' => 'Second Semester'], null, ['class' => 'custom-select material-input mt-2 ', 'id' => 'selectSemester'])}}                   
+                    {{Form::select('semester', [(string)\App\Models\Setting::first()->semester => \App\Models\Setting::first()->semester > 1 ? 'Second Semester' : 'First Semester'], null, ['class' => 'custom-select material-input mt-2 ', 'id' => 'selectSemester'])}}                   
                 </div>
             </div>
 
