@@ -3,9 +3,9 @@
 @section('class')  login-background   @endsection
 
 @section('content')
-<div class="container">
-  
-    <div class="fixed-bottom text-right">
+
+<div class="container">     
+    <div style="z-index: -1;" class="fixed-bottom text-right">
         <img style="max-width: 30% !important; opacity: 0.08 !important;" class="img-fluid" src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" >
     </div>
     <div class="row justify-content-center mt-5">
@@ -73,7 +73,7 @@
                                 @endif
                             </div>
                         </div>
-                    </form>
+                    </form>                    
                 </div>
             </div>
 
@@ -90,6 +90,8 @@
             </div>
 
         </div>
+
+        
     </div>
 </div>
 @endsection
