@@ -65,7 +65,7 @@
         <div class="row ">
             <div class="col-sm mx-auto text-center">
                 <h6 class="">SET CLASS NAME</h6>
-                <input type="text" name="class_name" maxlength="25" class="material-input text-center mx-auto w-25" required>                               
+                <input type="text" name="class_name" value="{{old('class_name')}}" maxlength="25" class="material-input text-center mx-auto w-25 @error('class_name') is-invalid @enderror" required>                               
             </div>            
             
         </div>
@@ -129,7 +129,7 @@
                      'thu'=> 'Thursday',
                      'fri'=> 'Friday',
                      'sat'=> 'Saturday',                
-                    ], null,
+                    ], old('day'),
                     ['name' => 'day', 'placeholder' => 'Pick a Day', 'class' => 'material-input custom-select bg-light text-dark border-secondary', 'id' => 'selectDay', 'required' => 'required'])}}            
     
                 </div>    
@@ -144,7 +144,7 @@
                         
                         <p><strong >From:   </strong></p>
     
-                        <input type="time" id="from_time" name="from" value="07:00"
+                        <input type="time" id="from_time" name="from" value="{{old('from') ? old('from') : "07:00"}}"
                         min="07:00" max="19:00" class="material-input form-control bg-light text-dark border-secondary" required>          
                         
     
@@ -152,7 +152,7 @@
     
                     <div class="col-sm">
                         <p><strong >Until:   </strong></p>
-                        <input type="time" id="until_time"  name="until" value="08:00"
+                        <input type="time" id="until_time"  name="until"  value="{{old('until') ? old('until') : "08:00"}}" 
                         min="08:00" max="21:00" class="material-input form-control bg-light text-dark border-secondary" required>          
     
                     </div>
@@ -168,7 +168,7 @@
                 <div class="form-group text-center">        
                         
                     {{Form::select('room', 
-                    [], null,
+                    [], old('room'),
                     [ 'name' => 'room_id', 'class' => 'material-input custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom', 'required' => 'required'])}}            
                 </div>    
     
@@ -180,9 +180,9 @@
                 
                 <div class="form-group text-center">        
                         
-                    {{Form::select('level', 
-                    [], null,
-                    ['name' => 'instructor_id', 'class' => 'material-input custom-select bg-light text-dark border-secondary ', 'id' => 'selectFaculty', 'required' => 'required'])}}            
+                    {{Form::select('instructor_id', 
+                    [], old('instructor_id'),
+                    ['class' => 'material-input custom-select bg-light text-dark border-secondary ', 'id' => 'selectFaculty', 'required' => 'required'])}}            
                 </div>    
     
             </div>

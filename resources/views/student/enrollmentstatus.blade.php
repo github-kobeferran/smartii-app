@@ -188,31 +188,50 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         
                         <div class="modal-content">
-                            <div class="modal-header bg-success">
-                                <h5 class="modal-title"><span class="text-white">CONFIRM ENROLLMENT?</span></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close">
-                                    <span class="text-white" aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body text-justify">
-                                <div class="" style="font-size: 1.2em;">
-                                    <p>Proceed to Process Your <b>Enrollment</b> to A.Y. {{\App\Models\Setting::first()->from_year}} - {{\App\Models\Setting::first()->to_year}} | {{\App\Models\Setting::first()->semester == 1 ? 'First Semester' : 'Second Semester'}} ?</p>                                                                        
+                            @if (!$student->hasUnarchivedClass())
+                                <div class="modal-header bg-success">
+                                    <h5 class="modal-title"><span class="text-white">CONFIRM ENROLLMENT?</span></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close">
+                                        <span class="text-white" aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-                                <div class="">
-                                    <p class="mb-0">By clicking <u><b class="text-success" style="font-size: 1.2em;">yes</b></u>:</p> 
-                                    <p class="ml-2 my-0"> <i class="fa fa-caret-right"></i> you will be enrolled to your elligble subjects of <b>{{$student->program->desc}}</b> <em>intented for</em> <b>{{$level}} - {{$semester}}</b> </p>
-                                    <p class="ml-2 mt-0"> <i class="fa fa-caret-right"></i> your <b>balance</b> will be updated depending on {{($student->program->is_tesda ? '' : $student->program->department) ? 'College price per unit which is Php ' . number_format(\App\Models\Setting::first()->col_price_per_unit,2) . ' and ' : 'SHS price per unit which is Php ' . number_format(\App\Models\Setting::first()->shs_price_per_unit, 2) . ' and '}} 
-                                    ORGANIZATIONAL, {{$student->department ? " COL, " : " SHS, "}} and {{$student->program->desc}}'s <b role="button" data-toggle="modal" data-target="#feesanddiscounts"  >fees</b>.
-                                    </p>
+
+                                <div class="modal-body text-justify">
+                                    <div class="" style="font-size: 1.2em;">
+                                        <p>Proceed to Process Your <b>Enrollment</b> to A.Y. {{\App\Models\Setting::first()->from_year}} - {{\App\Models\Setting::first()->to_year}} | {{\App\Models\Setting::first()->semester == 1 ? 'First Semester' : 'Second Semester'}} ?</p>                                                                        
+                                    </div>
+                                    <div class="">
+                                        <p class="mb-0">By clicking <u><b class="text-success" style="font-size: 1.2em;">yes</b></u>:</p> 
+                                        <p class="ml-2 my-0"> <i class="fa fa-caret-right"></i> you will be enrolled to your elligble subjects of <b>{{$student->program->desc}}</b> <em>intented for</em> <b>{{$level}} - {{$semester}}</b> </p>
+                                        <p class="ml-2 mt-0"> <i class="fa fa-caret-right"></i> your <b>balance</b> will be updated depending on {{($student->program->is_tesda ? '' : $student->program->department) ? 'College price per unit which is Php ' . number_format(\App\Models\Setting::first()->col_price_per_unit,2) . ' and ' : 'SHS price per unit which is Php ' . number_format(\App\Models\Setting::first()->shs_price_per_unit, 2) . ' and '}} 
+                                        ORGANIZATIONAL, {{$student->department ? " COL, " : " SHS, "}} and {{$student->program->desc}}'s <b role="button" data-toggle="modal" data-target="#feesanddiscounts"  >fees</b>.
+                                        </p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p>This action can't be <b>undone</b>.</p>
+                                    </div>
+                                </div>    
+                                <div class="modal-footer text-left">
+                                    <button type="submit" class="btn btn-success">YES</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
+                                </div>                        
+
+                            @else
+                                <div class="modal-header bg-light">
+                                    <h5 class="modal-title"><span class="text-secondary">CAN'T ENROLL</span></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close">
+                                        <span class="text-white" aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-                                <div class="text-right">
-                                    <p>This action can't be <b>undone</b>.</p>
+                                <div class="modal-body text-justify">
+                                    <div class="mx-auto">
+                                        <h6><em>You still have classes that have no ratings, please wait for your instructor to submit your grades.</em></h6>
+                                    </div>
+                                </div> 
+                                <div class="modal-footer">
+                                    <button type="button" data-dismiss="modal" class="btn btn-light">ok</button>
                                 </div>
-                            </div>    
-                            <div class="modal-footer text-left">
-                                <button class="btn btn btn-success">YES</button>
-                                <button class="btn btn btn-secondary" data-dismiss="modal">NO</button>
-                            </div>                        
+                            @endif
 
                         </div>
 

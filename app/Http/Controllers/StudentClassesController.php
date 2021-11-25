@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\StudentClass;
 use App\Models\SubjectTaken;
+use App\Models\Student;
 use App\Models\Faculty;
 use App\Models\Schedule;
 use App\Models\Subject;
@@ -178,6 +179,39 @@ class StudentClassesController extends Controller
 
         $counter = 1;
 
+            $students = $request->input('student_ids'); 
+
+            $proper_level = '';            
+
+            $sample_student = Student::find($students[0]);
+            switch($sample_student->level){
+                case 1:
+                    $proper_level = '11';
+                break;
+                case 2:
+                    $proper_level = '12';
+                break;
+                case 11:
+                    $proper_level = '1';
+                break;
+                case 12:
+                    $proper_level = '2';
+                break;
+
+            }
+
+            $validator = Validator::make($request->all(), [
+                'class_name' => 'required|regex:/^'. $sample_student->program->abbrv . ' ' . $proper_level. '-[A-G]{1}[1-9]{1}$/',                     
+            ],
+            [
+                'class_name.regex' => 'Class Name pattern is wrong, it must be exactly "' . $sample_student->program->abbrv . '<space>'. $proper_level . '-" followed by a section indicator that requires one capital letter from A-G and one letter from 1-9. (ex. ' . $sample_student->program->abbrv . ' ' . $proper_level . '-A1)' ,
+            ]);
+
+            if ($validator->fails())
+                return redirect()->route('adminClasses')->withInput()->withErrors($validator)->with('active', 'create');
+
+
+
             for($i=0; $i<$noOfSched; $i++){
 
                 if($i < 1){
@@ -185,7 +219,7 @@ class StudentClassesController extends Controller
                     $validator = Validator::make($request->all(), [
 
                         'day' => 'required', 
-                        'student_ids' => 'required',
+                        'student_ids' => 'required',                        
 
                     ],
                     [
@@ -275,9 +309,7 @@ class StudentClassesController extends Controller
                         return redirect()->route('adminClasses')->with('warning', 'Submission failed, schedule total hours is below the units of the subject. '. $theSubject->desc . ' has ' . $theSubject->units . ' units.');
                     }
                 }
-    
-                $students = $request->input('student_ids');
-    
+                                   
                /**
                 *  INSERT DATA INTO CLASSES, SCHEDULES and LINK IT TO SUBJECT TAKEN
                 */
@@ -348,6 +380,37 @@ class StudentClassesController extends Controller
              *  ONLY ONE SCHED BLOCK
              * 
              */
+            $students = $request->input('student_ids');
+
+
+            $proper_level = '';            
+
+            $sample_student = Student::find($students[0]);
+            switch($sample_student->level){
+                case 1:
+                    $proper_level = '11';
+                break;
+                case 2:
+                    $proper_level = '12';
+                break;
+                case 11:
+                    $proper_level = '1';
+                break;
+                case 12:
+                    $proper_level = '2';
+                break;
+
+            }
+
+            $validator = Validator::make($request->all(), [
+                'class_name' => 'required|regex:/^'. $sample_student->program->abbrv . ' ' . $proper_level. '-[A-G]{1}[1-9]{1}$/',                     
+            ],
+            [
+                'class_name.regex' => 'Class Name pattern is wrong, it must be exactly "' . $sample_student->program->abbrv . '<space>'. $proper_level . '-" followed by a section indicator that requires one capital letter from A-G and one letter from 1-9. (ex.' . $sample_student->program->abbrv . ' ' . $proper_level . '-A1)',
+            ]);
+
+            if ($validator->fails())
+                return redirect()->route('adminClasses')->withInput()->withErrors($validator)->with('active', 'create');
 
             $validator = Validator::make($request->all(), [
                 'day' => 'required',   
@@ -387,7 +450,6 @@ class StudentClassesController extends Controller
                 return redirect()->route('adminClasses')->with('warning', 'Until Time must be greater than From Time.');
             }
             
-            $students = $request->input('student_ids');
 
             $class = new StudentClass;
 
