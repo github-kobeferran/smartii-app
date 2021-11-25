@@ -13,7 +13,7 @@
                 {{Form::select('dept', 
                   ['0' => 'Senior High School Students',                              
                   '1' => 'College Students'], 0,
-                  ['class' => 'custom-select m-1 w-50 float-right', 'id' => 'selectDept'])}}                   
+                  ['class' => 'material-input custom-select m-1 w-50 float-right', 'id' => 'selectDept'])}}                   
             </div>   
 
         </div>
@@ -22,7 +22,7 @@
             <div class="form-group">                            
                 {{Form::select('prog', 
                 [], null,
-                ['class' => 'custom-select m-1 w-50 float-left', 'id' => 'selectProg'])}}          
+                ['class' => 'material-input custom-select m-1 w-50 float-left', 'id' => 'selectProg'])}}          
             </div>                
 
         </div>
@@ -32,8 +32,7 @@
 
         <div class="col-sm">
             
-            <div class="form-group text-center">        
-                    
+            <div class="form-group text-center">                            
                 {{Form::select('subj', 
                 [], null,
                 ['class' => 'custom-select w-50 m-1 material-input', 'id' => 'selectSubject'])}}    
@@ -66,7 +65,7 @@
         <div class="row ">
             <div class="col-sm mx-auto text-center">
                 <h6 class="">SET CLASS NAME</h6>
-                <input type="text" name="class_name" maxlength="25" class="text-center mx-auto w-25" required>                               
+                <input type="text" name="class_name" maxlength="25" class="material-input text-center mx-auto w-25" required>                               
             </div>            
             
         </div>
@@ -76,7 +75,7 @@
             <div class="col-sm">                        
                 <div class="dropdown float-right mb-2">
 
-                    <button class="btn btn-sm btn-light border dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="badge badge-pill badge-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Sort By
                     </button>
     
@@ -92,12 +91,12 @@
     
                 </div>
                 <div class ="table-responsive border shadow" style="max-height: 500px; overflow: auto; display:inline-block;">
-                    <table class="table table-striped table-responsive-sm border" >                        
-                        <thead class="thead">
+                    <table class="table table-striped border" >                        
+                        <thead class="thead" >
                             <tr>
-                                <th class="text-center bg-light" scope="col">Check</th>
-                                <th class="bg-light" scope="col">Student ID</th>
-                                <th class="bg-light" scope="col">Name</th>
+                                <th class="text-center border" style="background: #99ffff60 !important;" scope="col">Check</th>
+                                <th class="border" style="background: #99ffff60 !important;" scope="col">Student ID</th>
+                                <th class="border" style="background: #99ffff60 !important;" scope="col">Name</th>
                             </tr>
                         </thead> 
                         <tbody id="subjects-table" >
@@ -131,7 +130,7 @@
                      'fri'=> 'Friday',
                      'sat'=> 'Saturday',                
                     ], null,
-                    ['name' => 'day', 'placeholder' => 'Pick a Day', 'class' => 'custom-select bg-light text-dark border-secondary', 'id' => 'selectDay', 'required' => 'required'])}}            
+                    ['name' => 'day', 'placeholder' => 'Pick a Day', 'class' => 'material-input custom-select bg-light text-dark border-secondary', 'id' => 'selectDay', 'required' => 'required'])}}            
     
                 </div>    
     
@@ -146,7 +145,7 @@
                         <p><strong >From:   </strong></p>
     
                         <input type="time" id="from_time" name="from" value="07:00"
-                        min="07:00" max="19:00" class="form-control bg-light text-dark border-secondary" required>          
+                        min="07:00" max="19:00" class="material-input form-control bg-light text-dark border-secondary" required>          
                         
     
                     </div>
@@ -154,7 +153,7 @@
                     <div class="col-sm">
                         <p><strong >Until:   </strong></p>
                         <input type="time" id="until_time"  name="until" value="08:00"
-                        min="08:00" max="21:00" class="form-control bg-light text-dark border-secondary" required>          
+                        min="08:00" max="21:00" class="material-input form-control bg-light text-dark border-secondary" required>          
     
                     </div>
     
@@ -170,7 +169,7 @@
                         
                     {{Form::select('room', 
                     [], null,
-                    [ 'name' => 'room_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom', 'required' => 'required'])}}            
+                    [ 'name' => 'room_id', 'class' => 'material-input custom-select bg-light text-dark border-secondary ', 'id' => 'selectRoom', 'required' => 'required'])}}            
                 </div>    
     
             </div>
@@ -183,7 +182,7 @@
                         
                     {{Form::select('level', 
                     [], null,
-                    ['name' => 'instructor_id', 'class' => 'custom-select bg-light text-dark border-secondary ', 'id' => 'selectFaculty', 'required' => 'required'])}}            
+                    ['name' => 'instructor_id', 'class' => 'material-input custom-select bg-light text-dark border-secondary ', 'id' => 'selectFaculty', 'required' => 'required'])}}            
                 </div>    
     
             </div>
@@ -552,23 +551,18 @@ function changeSubjects(){
 
             for (let i in subjects) {                   
                 if(subjects[i].student_count < 1)
-                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} [${subjects[i].program.is_tesda? `hours:` : `units:`} ${subjects[i].units}]`, subjects[i].id);                                    
+                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} (${subjects[i].units} ${subjects[i].program.is_tesda? `hours` : `units`})`, subjects[i].id);                                    
                 else
-                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} [${subjects[i].program.is_tesda? `hours:` : `units:`} ${subjects[i].units}]  (pending:${subjects[i].student_count})`, subjects[i].id); 
+                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} (${subjects[i].units} ${subjects[i].program.is_tesda? `hours` : `units`}) PENDING : ${subjects[i].student_count}`, subjects[i].id); 
             }              
                     
             classesTableData();     
-
             currentProgramAndSubject(selectProg.value, selectSubject.value);       
 
-        } else {
-
-        }       
-
+        }      
     }
 
     xhr.send(); 
-
 
 }
 
@@ -606,32 +600,29 @@ function classesTableData(mode){
     xhr.onload = function() {
         if (this.status == 200) {
 
-            let students = JSON.parse(this.responseText);
-        
-
-    output = `<tbody>`;
+            let students = JSON.parse(this.responseText);            
+                    
+            output = `<tbody>`;
             for (let i in students) {
                 if(students[i] != null){
+                    output += '<tr>';                                                                                  
 
-                    output += '<tr>';
+                        if(i < sectionLimit)
+                            output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." checked></th>'; 
+                        else
+                            output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." ></th>';
 
-
-
-if(i < sectionLimit)
-    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." checked></th>'; 
-else
-    output +='<th scope="row"><input name="student_ids[]" class="form-control position-static" type="checkbox" id="blankCheckbox" value="'+ students[i].id +'" aria-label="..." ></th>';
-
-output +='<td>' + students[i].student_id + '</td>' +
-    '<td>' + capitalizeFirstLetter(students[i].last_name) + ',  ' + capitalizeFirstLetter(students[i].first_name) + ' ' + (students[i].middle_name != null ? students[i].middle_name.charAt(0).toUpperCase() : '' ) + '. ' + '</td>' +
-    '</tr>';
+                    output +=`<td><a target="_blank" href="${APP_URL}/studentprofile/${students[i].student_id}"> ${students[i].student_id} </a></td>` +
+                        `<td> <a class="text-dark" target="_blank" href="${APP_URL}/studentprofile/${students[i].student_id}"> <b>` + capitalizeFirstLetter(students[i].last_name) + ',  ' + capitalizeFirstLetter(students[i].first_name) + ' ' + (students[i].middle_name != null ? students[i].middle_name.charAt(0).toUpperCase() : '' ) + '. ' + '</b></a></td>' +
+                    '</tr>';
 
                 }
                
             }
 
-    output += ` </tbody>
-              </table>`;
+
+            output += ` </tbody>
+            </table>`;
 
             document.getElementById('subjects-table').innerHTML = output;
             

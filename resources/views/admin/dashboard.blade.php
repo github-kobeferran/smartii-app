@@ -524,8 +524,8 @@
                                     
                                     <div class="row justify-content-end">
             
-                                        <button role="button" data-toggle="modal" data-target="#noAppFormList" class="btn btn-info text-white float-right mr-2">
-                                            Still waiting for Admission Form Submission <span class="badge badge-danger">{{$still_no_app_form->count()}}</span>                                                                                                               
+                                        <button  id="no_form_count_btn" role="button" data-toggle="modal" data-target="#noAppFormList" class="btn btn-info text-white float-right mr-2">
+                                            Still waiting for Admission Form Submission <span id="no_form_count" class="badge badge-danger">{{$still_no_app_form->count()}}</span>                                                                                                               
                                         </button>                                                                             
                                     </div>
                                 @endif
@@ -540,8 +540,8 @@
                     @if ($still_no_app_form->count() > 0)
                 
                             <div class="modal fade" id="noAppFormList" tabindex="-1" role="dialog" aria-labelledby="noAppFormListTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-lg" style="width: 100%;" role="document">
-                                <div class="modal-content" >
+                                <div class="modal-dialog modal-dialog-centered modal-lg" style="width: 80%;" role="document">
+                                <div class="modal-content" style="min-width: 100%;">
                                     <div class="modal-header bg-info">
                                     <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Still Waiting to pass their Admission Form</span></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -566,14 +566,26 @@
                                                     <th class="bg-secondary">Email</th>
                                                     <th class="bg-secondary">Name</th>
                                                     <th class="bg-secondary">Duration in the system</th>
+                                                    <th class="bg-light text-dark">Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>                              
                                                     @foreach ($still_no_app_form as $user_applicant)
-                                                        <tr>
+                                                        <tr id="noform-{{$user_applicant->id}}">
                                                             <td>{{$user_applicant->email}}</td>
                                                             <td>{{$user_applicant->name}}</td>
                                                             <td>{{\Carbon\Carbon::parse($user_applicant->created_at)->diffForHumans()}}</td>
+                                                            <td class="py-auto">
+                                                                <p id="reminder-msg-{{$user_applicant->id}}" class="d-none"></p>
+                                                                <div id="remind-spinner-{{$user_applicant->id}}" class="spinner-border text-warning d-none" role="status">
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </div>
+                                                                <button onclick="remindNoForm({{$user_applicant->id}})" class="badge badge-pill badge-warning">Remind</button>
+                                                                <div id="delete-spinner-{{$user_applicant->id}}" class="spinner-border text-danger d-none" role="status">
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </div>
+                                                                <button onclick="deleteNoForm({{$user_applicant->id}}, document.getElementById('noform-{{$user_applicant->id}}'))" class="badge badge-pill badge-danger">Delete</button>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -924,9 +936,48 @@ file.addEventListener('input', () => {
 
 });
 
+async function remindNoForm(id){
 
+    document.getElementById(`remind-spinner-${id}`).classList.remove('d-none');
 
+    const data = await fetch(`${APP_URL}/remindspecific/${id}`);
+    const res = await data.json();
 
+    document.getElementById(`remind-spinner-${id}`).classList.add('d-none');
+
+    if(res){
+        document.getElementById(`reminder-msg-${id}`).classList.remove('d-none');
+        document.getElementById(`reminder-msg-${id}`).classList.add('text-danger');
+        document.getElementById(`reminder-msg-${id}`).textContent = 'Error Sending Email.';
+    } else {
+        document.getElementById(`reminder-msg-${id}`).classList.remove('d-none');
+        document.getElementById(`reminder-msg-${id}`).classList.add('text-success');
+        document.getElementById(`reminder-msg-${id}`).textContent = 'Reminder Sent.';
+    }
+
+}
+
+async function deleteNoForm(id, row){    
+    
+    document.getElementById(`delete-spinner-${id}`).classList.remove('d-none');
+
+    const data = await fetch(`${APP_URL}/deletespecific/${id}`);
+    const res = await data.json();
+
+    document.getElementById(`delete-spinner-${id}`).classList.add('d-none');
+
+    if(res < 1){
+        document.getElementById('no_form_count_btn').style.display = 'none';
+        row.style.display = 'none';
+    } else {               
+        document.getElementById('no_form_count').innerHTML = `<span id="no_form_count" class="badge badge-danger">${res}</span>`;
+        row.style.display = 'none';
+    }   
+
+    console.log(res);
+    console.log(document.getElementById('no_form_count'));
+
+}
 
 </script>
 

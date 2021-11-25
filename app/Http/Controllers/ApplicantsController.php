@@ -906,8 +906,10 @@ class ApplicantsController extends Controller
 
         Mail::to($applicant->member->user)->send(new RejectApplicant(ucfirst($applicant->first_name) . ' ' . ucfirst($applicant->last_name), $applicant->prog_desc, $applicant->dept_desc, $request->input('reason')));
 
-        $applicant->member->user->access_grant = 1;
-        $applicant->member->user->save();
+        $user = User::find($applicant->member->user->id);
+
+        $user->access_grant = 1;
+        $user->save();
 
         $applicant->delete();
 

@@ -50,4 +50,24 @@ class UsersController extends Controller
         
     }
 
+    public function remindSpecific($id){
+        $user = User::find($id);
+
+        Mail::to($user)->send(new RemindToSubmitAdmissionForm($user));
+
+        if(count(Mail::failures()) > 0)
+            return 1;
+        else 
+            return 0;
+    }
+
+    public function deleteSpecific($id){
+        
+        $user = User::find($id);
+        $user->delete();
+        
+        $count = $applicantUsersThisSem = User::whereDate('created_at', '>=', Carbon::parse(Setting::first()->semester_updated_at)->subWeek())->where('user_type', 'applicant')->get()->count();
+
+        return $count;        
+    }
 }

@@ -1,4 +1,4 @@
-<h4 class="mb-3">Add a Room</h4>
+<h5 class="mb-3">Rooms</h5>
 
 {!! Form::open(['url' => 'admin/create/room','id' => 'roomForm']) !!}
 
@@ -20,18 +20,18 @@
     <div class="input-group-prepend">
       <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
     </div>
-    <input id="roomSearch" type="text" class="form-control" placeholder="Room name" aria-label="Username" aria-describedby="basic-addon1">
+    <input id="roomSearch" type="text" class="material-input form-control" placeholder="Search room.." aria-label="Username" aria-describedby="basic-addon1">
   </div>
 
 {!! Form::open(['url' => 'admin/update/room', 'id' => 'updateRoomForm']) !!}
 
 <div class ="table-responsive border shadow bg-light" style="max-height: 500px; overflow: auto; display:inline-block;">
-    <table class="table table-striped bg-light table-responsive-sm border" >
-        <thead class="thead bg-light">
+    <table class="table table-striped border" >
+        <thead >
             <tr>                        
-                <th class="bg-light" scope="col">Room Name</th>
+                <th style="background: #EAE0BD !important;" scope="col">Room Name</th>
                 {{-- <th class="bg-light" scope="col">Status</th> --}}
-                <th class="bg-light" scope="col" colspan="2">Action</th>
+                <th style="background: #EAE0BD !important;"  scope="col" colspan="2">Action</th>
             </tr>
         </thead> 
         <tbody id="rooms-table" >
@@ -66,21 +66,21 @@ function fillRoomTable(){
             let rooms = JSON.parse(this.responseText);
 
             output = '<tbody id="rooms-table">';
+            
+                for(let i in rooms){
+                    output+= '<tr id="room-row-' + rooms[i].id + '">';
+                        output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
+                        output+= '<td id="room-name" >' + rooms[i].name + '</td>';
 
-            for(let i in rooms){
-                output+= '<tr id="room-row-' + rooms[i].id + '">';
-                output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
-                output+= '<td id="room-name" >' + rooms[i].name + '</td>';
+                        // if(rooms[i].enable == 1)
+                        //     output+= '<td>Enabled</td>';
+                        // else
+                        //     output+= '<td>Disabled</td>';
 
-                // if(rooms[i].enable == 1)
-                //     output+= '<td>Enabled</td>';
-                // else
-                //     output+= '<td>Disabled</td>';
-
-                output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
-                output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;
-                output+= '</tr>';
-            }  
+                        output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
+                        output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;
+                    output+= '</tr>';
+                }  
 
             output+= '</tbody>';
 
@@ -112,16 +112,16 @@ function searchRoom(){
 
             for(let i in rooms){
                 output+= '<tr id="room-row-' + rooms[i].id + '">';
-                output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
-                output+= '<td id="room-name" >' + rooms[i].name + '</td>';
+                    output+= '<input id="room-hidden-' + rooms[i].id + '"  type="hidden" value="' + rooms[i].id + '">';
+                    output+= '<td id="room-name" >' + rooms[i].name + '</td>';
 
-                if(rooms[i].enable == 1)
-                    output+= '<td>Enabled</td>';
-                else
-                    output+= '<td>Disabled</td>';
+                    // if(rooms[i].enable == 1)
+                    //     output+= '<td>Enabled</td>';
+                    // else
+                    //     output+= '<td>Disabled</td>';
 
-                output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
-                output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;
+                    output+= `<td id="button-`+ rooms[i].id + `"><button onclick="changeToEdit(`+  rooms[i].id + `)" type="button" class="btn btn-info text-white">Edit</button></td>`;
+                    output+= `<td><a class="btn btn-info text-white" href="/admin/delete/room/`+ rooms[i].id+`">Delete</a></td>`;
                 output+= '</tr>';
             }  
 

@@ -21,11 +21,11 @@
                 <table class="table table-bordered">
                     <thead class="border border-success">
                         <tr >
-                            <th class="bg-light">S.Y. & Sem</th>
-                            <th class="bg-light">Department & Program</th>
+                            <th class="smartii-bg-dark text-light">S.Y. & Sem</th>
+                            <th class="smartii-bg-dark text-light">Department & Program</th>
                             <th style="background-color: #EAE0BD !important">Class Name/Section</th>
-                            <th class="bg-light">Subject</th>
-                            <th class="bg-light">Instructor</th>
+                            <th class="smartii-bg-dark text-light">Subject</th>
+                            <th class="smartii-bg-dark text-light">Instructor</th>
                         </tr>    
                     </thead>    
         
@@ -82,7 +82,7 @@
                                                             <div class="col border-right">
 
                                                                 <span class="text-left " >
-                                                                    <a href="{{url('/studentprofile/' . $subjectTaken->student->student_id)}}">{{$subjectTaken->student->student_id}}</a>
+                                                                    <a target="_blank" href="{{url('/studentprofile/' . $subjectTaken->student->student_id)}}">{{$subjectTaken->student->student_id}}</a>
                                                                 </span>
                                                                 
                                                             </div>
@@ -202,7 +202,7 @@
                                             output += `<div class="row border my-0 mx-auto py-2 ">
                                                             <div class="col border-right">
                                                                 <span class="text-left " >
-                                                                    <a href="${APP_URL}/studentprofile/${archives[i].subjectsTaken[j].student.student_id}">${archives[i].subjectsTaken[j].student.student_id}</a>                                                                
+                                                                    <a target="_blank" href="${APP_URL}/studentprofile/${archives[i].subjectsTaken[j].student.student_id}">${archives[i].subjectsTaken[j].student.student_id}</a>                                                                
                                                                 </span>
                                                             </div>
                                                             

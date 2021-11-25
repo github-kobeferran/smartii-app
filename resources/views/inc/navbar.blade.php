@@ -65,7 +65,13 @@
                         <div class="dropdown-menu dropdown-menu-right color-custom-green" aria-labelledby="navbarDropdown">
 
                             <?php $role = auth()->user()->user_type; ?>
-                            <a href="/home" class="dropdown-item">Smartii Homepage</a>
+
+                            @if (!Auth::guest() && !Auth::user()->isApplicant())
+                                
+                                <a href="/home" class="dropdown-item">Homepage</a>
+
+                            @endif
+
 
                             <a class="dropdown-item"
                             

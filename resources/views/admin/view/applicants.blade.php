@@ -569,7 +569,7 @@ function applicantSelect(btnId, id, isdefault = false ){
                             <li class="list-group-item">First Name: <strong>`+ ucfirst(applicant.first_name)  + `</strong></li>                            
                             <li class="list-group-item">Middle Name: <strong>${applicant.middle_name != null ? ucfirst(applicant.middle_name) : ''}</strong></li>                            
                             <li class="list-group-item">Age: <strong>`+ applicant.age + ' years ' + `</strong></li>                            
-                            <li class="list-group-item">Gender: <strong>`+ ucfirst(applicant.gender) + `</strong></li>                            
+                            <li class="list-group-item">Gender: <strong style="color: ${applicant.gender == 'male' ? '#0099ff' : '#ff80ff'} !important;">`+  ucfirst(applicant.gender) + `</strong></li>                            
                             <li class="list-group-item">Living in: <strong>`+ applicant.present_address + `</strong></li>                            
                             <li class="list-group-item">Previous School: <strong>`+ applicant.last_school + `</strong></li>                                                        
                             {{ Form::hidden('app_id','`+ applicant.id  + `') }}`;

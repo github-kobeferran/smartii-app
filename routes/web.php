@@ -165,6 +165,11 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::post('/admin/approveapplicant', [App\Http\Controllers\ApplicantsController::class, 'approve'])->name('applicant.approve');
     Route::any('/admin/rejectapplicant', [App\Http\Controllers\ApplicantsController::class, 'reject'])->name('applicant.reject');
     Route::any('/admin/restoreapplicant', [App\Http\Controllers\ApplicantsController::class, 'restore'])->name('applicant.restore');            
+    //applicants **no forms
+    Route::get('/remindapplicationform', [App\Http\Controllers\UsersController::class, 'remindToSubmit']);
+    Route::any('/deletenoform', [App\Http\Controllers\UsersController::class, 'deleteNoAdmissionForms']);        
+    Route::get('/remindspecific/{id}', [App\Http\Controllers\UsersController::class, 'remindSpecific']);        
+    Route::get('/deletespecific/{id}', [App\Http\Controllers\UsersController::class, 'deleteSpecific']);        
     //announcement
     Route::any('/createannouncement', [App\Http\Controllers\AnnouncementsController::class, 'store'])->name('storeAnnouncement');
     Route::any('/deleteannouncement/{id}', [App\Http\Controllers\AnnouncementsController::class, 'delete'])->name('storeAnnouncement');
@@ -201,10 +206,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/deletediscount', [App\Http\Controllers\DiscountsController::class, 'delete'])->name('discount.delete');    
     Route::any('/storediscount', [App\Http\Controllers\DiscountsController::class, 'store'])->name('discount.store');    
     //counts
-    Route::get('/countclass/{prog}/{subj}', [App\Http\Controllers\StudentClassesController::class, 'countClasses']);
-    //no forms
-    Route::get('/remindapplicationform', [App\Http\Controllers\UsersController::class, 'remindToSubmit']);
-    Route::any('/deletenoform', [App\Http\Controllers\UsersController::class, 'deleteNoAdmissionForms']);        
+    Route::get('/countclass/{prog}/{subj}', [App\Http\Controllers\StudentClassesController::class, 'countClasses']);    
     // registrar requests
     Route::get('/droprequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewDropRequests'])->name('drop.view')->middleware(['admin.registrar']);
     Route::get('/shiftrequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewShiftRequests'])->name('shift.view')->middleware(['admin.registrar']);
@@ -222,15 +224,17 @@ Route::middleware([App\Http\Middleware\ProtectApplicantRoutesMiddleware::class])
     Route::get('/applicant/view/programs/{dept}', [App\Http\Controllers\ApplicantsController::class, 'showPrograms'])->name('applicantViewPrograms');    
     Route::get('/applicant/programs/{prog}', [App\Http\Controllers\ApplicantsController::class, 'getProg'])->name('getApplicantProg');    
     Route::any('/applicant/create/', [App\Http\Controllers\ApplicantsController::class, 'store'])->name('applicantStore');    
-    
+    Route::any('/applicant/resubmit/', [App\Http\Controllers\ApplicantsController::class, 'resubmit'])->name('applicantResubmit');    
 });
 
 //drop subjecttaken
 Route::any('/requestdrop', [App\Http\Controllers\RegistrarRequestsController::class, 'requestDrop'])->middleware(['verified'])->name('registrarrequest.requestdrop');    
 
+// about student but can be accessed by all members
+Route::get('/studentprofile/{id?}/', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentProfile')->middleware(['verified', 'member']);
+
 // STUDENT protected routes 
 Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->group(function () {
-    
     
     Route::get('/student/classes/', [App\Http\Controllers\StudentsController::class, 'getClasses'])->name('studentClasses');    
     Route::get('/student/balance/', [App\Http\Controllers\StudentsController::class, 'getBalance'])->name('studentBalance');    
@@ -242,9 +246,6 @@ Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->
     Route::any('/storeshift', [App\Http\Controllers\RegistrarRequestsController::class, 'storeShift'])->name('store.shift');
 
 });
-
-// about student but can be accessed by all
-Route::get('/studentprofile/{id?}/', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentProfile')->middleware(['verified', 'member']);
 
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->group(function () {

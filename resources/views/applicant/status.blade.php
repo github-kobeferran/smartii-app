@@ -38,7 +38,7 @@
 
                 @include('inc.messages')
 
-                <p class="text-center">The Admission Officer has requested you to resubmit the following files:</p>
+                <b><p class="text-center">The Admission Officer has requested you to resubmit the following files:</p></b>
 
                 @switch($applicant->resubmit_file)
                     @case('1000')
@@ -46,8 +46,8 @@
 
                             <div class="form-group m-3">
 
-                                {{Form::label('idpic', '1x1 ID Picture')}}
-                                {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                                <b>{{Form::label('idpic', '1x1 ID Picture')}}</b>
+                                {{Form::file('id_pic', ['class' => 'material-input form-control-file'])}}
                 
                             </div>
 
@@ -60,8 +60,8 @@
                         
                         <div class="form-group m-3">
                             
-                            {{Form::label('idpic', '1x1 ID Picture')}}
-                            {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('idpic', '1x1 ID Picture')}}</b>
+                            {{Form::file('id_pic', ['class' => 'material-input form-control-file'])}}
                             
                         </div>
                         
@@ -71,8 +71,8 @@
                         
                         <div class="form-group m-3">
                             
-                            {{Form::label('birthcert', 'Birth Certificate')}}
-                            {{Form::file('birth_cert', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('birthcert', 'Birth Certificate')}}</b>
+                            {{Form::file('birth_cert', ['class' => 'material-input form-control-file'])}}
                             
                         </div>
                         
@@ -86,8 +86,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('idpic', '1x1 ID Picture')}}
-                            {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('idpic', '1x1 ID Picture')}}</b>
+                            {{Form::file('id_pic', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -98,8 +98,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('reportcard', 'Report Card')}}
-                            {{Form::file('report_card', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('reportcard', 'Report Card')}}</b>
+                            {{Form::file('report_card', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -112,8 +112,8 @@
 
                             <div class="form-group m-3">
 
-                                {{Form::label('idpic', '1x1 ID Picture')}}
-                                {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                                <b>{{Form::label('idpic', '1x1 ID Picture')}}</b>
+                                {{Form::file('id_pic', ['class' => 'material-input form-control-file'])}}
                 
                             </div>
 
@@ -123,8 +123,8 @@
 
                             <div class="form-group m-3">
 
-                                {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                                {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                                <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                                {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
                 
                             </div>
 
@@ -134,8 +134,8 @@
 
                             <div class="form-group m-3">
 
-                                {{Form::label('reportcard', 'Report Card')}}
-                                {{Form::file('report_card', ['class' => 'form-control-file'])}}
+                                <b>{{Form::label('reportcard', 'Report Card')}}</b>
+                                {{Form::file('report_card', ['class' => 'material-input form-control-file'])}}
                 
                             </div>
 
@@ -147,8 +147,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('idpic', '1x1 ID Picture')}}
-                            {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('idpic', '1x1 ID Picture')}}</b>
+                            {{Form::file('id_pic', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -158,8 +158,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('birthcert', 'Birth Certificate')}}
-                            {{Form::file('birth_cert', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('birthcert', 'Birth Certificate')}}</b>
+                            {{Form::file('birth_cert', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -169,8 +169,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                            {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                            {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -183,8 +183,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('idpic', '1x1 ID Picture')}}
-                            {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('idpic', '1x1 ID Picture')}}</b>
+                            {{Form::file('id_pic', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -194,8 +194,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('birthcert', 'Birth Certificate')}}
-                            {{Form::file('birth_cert', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('birthcert', 'Birth Certificate')}}</b>
+                            {{Form::file('birth_cert', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -205,8 +205,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                            {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                            {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -216,8 +216,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('reportcard', 'Report Card')}}
-                            {{Form::file('report_card', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('reportcard', 'Report Card')}}</b>
+                            {{Form::file('report_card', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -229,8 +229,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('birthcert', 'Birth Certificate')}}
-                            {{Form::file('birth_cert', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('birthcert', 'Birth Certificate')}}</b>
+                            {{Form::file('birth_cert', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -243,8 +243,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('birthcert', 'Birth Certificate')}}
-                            {{Form::file('birth_cert', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('birthcert', 'Birth Certificate')}}</b>
+                            {{Form::file('birth_cert', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -254,8 +254,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                            {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                            {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -269,8 +269,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('birthcert', 'Birth Certificate')}}
-                            {{Form::file('birth_cert', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('birthcert', 'Birth Certificate')}}</b>
+                            {{Form::file('birth_cert', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -281,8 +281,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('reportcard', 'Report Card')}}
-                            {{Form::file('report_card', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('reportcard', 'Report Card')}}</b>
+                            {{Form::file('report_card', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -295,8 +295,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('birthcert', 'Birth Certificate')}}
-                            {{Form::file('birth_cert', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('birthcert', 'Birth Certificate')}}</b>
+                            {{Form::file('birth_cert', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -306,8 +306,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                            {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                            {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -317,8 +317,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('reportcard', 'Report Card')}}
-                            {{Form::file('report_card', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('reportcard', 'Report Card')}}</b>
+                            {{Form::file('report_card', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -331,8 +331,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                            {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                            {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -346,8 +346,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                            {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                            {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -357,8 +357,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('reportcard', 'Report Card')}}
-                            {{Form::file('report_card', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('reportcard', 'Report Card')}}</b>
+                            {{Form::file('report_card', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -371,8 +371,8 @@
 
                         <div class="form-group m-3">
 
-                            {{Form::label('reportcard', 'Report Card')}}
-                            {{Form::file('report_card', ['class' => 'form-control-file'])}}
+                            <b>{{Form::label('reportcard', 'Report Card')}}</b>
+                            {{Form::file('report_card', ['class' => 'material-input form-control-file'])}}
             
                         </div>
 
@@ -385,7 +385,7 @@
                                             
                 <div class = "form-group mt-3">   
                          
-                    {{Form::submit('Resubmit',  ['class' => 'btn btn-primary btn-block '])}}
+                    {{Form::submit('Resubmit',  ['class' => 'material-btn btn btn-primary btn-block '])}}
 
                 </div> 
 

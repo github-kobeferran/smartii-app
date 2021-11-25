@@ -687,7 +687,7 @@ tbody td {
   font-weight: bold !important;
 }
 
-.material-btn:hover {
+.material-btn:hover:enabled {
   filter: drop-shadow(0 0 1rem #898a8b) !important;
   background-color: #05551B !important;
 }

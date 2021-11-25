@@ -71,7 +71,9 @@ class SubjectsTakenController extends Controller
 
         }
 
-                 
+        $students = $students->filter(function ($student, $key) {
+            return !is_null($student);
+        });
                         
         return $students->values();        
         

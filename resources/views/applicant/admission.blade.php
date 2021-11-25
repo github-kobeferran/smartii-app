@@ -241,11 +241,11 @@ Define your own CSS3 animations in the CSS.
 
                             <div class="form-group text-center text-white">                                 
                                
-                                <button id="btnShsSelect"  value="0" onclick="toggleDepartment(document.getElementById('btnShsSelect'))" style="height: 100px; width: 120px;" type="button" class="btn btn-primary m-1 " data-toggle="button" aria-pressed="false" autocomplete="off">
+                                <button id="btnShsSelect"  value="0" onclick="toggleDepartment(document.getElementById('btnShsSelect'))" style="height: 100px; width: 120px;" type="button" class="material-btn btn btn-primary m-1 " data-toggle="button" aria-pressed="false" autocomplete="off">
                                     <h4>Senior High School</h4>
                                 </button>
 
-                                <button id="btnCollegeSelect" value="1" onclick="toggleDepartment(document.getElementById('btnCollegeSelect'))" style="height: 100px;  width: 120px;" type="button" class="btn btn-primary m-1" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                <button id="btnCollegeSelect" value="1" onclick="toggleDepartment(document.getElementById('btnCollegeSelect'))" style="height: 100px;  width: 120px;" type="button" class="material-btn btn btn-primary m-1" data-toggle="button" aria-pressed="false" autocomplete="off">
                                     <h4>College</h4>
                                 </button>
 
@@ -255,7 +255,7 @@ Define your own CSS3 animations in the CSS.
 
                             <div id="divProg" class="form-group text-center mt-3 d-none">
                                 <h4 style="font-family: 'Raleway', sans-serif; font-weight: 900px; color: #044716;">Program</h4>
-                                {{Form::select('program_id', [], null, ['placeholder' => 'Select a Program', 'class' => 'form-control' , 'id' => 'selectProg'])}}   
+                                {{Form::select('program_id', [], null, ['placeholder' => 'Select a Program', 'class' => 'material-input form-control' , 'id' => 'selectProg'])}}   
                             </div>                                                              
 
                         </div>
@@ -321,33 +321,33 @@ Define your own CSS3 animations in the CSS.
                             <div class="border rounded border-secondary mb-2">
                 
                                 <div class="form-group m-3">
-                                    {{Form::label('details', 'Please fill data needed ')}}
-                                    {{ Form::text('l_name', '', [ 'id' => 'lName', 'maxLength' => '100', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last Name Here..']) }}
-                                    {{ Form::text('f_name', '', ['id' => 'fName','maxLength' => '100', 'class' => 'form-control mb-2', 'placeholder' => 'Your First Name Here..']) }}
-                                    {{ Form::text('m_name', '', ['id' => 'mName','maxLength' => '100','class' => 'form-control mb-2', 'placeholder' => 'Your Middle Name Here..']) }}
+                                    <b>{{Form::label('details', 'Please fill data needed ')}}</b>
+                                    {{ Form::text('l_name', '', [ 'id' => 'lName', 'maxLength' => '100', 'class' => 'material-input form-control mb-2', 'placeholder' => 'Your Last Name Here..']) }}
+                                    {{ Form::text('f_name', '', ['id' => 'fName','maxLength' => '100', 'class' => 'material-input form-control mb-2', 'placeholder' => 'Your First Name Here..']) }}
+                                    {{ Form::text('m_name', '', ['id' => 'mName','maxLength' => '100','class' => 'material-input form-control mb-2', 'placeholder' => 'Your Middle Name Here..']) }}
                     
                                 </div>
 
                                 
                                 <div class = "form-group text-center">     
-                                    {{Form::label('dob', 'Date of Birth')}}                   
-                                    {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), [ 'class' => 'ml-2', 'id' => 'dob'] )}}
+                                    <b>{{Form::label('dob', 'Date of Birth')}}                  </b> 
+                                    {{Form::date('dob', \Carbon\Carbon::now()->subYears(15), [ 'class' => 'material-input ml-2', 'id' => 'dob'] )}}
                                 </div> 
                           
                                 
                                 <div class = "form-group text-center">     
-                                    {{Form::label('gender', 'Sex',  ['class' => 'mt-2'])}}
+                                    <b>{{Form::label('gender', 'Sex',  ['class' => 'mt-2'])}}</b>
                                     {{Form::select('gender', ['male' => 'Male',
                                                                 'female' => 'Female',                                                              
                                                                 ], null,
-                                                                ['class' => 'custom-select w-50', 'id' => 'selectGender'])}}   
+                                                                ['class' => 'material-input custom-select w-50', 'id' => 'selectGender'])}}   
                                 </div>
 
                                 <div class = "form-group m-3">                                                          
-                                    {{ Form::text('present_address', '', ['maxLength' => '100', 'id' => 'address', 'class' => 'form-control mb-2', 'placeholder' => 'Your Present Address..']) }}
+                                    {{ Form::text('present_address', '', ['maxLength' => '100', 'id' => 'address', 'class' => 'material-input form-control mb-2', 'placeholder' => 'Your Present Address..']) }}
                                 </div> 
                                 <div class = "form-group m-3">                                                          
-                                    {{ Form::text('last_school', '', ['maxLength' => '100', 'id' => 'l_school', 'class' => 'form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}
+                                    {{ Form::text('last_school', '', ['maxLength' => '100', 'id' => 'l_school', 'class' => 'material-input form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}
                                 </div> 
                 
                             </div>
@@ -366,8 +366,8 @@ Define your own CSS3 animations in the CSS.
 
                                 <div class="form-group m-3">
                 
-                                    {{Form::label('idpic', '1x1 ID Picture')}}
-                                    {{Form::file('id_pic', ['class' => 'form-control-file'])}}
+                                    <b>{{Form::label('idpic', '1x1 ID Picture')}}</b>
+                                    {{Form::file('id_pic', ['class' => 'material-input form-control-file'])}}
                     
                                 </div>
                 
@@ -377,8 +377,8 @@ Define your own CSS3 animations in the CSS.
                 
                                 <div class="form-group m-3">
                 
-                                    {{Form::label('birthcert', 'PSA Birth Certificate')}}
-                                    {{Form::file('birth_cert', ['class' => 'form-control-file '])}}
+                                    <b>{{Form::label('birthcert', 'PSA Birth Certificate')}}</b>
+                                    {{Form::file('birth_cert', ['class' => 'material-input form-control-file '])}}
                     
                                 </div>
                 
@@ -388,8 +388,8 @@ Define your own CSS3 animations in the CSS.
                 
                                 <div class="form-group m-3">
                 
-                                    {{Form::label('goodmoral', 'Good Moral Certificate')}}
-                                    {{Form::file('good_moral', ['class' => 'form-control-file'])}}
+                                    <b>{{Form::label('goodmoral', 'Good Moral Certificate')}}</b>
+                                    {{Form::file('good_moral', ['class' => 'material-input form-control-file'])}}
                     
                                 </div>
                 
@@ -399,8 +399,8 @@ Define your own CSS3 animations in the CSS.
                 
                                 <div class="form-group m-3">
                 
-                                    {{Form::label('form10', 'Grade 10 Report Card | Form 138', ['id' => 'reportCardLabel'])}}
-                                    {{Form::file('report_card', ['class' => 'form-control-file ', 'id' => 'reportCard'])}}
+                                    <b>{{Form::label('form10', 'Grade 10 Report Card | Form 138', ['id' => 'reportCardLabel'])}}</b>
+                                    {{Form::file('report_card', ['class' => 'material-input form-control-file ', 'id' => 'reportCard'])}}
                     
                                 </div>
                 
@@ -414,7 +414,7 @@ Define your own CSS3 animations in the CSS.
                             </div>                                             
                             
                             <div class = "form-group mt-3">        
-                              {{Form::submit('Submit',  ['id' => 'submitbutton', 'class' => 'btn btn-primary btn-block ', 'disabled' => 'disabled'])}}
+                              {{Form::submit('Submit',  ['id' => 'submitbutton', 'class' => 'material-btn btn btn-primary btn-block ', 'disabled' => 'disabled'])}}
                             </div>   
                             
                             <div class="card bg-light border-info mb-3 text-center" >                              
@@ -707,8 +707,8 @@ function updateMonitorOutput(){
 }
 
 function toggleDepartment(btn){
-    btnSHS.className = "btn btn-primary m-1";
-    btnColl.className = "btn btn-primary m-1";
+    btnSHS.className = "material-btn btn btn-primary m-1";
+    btnColl.className = "material-btn btn btn-primary m-1";
     btn.className = "d-none";
 
     department = btn.value;
