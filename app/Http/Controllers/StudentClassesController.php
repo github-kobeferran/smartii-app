@@ -178,6 +178,50 @@ class StudentClassesController extends Controller
         $proceed = true;
 
         $counter = 1;
+           
+            for($i=0; $i<$noOfSched; $i++){
+
+                if($i < 1){
+                    
+                    $validator = Validator::make($request->all(), [
+
+                        'day' => 'required', 
+                        'student_ids' => 'required',                        
+
+                    ],
+                    [
+                        'student_ids.required' => 'Students are required',
+                    ]);
+
+                } else {
+
+                    $validator = Validator::make($request->all(), [
+                                                
+                        'day_' . $i => 'required',                                          
+                        'day_' . $i => 'required',  
+                        'student_ids' => 'required',                                        
+                        'instructor_id_' . $i => 'required|in:'. $request->input('instructor_id'),                                          
+
+                    ],
+                    [
+                        'day_' .$i. '.required' => 'day ' . ($i+1) . ' is required',
+                        'day_' .$i. '.required' => 'day ' . ($i+1) . ' is required',
+                        'instructor_id_' . $i. '.in' => 'Must be the same Instructor for all schedules',
+                        'student_ids.required' => 'Students are required.',
+                    ]);                   
+                    
+                }
+
+            } 
+            
+    
+            if ($validator->fails()) {
+                return redirect()->route('adminClasses')
+                             ->withErrors($validator)
+                             ->withInput()
+                             ->with('active', 'create');
+            }
+
 
             $students = $request->input('student_ids'); 
 
@@ -209,51 +253,6 @@ class StudentClassesController extends Controller
 
             if ($validator->fails())
                 return redirect()->route('adminClasses')->withInput()->withErrors($validator)->with('active', 'create');
-
-
-
-            for($i=0; $i<$noOfSched; $i++){
-
-                if($i < 1){
-                    
-                    $validator = Validator::make($request->all(), [
-
-                        'day' => 'required', 
-                        'student_ids' => 'required',                        
-
-                    ],
-                    [
-                        'student_ids.required' => 'Students are required',
-                    ]);
-
-                } else {
-
-                    $validator = Validator::make($request->all(), [
-                                                
-                        'day_' . $i => 'required',                                          
-                        'day_' . $i => 'required',  
-                        'student_ids' => 'required',                                        
-                        'instructor_id_' . $i => 'required|in:'. $request->input('instructor_id'),                                          
-
-                    ],
-                    [
-                        'day_' .$i. '.required' => 'day ' . ($i+1) . ' is required',
-                        'day_' .$i. '.required' => 'day ' . ($i+1) . ' is required',
-                        'instructor_id_' . $i. '.in' => 'Must be the same Instructor for all schedules',
-                        'student_ids.required' => 'Students are required',
-                    ]);                   
-                    
-                }
-
-            } 
-            
-    
-            if ($validator->fails()) {
-                return redirect()->route('adminClasses')
-                             ->withErrors($validator)
-                             ->withInput()
-                             ->with('active', 'create');
-            }
 
             for($i=0; $i<$noOfSched; $i++){ 
 
@@ -380,6 +379,23 @@ class StudentClassesController extends Controller
              *  ONLY ONE SCHED BLOCK
              * 
              */
+           
+
+            $validator = Validator::make($request->all(), [
+                'day' => 'required',   
+                'student_ids' => 'required',
+            ],
+            [
+                'student_ids.required' => 'Students are required.',
+            ]);
+    
+            if ($validator->fails()) {
+                return redirect()->route('adminClasses')
+                             ->withErrors($validator)
+                             ->withInput()
+                             ->with('active', 'create');
+            }
+
             $students = $request->input('student_ids');
 
 
@@ -411,21 +427,6 @@ class StudentClassesController extends Controller
 
             if ($validator->fails())
                 return redirect()->route('adminClasses')->withInput()->withErrors($validator)->with('active', 'create');
-
-            $validator = Validator::make($request->all(), [
-                'day' => 'required',   
-                'student_ids' => 'required',
-            ],
-            [
-                'student_ids.required' => 'Students are required',
-            ]);
-    
-            if ($validator->fails()) {
-                return redirect()->route('adminClasses')
-                             ->withErrors($validator)
-                             ->withInput()
-                             ->with('active', 'create');
-            }
 
             $from_time = Carbon::parse(($request->input('from')));
             $until_time = Carbon::parse(($request->input('until')));            

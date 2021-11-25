@@ -65,7 +65,7 @@
         <div class="row ">
             <div class="col-sm mx-auto text-center">
                 <h6 class="">SET CLASS NAME</h6>
-                <input type="text" name="class_name" value="{{old('class_name')}}" maxlength="25" class="material-input text-center mx-auto w-25 @error('class_name') is-invalid @enderror" required>                               
+                <input id="class-name" type="text" name="class_name" value="{{old('class_name')}}" maxlength="25" class="material-input text-center mx-auto w-25 @error('class_name') is-invalid @enderror" required>                               
             </div>            
             
         </div>
@@ -226,8 +226,11 @@ let until_time = document.getElementById('until_time');
 let selectDay = document.getElementById('selectDay');
 let loaderPanel = document.getElementById('loader-panel');
 let classPanel = document.getElementById('class-panel');
+let classNameInput = document.getElementById('class-name');
 
 let cur_program = '';
+let cur_program_abbrv = '';
+let cur_proper_level = '';
 let cur_subject = '';
 let cur_mode = 'id_asc';
 let counter = 1;
@@ -553,11 +556,11 @@ function changeSubjects(){
                 if(subjects[i].student_count < 1)
                     selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} (${subjects[i].units} ${subjects[i].program.is_tesda? `hours` : `units`})`, subjects[i].id);                                    
                 else
-                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} (${subjects[i].units} ${subjects[i].program.is_tesda? `hours` : `units`}) PENDING : ${subjects[i].student_count}`, subjects[i].id); 
+                    selectSubject.options[i] = new Option(`${subjects[i].code} - ${subjects[i].desc} (${subjects[i].units} ${subjects[i].program.is_tesda? `hours` : `units`}) PENDING : ${subjects[i].student_count}`, subjects[i].id);                 
             }              
                     
             classesTableData();     
-            currentProgramAndSubject(selectProg.value, selectSubject.value);       
+            currentProgramAndSubject(selectProg.value, selectSubject.value);               
 
         }      
     }
@@ -687,8 +690,7 @@ function changeProgramID(subjectid, selectElement = null){
 
 async function currentProgramAndSubject(progid, subjid){
     const res = await fetch(APP_URL + `/admin/view/programs/${progid}`);
-    const program = await res.json();
-
+    const program = await res.json();         
 
     const res2 = await fetch(APP_URL + `/admin/view/subjects/${subjid}`);
     const subject = await res2.json();    
@@ -698,19 +700,28 @@ async function currentProgramAndSubject(progid, subjid){
     switch(subject.level){
         case 1:
             level = 'Grade 11';
+            cur_proper_level = '11';
         break;
         case 2:
             level = 'Grade 12';
+            cur_proper_level = '12';
         break;
         case 11:
             level = 'First Year';
+            cur_proper_level = '1';
         break;
         case 12:
             level = 'Second Year';
+            cur_proper_level = '2';
         break;
     }
     document.getElementById('cur-program').textContent = level + " - " + program.abbrv;
 
     document.getElementById('cur-subject').textContent = subject.desc;
+
+    cur_program_abbrv = program.abbrv;  
+
+    classNameInput.value = `${cur_program_abbrv} ${cur_proper_level}-`;
+
 }
 </script>
