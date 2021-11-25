@@ -1,15 +1,20 @@
 @extends('layouts.app')
 
+@section('class')  login-background   @endsection
 
 @section('content')
 <div class="container">
+  
+    <div class="fixed-bottom text-right">
+        <img style="max-width: 30% !important; opacity: 0.08 !important;" class="img-fluid" src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" >
+    </div>
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
 
             @include('inc.messages')
 
             <div class="card">
-                <div class="card-header"><h5 class="text-center">LOGIN</h5></div>
+                <div class="card-header border-0 my-0 smartii-text-dark"><h4 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif" class="text-left">Login</h4></div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -19,7 +24,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right"><strong>{{ __('E-Mail Address') }}</strong></label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="email" type="email" class="material-input form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -33,7 +38,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right"><strong>{{ __('Password') }}</strong></label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                <input id="password" type="password" class="material-input form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -57,7 +62,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="material-btn btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
 
@@ -72,7 +77,7 @@
                 </div>
             </div>
 
-            <div class="border border-warning rounded p-4 mt-1 text-center mb-2">
+            <div class="border border-warning p-4 mt-1 text-center mb-2">
 
                 Note: Sign in with Google is not available by <strong> Members created by Admin</strong>, use your email and password.
 

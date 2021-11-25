@@ -1,15 +1,20 @@
 @extends('layouts.app')
 
+@section('class')  register-background   @endsection
+
 @section('content')
 <div class="container">
-    <div class="row justify-content-center mt-5">
+    <div class="fixed-bottom text-right">
+        <img style="max-width: 30% !important; opacity: 0.08 !important;" class="img-fluid" src="{{url('/storage/images/system/logo/smartii.png')}}" alt="" >
+    </div>
+    <div class="row justify-content-center mt-5 ">
         <div class="col-md-8">
 
             @if (\App\Models\Admin::count() > 0)
 
                 @if (\App\Models\Setting::first()->enrollment_mode)
                     <div class="card">
-                        <div class="card-header"><h5 class="text-center">REGISTER</h5></div>
+                        <div class="card-header border-0 my-0 smartii-text-dark"><h4 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif" class="text-left">Register</h4></div>
         
                         <div class="card-body ">
                             <form method="POST" action="{{ route('register') }}">
@@ -19,7 +24,7 @@
                                     <label for="name" class="col-md-4 col-form-label text-md-right"><strong>{{ __('Name') }}</strong></label>
         
                                     <div class="col-md-6">
-                                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                        <input id="name" type="text" class="material-input form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
         
                                         @error('name')
                                             <span class="invalid-feedback" role="alert">
@@ -33,7 +38,7 @@
                                     <label for="email" class="col-md-4 col-form-label text-md-right"><strong>{{ __('E-Mail Address') }}</strong></label>
         
                                     <div class="col-md-6">
-                                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                        <input id="email" type="email" class="material-input form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
         
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
@@ -47,7 +52,7 @@
                                     <label for="password" class="col-md-4 col-form-label text-md-right"><strong>{{ __('Password') }}</strong></label>
         
                                     <div class="col-md-6">
-                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                        <input id="password" type="password" class="material-input form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
         
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
@@ -61,13 +66,13 @@
                                     <label for="password-confirm" class="col-md-4 col-form-label text-md-right"><strong>{{ __('Confirm Password') }}</strong></label>
         
                                     <div class="col-md-6">
-                                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                                        <input id="password-confirm" type="password" class="material-input form-control" name="password_confirmation" required autocomplete="new-password">
                                     </div>
                                 </div>
         
                                 <div class="form-group row mb-0">
                                     <div class="col-md-6 offset-md-4">
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" class="material-btn btn btn-primary">
                                             {{ __('Register') }}
                                         </button>
         
@@ -96,7 +101,7 @@
                         </div>                
                     </div>
         
-                    <div class="border border-primary rounded p-4 mt-1 text-center mb-2">
+                    <div class="border border-success p-4 mt-1 text-left mb-2">
         
                         Note: This registration is only for <strong> New Applicants </strong>, if you are already an existing Student or Faculty. Please go to the registrar for your User Details.
         
