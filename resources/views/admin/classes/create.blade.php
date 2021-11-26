@@ -34,7 +34,7 @@
             
             <div class="form-group text-center">                            
                 {{Form::select('subj', 
-                [], null,
+                [], old('subj'),
                 ['class' => 'custom-select w-50 m-1 material-input', 'id' => 'selectSubject'])}}    
                 {{Form::hidden('programid', '', ['id' => 'programID'])}}                        
             </div>    

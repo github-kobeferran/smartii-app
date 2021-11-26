@@ -537,8 +537,35 @@ class StudentClassesController extends Controller
                     break;
             }
         }
-        if (StudentClass::where('id', '!=', $class->id)->where('class_name', str_replace(' ', '', $request->input('class_name')))->exists())
-            return redirect()->back()->with('error', 'There is already a class name "'. $request->input('class_name') . '"')->with('active', 'view');
+
+        $proper_level = '';            
+
+        $sample_student = $class->subjectsTaken->first()->student;
+        switch($sample_student->level){
+            case 1:
+                $proper_level = '11';
+            break;
+            case 2:
+                $proper_level = '12';
+            break;
+            case 11:
+                $proper_level = '1';
+            break;
+            case 12:
+                $proper_level = '2';
+            break;
+
+        }
+
+        $validator = Validator::make($request->all(), [
+            'class_name' => 'required|unique:classes,class_name,' . $request->input('class_id') . '|regex:/^'. $sample_student->program->abbrv . ' ' . $proper_level. '-[A-G]{1}[1-9]{1}$/',
+        ],[
+            'class_name.unique' => 'The class name had already been taken.',
+            'class_name.regex' => 'Class Name pattern is wrong, it must be exactly "' . $sample_student->program->abbrv . '<space>'. $proper_level . '-" followed by a section indicator that requires one capital letter from A-G and one letter from 1-9. (ex.' . $sample_student->program->abbrv . ' ' . $proper_level . '-A1)',
+        ]);
+
+        if ($validator->fails()) 
+            return redirect()->route('adminClasses')->withErrors($validator)->withInput()->with('active','view');
 
         $class->faculty_id = $request->input('instructor');
         $class->class_name = $request->input('class_name');
