@@ -156,7 +156,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     //classes
     Route::get('/admin/classes/', [App\Http\Controllers\StudentClassesController::class, 'view'])->name('adminClasses')->middleware(['admin.registrar']);
     Route::get('/admin/classes/archived', [App\Http\Controllers\StudentClassesController::class, 'viewArchived'])->name('viewArchived')->middleware(['admin.registrar']);
-    Route::get('/admin/searcharchived/{text?}', [App\Http\Controllers\StudentClassesController::class, 'searchArchived'])->name('view.class.archived.search')->middleware(['admin.registrar']);
+    Route::get('/admin/searcharchived/{text}/{faculty_id?}', [App\Http\Controllers\StudentClassesController::class, 'searchArchived'])->name('view.class.archived.search')->middleware(['admin.registrar']);
     Route::get('/admin/schedules/{prog}/{subj}', [App\Http\Controllers\SubjectsTakenController::class, 'showClassSchedules'])->name('showClassSchedules');
     Route::any('/updateschedule', [App\Http\Controllers\StudentClassesController::class, 'updateSchedule'])->name('updateschedule');    
     //applicants 
@@ -214,6 +214,8 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     Route::any('/rejectshift', [App\Http\Controllers\RegistrarRequestsController::class, 'rejectShift'])->name('reject.shift');    
     Route::any('/approvedrop', [App\Http\Controllers\RegistrarRequestsController::class, 'approveDrop'])->name('subjecttaken.approvedrop');    
     Route::any('/rejectdrop', [App\Http\Controllers\RegistrarRequestsController::class, 'rejectDrop'])->name('subjecttaken.rejectdrop');    
+    Route::any('/approveratingupdate', [App\Http\Controllers\RegistrarRequestsController::class, 'approveRatingUpdate'])->name('request.rating.approve');    
+    Route::any('/rejectratingupdate', [App\Http\Controllers\RegistrarRequestsController::class, 'rejectRatingUpdate'])->name('request.rating.reject');    
 });
 
 // APPLICANT protected routes 
@@ -253,6 +255,7 @@ Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->
 
     Route::get('/myclass/{id}/', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
     Route::get('/myclass/{id}/export', [App\Http\Controllers\FacultiesController::class, 'exportClass'])->name('exportClass');
+    Route::get('/myarchivedclass/{id}/export', [App\Http\Controllers\FacultiesController::class, 'exportClass'])->name('exportClass');
 
     Route::get('/sortclass/{classid}/{facultyid}/{sortby}', [App\Http\Controllers\StudentClassesController::class, 'sortStudents'])->name('sortStudents');
     Route::any('/faculty/updaterating/', [App\Http\Controllers\SubjectsTakenController::class, 'updateRating'])->name('updaterating');
@@ -261,6 +264,9 @@ Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->
     Route::get('/showfacultydetail/{id}/{detail}', [App\Http\Controllers\FacultiesController::class, 'showDetail'])->name('showdetail');
     Route::any('/updatefaculty', [App\Http\Controllers\FacultiesController::class, 'update'])->name('updatefaculty');        
     Route::any('/deletefaculty', [App\Http\Controllers\FacultiesController::class, 'delete'])->name('faculty.delete');           
+    Route::any('/storeratings', [App\Http\Controllers\FacultiesController::class, 'importRatings'])->name('ratings.import');           
+    Route::get('/myarchived/{text}/{faculty_id?}', [App\Http\Controllers\StudentClassesController::class, 'searchArchived'])->name('faculty.archived.search');
+    Route::any('/requestratingupdate', [App\Http\Controllers\RegistrarRequestsController::class, 'requestRatingUpdate'])->name('faculty.request.rating.update');
 });
 
 

@@ -35,7 +35,8 @@ class Student extends Model
                           'tuition_with_discount' => null,
                           'level_desc_better' => null,
                           'drop_status' => null,
-                          'drop_request' => null
+                          'drop_request' => null,
+                          'request_rating_update' => null
                         ];
 
     public function member(){
@@ -44,7 +45,7 @@ class Student extends Model
 
     public function subject_taken(){
         return $this->hasMany(SubjectTaken::class)->withTrashed();
-    } 
+    }
 
     public function applicant(){
         return $this->hasOne(Applicant::class);
@@ -91,6 +92,14 @@ class Student extends Model
 
     public function getDropRequestAttribute(){
         return $this->attributes['drop_request'];
+    }
+
+    public function setRequestRatingUpdateAttribute($request){
+        $this->attributes['request_rating_update'] = $request;
+    }
+
+    public function getRequestRatingUpdateAttribute(){
+        return $this->attributes['request_rating_update'];
     }
 
     public function stillToBeTakenSubjects(){

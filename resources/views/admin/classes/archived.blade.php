@@ -152,9 +152,15 @@
 
     let searchText = document.getElementById('search-text');
     let archiveList = document.getElementById('archive-list');
+    let txt = '';
+
+    if(searchText.value == '')
+        txt = 'iamnotsearchingforanarchiveclass';
+    else 
+        txt = searchText.value;
 
     async function searchArchived(){        
-        const res = await fetch(APP_URL + '/admin/searcharchived/' + searchText.value);
+        const res = await fetch(APP_URL + '/admin/searcharchived/' + txt);
         const archives = await res.json();
 
         let output = `<tbody id="archive-list">`;

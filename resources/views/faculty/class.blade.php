@@ -14,10 +14,11 @@
     </script>
 
     <div class="row ">
-        <div class="col-sm">
+        <div class="col-sm" @if ($class->archive) style="display: none;" @endif>
             <a class="btn-back float-left mt-2" href="{{route('facultyClasses')}}"><i class="fa fa-arrow-left" aria-hidden="true"></i> My Classes</a>    
         </div>
-        <div class="col-sm">
+
+        <div class="col-sm" @if ($class->archive) style="display: none;" @endif>
             <button id="btn-archive" class="btn btn-secondary btn-sm float-right mt-2 d-none" data-toggle="modal" data-target="#confirmArchive"><i class="fa fa-archive" aria-hidden="true"></i> Archive this Class</button>
         </div>        
           
@@ -63,19 +64,21 @@
         <div class="col-sm mx-auto text-center">
 
             <h5 class="mb-2">{{$class->topic}} Class </h5>            
-            <p class="mb-2"> of {{$class->class_name}}</p>  
+            <p class="mb-2"> of {{$class->class_name}} </p>  
 
             @foreach ($schedules as $sched)
 
                 <div> 
                     {{$sched->day_name}}  {{$sched->formatted_start}} - {{$sched->formatted_until}} {{$sched->room_name}}
-
                 </div>
                 
             @endforeach
 
+            @if ($class->archive)
+                A.Y of {{$class->subjectsTaken->first()->from_year}} - {{$class->subjectsTaken->first()->to_year}} / {{$class->subjectsTaken->first()->semester == 1 ? '1st semester' : '2nd semseter'}}
+            @endif
                         
-            <h4 class="mt-5">Students List </h4>   
+            <h4 class="mt-5">Students List <span style="font-size: .5em;" class="badge badge-light border">{{$class->student_count}}</span> </h4>   
 
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
@@ -106,16 +109,83 @@
             <div class="row no-gutters float-right mb-2">
 
                 <div class="col">
-                    <a href="/myclass/{{$class->id}}/export" class="btn btn-success rounded-0" type="button" data-toggle="tooltip" title="Export to Excel" aria-haspopup="true" aria-expanded="false">
-                       Export List to Excel
-                    </a> 
-                </div>          
-                
+                    <button class="badge badge-pill badge-{{$class->archive ? 'secondary text-white' : 'success text-dark'}} " type="button" data-toggle="modal" data-target="#class-actions">Actions</button>
+                </div>                
             </div>           
+
+            <div class="modal fade" id="class-actions" tabindex="-1" role="dialog" aria-labelledby="class-actions-title" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    @if ($class->archive) 
+                        <div class="modal-content">
+                            <div class="modal-header bg-secondary">
+                                <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Class Actions</span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-left">
+                                <h5><span class="text-dark">Export Archived Class Student List</span></h5>                  
+                                <em>Downloads a Excel File of this archived class Student List</em>
+                                <br>
+                                <a href="/exportratings/{{$class->id}}/export" class="btn btn-secondary rounded-0 mb-2 float-right" type="button" data-toggle="tooltip" title="Export to Excel" aria-haspopup="true" aria-expanded="false">
+                                    Export Student List 
+                                </a> 
+                            </div>
+                        </div>
+                    @else
+                        <div class="modal-content">
+                            <div class="modal-header bg-success">
+                                <h5 class="modal-title" id="exampleModalLongTitle"><span class="text-white">Class Actions</span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row border-bottom">
+                                    <div class="col text-left">              
+                                        <h5>Export</h5>                  
+                                        <em>Downloads a Excel File of this class Student List</em>
+                                        <br>
+                                        <a href="/myclass/{{$class->id}}/export" class="btn btn-success rounded-0 mb-2 float-right" type="button" data-toggle="tooltip" title="Export to Excel" aria-haspopup="true" aria-expanded="false">
+                                            Export Student List
+                                        </a> 
+                                    </div>                            
+                                </div>
+                                <div class="row">
+                                    <div class="col text-left">
+                                        <h5>Import</h5>   
+                                        {!!Form::open(['url' => '/storeratings', 'files' => true])!!}
+                                            <em>Inputting the Rating of Students by uploading an <b>excel file</b></em>
+                                            <em>You must exactly have a '<b>Student ID</b>' and '<b>Rating</b>' column in your excel file.</em>
+                                            <em><span class="text-danger">Rows with invalid rating values</span> such ratings <b>less than one</b>, <b>greater than five</b>, <b>3.1 - 3.9, 4.1-4.9</b> and <b>not divisible by .25</b>
+                                            are going to be <u>ignored</u>.
+                                            </em>
+                                            <br>
+                                            <br>
+                                            <h5><span class="text-primary"><em>You are going to change the student ratings of <span class="text-dark">{{$class->class_name}} - {{$class->topic}}.</span></em></span></h5>
+                                            <br>
+                                            <div class="p-2 border border-primary">
+                                                <span class="text-muted float-right">upload excel file</span>
+                                                {{Form::file('ratings', ['class' => 'material-input form-control-file', 'required' => 'required'])}}
+                                                {{Form::hidden('class_id', $class->id)}}
+                                                <button type="submit" class="btn btn-primary mt-2">Import Ratings</button> 
+                                            </div>
+                                        {!!Form::close()!!}
+                                    </div>
+                                </div>
+                            </div>                
+                        </div>
+
+                    @endif
+                </div>
+            </div>
+            
+
+
             
            <div class="table-responsive">
                 <table class="table table-bordered">
-                    <thead class="green-bg-light">
+                    <thead @if ($class->archive) class="bg-secondary text-white" @else class="green-bg-light" @endif>
                         <tr>
                             <th>Student ID</th>
                             <th>Student Name</th>
@@ -184,8 +254,7 @@ function selectTable(mode){
                 output = '<tbody id="students-table">';
                                 
                 for(let i in students){
-                    
-                    
+                                                           
                     output+= `<tr>
                         <td>`;
                     if(typeof students[i].drop_request != null && typeof students[i].drop_request != 'undefined')   {
@@ -215,11 +284,85 @@ function selectTable(mode){
                     if(students[i].rating == 3.5){
                         output+= '<td id="rating-' + students[i].id + '" class="btn-input border-left"><button onclick="selectRating('+ students[i].id +')" class="btn btn-primary">Input Rating</button></td>';
                         availForArchive = false;
-                    }else{                                                
-                        if(students[i].rating == 4)
-                            output+= '<td id="rating-' + students[i].id + '" class="btn-input border-left rated"><span class="rating-text"> INC </span><a onclick="selectRating('+ students[i].id +', '+ students[i].rating +')" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>';
-                        else
-                            output+= '<td id="rating-' + students[i].id + '" class="btn-input border-left rated"><span class="rating-text"> '+ students[i].rating +'</span>   <a onclick="selectRating('+ students[i].id +', '+ students[i].rating +')" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>';
+                    }else{                                                                        
+                        if(students[i].rating == 4){                            
+                            output+= `<td id="rating-${students[i].id}" class="btn-input border-left rated"><span class="rating-text"> INC </span>`;
+
+                                let is_archived = false;                                
+                                let sub_taken_id = 0;
+                                let status = null;
+                                students[i].subject_taken.forEach(subject_taken => {                        
+                                    if(subject_taken.class_id == CLASS_ID){
+                                        if(subject_taken.class.archive == 1){
+                                            is_archived = true;
+                                            sub_taken_id = subject_taken.id;
+                                            if(typeof subject_taken.request_rating_update != null && typeof subject_taken.request_rating_update != 'undefined')
+                                                status = subject_taken.request_rating_update.status;
+                                        }                                        
+                                    }
+                                });
+
+                                console.log(status);
+
+                            if(is_archived){
+                                if(status != null){
+                                    switch(status){
+                                        case 0:
+                                            output+=`<span class="text-primary">Request Pending</span></td>`;
+                                        break; 
+                                        case 1:
+                                            output+=`<span class="text-success">Request approved</span></td>`;
+                                        break; 
+                                        case 2:
+                                            outut+=`<span class="text-danger">Request rejected</span></td>`;
+                                        break; 
+                                    }                                
+                                } else {
+                                    output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
+                                }
+                            } else {
+                                output+=`<a onclick="selectRating('${students[i].id}', '${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
+                            }
+
+                        } else {
+
+                            output+= `<td id="rating-${students[i].id}" class="btn-input border-left rated"><span class="rating-text"> ${students[i].rating} </span>`;
+                            let is_archived = false;
+                            let sub_taken_id = 0;
+                            let status = null;
+                            students[i].subject_taken.forEach(subject_taken => {                        
+                                if(subject_taken.class_id == CLASS_ID){
+                                    if(subject_taken.class.archive == 1){
+                                        is_archived = true;
+                                        sub_taken_id = subject_taken.id;
+                                        if(typeof subject_taken.request_rating_update != null && typeof subject_taken.request_rating_update != 'undefined')
+                                                status = subject_taken.request_rating_update.status;
+                                    }
+                                }
+                            });
+
+                            console.log(status);
+
+                            if(is_archived){
+                                if(status != null){
+                                    switch(status){
+                                        case 0:
+                                            output+=`<span class="text-primary">Pending</span></td>`;
+                                        break; 
+                                        case 1:
+                                            output+=`<span class="text-success">Update rating request approved</span></td>`;
+                                        break; 
+                                        case 2:
+                                            outut+=`<span class="text-danger">Update rating request rejected</span></td>`;
+                                        break; 
+                                    }                                
+                                } else {
+                                    output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
+                                }
+                            } else {
+                                output+=`<a onclick="selectRating('${students[i].id}', '${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
+                            }
+                        }
                     }
                     output+= '</tr>';
 
@@ -253,6 +396,76 @@ function selectTable(mode){
                         </div>
                     </div>
                     `;
+
+                    students[i].subject_taken.forEach(subject_taken => {                        
+                        if(subject_taken.class_id == CLASS_ID){
+
+                            cur_rating = '';
+
+                            switch(subject_taken.rating){
+                                case 4: 
+                                    cur_rating = 'INC'; 
+                                break;
+                                case 5: 
+                                    cur_rating = 'Failed'; 
+                                break;
+                                default:
+                                    cur_rating = subject_taken.rating;
+                                break;
+                            }
+
+                            modal_output+=`<div class="modal fade" id="request-rating-edit-${subject_taken.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-secondary">
+                                                            <h5 class="modal-title" id="exampleModalCenterTitle"><span class="text-white">Send Request for Rating Modification for ${students[i].first_name} ${students[i].last_name}</span></h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        {!!Form::open(['url' => 'requestratingupdate'])!!}
+                                                            <div class="modal-body text-justify">
+                                                                Request to change rating of  ${students[i].student_id} - ${students[i].first_name} ${students[i].last_name}
+                                                                <p><b>Current rating: ${cur_rating} </b></p>
+                                                                <p><b>Change to: </b></p>
+                                                                <input type="hidden" name="id" value="${subject_taken.id}">
+                                                                <select name="rating" class="custom-select" required>                                                                
+                                                                <option value="" selected>Choose...</option>`;
+                                                                if(subject_taken.rating != 1)
+                                                                    modal_output+=`<option value="1">1</option>`;
+                                                                if(subject_taken.rating != 1.25)
+                                                                    modal_output += `<option value="1.25">1.25</option>`;
+                                                                if(subject_taken.rating != 1.50)    
+                                                                    modal_output +=`<option value="1.50">1.50</option>`;                                                                    
+                                                                if(subject_taken.rating != 1.75)    
+                                                                    modal_output += `<option value="1.75">1.75</option>`;
+                                                                if(subject_taken.rating != 2)    
+                                                                    modal_output += `<option value="2">2</option>`;
+                                                                if(subject_taken.rating != 2.25)    
+                                                                    modal_output += `<option value="2.25">2.25</option>`;                                                                    
+                                                                if(subject_taken.rating != 2.50)
+                                                                    modal_output+= `<option value="2.50">2.50</option>`;
+                                                                if(subject_taken.rating != 2.75)
+                                                                    modal_output+= `<option value="2.75">2.75</option>`;
+                                                                if(subject_taken.rating != 3)
+                                                                    modal_output += `<option value="3">3</option>`;                                                                    
+                                                                if(subject_taken.rating != 4)
+                                                                    modal_output += `<option value="4">INC/Deferred</option>`;
+                                                                if(subject_taken.rating != 5)
+                                                                    modal_output += `<option value="5">5/Failed</option>`;
+                                                modal_output+=`</select>
+                                                            </div>
+                                                            <div class="modal-footer py-0">
+                                                                <button type="submit" class="btn btn-primary">Send Request to Registrar</button>
+                                                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                                            </div>
+                                                        {!!Form::close()!!}
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                        }
+                    });
+
                 }
 
                 modal_output += `</div>`;

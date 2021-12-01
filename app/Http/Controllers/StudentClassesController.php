@@ -55,15 +55,20 @@ class StudentClassesController extends Controller
                ->with('archivedClasses', $archivedClasses);
     }
 
-    public function searchArchived($text = null){
+    public function searchArchived($text, $faculty_id = null){
 
-        $archivedClasses = collect(new StudentClass);
+        $archivedClasses = collect();
     
-        if(!is_null($text)){
+        if($text != 'iamnotsearchingforanarchiveclass'){
 
-            $archivedClasses = StudentClass::where('archive', 1)->get();            
+            $archivedClasses = collect([]);           
 
-            $archivedClasses = $archivedClasses->filter(function($archived_class) use($text){
+            if(!is_null($faculty_id))
+                $archivedClasses = StudentClass::where('archive', 1)->where('faculty_id', $faculty_id)->get();
+            else
+                $archivedClasses = StudentClass::where('archive', 1)->get();            
+
+            $archivedClasses = $archivedClasses->filter(function($archived_class) use($text, $faculty_id){
                 $valid = false;
                 $text = strtolower($text);
                 
@@ -91,13 +96,14 @@ class StudentClassesController extends Controller
                     $valid = true;
                 }
 
-                if(str_contains(strtolower($archived_class->faculty->first_name), $text)){
-                    $valid = true;
-                }
-
-                if(str_contains(strtolower($archived_class->faculty->last_name), $text)){
-                    $valid = true;
-                }   
+                if(is_null($faculty_id))
+                    if(str_contains(strtolower($archived_class->faculty->first_name), $text))
+                        $valid = true;
+                
+                if(!is_null($faculty_id))
+                    if(str_contains(strtolower($archived_class->faculty->last_name), $text))
+                        $valid = true;
+                
 
                 return $valid == true;
 
@@ -106,8 +112,11 @@ class StudentClassesController extends Controller
                         
         } else {
 
-            $archivedClasses = StudentClass::where('archive', 1)->get();     
-            
+            if(!is_null($faculty_id))
+                $archivedClasses = StudentClass::where('archive', 1)->where('faculty_id', $faculty_id)->get();
+            else
+                $archivedClasses = StudentClass::where('archive', 1)->get();
+
         }     
                 
         $sorted = $archivedClasses->sortByDesc('id');        
@@ -135,15 +144,7 @@ class StudentClassesController extends Controller
             });   
             
                      
-        }
-
-        // foreach($sorted as $class){
-        //     foreach($class->$subjectsTaken as $subjectTaken){
-        //         $subjectTaken->student;
-        //         $subjectTaken->student->program;
-        //     }
-
-        // }
+        }     
         
         return $sorted;
     }
@@ -642,17 +643,24 @@ class StudentClassesController extends Controller
             return $value != null;
         });
 
-        foreach($students as $student){
-
+        foreach($students as $student){            
             foreach($student->subject_taken as $subject_taken){
                 foreach(RegistrarRequest::all() as $request){
                     if($request->type_id == $subject_taken->id){
-                        $student->drop_status = $request->status;
-                        $student->drop_request = $request;
+                        if($request->type == 'drop'){
+                            $student->drop_status = $request->status;
+                            $student->drop_request = $request;
+                        } else if ($request->type == 'rating'){                            
+                            $subject_taken->request_rating_update = $request;
+                        }
+                            
                     }
                 }
-            }            
+
+                $subject_taken->class;
+            }                   
         }
+        
                 
         $alphabetical = $students->sortBy('last_name');
         $idAsc = $students->sortBy('student_id');                     

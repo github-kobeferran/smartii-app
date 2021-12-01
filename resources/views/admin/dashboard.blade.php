@@ -457,15 +457,21 @@
                                     <span class="raleway-font">CHANGE PROGRAM</span> <span class="badge badge-info text-white rounded-circle">{{\App\Models\RegistrarRequest::where('status', 0)->where('type', 'shift')->count()}}</span>                 
                                 </button>
                             @endif
-                        @endif
 
-                        @if (auth()->user()->member->admin->position == 'superadmin' || auth()->user()->member->admin->position == 'registrar')
                             @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->count() > 0)                            
                                 <button data-toggle="modal" data-target="#drop-modal" type="button" class="btn btn-light btn-lg m-1 border">
                                     <span class="raleway-font">DROP REQUESTS</span> <span class="badge badge-info text-white rounded-circle">{{\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->count()}}</span>                 
                                 </button>
                             @endif
+
+                            @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'rating')->count() > 0)                            
+                                <button data-toggle="modal" data-target="#rating-modal" type="button" class="btn btn-light btn-lg m-1 border">
+                                    <span class="raleway-font">CHANGE STUDENT GRADE REQUESTS</span> <span class="badge badge-info text-white rounded-circle">{{\App\Models\RegistrarRequest::where('status', 0)->where('type', 'rating')->count()}}</span>                 
+                                </button>
+                            @endif
+
                         @endif
+
                     </div>
 
                     {{-- STILL WAITING MODAL  --}}
@@ -829,6 +835,113 @@
                     
                     @endif
 
+            {{-- RATING MODAL --}}
+
+                @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'rating')->count() > 0)
+                    <div class="modal fade" id="rating-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" style="max-width: 80%;" role="document">
+                            <div class="modal-content" >
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle"><span class="text-dark">RATING UPDATE REQUESTS</span></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Requestor</th>
+                                                    <th>Student</th>
+                                                    <th>Subject</th>
+                                                    <th class="text-center">Current Grade</th>
+                                                    <th class="text-center">Change to</th>
+                                                    <th>Created at</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'rating')->get() as $request)
+                                                    <tr>
+                                                        <?php $subject_taken = \App\Models\SubjectTaken::find($request->type_id); ?>
+                                                        <td>{{$request->requestor->faculty_id}} - {{$request->requestor->first_name}} {{$request->requestor->last_name}}</td>
+                                                        <td><a href="{{url('/studentprofile/'. $subject_taken->student->student_id)}}" target="_blank">{{$subject_taken->student->student_id}} - {{$subject_taken->student->first_name}} {{$subject_taken->student->last_name}}</a></td>
+                                                        <td>{{$subject_taken->subject->code}} - {{$subject_taken->subject->desc}}</td>
+                                                        <td class="text-center">{{$subject_taken->rating}}</td>
+                                                        <td class="text-center">{{$request->rating}}</td>
+                                                        <td>{{$request->created_at->isoFormat('MMM DD, YYYY hh:mm A')}}</td>
+                                                        <td>
+                                                            <button type="button" data-toggle="modal" data-target="#approve-rating-{{$request->id}}" class="badge badge-badge-pill text-white badge-success">Approve</button>
+                                                            <button type="button" data-toggle="modal" data-target="#reject-rating-{{$request->id}}" class="badge badge-badge-pill text-white badge-danger">Reject</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+
+                    @foreach (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'rating')->get() as $request)                        
+                        <div class="modal fade" id="approve-rating-{{$request->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header smartii-bg-dark">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle"><span class="text-white">Change of Grade Approval</span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {!!Form::open(['url' => '/approveratingupdate']) !!}
+                                        <?php $subject_taken = \App\Models\SubjectTaken::find($request->type_id); ?>
+                                        <div class="modal-body text-justify">
+                                            {{Form::hidden('id', $request->id)}}
+                                            {{Form::hidden('rating', $request->rating)}}
+                                            <p>Approve changing of {{$subject_taken->student->student_id}} - {{$subject_taken->student->first_name}} {{$subject_taken->student->last_name}}'s</p>
+                                            <p>{{$subject_taken->subject->code}} - {{$subject_taken->subject->desc}} grade <b>from {{$subject_taken->rating}}</b> <b class="text-primary">to {{$request->rating}}</b> <b>?</b></p>
+                                        </div>
+                                        <div class="modal-footer py-0">
+                                            <button type="submit" class="btn btn-success">Yes</button>
+                                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    {!!Form::close() !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="reject-rating-{{$request->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header red-bg-light">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">Reject {{$request->requestor->faculty_id}} - {{$request->requestor->first_name}} {{$request->requestor->last_name}}'s request</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {!!Form::open(['url' => '/rejectratingupdate']) !!}
+                                        <?php $subject_taken = \App\Models\SubjectTaken::find($request->type_id); ?>
+                                        <div class="modal-body text-justify">
+                                            {{Form::hidden('id', $request->id)}}     
+                                            <b>{{Form::label('Reason of reject: ')}}</b>                                                                                   
+                                            <p>Reject this update rating request?</p>
+                                            {{Form::text('reason', '', ['class' => 'form-control', 'placeholder' => 'Enter the reject cause here..'])}}
+                                        </div>
+                                        <div class="modal-footer py-0">
+                                            <button type="submit" class="btn btn-danger">Yes</button>
+                                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    {!!Form::close() !!}
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+
+                @endif
+             {{-- RATING MODAL END --}}
 
                 </div>
             </div>

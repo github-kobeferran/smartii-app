@@ -145,7 +145,57 @@ class RegistrarRequestsController extends Controller
 
         return redirect()->back()->with('info', 'Drop Request for '. $subject_taken->subject->desc . ' of '. $subject_taken->student->first_name . ' '  . $subject_taken->student->last_name  . ' has been submitted.');
         
+    }   
+    
+    public function requestRatingUpdate(Request $request){
+        if($request->method() != "POST")
+            return redirect()->back();            
+
+        $registrar_request = new RegistrarRequest;
+
+        $registrar_request->type = 'rating';
+        $registrar_request->type_id = $request->input('id');
+        $registrar_request->requestor_type = auth()->user()->user_type;
+        $registrar_request->requestor_id = auth()->user()->member->member_id;
+        $registrar_request->rating = $request->input('rating');
+        $registrar_request->save();
+        
+        return redirect()->back()->with('success', 'Request for Rating Update is successfully sent to registrar');
     }
+
+    public function approveRatingUpdate(Request $request){
+        if($request->method() != "POST")
+            return redirect()->back();            
+
+        $registrar_request = RegistrarRequest::find($request->input('id'));
+        $subject_taken = SubjectTaken::find($registrar_request->type_id);
+
+        $subject_taken->rating = $registrar_request->rating;
+        $subject_taken->save();
+
+        $registrar_request->marked_by = auth()->user()->member->member_id;
+        $registrar_request->status = 1;
+
+        $registrar_request->save();
+        
+        return redirect()->back()->with('info', 'Rating request is approved.');
+    }
+
+    public function rejectRatingUpdate(Request $request){
+        if($request->method() != "POST")
+            return redirect()->back();            
+
+        $registrar_request = RegistrarRequest::find($request->input('id'));
+        $registrar_request->status = 2;
+        
+        if($request->has('reason'))
+            $registrar_request->reject_reason = $request->input('reason');
+
+        $registrar_request->save();
+        
+    }
+
+
 
 
 }

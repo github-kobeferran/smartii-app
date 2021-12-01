@@ -21,6 +21,7 @@ use App\Mail\WelcomeMember;
 use App\Mail\RemindToArchive;
 use Carbon\Carbon;
 use App\Exports\ClassStudenList;
+use App\Imports\RatingsImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FacultiesController extends Controller
@@ -330,10 +331,11 @@ class FacultiesController extends Controller
             return redirect()->back()->with('error', 'User Access not granted. Please contact the Site Administrator for more details.');
         }
         
-        $id = auth()->user()->member->member_id;                                   
-
-        $classesByProgram = StudentClass::getFacultyClassesByProgram($id); //base the loop here
+        $id = auth()->user()->member->member_id; 
         
+        $faculty = Faculty::find($id);
+
+        $classesByProgram = StudentClass::getFacultyClassesByProgram($id); //base the loop here        
         
         $programs = collect(new Program); 
         $classes = collect(new StudentClass);        
@@ -354,13 +356,10 @@ class FacultiesController extends Controller
                 $classesToPush = collect(new StudentClass);
 
                 foreach($classids as $class){
-
                     $class = StudentClass::find($class);
-
-                    $class->topic = $class->id;
+                    $class->topic = $class->id;                    
 
                     $classesToPush->push($class);
-
                 }
 
                 $filtered = $classesToPush->filter(function ($value, $key) {
@@ -379,10 +378,20 @@ class FacultiesController extends Controller
 
         $classesThisSemester = $classes->filter(function ($value, $key) {
             return $value != null;
-        });                                    
+        });     
+
+       
+
+        $archivedClasses = $faculty->classes->where('archive', 1)->sortDesc();   
+
+        foreach($archivedClasses as $class){
+            $class->student_count;
+            $class->dropped_count;
+        }
     
         return view('faculty.classes')            
-                ->with('classesThisSemester', $classesThisSemester);
+                ->with('classesThisSemester', $classesThisSemester)
+                ->with('archivedClasses', $archivedClasses->values());
 
      }
 
@@ -394,12 +403,14 @@ class FacultiesController extends Controller
 
         $class = StudentClass::find($id);
 
-        if($class->archive == 1){
-            return redirect()->route('facultyClasses');
-        }
+        // if($class->archive == 1){
+        //     return redirect()->route('facultyClasses');
+        // }
 
         $class->topic = $class->id;
         $class->prog = $class->id;
+        $class->student_count;
+        $class->dropped_count;
 
         $faculty = Faculty::find(auth()->user()->member->member_id);
         
@@ -696,5 +707,22 @@ class FacultiesController extends Controller
 
         return redirect()->route('adminView')->with('active', 'faculties')->with('info', 'Faculty ' . $faculty->first_name . ' ' . $faculty->last_name . ' \'s account restored.');
     }
+
+    public function importRatings(Request $request){ 
+
+        $validator = Validator::make($request->all(), [
+            'ratings' => 'required|mimes:xlsx,xls|max:10000',
+        ]);
+           
+        if ($validator->fails())
+            return redirect()->back()->withErrors($validator);                                                        
+
+        Excel::import(new RatingsImport($request->input('class_id')), $request->file('ratings'));
+
+        return redirect('myclass/'. $request->input('class_id'))->with('info', 'Ratings Uploaded. If the ratings have not been changed, please check the instructions before submitting your file.');
+
+    }
+
+   
 
 }

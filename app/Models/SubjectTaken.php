@@ -17,7 +17,14 @@ class SubjectTaken extends Model
 
     protected $table = 'subjects_taken';
 
-    protected $appends = ['units'=> null, 'subj_desc' => null, 'sy_and_sem' => null];
+    protected $appends = [
+                            'units'=> null, 
+                            'subj_desc' => null, 
+                            'sy_and_sem' => null,
+                            'request_rating_update' => null
+                        ];
+
+    protected $fillable = ['rating'];
 
     // protected $primaryKey = ['student_id', 'subject_id', 'from_year', 'semester'];
 
@@ -65,6 +72,14 @@ class SubjectTaken extends Model
     {
         $this->attributes['sy_and_sem'] = $this->from_year . '-' . $this->to_year . ' ' . ($this->semester == 1? '1st sem' : '2nd sem');
         return $this->attributes['sy_and_sem'];
+    }
+
+    public function setRequestRatingUpdateAttribute($request){
+        $this->attributes['request_rating_update'] = $request;
+    }
+
+    public function getRequestRatingUpdateAttribute(){
+        return $this->attributes['request_rating_update'];
     }
     
     public static function pendingClasses(){

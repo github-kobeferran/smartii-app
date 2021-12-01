@@ -31,10 +31,11 @@ class ClassStudenList implements FromCollection, WithMapping, WithHeadings, With
     public function headings(): array
     {
         return [
-            'Student-ID',
+            'Student ID',
             'Last Name',         
             'First Name',         
             'Middle Name',                           
+            'Rating',                           
         ];
     }
 
@@ -45,7 +46,7 @@ class ClassStudenList implements FromCollection, WithMapping, WithHeadings, With
             $students->student_id,
             ucfirst($students->last_name),
             ucfirst($students->first_name),
-            ucfirst($students->middle_name),                               
+            $students->middle_name ?? '',                                           
         ];
     }
 

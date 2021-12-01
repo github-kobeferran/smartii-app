@@ -19,7 +19,13 @@ class StudentClass extends Model
     
     protected $table = 'classes';
     
-    protected $appends = ['topic' => null, 'prog'=> null, 'faculty_name' => null];
+    protected $appends = [
+                            'topic' => null, 
+                            'prog'=> null, 
+                            'faculty_name' => null,
+                            'student_count' => null,
+                            'dropped_count' => null
+                        ];
 
     
     public static function init(){
@@ -84,6 +90,23 @@ class StudentClass extends Model
 
     }
 
+  
+    public function getStudentCountAttribute(){
+
+        $this->attributes['student_count'] = $this->hasMany(SubjectTaken::class, 'class_id', 'id')->count();
+
+        return $this->attributes['student_count'];
+
+    }
+
+    public function getDroppedCountAttribute(){
+
+        $this->attributes['dropped_count'] = $this->hasMany(SubjectTaken::class, 'class_id', 'id')->onlyTrashed()->count();
+
+        return $this->attributes['dropped_count'];
+
+    }
+
     public function setProgAttribute($id){
 
         $subjecttaken = SubjectTaken::where('class_id', $id)->first();
@@ -127,13 +150,13 @@ class StudentClass extends Model
      */
 
 
-    public static function getFacultyClassesByProgram($id){        
+    public static function getFacultyClassesByProgram($id, $archive = false){        
 
         $classesByProgram = [];   
               
-        if(static::where('faculty_id', $id)->where('archive', 0)->count() > 1){
+        if(static::where('faculty_id', $id)->where('archive', $archive ? 1 : 0)->count() > 1){
 
-            $classes = static::where('faculty_id', $id)->where('archive', 0)->get();
+            $classes = static::where('faculty_id', $id)->where('archive', $archive ? 1 : 0)->get();
                                     
             $length = $classes->count();
             $i=0;
@@ -158,9 +181,9 @@ class StudentClass extends Model
 
             }
 
-        } elseif (static::where('faculty_id', $id)->where('archive', 0)->count() == 1) {
+        } elseif (static::where('faculty_id', $id)->where('archive', $archive ? 1 : 0)->count() == 1) {
 
-            $class = static::where('faculty_id', $id)->where('archive', 0)->first();            
+            $class = static::where('faculty_id', $id)->where('archive', $archive ? 1 : 0)->first();            
 
             $subjecttaken = SubjectTaken::where('class_id' , $class->id)->first();
 
