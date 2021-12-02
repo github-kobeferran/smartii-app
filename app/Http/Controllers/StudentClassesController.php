@@ -647,10 +647,12 @@ class StudentClassesController extends Controller
             foreach($student->subject_taken as $subject_taken){
                 foreach(RegistrarRequest::all() as $request){
                     if($request->type_id == $subject_taken->id){
+                        if($request->status != 0)
+                            $request->admin;
                         if($request->type == 'drop'){
                             $student->drop_status = $request->status;
                             $student->drop_request = $request;
-                        } else if ($request->type == 'rating'){                            
+                        } else if ($request->type == 'rating'){                                                        
                             $subject_taken->request_rating_update = $request;
                         }
                             

@@ -13,11 +13,10 @@ class SettingsController extends Controller
 
     public function update(Request $request){  
         
-        $dateTimeNow = Carbon::now();
-        $yearNow = $dateTimeNow->year;
-        $min = $dateTimeNow->subYears(1)->year;
-        $maxFrom = $dateTimeNow->addYear(1)->year;
-        $maxTo = $dateTimeNow->addYear(2)->year;                    
+        $now = Carbon::now()->year;
+        $min = Carbon::now()->subYears(1)->year;
+        $maxFrom = Carbon::now()->addYear()->year;
+        $maxTo = Carbon::now()->addYear(2)->year;                  
 
         $validator = Validator::make($request->all(), [
             'from' => 'required|numeric|min:' . $min . '|max:' . $maxFrom, 

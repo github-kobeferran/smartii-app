@@ -11,6 +11,8 @@
     <script>
         var CLASS_ID = {!! json_encode($class->id) !!}    
         var FACULTY_ID = {!! json_encode(auth()->user()->member->member_id) !!}    
+        var FROM_CUR_SEM = {!! json_encode($class->from_cur_sem) !!}    
+        var FROM_LAST_SEM = {!! json_encode($class->from_last_sem) !!}            
     </script>
 
     <div class="row ">
@@ -127,7 +129,7 @@
                                 <h5><span class="text-dark">Export Archived Class Student List</span></h5>                  
                                 <em>Downloads a Excel File of this archived class Student List</em>
                                 <br>
-                                <a href="/exportratings/{{$class->id}}/export" class="btn btn-secondary rounded-0 mb-2 float-right" type="button" data-toggle="tooltip" title="Export to Excel" aria-haspopup="true" aria-expanded="false">
+                                <a href="/myarchivedclass/{{$class->id}}/export" class="btn btn-secondary rounded-0 mb-2 float-right" type="button" data-toggle="tooltip" title="Export to Excel" aria-haspopup="true" aria-expanded="false">
                                     Export Student List 
                                 </a> 
                             </div>
@@ -290,35 +292,34 @@ function selectTable(mode){
 
                                 let is_archived = false;                                
                                 let sub_taken_id = 0;
-                                let status = null;
+                                let request = null;
                                 students[i].subject_taken.forEach(subject_taken => {                        
                                     if(subject_taken.class_id == CLASS_ID){
                                         if(subject_taken.class.archive == 1){
                                             is_archived = true;
                                             sub_taken_id = subject_taken.id;
                                             if(typeof subject_taken.request_rating_update != null && typeof subject_taken.request_rating_update != 'undefined')
-                                                status = subject_taken.request_rating_update.status;
+                                            request = subject_taken.request_rating_update;
                                         }                                        
                                     }
                                 });
-
-                                console.log(status);
-
+                                
                             if(is_archived){
-                                if(status != null){
-                                    switch(status){
+                                if(request != null){
+                                    switch(request.status){
                                         case 0:
                                             output+=`<span class="text-primary">Request Pending</span></td>`;
                                         break; 
                                         case 1:
-                                            output+=`<span class="text-success">Request approved</span></td>`;
+                                            output+=`<span class="text-success">Request approved by Admin ${request.admin.name}</span></td>`;
                                         break; 
                                         case 2:
-                                            outut+=`<span class="text-danger">Request rejected</span></td>`;
+                                            output+=`<span class="text-danger">Request rejected by Admin ${request.admin.name} ${request.reject_reason != null ? `"${request.reject_reason}"` : ``}</span></td>`;
                                         break; 
                                     }                                
                                 } else {
-                                    output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
+                                    if(FROM_CUR_SEM == true || FROM_LAST_SEM == true)
+                                        output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
                                 }
                             } else {
                                 output+=`<a onclick="selectRating('${students[i].id}', '${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
@@ -329,35 +330,34 @@ function selectTable(mode){
                             output+= `<td id="rating-${students[i].id}" class="btn-input border-left rated"><span class="rating-text"> ${students[i].rating} </span>`;
                             let is_archived = false;
                             let sub_taken_id = 0;
-                            let status = null;
+                            let request = null;
                             students[i].subject_taken.forEach(subject_taken => {                        
                                 if(subject_taken.class_id == CLASS_ID){
                                     if(subject_taken.class.archive == 1){
                                         is_archived = true;
                                         sub_taken_id = subject_taken.id;
                                         if(typeof subject_taken.request_rating_update != null && typeof subject_taken.request_rating_update != 'undefined')
-                                                status = subject_taken.request_rating_update.status;
+                                            request = subject_taken.request_rating_update;
                                     }
                                 }
                             });
 
-                            console.log(status);
-
                             if(is_archived){
-                                if(status != null){
-                                    switch(status){
+                                if(request != null){
+                                    switch(request.status){
                                         case 0:
-                                            output+=`<span class="text-primary">Pending</span></td>`;
+                                            output+=`<span class="text-primary">Request pending</span></td>`;
                                         break; 
                                         case 1:
-                                            output+=`<span class="text-success">Update rating request approved</span></td>`;
+                                            output+=`<span class="text-success">Request approved by Admin ${request.admin.name}</span></td>`;
                                         break; 
                                         case 2:
-                                            outut+=`<span class="text-danger">Update rating request rejected</span></td>`;
+                                            output+=`<span class="text-danger">Request rejected by Admin ${request.admin.name} ${request.reject_reason != null ? `"${request.reject_reason}"` : ``}</span></td>`;
                                         break; 
                                     }                                
                                 } else {
-                                    output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
+                                    if(FROM_CUR_SEM == true || FROM_LAST_SEM == true)
+                                        output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
                                 }
                             } else {
                                 output+=`<a onclick="selectRating('${students[i].id}', '${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;

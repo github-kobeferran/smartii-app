@@ -17,11 +17,10 @@
 <?php 
     $currentSetting = \App\Models\Setting::first();
 
-    $yearNow= \Carbon\Carbon::now();
-    $now = $yearNow->year;
-    $min = $yearNow->subYears(1)->year;
-    $maxFrom = $yearNow->addYear(1)->year;
-    $maxTo = $yearNow->addYear(2)->year;
+    $now = \Carbon\Carbon::now()->year;
+    $min = \Carbon\Carbon::now()->subYears(1)->year;
+    $maxFrom = \Carbon\Carbon::now()->addYear()->year;
+    $maxTo = \Carbon\Carbon::now()->addYear(2)->year;      
 
 
     function semDesc($sem){

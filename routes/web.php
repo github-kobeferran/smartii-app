@@ -255,7 +255,7 @@ Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->
 
     Route::get('/myclass/{id}/', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
     Route::get('/myclass/{id}/export', [App\Http\Controllers\FacultiesController::class, 'exportClass'])->name('exportClass');
-    Route::get('/myarchivedclass/{id}/export', [App\Http\Controllers\FacultiesController::class, 'exportClass'])->name('exportClass');
+    Route::get('/myarchivedclass/{id}/export', [App\Http\Controllers\FacultiesController::class, 'exportArchivedClass'])->name('archived.export');
 
     Route::get('/sortclass/{classid}/{facultyid}/{sortby}', [App\Http\Controllers\StudentClassesController::class, 'sortStudents'])->name('sortStudents');
     Route::any('/faculty/updaterating/', [App\Http\Controllers\SubjectsTakenController::class, 'updateRating'])->name('updaterating');

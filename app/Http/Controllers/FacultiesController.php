@@ -21,6 +21,7 @@ use App\Mail\WelcomeMember;
 use App\Mail\RemindToArchive;
 use Carbon\Carbon;
 use App\Exports\ClassStudenList;
+use App\Exports\ArchivedClassExport;
 use App\Imports\RatingsImport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -411,6 +412,8 @@ class FacultiesController extends Controller
         $class->prog = $class->id;
         $class->student_count;
         $class->dropped_count;
+        $class->from_last_sem;
+        $class->from_cur_sem;
 
         $faculty = Faculty::find(auth()->user()->member->member_id);
         
@@ -723,6 +726,26 @@ class FacultiesController extends Controller
 
     }
 
-   
+    public function exportArchivedClass($id){
+        $class = StudentClass::find($id);
+
+        if($class->faculty_id != auth()->user()->member->member_id)
+            return redirect()->back();
+
+        if($class->archive == 0)
+            return redirect()->back();
+
+        $class->topic = $class->id;
+
+        $semester = "";
+
+        if($class->subjectsTaken()->first()->semester == 1)
+            $semester = "First Semester";
+        else 
+            $semester = "Second Semester";            
+
+        return Excel::download(new ArchivedClassExport($class), 'SMARTII Class ' . strtoupper($class->class_name) . ' ' . $class->subjectsTaken()->first()->from_year . '-' . $class->subjectsTaken()->first()->to_year . '['. $semester .']'. '.xlsx');            
+
+    }
 
 }

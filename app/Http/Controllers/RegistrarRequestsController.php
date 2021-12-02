@@ -178,20 +178,24 @@ class RegistrarRequestsController extends Controller
 
         $registrar_request->save();
         
-        return redirect()->back()->with('info', 'Rating request is approved.');
+        return redirect()->back()->with('info', 'Rating request approved.');
     }
 
     public function rejectRatingUpdate(Request $request){
         if($request->method() != "POST")
-            return redirect()->back();            
+            return redirect()->back();
 
         $registrar_request = RegistrarRequest::find($request->input('id'));
+
+        $registrar_request->marked_by = auth()->user()->member->member_id;
         $registrar_request->status = 2;
         
         if($request->has('reason'))
             $registrar_request->reject_reason = $request->input('reason');
 
         $registrar_request->save();
+
+        return redirect()->back()->with('info', 'Rating request rejected.');
         
     }
 

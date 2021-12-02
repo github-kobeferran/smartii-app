@@ -11,6 +11,7 @@ use App\Models\Faculty;
 use App\Models\Program;
 use App\Models\Setting;
 use App\Models\Schedule;
+use Carbon\Carbon;
 
 class StudentClass extends Model
 {
@@ -24,7 +25,9 @@ class StudentClass extends Model
                             'prog'=> null, 
                             'faculty_name' => null,
                             'student_count' => null,
-                            'dropped_count' => null
+                            'dropped_count' => null,
+                            'from_cur_sem' => null,
+                            'from_last_sem' => null
                         ];
 
     
@@ -120,6 +123,52 @@ class StudentClass extends Model
     public function getProgAttribute(){
         
         return  $this->attributes['prog'];
+    }
+
+    public function getFromLastSemAttribute(){
+        $this->attributes['from_last_sem'] = false;
+
+        $setting = Setting::first();
+
+        $last_sem = new Setting;
+        
+        if($setting->semester == 2){
+            $last_sem->semester = 1;
+
+            $last_sem->to_year = $setting->to_year;
+            $last_sem->from_year = $setting->from_year;            
+        } else {
+            $last_sem->semester = 2;
+            if($setting->updated_at->year == Carbon::now()->year){
+                $last_sem->to_year = Carbon::now()->year;
+                $last_sem->from_year = Carbon::now()->subYear()->year;
+            }
+        }    
+
+        if(
+            $last_sem->from_year == $this->subjectsTaken->first()->from_year &&
+            $last_sem->to_year == $this->subjectsTaken->first()->to_year &&
+            $last_sem->semester == $this->subjectsTaken->first()->semester
+        )
+            $this->attributes['from_last_sem'] = true;
+        
+
+        return $this->attributes['from_last_sem'];
+    }
+
+    public function getFromCurSemAttribute(){
+        $this->attributes['from_cur_sem'] = false;
+
+        $setting = Setting::first();
+        
+        if(
+            $setting->from_year == $this->subjectsTaken->first()->from_year &&
+            $setting->to_year == $this->subjectsTaken->first()->to_year &&
+            $setting->semester == $this->subjectsTaken->first()->semester
+        )
+            $this->attributes['from_cur_sem'] = true;
+
+        return $this->attributes['from_cur_sem'];
     }
 
 
