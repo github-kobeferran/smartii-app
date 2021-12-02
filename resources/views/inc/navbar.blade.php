@@ -139,9 +139,8 @@
                             </a>
 
                             @if(!Auth::guest() && Auth::user()->isFaculty())
-
                                 <a class="dropdown-item" href="/facultydetails"> Personal Details</a>
-
+                                <a class="dropdown-item" href="/myrequests"> Registrar Requests</a>
                             @endif
 
 

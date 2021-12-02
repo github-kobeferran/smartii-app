@@ -27,6 +27,7 @@ use App\Exports\StudentsExport;
 use App\Exports\ActiveStudentsExport;
 use App\Exports\AdvancedStudentExport;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class StudentsController extends Controller
 {
@@ -886,6 +887,17 @@ class StudentsController extends Controller
         }
 
         return redirect('studentprofile/' . $student->student_id)->with('success', $student->first_name . ' ' . $student->last_name . ' is enrolled to ' . $msg);
+    }
+
+    public function viewTOR($id){   
+        $student = Student::where('student_id', $id)->first();
+
+        $student->level_desc = $student->level;
+
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);                                    
+        $pdf = PDF::loadView('pdf.tor', compact('student'));
+        return $pdf->stream(  $student->student_id . '_' . strtoupper($student->last_name) .'_TOR.pdf');  
+        
     }
 
 }

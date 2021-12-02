@@ -22,6 +22,11 @@ class RegistrarRequestsController extends Controller
         return view('admin.shift')->with('requests', $requests);
     }
 
+    public function viewRatingRequests(){
+        $requests = RegistrarRequest::where('type', 'rating')->orderBy('created_at', 'desc')->paginate(10); 
+        return view('admin.rating')->with('requests', $requests);
+    }
+
     public function storeShift(Request $request){
         if($request->method() != "POST")
             return redirect()->back();

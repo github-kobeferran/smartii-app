@@ -72,6 +72,7 @@ Route::get('/editpost/{email}/{id}', [App\Http\Controllers\PostsController::clas
 Route::any('/updatepost', [App\Http\Controllers\PostsController::class, 'update'])->middleware(['verified', 'adminAndFaculty']);
 Route::get('/invoice/{invoice_id}', [App\Http\Controllers\InvoicesController::class, 'show'])->middleware(['verified'])->name('invoice.show');    
 Route::get('/cor/{student_id}', [App\Http\Controllers\SubjectsTakenController::class, 'viewCOR'])->middleware(['verified'])->name('subjectstaken.viewCOR');    
+Route::get('/tor/{student_id}', [App\Http\Controllers\StudentsController::class, 'viewTOR'])->middleware(['verified'])->name('subjectstaken.viewTOR');    
 //program outline export
 Route::get('viewprogramcourses/export/{id}/', [App\Http\Controllers\ProgramsController::class, 'programCoursesExport'])->middleware(['verified']);
 
@@ -210,6 +211,7 @@ Route::middleware([App\Http\Middleware\ProtectAdminRoutesMiddleware::class])->gr
     // registrar requests
     Route::get('/droprequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewDropRequests'])->name('drop.view')->middleware(['admin.registrar']);
     Route::get('/shiftrequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewShiftRequests'])->name('shift.view')->middleware(['admin.registrar']);
+    Route::get('/ratingupdaterequests', [App\Http\Controllers\RegistrarRequestsController::class, 'viewRatingRequests'])->name('rating_request.view')->middleware(['admin.registrar']);
     Route::any('/approveshift', [App\Http\Controllers\RegistrarRequestsController::class, 'approveShift'])->name('approve.shift');
     Route::any('/rejectshift', [App\Http\Controllers\RegistrarRequestsController::class, 'rejectShift'])->name('reject.shift');    
     Route::any('/approvedrop', [App\Http\Controllers\RegistrarRequestsController::class, 'approveDrop'])->name('subjecttaken.approvedrop');    
@@ -252,6 +254,7 @@ Route::middleware([App\Http\Middleware\ProtectStudentRoutesMiddleware::class])->
 // FACULTY protected routes 
 Route::middleware([App\Http\Middleware\ProtectFacultyRoutesMiddleware::class])->group(function () {
     Route::get('/myclasses', [App\Http\Controllers\FacultiesController::class, 'getClasses'])->middleware(['verified'])->name('facultyClasses');
+    Route::get('/myrequests', [App\Http\Controllers\FacultiesController::class, 'viewRegistrarRequests'])->middleware(['verified'])->name('faculty.requests');
 
     Route::get('/myclass/{id}/', [App\Http\Controllers\FacultiesController::class, 'getClass'])->name('facultyClass');
     Route::get('/myclass/{id}/export', [App\Http\Controllers\FacultiesController::class, 'exportClass'])->name('exportClass');

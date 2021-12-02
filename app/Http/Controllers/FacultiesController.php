@@ -17,6 +17,7 @@ use App\Models\StudentClass;
 use App\Models\SubjectTaken;
 use App\Models\Subject;
 use App\Models\Program;
+use App\Models\RegistrarRequest;
 use App\Mail\WelcomeMember;
 use App\Mail\RemindToArchive;
 use Carbon\Carbon;
@@ -27,6 +28,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class FacultiesController extends Controller
 {    
+
+    public function viewRegistrarRequests(){
+        $faculty = Faculty::find(auth()->user()->member->member_id);
+        $requests = RegistrarRequest::where('requestor_type', 'faculty')->where('requestor_id', $faculty->id)->orderBy('created_at', 'desc')->get();
+
+        return view('faculty.requests')->with('faculty', $faculty)->with('requests', $requests);
+    }
 
     public function store(Request $request){                             
         
@@ -746,6 +754,6 @@ class FacultiesController extends Controller
 
         return Excel::download(new ArchivedClassExport($class), 'SMARTII Class ' . strtoupper($class->class_name) . ' ' . $class->subjectsTaken()->first()->from_year . '-' . $class->subjectsTaken()->first()->to_year . '['. $semester .']'. '.xlsx');            
 
-    }
+    }    
 
 }

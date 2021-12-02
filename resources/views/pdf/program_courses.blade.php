@@ -147,7 +147,6 @@
 
         <tr class="heading" style="text-align: left !important;">
             <td>Subject Code</td>
-    
             <td>Description</td>
             
             @if ($program->is_tesda)

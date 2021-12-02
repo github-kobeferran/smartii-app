@@ -643,6 +643,9 @@
                         <div>
                             <a href="{{url('/cor/'. $student->student_id)}}" target="_blank">View Certificate of Registration</a>
                         </div>
+                        <div>
+                            <a href="{{url('/tor/'. $student->student_id)}}" target="_blank">View Transcript of Records</a>
+                        </div>
                         
                         @if (!is_null($student->applicant))
                             <button type="button" data-toggle="modal" data-target="#viewimage" class="btn btn-sm btn-light border">View Images</button>

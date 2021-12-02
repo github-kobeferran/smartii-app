@@ -195,10 +195,6 @@
         chart.draw(data, options);
     }
     
-   
-       
-
-    
 </script>
 
     
@@ -246,6 +242,13 @@
                         <a href="{{url('/droprequests')}}" class="dropdown-item list-group-item">View Drop Requests 
                             @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->count() > 0)                                    
                                 <span class="badge badge-danger text-white rounded-circle">{{\App\Models\RegistrarRequest::where('status', 0)->where('type', 'drop')->count()}}</span>
+                            @endif
+                        </a>
+                    @endif
+                    @if (auth()->user()->member->admin->position == 'superadmin' || auth()->user()->member->admin->position == 'registrar')
+                        <a href="{{url('/ratingupdaterequests')}}" class="dropdown-item list-group-item">View Change Grade Requests 
+                            @if (\App\Models\RegistrarRequest::where('status', 0)->where('type', 'rating')->count() > 0)                                    
+                                <span class="badge badge-danger text-white rounded-circle">{{\App\Models\RegistrarRequest::where('status', 0)->where('type', 'rating')->count()}}</span>
                             @endif
                         </a>
                     @endif
