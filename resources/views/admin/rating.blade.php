@@ -50,7 +50,7 @@
                                     @endswitch
                                 </td>
                                 <td>{{\App\Models\Faculty::where('id', $request->requestor_id)->first()->faculty_id }} - {{\App\Models\Faculty::where('id', $request->requestor_id)->first()->first_name }} {{\App\Models\Faculty::where('id', $request->requestor_id)->first()->last_name}}</td>
-                                <td><a href="{{url($subject_taken->student->student_id)}}">{{$subject_taken->student->first_name}} - {{$subject_taken->student->last_name}}</a></td>
+                                <td><a href="{{url('studentprofile/' . $subject_taken->student->student_id)}}">{{$subject_taken->student->first_name}} - {{$subject_taken->student->last_name}}</a></td>
                                 <td>
                                     @if ($request->status != 0)
                                         {{$subject_taken->subject->code}} - {{$subject_taken->subject->desc}} 
