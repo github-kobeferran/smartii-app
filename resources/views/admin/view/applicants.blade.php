@@ -572,6 +572,7 @@ function applicantSelect(btnId, id, isdefault = false ){
                             <li class="list-group-item">Gender: <strong style="color: ${applicant.gender == 'male' ? '#0099ff' : '#ff80ff'} !important;">`+  ucfirst(applicant.gender) + `</strong></li>                            
                             <li class="list-group-item">Living in: <strong>`+ applicant.present_address + `</strong></li>                            
                             <li class="list-group-item">Previous School: <strong>`+ applicant.last_school + `</strong></li>                                                        
+                            <li class="list-group-item">Previous School Year Attended: <strong>`+ applicant.last_school_year + `</strong></li>                                                        
                             {{ Form::hidden('app_id','`+ applicant.id  + `') }}`;
                 if(selectedDept != 4){
                     output2 +=`<li class="list-group-item p-0" type="submit" ><button type="submit" class="btn btn-success btn-block rounded-0">Approve</button></li>

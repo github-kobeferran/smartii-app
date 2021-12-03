@@ -129,6 +129,7 @@ class ApplicantsController extends Controller
             'm_name' => 'nullable|regex:/^[a-zA-Z ]{2,}[ Ññ-]*$/|max:100',
             'present_address' => 'required|max:191', 
             'last_school' => 'required|max:191|regex:/^[a-zA-Z Ññ-]*$/',
+            'last_school_year' => 'required|digits:4|gte:1990|lte:' . Carbon::now()->year,
             'dob' => 'required|date|before:'. $before_date->toDateString() . '|after:' . $after_date,            
 
         ],
@@ -173,7 +174,9 @@ class ApplicantsController extends Controller
                                'dob' => $request->input('dob'),
                                'gender' => $request->input('gender'),
                                'present_address' => $request->input('present_address'),
-                               'last_school' => $request->input('last_school')];
+                               'last_school' => $request->input('last_school'),
+                               'last_school_year' => $request->input('last_school_year')                            
+                            ];
         
 
         $validator = Validator::make($request->all(), [
@@ -218,7 +221,8 @@ class ApplicantsController extends Controller
                          ->with('dob', $validated['dob'])
                          ->with('gender', $validated['gender'])
                          ->with('present_address', $validated['present_address'])
-                         ->with('last_school', $validated['last_school']);
+                         ->with('last_school', $validated['last_school'])
+                         ->with('last_school_year', $validated['last_school_year']);
         }
 
         if( $request->hasFile('id_pic')  && $request->hasFile('report_card') &&
@@ -270,6 +274,7 @@ class ApplicantsController extends Controller
         $applicant->gender = $request->input('gender');
         $applicant->present_address = $request->input('present_address');
         $applicant->last_school = $request->input('last_school');
+        $applicant->last_school_year = $request->input('last_school_year');
 
         $applicant->id_pic  = $idPicToStore;
         $applicant->birth_cert  =  $birth_certToStore;
@@ -786,6 +791,7 @@ class ApplicantsController extends Controller
         
         $student->present_address = $applicant->present_address;
         $student->last_school = $applicant->last_school;
+        $student->last_school_year = $applicant->last_school_year;
 
         $student->save();
     

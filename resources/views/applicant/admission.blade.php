@@ -347,8 +347,12 @@ Define your own CSS3 animations in the CSS.
                                     {{ Form::text('present_address', '', ['maxLength' => '100', 'id' => 'address', 'class' => 'material-input form-control mb-2', 'placeholder' => 'Your Present Address..']) }}
                                 </div> 
                                 <div class = "form-group m-3">                                                          
-                                    {{ Form::text('last_school', '', ['maxLength' => '100', 'id' => 'l_school', 'class' => 'material-input form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}
-                                </div> 
+                                    {{ Form::text('last_school', '', ['maxLength' => '100', 'id' => 'l_school', 'class' => 'material-input form-control mb-2', 'placeholder' => 'Your Last School Attended..']) }}                                    
+                                </div>
+                                
+                                <div class="form-group m-3">
+                                  {{ Form::number('last_school_year', '', ['min'=> '1990', 'max' => \Carbon\Carbon::now()->year, 'maxLength' => '100', 'id' => 'l_school', 'class' => 'material-input form-control mb-2 ', 'placeholder' => 'Your Last School Year Attended..']) }}
+                                </div>
                 
                             </div>
 
