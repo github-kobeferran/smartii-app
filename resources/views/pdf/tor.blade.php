@@ -234,6 +234,9 @@
                                         @case(3.5)
                                             FAILED  
                                             @break
+                                        @case(4)
+                                            INC
+                                            @break
                                         @case(4.5)
                                             FAILED
                                             @break
