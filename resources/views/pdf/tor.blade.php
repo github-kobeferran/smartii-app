@@ -207,7 +207,21 @@
                                 <td><span style="font-size: 1em; font-style: bold;">{{$subject_taken->from_year}} - {{$subject_taken->to_year}} {{$subject_taken->semester == 1 ? 'First Semester' : 'Second Semester'}}</span></td>  
                                 <td>{{$subject_taken->subject->code}}</td>
                                 <td>{{$subject_taken->subject->desc}}</td>
-                                <td>{{$subject_taken->rating}}</td>
+                                <td>
+                                    @switch($subject_taken->rating)
+                                        @case(3.5)
+                                            FAILED  
+                                            @break
+                                        @case(4.5)
+                                            FAILED
+                                            @break
+                                        @case(5)
+                                            FAILED
+                                            @break
+                                        @default
+                                            {{$subject_taken->rating}}
+                                    @endswitch
+                                </td>
                                 <td>{{$subject_taken->subject->units}}</td>
                             </tr>
                         @else
@@ -215,7 +229,21 @@
                                 <td></td>
                                 <td>{{$subject_taken->subject->code}}</td>
                                 <td>{{$subject_taken->subject->desc}}</td>
-                                <td>{{$subject_taken->rating}}</td>
+                                <td>
+                                    @switch($subject_taken->rating)
+                                        @case(3.5)
+                                            FAILED  
+                                            @break
+                                        @case(4.5)
+                                            FAILED
+                                            @break
+                                        @case(5)
+                                            FAILED
+                                            @break
+                                        @default
+                                            {{$subject_taken->rating}}
+                                    @endswitch
+                                </td>
                                 <td>{{$subject_taken->subject->units}}</td>
                             </tr>
                         @endif   
