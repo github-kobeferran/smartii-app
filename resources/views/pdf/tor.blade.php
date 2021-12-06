@@ -189,6 +189,7 @@
             @else
                 <td>No. of Units</td>
             @endif
+            <td>Remarks</td>
         </tr> 
         
         <?php $from_year = $student->subject_taken->groupBy(['from_year', 'to_year', 'semester']); ?>
@@ -210,19 +211,41 @@
                                 <td>
                                     @switch($subject_taken->rating)
                                         @case(3.5)
-                                            FAILED  
+                                            4
+                                            @break
+                                        @case(4)
+                                            4
                                             @break
                                         @case(4.5)
-                                            FAILED
+                                            4
                                             @break
                                         @case(5)
-                                            FAILED
+                                            5
                                             @break
                                         @default
                                             {{$subject_taken->rating}}
                                     @endswitch
                                 </td>
                                 <td>{{$subject_taken->subject->units}}</td>
+                                <td>
+                                    @switch($subject_taken->rating)
+                                        @case($subject_taken->rating >= 1 && $subject_taken->rating <= 3)
+                                            C
+                                            @break
+                                        @case(3.5)
+                                            INC
+                                            @break
+                                        @case(4)
+                                            INC
+                                            @break
+                                        @case(4.5)
+                                            INC
+                                            @break
+                                        @case(5)
+                                            NC
+                                            @break
+                                    @endswitch
+                                </td>
                             </tr>
                         @else
                             <tr class="item" style="text-align: left !important">
@@ -232,22 +255,41 @@
                                 <td>
                                     @switch($subject_taken->rating)
                                         @case(3.5)
-                                            FAILED  
+                                            4
                                             @break
                                         @case(4)
-                                            INC
+                                            4
                                             @break
                                         @case(4.5)
-                                            FAILED
+                                            4
                                             @break
                                         @case(5)
-                                            FAILED
+                                            5
                                             @break
                                         @default
                                             {{$subject_taken->rating}}
                                     @endswitch
                                 </td>
                                 <td>{{$subject_taken->subject->units}}</td>
+                                <td>
+                                    @switch($subject_taken->rating)
+                                        @case($subject_taken->rating >= 1 && $subject_taken->rating <= 3)
+                                            C
+                                            @break
+                                        @case(3.5)
+                                            INC
+                                            @break
+                                        @case(4)
+                                            INC
+                                            @break
+                                        @case(4.5)
+                                            INC
+                                            @break
+                                        @case(5)
+                                            NC
+                                            @break
+                                    @endswitch
+                                </td>
                             </tr>
                         @endif   
                     @endforeach
@@ -256,6 +298,124 @@
         @endforeach            
     
     </table>
+
+    <div style="border: 1px solid rgb(143, 142, 142); margin-top: 25px;">
+        <h3 style="margin-left: 10px;">An areasure or alteration of entry invalidates this documents.</h3>
+    </div>
+
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <table style="width: 25% !important; margin-right: 0px !important;" >
+                    <thead>
+                        <tr class="heading" style="text-align: left !important;">
+                            <th style="border .5px black !important;">Rating</th>
+                            <th style="border .5px black !important;">Percentage Weight Equivalent</th>
+                            <th style="border .5px black !important;">Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="item" style="text-align: left !important">
+                            <td>1.00</td>
+                            <td>99-100</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>1.25</td>
+                            <td>96-98</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>1.50</td>
+                            <td>93-95</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>1.75</td>
+                            <td>90-92</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>2.00</td>
+                            <td>87-89</td>
+                            <td>C</td>
+                        </tr>                     
+                    </tbody>
+                </table>
+                <h3 style="margin-left: 25px;">INTERPRETATION</h3>
+                <h4 style="margin-top: 0px !important; margin-bottom: 0px !important;">C - COMPETENT</h4>
+                <h4 style="margin-top: 0px !important; margin-bottom: 0px !important;">NC - NOT YET COMPETENT</h4>
+                <h4 style="margin-top: 0px !important; margin-bottom: 0px !important;">INC - INCOMPLETE</h4>
+            </td>
+            <td>
+                <table style="width: 25% !important; margin-right: 0px !important;">
+                    <thead>
+                        <tr class="heading" style="text-align: left !important;">
+                            <th style="border .5px black !important;">Rating</th>
+                            <th style="border .5px black !important;">Percentage Weight Equivalent</th>
+                            <th style="border .5px black !important;">Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="item" style="text-align: left !important">
+                            <td>2.25</td>
+                            <td>84-86</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>2.50</td>
+                            <td>81-83</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>2.75</td>
+                            <td>78-80</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>3.00</td>
+                            <td>75-77</td>
+                            <td>C</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>4.00</td>
+                            <td>75 and below</td>
+                            <td>INC</td>
+                        </tr>
+                        <tr class="item" style="text-align: left !important">
+                            <td>5.00</td>
+                            <td>75 and below</td>
+                            <td>NC</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="width: 25% !important;">
+                <em><u>Prepared by: </u></em>
+                <br>
+                <br>
+                <h3>{{\App\Models\Admin::find(auth()->user()->member->member_id)->name}}</h3>
+                Record Officer 
+                <br>
+                <br>
+                <em><u>Certified True and correct:</u></em>
+                <br>
+                <br>
+                <h3>Levy G. Eguiron</h3>
+                Registrar
+            </td>
+            <td style="text-align: right !important;">
+                Date Issued: {{\Carbon\Carbon::now()->isoFormat('MMMM DD, YYYY')}}
+                <br>
+                <div style="text-align: center">
+                    <h3>NOT VALID WITHOUT SMARTII SEAL</h3>
+                </div>
+                <br>            
+                No. {{sprintf('%06d', $student->id)}}
+            </td> 
+        </tr>
+    </table>
+    
 
 </div>
     
