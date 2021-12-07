@@ -34,14 +34,9 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  This will archive the class details and can be only accessed by the admin. 
-
-                    <br>
-                    <br>
-
+                <div class="modal-body text-justify">
+                  Archive this class?
                   {{$class->class_name}}
-                  <br>
                   {{$class->topic}}
                 </div>
                 <div class="modal-footer">
