@@ -40,14 +40,14 @@
                   {{$class->topic}}
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                  {!! Form::open(['url' => '/archiveclass']) !!}
-                  {{Form::hidden('class_id', $class->id)}}
-                  {{Form::hidden('faculty_id', auth()->user()->member->member_id)}}
-                  <button type="submit" class="btn btn-primary">Confirm</button>
-                  {!! Form::close() !!}                  
-
+                    
+                    {!! Form::open(['url' => '/archiveclass']) !!}
+                    {{Form::hidden('class_id', $class->id)}}
+                    {{Form::hidden('faculty_id', auth()->user()->member->member_id)}}
+                    <button type="submit" class="btn btn-secondary">Confirm</button>
+                    {!! Form::close() !!}                  
+                    
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
                 </div>
               </div>
             </div>
