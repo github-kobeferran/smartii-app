@@ -177,9 +177,6 @@
                 </div>
             </div>
             
-
-
-            
            <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead @if ($class->archive) class="bg-secondary text-white" @else class="green-bg-light" @endif>
@@ -317,7 +314,7 @@ function selectTable(mode){
                                         output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
                                 }
                             } else {
-                                output+=`<a onclick="selectRating('${students[i].id}', '${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
+                                output+=`<a onclick="selectRating(${students[i].id}, ${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
                             }
 
                         } else {
@@ -355,7 +352,7 @@ function selectTable(mode){
                                         output+=`<button class="badge badge-pill badge-primary d-inline" type="button" data-toggle="modal" data-target="#request-rating-edit-${sub_taken_id}">Request to Edit</button></td>`;
                                 }
                             } else {
-                                output+=`<a onclick="selectRating('${students[i].id}', '${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
+                                output+=`<a onclick="selectRating(${students[i].id}, ${students[i].rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
                             }
                         }
                     }
@@ -492,7 +489,7 @@ function selectTable(mode){
 
 }
 
-function selectRating(id, rating = null){
+function selectRating(id, rating = null){    
 
     let btnInputs = document.getElementsByClassName('btn-input');
     let inputTd = document.getElementById('rating-' + id);
@@ -502,7 +499,7 @@ function selectRating(id, rating = null){
         
         if(!btnInputs[i].classList.contains('rated')){
 
-            let output = `<td id="rating-`+ studentID +`" class=" btn-input"><button onclick="selectRating(`+ studentID +`)" class="btn btn-primary">Input Rating</button></td>`;
+            let output = `<td id="rating-`+ studentID +`" class=" btn-input"><button onclick="selectRating(${studentID})" class="btn btn-primary">Input Rating</button></td>`;
             btnInputs[i].innerHTML = output;
 
         }
@@ -555,7 +552,7 @@ function cancelRating(id, rating = null){
     if(rating ==  null){
 
         let inputTd = document.getElementById('rating-' + id);
-        let output = `<td id="rating-`+ id +`" class=" btn-input"><button onclick="selectRating(`+ id +`)" class="btn btn-primary">Input Rating</button></td>`;
+        let output = `<td id="rating-`+ id +`" class=" btn-input"><button onclick="selectRating(${id})" class="btn btn-primary">Input Rating</button></td>`;
 
         inputTd.innerHTML = output;
 
@@ -565,9 +562,9 @@ function cancelRating(id, rating = null){
         let output = ``;
 
         if(rating == 4)
-            output = `<td id="rating-`+ id +`" class=" btn-input"><span class="rating-text"> INC </span>   <a onclick="selectRating(`+ id +`, ` + rating +`)" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
+            output = `<td id="rating-`+ id +`" class=" btn-input"><span class="rating-text"> INC </span>   <a onclick="selectRating(${id}, ${rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
         else
-            output = `<td id="rating-`+ id +`" class=" btn-input"><span class="rating-text"> `+ rating +`</span>   <a onclick="selectRating(`+ id +`, ` + rating +`)" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
+            output = `<td id="rating-`+ id +`" class=" btn-input"><span class="rating-text"> `+ rating +`</span>   <a onclick="selectRating(${id}, ${rating})" data-toggle"tooltip" data-placement="top" title="Edit Rating"><i class="fa fa-pencil-square edit-rating" aria-hidden="true"></i></a></td>`;
 
 
         inputTd.innerHTML = output;
