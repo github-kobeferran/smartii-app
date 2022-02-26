@@ -4,6 +4,8 @@ A Web Application designed for business and some academic operations of *St. Mar
 
 > Capstone Project required for my Bachelor of Science in Information Technology program at Mindoro State University Calapan Campus.
 
+[Watch our short video presentation here](https://youtu.be/RpSiih-21P0)
+
 Development:
 - LAMP Stack
 - HTML, CSS, Javascript
